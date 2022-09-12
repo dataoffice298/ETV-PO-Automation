@@ -1,0 +1,142 @@
+ codeunit 50027 "Attachment Codeunit"
+
+ trigger OnRun();
+    begin
+    end;
+
+ FromRecRef.GetTable(Rec);
+        ToRecRef.GetTable(InspectReportHeader);
+        CopyAttachments(FromRecRef, ToRecRef, 2);
+
+       
+        ToRecRef1.GetTable(PostInspectData);
+        CopyAttachments(FromRecRef, ToRecRef1, 1);
+
+
+
+local procedure CopyAttachments(var FromRecRef: RecordRef; var ToRecRef: RecordRef; Num: Integer)
+    var
+        FromDocumentAttachment: Record "Document Attachment";
+        ToDocumentAttachment: Record "Document Attachment";
+        FromFieldRef: FieldRef;
+        ToFieldRef: FieldRef;
+        FromLineNo: Integer;
+        FromNo: Code[20];
+        ToNo: Code[20];
+        ToLineNo: Integer;
+    begin
+        FromDocumentAttachment.SetRange("Table ID", FromRecRef.Number);
+        if FromDocumentAttachment.IsEmpty() then
+            exit;
+        case FromRecRef.Number of
+            DATABASE::"Ins Datasheet Header B2B":
+                begin
+                    FromFieldRef := FromRecRef.Field(1);
+                    FromNo := FromFieldRef.Value;
+                    FromDocumentAttachment.SetRange("No.", FromNo);
+                end;
+        end;
+
+        if FromDocumentAttachment.FindSet then begin
+            repeat
+                Clear(ToDocumentAttachment);
+                ToDocumentAttachment.Init();
+                ToDocumentAttachment.TransferFields(FromDocumentAttachment);
+                ToDocumentAttachment.Validate("Table ID", ToRecRef.Number);
+
+                ToFieldRef := ToRecRef.Field(Num);
+                ToNo := ToFieldRef.Value;
+                ToDocumentAttachment.Validate("No.", ToNo);
+                if not ToDocumentAttachment.Insert(true) then;
+
+            until FromDocumentAttachment.Next() = 0;
+        end;
+
+
+[EventSubscriber(ObjectType::Table, 1173, 'OnAfterInitFieldsFromRecRef', '', false, false)]
+    local procedure OnAfterInitFieldsFromRecRef(var DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef)
+    var
+        FieldRef: FieldRef;
+        RecNo: Code[20];
+    begin
+        case RecRef.Number of
+            DATABASE::"Ins Datasheet Header B2B":
+                begin
+                    FieldRef := RecRef.Field(1);
+                    RecNo := FieldRef.Value;
+                    DocumentAttachment.Validate("No.", RecNo);
+                end;
+            DATABASE::"Inspection Receipt Header B2B":
+                begin
+                    FieldRef := RecRef.Field(2);
+                    RecNo := FieldRef.Value;
+                    DocumentAttachment.Validate("No.", RecNo);
+                end;
+            //B2BMSOn29Apr2022>>
+            Database::"Posted Ins DatasheetHeader B2B":
+                begin
+                    FieldRef := RecRef.Field(1);
+                    RecNo := FieldRef.Value;
+                    DocumentAttachment.Validate("No.", RecNo);
+                end;
+        
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Page, PAGE::"Document Attachment Details", 'OnAfterOpenForRecRef', '', false, false)]
+    local procedure OnAfterOpenForRecRef(var DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef; var FlowFieldsEditable: Boolean)
+    var
+        FieldRef: FieldRef;
+        RecNo: Code[20];
+    begin
+        case RecRef.Number of
+            DATABASE::"Inspection Receipt Header B2B":
+                begin
+                    FieldRef := RecRef.Field(2);
+                    RecNo := FieldRef.Value;
+                    DocumentAttachment.SetRange("No.", RecNo);
+
+                    FlowFieldsEditable := false;
+                end;
+            DATABASE::"Ins Datasheet Header B2B":
+                begin
+                    FieldRef := RecRef.Field(1);
+                    RecNo := FieldRef.Value;
+                    DocumentAttachment.SetRange("No.", RecNo);
+
+                    FlowFieldsEditable := false;
+                end;
+
+           
+            Database::"Posted Ins DatasheetHeader B2B":
+                begin
+                    FieldRef := RecRef.Field(1);
+                    RecNo := FieldRef.Value;
+                    DocumentAttachment.SetRange("No.", RecNo);
+
+                    FlowFieldsEditable := false;
+                end;
+        
+        end;
+    end;
+
+
+action(DocAttach)
+            {
+                ApplicationArea = All;
+                Caption = 'Attachments';
+                Image = Attach;
+                Promoted = true;
+                PromotedCategory = Process;
+                ToolTip = 'Add a file as an attachment. You can attach images as well as documents.';
+
+                trigger OnAction()
+                var
+                    DocumentAttachmentDetails: Page "Document Attachment Details";
+                    RecRef: RecordRef;
+                begin
+                    RecRef.GetTable(Rec);
+                    DocumentAttachmentDetails.OpenForRecRef(RecRef);
+                    DocumentAttachmentDetails.RunModal;
+                end;
+            }

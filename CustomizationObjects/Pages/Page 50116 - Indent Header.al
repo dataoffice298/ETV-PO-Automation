@@ -77,12 +77,19 @@ page 50116 "Indent Header"
                     Importance = Promoted;
                     ToolTip = 'Specifies the code of the location that items are transferred from.';
                 }
-                field("Transfer-to Code"; "Transfer-to Code")
+                field("Transfer-to Code"; Rec."Transfer-to Code")
                 {
                     ApplicationArea = Location;
                     // Editable = (Status = Status::Open) AND EnableTransferFields;
                     Importance = Promoted;
                     ToolTip = 'Specifies the code of the location that the items are transferred to.';
+                }
+                field("In-Transit Code"; "In-Transit Code")
+                {
+                    ApplicationArea = Location;
+                    // Editable = EnableTransferFields;
+                    // Enabled = (NOT "Direct Transfer") AND (Status = Status::Open);
+                    ToolTip = 'Specifies the in-transit code for the transfer order, such as a shipping agent.';
                 }
             }
             part(indentLine; 50023)
@@ -123,6 +130,18 @@ page 50116 "Indent Header"
                 PromotedOnly = true;
                 trigger OnAction()
                 begin
+                    Rec.TESTFIELD("Released Status", Rec."Released Status"::Open);
+                    Rec.TESTFIELD(Indentor);
+                    Rec.LOCKTABLE;
+                    IndentLine.RESET;
+                    IndentLine.SETRANGE("Document No.", Rec."No.");
+                    IF IndentLine.FINDSET THEN
+                        REPEAT
+                            IF IndentLine.Type <> IndentLine.Type::Description THEN BEGIN
+                                IndentLine.TESTFIELD(IndentLine."No.");
+                                IndentLine.TESTFIELD(IndentLine."Req.Quantity");
+                            END;
+                        UNTIL IndentLine.NEXT = 0;
                     IF allinoneCU.CheckIndentDocApprovalsWorkflowEnabled(Rec) then
                         allinoneCU.OnSendIndentDocForApproval(Rec);
 

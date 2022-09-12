@@ -356,7 +356,7 @@ codeunit 50018 "Approvals MGt 4"
     local procedure OnopendocumentIndentDoc(RecRef: RecordRef; var Handled: boolean)
     var
         IndentDoc: Record "Indent Header";
-        PurchaseHeader: Record "Purchase Header";
+        IndentLine: Record "Indent Line";
     begin
         case RecRef.Number() of
             Database::"Indent Header":
@@ -364,13 +364,14 @@ codeunit 50018 "Approvals MGt 4"
                     RecRef.SetTable(IndentDoc);
                     IndentDoc.SetRange("No.", IndentDoc."No.");
                     IndentDoc."Released Status" := IndentDoc."Released Status"::Open;
+                    IndentDoc."Last Modified Date" := WorkDate();
                     IndentDoc.Modify();
 
-                    // PurchaseHeader.Reset();
-                    // PurchaseHeader.SetRange("RFQ No.", IndentDoc.RFQNumber);
-                    // PurchaseHeader.SetRange("Document Type", PurchaseHeader."Document Type"::Quote);
-                    // if PurchaseHeader.FindSet() then
-                    //     PurchaseHeader.ModifyAll("Approval Status", PurchaseHeader."Approval Status"::Open);
+                    IndentLine.RESET;
+                    IndentLine.SETRANGE("Document No.", IndentDoc."No.");
+                    IndentLine.SETRANGE("Indent Status", IndentLine."Indent Status"::Indent);
+                    IF IndentLine.FIND('-') THEN
+                        IndentLine.MODIFYALL("Release Status", IndentLine."Release Status"::Open);
                     Handled := true;
 
                 end;
@@ -381,7 +382,7 @@ codeunit 50018 "Approvals MGt 4"
     local procedure OnReleasedocumentIndentDoc(RecRef: RecordRef; var Handled: boolean)
     var
         IndentDoc: Record "Indent Header";
-        PurchaseHeader: Record "Purchase Header";
+        IndentLine: Record "Indent Line";
     begin
         case RecRef.Number() of
             Database::"Indent Header":
@@ -389,15 +390,15 @@ codeunit 50018 "Approvals MGt 4"
                     RecRef.SetTable(IndentDoc);
                     IndentDoc.SetRange("No.", IndentDoc."No.");
                     IndentDoc."Released Status" := IndentDoc."Released Status"::Released;
+                    IndentDoc."Last Modified Date" := WORKDATE;
                     IndentDoc.Modify();
-                    //QuoteComparisionCus.ModifyAll("Approval Status", QuoteComparisionCus."Approval Status"::Released);
-                    // PurchaseHeader.Reset();
-                    // PurchaseHeader.SetRange("RFQ No.", QuoteComparisionCus.RFQNumber);
-                    // PurchaseHeader.SetRange("Document Type", PurchaseHeader."Document Type"::Quote);
-                    // if PurchaseHeader.FindSet() then
-                    //     PurchaseHeader.ModifyAll("Approval Status", PurchaseHeader."Approval Status"::Released);
-                    Handled := true;
 
+                    IndentLine.RESET;
+                    IndentLine.SETRANGE("Document No.", IndentDoc."No.");
+                    IF IndentLine.FINDSET THEN
+                        IndentLine.MODIFYALL("Release Status", IndentLine."Release Status"::Released);
+
+                    Handled := true;
                 end;
         end;
     end;
@@ -406,7 +407,7 @@ codeunit 50018 "Approvals MGt 4"
     local procedure OnSetstatusToPendingApprovalIndentDoc(RecRef: RecordRef; var IsHandled: boolean)
     var
         IndentDoc: Record "Indent Header";
-        PurchaseHeader: Record "Purchase Header";
+        IndentLine: Record "Indent Line";
     begin
         case RecRef.Number() of
             Database::"Indent Header":
@@ -414,13 +415,14 @@ codeunit 50018 "Approvals MGt 4"
                     RecRef.SetTable(IndentDoc);
                     IndentDoc.SetRange("No.", IndentDoc."No.");
                     IndentDoc."Released Status" := IndentDoc."Released Status"::"Pending Approval";
+                    IndentDoc."Last Modified Date" := WorkDate();
                     IndentDoc.Modify();
-                    //QuoteComparisionCus.ModifyAll("Approval Status", QuoteComparisionCus."Approval Status"::"Pending Approval");
-                    // PurchaseHeader.Reset();
-                    // PurchaseHeader.SetRange("RFQ No.", QuoteComparisionCus.RFQNumber);
-                    // PurchaseHeader.SetRange("Document Type", PurchaseHeader."Document Type"::Quote);
-                    // if PurchaseHeader.FindSet() then
-                    //     PurchaseHeader.ModifyAll("Approval Status", PurchaseHeader."Approval Status"::"Pending Approval");
+
+                    IndentLine.RESET;
+                    IndentLine.SETRANGE("Document No.", IndentDoc."No.");
+                    IndentLine.SETRANGE("Indent Status", IndentLine."Indent Status"::Indent);
+                    IF IndentLine.FIND('-') THEN
+                        IndentLine.MODIFYALL("Release Status", IndentLine."Release Status"::"Pending Approval");
                     IsHandled := true;
                 end;
         end;

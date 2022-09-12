@@ -176,8 +176,12 @@ table 50037 "Indent Line"
         }
         field(36; "Release Status"; Option)
         {
-            OptionCaption = 'Open,Released,Cancel,Closed';
-            OptionMembers = Open,Released,Cancel,Closed;
+            //B2BMSOn12Sep2022>>
+            //OptionCaption = 'Open,Released,Cancel,Closed';
+            //OptionMembers = Open,Released,Cancel,Closed;
+            OptionCaption = 'Open,Released,Cancel,Closed,Pending Approval';
+            OptionMembers = Open,Released,Cancel,Closed,"Pending Approval";
+            //B2BMSOn12Sep2022<<
         }
         field(37; "Description 2"; Text[50])
         {

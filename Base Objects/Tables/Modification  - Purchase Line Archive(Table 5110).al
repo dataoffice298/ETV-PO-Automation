@@ -66,7 +66,7 @@ tableextension 50055 tableextension70000016 extends "Purchase Line Archive"
         {
             Description = 'B2B1.0 06 Dec2016';
         }
-        field(60001; "Indent No."; Code[20])
+        field(33002900; "Indent No."; Code[20])
         {
             Description = 'B2B1.0';
         }

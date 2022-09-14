@@ -22,8 +22,8 @@ page 50116 "Indent Header"
 
                     trigger OnAssistEdit();
                     begin
-                        // IF rec.AssistEdit(xRec) THEN
-                        //     CurrPage.UPDATE;
+                        IF rec.AssistEdit(xRec) THEN
+                            CurrPage.UPDATE;
                     end;
                 }
                 field(Description; rec.Description)
@@ -37,7 +37,7 @@ page 50116 "Indent Header"
                 }
                 field(Department; rec.Department)
                 {
-                    Visible = true;
+                    Visible = false;
                     ApplicationArea = all;
                 }
                 field("Document Date"; rec."Document Date")
@@ -60,6 +60,18 @@ page 50116 "Indent Header"
                     Visible = false;
                     ApplicationArea = all;
                 }
+                //B2BMSOn13Sep2022>>
+                field("No. of Archived Versions"; Rec."No. of Archived Versions")
+                {
+                    ApplicationArea = All;
+                }
+                field("Ammendent Comments"; Rec."Ammendent Comments")
+                {
+                    ApplicationArea = All;
+                }
+                //B2BMSOn13Sep2022<<
+
+                // >> B2BPAV 
                 field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {
                     ApplicationArea = all;
@@ -92,12 +104,14 @@ page 50116 "Indent Header"
                     ToolTip = 'Specifies the in-transit code for the transfer order, such as a shipping agent.';
                 }
             }
+            //B2BPAV<<
             part(indentLine; 50023)
             {
                 SubPageLink = "Document No." = FIELD("No.");
                 ApplicationArea = All;
             }
         }
+
     }
 
     actions
@@ -115,8 +129,88 @@ page 50116 "Indent Header"
                 PromotedCategory = Process;
                 PromotedOnly = true;
                 trigger OnAction()
+                var
+                    ArchiveVersion: Integer;
                 begin
                     approvalmngmt.ApproveRecordApprovalRequest(Rec.RecordId());
+
+                    //B2BMSOn13Sep2022>>
+                    IndentLine.Reset();
+                    IndentLine.SetRange("Document No.", Rec."No.");
+                    IndentLine.SetFilter("No.", '<>%1', '');
+                    IndentLine.SetFilter("Prev Quantity", '<>%1', 0);
+                    if IndentLine.FindFirst() then
+                        if IndentLine."Req.Quantity" <> IndentLine."Prev Quantity" then begin
+                            Clear(ArchiveVersion);
+                            ArchiveIndHdr.Reset();
+                            ArchiveIndHdr.SetCurrentKey("Archived Version");
+                            ArchiveIndHdr.SetRange("No.", Rec."No.");
+                            if ArchiveIndLine.FindLast() then
+                                ArchiveVersion := ArchiveIndLine."Archived Version" + 1
+                            else
+                                ArchiveVersion := 1;
+
+                            ArchiveIndHdr.Init();
+                            ArchiveIndHdr.TransferFields(Rec);
+                            ArchiveIndHdr."Archived Version" := ArchiveVersion;
+                            ArchiveIndHdr."Archived By" := UserId;
+                            ArchiveIndHdr.Insert();
+
+                            IndentLine.Reset();
+                            IndentLine.SetRange("Document No.", Rec."No.");
+                            if IndentLine.FindSet() then
+                                repeat
+                                    ArchiveIndLine.Init();
+                                    ArchiveIndLine.TransferFields(IndentLine);
+                                    if IndentLine."Prev Quantity" <> 0 then
+                                        ArchiveIndLine."Req.Quantity" := IndentLine."Prev Quantity";
+                                    ArchiveIndLine."Archived Version" := ArchiveVersion;
+                                    ArchiveIndLine."Archived By" := UserId;
+                                    ArchiveIndLine.Insert();
+
+                                    IndentLine."Prev Quantity" := 0;
+                                    IndentLine.Modify();
+                                until IndentLine.Next() = 0;
+                        end;
+                    //B2BMSOn13Sep2022<<
+                end;
+            }
+
+            action(Reject)
+            {
+                ApplicationArea = All;
+                Caption = 'Reject';
+                Image = Reject;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                PromotedOnly = true;
+                ToolTip = 'Reject the approval request.';
+                Visible = OpenAppEntrExistsForCurrUser;
+
+                trigger OnAction()
+                var
+                    ApprovalsMgmt: Codeunit "Approvals Mgmt.";
+                begin
+                    ApprovalsMgmt.RejectRecordApprovalRequest(RecordId);
+                end;
+            }
+            action(Delegate)
+            {
+                ApplicationArea = All;
+                Caption = 'Delegate';
+                Image = Delegate;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedOnly = true;
+                ToolTip = 'Delegate the approval to a substitute approver.';
+                Visible = OpenAppEntrExistsForCurrUser;
+
+                trigger OnAction()
+                var
+                    ApprovalsMgmt: Codeunit "Approvals Mgmt.";
+                begin
+                    ApprovalsMgmt.DelegateRecordApprovalRequest(RecordId);
                 end;
             }
             action("Send Approval Request")
@@ -191,7 +285,7 @@ page 50116 "Indent Header"
                         if not IndentLineRec.FINDFIRST() then
                             ERROR('No Line with Qty. to Issue > 0');
 
-
+                        /*
                         IndentLineRec.RESET();
                         IndentLineRec.SETCURRENTKEY("Document No.", "Line No.");
                         IndentLineRec.SETRANGE("Document No.", "No.");
@@ -204,7 +298,8 @@ page 50116 "Indent Header"
                             //          if IndentLineRec."Qty. to Issue" > (IndentLineRec.Quantity - IndentLineRec."Quantity Issued") then
                             //              ERROR(Text002Lbl, (IndentLineRec.Quantity - IndentLineRec."Quantity Issued"));
                             until IndentLineRec.NEXT() = 0;
-                        CreateItemJnlLine();
+                            */
+                        Rec.CreateItemJnlLine();
                         CurrPage.Update();
                     end;
                 }
@@ -219,10 +314,20 @@ page 50116 "Indent Header"
                         IndentLineRec.SETRANGE("Document No.", "No.");
                         IndentLineRec.SETFILTER("Req.Quantity", '<>%1', 0);
                         if IndentLineRec.FIND('-') then
-                            CreateReturnItemJnlLine()
+                            Rec.CreateReturnItemJnlLine()
                         else
                             Error('Please check value in Qty. to Return field. It should not be empty and atleast have in one line.');
                         CurrPage.Update();
+                    end;
+                }
+                //B2BMSOn13Sep2022>>
+                action("Generate Transfer")
+                {
+                    Image = TransferOrder;
+                    Applicationarea = all;
+                    trigger OnAction()
+                    begin
+                        CreateTransferOrder();
                     end;
                 }
                 action("Copy BOM Lines")
@@ -259,8 +364,14 @@ page 50116 "Indent Header"
                     ShortCutKey = 'Ctrl+F9';
                     ApplicationArea = All;
 
-                    trigger OnAction();
+                    trigger OnAction()
+                    var
+                        RelError: Label 'This document is enabled for workflow. Manual release is not possible.';
                     begin
+                        //B2BMSOn13Sep2022>>
+                        IF allinoneCU.CheckIndentDocApprovalsWorkflowEnabled(Rec) then
+                            Error(RelError);
+                        //B2BMSOn13Sep2022<<
                         Rec.TESTFIELD("Document Date");
                         IndentLine.SETRANGE("Document No.", Rec."No.");
                         IF IndentLine.FIND('-') THEN
@@ -348,6 +459,10 @@ page 50116 "Indent Header"
     var
         IndentLine: Record 50037;
         IndentHeader: Record 50010;
+        //B2BMSOn13Sep2022>>
+        ArchiveIndHdr: Record "Archive Indent Header";
+        ArchiveIndLine: record "Archive Indent Line";
+        //B2BMSOn13Sep2022<<
         Text000: Label 'Do you want Convert to Quote?';
         Text001: Label 'There Is Nothing to Release for Indent %1';
         Text13002: Label 'The Order Is Authorized, You Cannot Resend For Authorization';

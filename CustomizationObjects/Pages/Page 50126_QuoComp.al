@@ -14,6 +14,8 @@ page 50126 "Quotation Comparision Doc"
             group(General)
             {
                 Caption = 'General';
+
+
                 field("No."; Rec."No.")
                 {
                     ApplicationArea = all;
@@ -164,6 +166,12 @@ page 50126 "Quotation Comparision Doc"
                     POCreationReport: Report "Purchase Order Creation";
                     QuoteCompLine: Record "Quotation Comparison Test";
                     POCreation: Report "Purchase Order Creation New";
+                    QuotationComparisionDelete: Record 50041;
+                    POAutomation: Codeunit 50026;
+                    QuoteCompareArchive: Record 50044;
+                    ArchiveQuotationHeader: Record "Archive Quotation Header";
+                    QuoCompHdr: Record QuotCompHdr;
+
                 begin
                     Rec.TestField("Orders Created", false);
                     Rec.TestField(Status, Rec.Status::Released);
@@ -180,6 +188,25 @@ page 50126 "Quotation Comparision Doc"
                     POCreation.RUN();
                     Rec."Orders Created" := true;
                     CurrPage.UPDATE();
+
+                    QuoteCompareArchive.SETRANGE("RFQ No.", Rec.RFQNumber);
+                    IF QuoteCompareArchive.FIND('-') THEN
+                        REPEAT
+                            QuoteCompareArchive.DELETE;
+                        UNTIL QuoteCompareArchive.NEXT = 0;
+
+
+                    ArchiveQCS(); //ETVPO1.1
+                    //B2B1.1START
+                    QuotationComparisionDelete.RESET;
+                    QuotationComparisionDelete.SETRANGE("Carry Out Action", TRUE);
+                    IF QuotationComparisionDelete.FINDFIRST THEN BEGIN
+                        QuotationComparisionDelete.DELETE;//B2B1.1
+                    END;
+                    //END B2B1.1
+                    CurrPage.UPDATE;
+
+
                 end;
             }
 
@@ -345,5 +372,37 @@ page 50126 "Quotation Comparision Doc"
         CanCancelapprovalforrecord: Boolean;
         CanCancelapprovalforflow: Boolean;
         CanrequestApprovForFlow: Boolean;
+
+
+
+    procedure ArchiveQCS();
+    var
+        QuotationComparisionDelete: Record "Quotation Comparison Test";
+        QuoteCompareArchive: Record "Archive Quotation Comparison";
+        ArchiveQuoHeader: Record "Archive Quotation Header";
+        LastArchiveQuote: Record "Archive Quotation Header";
+    begin
+
+        ArchiveQuoHeader.Init;
+        ArchiveQuoHeader.TransferFields(Rec);
+        LastArchiveQuote.Reset();
+        LastArchiveQuote.SetRange("No.", Rec."No.");
+        if LastArchiveQuote.FindLast() then;
+        ArchiveQuoHeader.Version := LastArchiveQuote.Version + 1;
+        ArchiveQuoHeader.Insert();
+
+        QuotationComparisionDelete.RESET;
+        QuotationComparisionDelete.SetRange("RFQ No.", Rec.RFQNumber);
+        if QuotationComparisionDelete.FindSet() then
+            REPEAT
+                QuoteCompareArchive.INIT;
+                QuoteCompareArchive.TRANSFERFIELDS(QuotationComparisionDelete);
+                QuoteCompareArchive.Version := ArchiveQuoHeader.Version;
+                IF NOT (QuoteCompareArchive."Line No." = 0) THEN
+                    QuoteCompareArchive.INSERT(TRUE);
+            UNTIL QuotationComparisionDelete.NEXT = 0;
+
+    end;
+
 
 }

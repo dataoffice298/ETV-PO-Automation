@@ -55,6 +55,7 @@ report 50076 "Purchase Order Creation New"
                     IF PurchaseLineOrder2.GET(PurchaseHeaderOrder."Document Type"::Order, PurchaseHeaderOrder."No.") THEN
                         ERROR('Record already Existed.');
                     //PurchaseHeaderOrder."Posting Date" := WORKDATE();
+                    PurchaseHeaderOrder.INSERT(true);
                     PurchaseHeaderOrder."Posting Date" := Today;
                     PurchaseHeaderOrder."Document Date" := WORKDATE();
                     PurchaseHeaderOrder.Validate("Order Date", WorkDate());
@@ -65,7 +66,7 @@ report 50076 "Purchase Order Creation New"
                     PurchaseHeaderOrder."Currency Code" := "Quotation Comparison1"."Currency Code";
                     PurchaseHeaderOrder.Validate("Shortcut Dimension 1 Code", "Quotation Comparison1"."Shortcut Dimension 1 Code");//B2BPAV
                     PurchaseHeaderOrder.Validate("Shortcut Dimension 2 Code", "Quotation Comparison1"."Shortcut Dimension 2 Code");//B2BPAV
-                    PurchaseHeaderOrder.INSERT(true);
+                    PurchaseHeaderOrder.Modify();
                     PurchaseLine.Reset();
                     PurchaseLine.SETRANGE("Document Type", PurchaseLine."Document Type"::Quote);
                     PurchaseLine.SETRANGE("Document No.", "Parent Quote No.");

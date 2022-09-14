@@ -31,6 +31,7 @@ page 50023 "Indent Line"
                 }
                 field(Department; rec.Department)
                 {
+                    Visible = false;
                     ApplicationArea = All;
                 }
                 field("Delivery Location"; rec."Delivery Location")
@@ -114,6 +115,36 @@ page 50023 "Indent Line"
                         ItemJournalLine.SetRange("Item No.", "No.");
                         IF ItemJournalLine.findset then;
                         Page.RunModal(40, ItemJournalLine);
+                    END;
+                }
+                action(createFAMovement)
+                {
+                    ApplicationArea = ALL;
+                    Caption = 'create FA Movement';
+                    Image = CreateMovement;
+                    trigger onaction()
+                    var
+                        FAMovement: Codeunit MyBaseSubscr;
+                    BEGIN
+                        Rec.TestField(Type, Rec.Type::"Fixed Assets");
+                        FAMovement.CreateFAMovememt(rec);
+                    END;
+                }
+                action(OpenFAMovementEntries)
+                {
+                    ApplicationArea = ALL;
+                    Caption = 'FA Movement Entries';
+                    Image = Entries;
+                    trigger onaction()
+                    var
+                        FAMovement: Record "Fixed Asset Movements";
+                    BEGIN
+                        Rec.TestField(Type, Rec.Type::"Fixed Assets");
+                        FAMovement.Reset();
+                        FAMovement.SetRange("Document No.", Rec."Document No.");
+                        FAMovement.SetRange("Document Line No.", Rec."Line No.");
+                        if FAMovement.FindSet() then
+                            Page.Run(0, FAMovement);
                     END;
                 }
 

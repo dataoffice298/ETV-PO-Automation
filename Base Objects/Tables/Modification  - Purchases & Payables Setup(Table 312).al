@@ -43,108 +43,71 @@ tableextension 50057 tableextension70000012 extends "Purchases & Payables Setup"
         }
         field(33002904; "Indent Nos."; Code[20])
         {
-            Caption = 'Purchase Indent Nos.';
+            Caption = 'Indent Nos.';
             Description = 'PO1.0';
             TableRelation = "No. Series";
         }
         field(33002905; "Price Required"; Boolean)
         {
             Description = 'PO1.0';
-
-            trigger OnValidate();
-            begin
-                TESTFIELD("Price Weightage", 0);
-            end;
+            Caption = 'Price Required';
         }
         field(33002906; "Price Weightage"; Decimal)
         {
             Description = 'PO1.0';
-
-            trigger OnValidate();
-            begin
-                TESTFIELD("Price Required");
-            end;
+            Caption = 'Price Weightage';
         }
         field(33002907; "Quality Required"; Boolean)
         {
             Description = 'PO1.0';
-
-            trigger OnValidate();
-            begin
-                TESTFIELD("Quality Weightage", 0);
-            end;
+            Caption = 'Quality Required';
         }
         field(33002908; "Quality Weightage"; Decimal)
         {
             Description = 'PO1.0';
-
-            trigger OnValidate();
-            begin
-                TESTFIELD("Quality Required");
-            end;
+            Caption = 'Quality Weightage';
         }
         field(33002909; "Delivery Required"; Boolean)
         {
             Description = 'PO1.0';
+            Caption = 'Delivery Required';
 
-            trigger OnValidate();
-            begin
-                TESTFIELD("Delivery Weightage", 0);
-            end;
         }
         field(33002910; "Delivery Weightage"; Decimal)
         {
             Description = 'PO1.0';
-
-            trigger OnValidate();
-            begin
-                TESTFIELD("Delivery Required");
-            end;
+            Caption = 'Delivery Weightage';
         }
         field(33002911; "Payment Terms Required"; Boolean)
         {
             Description = 'PO1.0';
-
-            trigger OnValidate();
-            begin
-                TESTFIELD("Payment Terms Weightage", 0);
-            end;
+            Caption = 'Payment Terms Required';
         }
         field(33002912; "Payment Terms Weightage"; Decimal)
         {
             Description = 'PO1.0';
-
-            trigger OnValidate();
-            begin
-                TESTFIELD("Payment Terms Required");
-            end;
+            Caption = 'Payment Terms Weightage';
         }
         field(33002913; "Default Quality Rating"; Decimal)
         {
             Description = 'PO1.0';
-
-            trigger OnValidate();
-            begin
-                //TESTFIELD("Default Quality Required");
-            end;
+            Caption = 'Default Quality Rating';
         }
         field(33002914; "Default Delivery Rating"; Decimal)
         {
             Description = 'PO1.0';
-
-            trigger OnValidate();
-            begin
-                //TESTFIELD("Default Delivery Required");
-            end;
+            Caption = 'Default Delivery Rating';
         }
         field(33002915; "Cumulation of Indents"; Boolean)
         {
             Description = 'PO1.0';
+            Caption = 'Cumulation of Indents';
         }
         field(33002916; "Indent Req No."; Code[20])
         {
             Description = 'PO1.0';
             TableRelation = "No. Series";
+            Caption = 'Indent Req No.';
         }
         field(50103; "Quotation Comparision Nos."; Code[20])
         {
@@ -156,6 +119,34 @@ tableextension 50057 tableextension70000012 extends "Purchases & Payables Setup"
             Caption = 'Purchase Enquiry Nos.';
             TableRelation = "No. Series";
         }
+        //B2BMSOn13Sep2022>>
+        field(50105; "Indent Issue Jnl. Batch"; Code[20])
+        {
+            DataClassification = CustomerContent;
+            TableRelation = "Item Journal Batch".Name where("Journal Template Name" = field("Indent Issue Jnl. Template"));
+        }
+        field(50106; "Indent Issue Jnl. Template"; Code[20])
+        {
+            DataClassification = CustomerContent;
+            TableRelation = "Item Journal Template".Name;
+        }
+        field(50107; "Indent Return Jnl. Batch"; Code[20])
+        {
+            DataClassification = CustomerContent;
+            TableRelation = "Item Journal Batch".Name where("Journal Template Name" = field("Indent Return Jnl. Template"));
+        }
+        field(50108; "Indent Return Jnl. Template"; Code[20])
+        {
+            DataClassification = CustomerContent;
+            TableRelation = "Item Journal Template".Name;
+        }
+        field(50109; "LC Detail Nos."; Code[20])
+        {
+            DataClassification = CustomerContent;
+            TableRelation = "No. Series";
+        }
+        //B2BMSOn13Sep2022<<
+
     }
 
     //Unsupported feature: PropertyChange. Please convert manually.

@@ -55,8 +55,9 @@ report 50001 "Indent Requestion Lines"
                         IndentRequisitions.INIT;
                         IndentRequisitions."Document No." := IndentReqHeader."No.";
                         IndentRequisitions."Line No." := TempLineNo;
+                        IndentRequisitions."Line Type" := Type; //ETVPO1.1
                         IndentRequisitions."Item No." := "No.";
-                        Message('%1..%2...%3',"No.","Shortcut Dimension 1 Code","Shortcut Dimension 2 Code");
+                        Message('%1..%2...%3', "No.", "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code");
                         IndentRequisitions.Description := Description;
                         IF RecItem.GET(IndentRequisitions."Item No.") THEN
                             IndentRequisitions."Unit of Measure" := RecItem."Base Unit of Measure";
@@ -87,8 +88,8 @@ report 50001 "Indent Requestion Lines"
                         IndentRequisitions."Due Date" := "Due Date";
                         //    IndentRequisitions."Payment Method Code" := "Indent Line"."Payment Meathod Code";//Divya
                         IndentRequisitions."Carry out Action" := TRUE;
-                        IndentRequisitions.Validate("Shortcut Dimension 1 Code", "Shortcut Dimension 1 Code");
-                        IndentRequisitions.Validate("Shortcut Dimension 2 Code", "Shortcut Dimension 2 Code");
+                        IndentRequisitions.Validate("Shortcut Dimension 1 Code", "Shortcut Dimension 1 Code");//B2BPAV
+                        IndentRequisitions.Validate("Shortcut Dimension 2 Code", "Shortcut Dimension 2 Code");//B2BPAV
                         IndentRequisitions.INSERT;
                         TempLineNo += 10000;
                     END;
@@ -99,8 +100,8 @@ report 50001 "Indent Requestion Lines"
                     if not BoolGvar then begin
                         BoolGvar := true;
                         if IndentReqHeaderGRec.Get(IndentReqHeader."No.") then begin
-                            IndentReqHeaderGRec.Validate("Shortcut Dimension 1 Code", "Shortcut Dimension 1 Code");
-                            IndentReqHeaderGRec.Validate("Shortcut Dimension 2 Code", "Shortcut Dimension 2 Code");
+                            IndentReqHeaderGRec.Validate("Shortcut Dimension 1 Code", "Shortcut Dimension 1 Code");//B2BPAV
+                            IndentReqHeaderGRec.Validate("Shortcut Dimension 2 Code", "Shortcut Dimension 2 Code");//B2BPAV
                             IndentReqHeaderGRec.Modify();  //B2BPAV
                         end;
                     end;

@@ -25,15 +25,19 @@ tableextension 50051 tableextension70000002 extends "Purch. Rcpt. Header"
             Editable = false;
             TableRelation = "Quotation Comparison";
         }
-        field(50003; "LC No."; Code[20])
+        field(50110; "LC No."; Code[20])
         {
             Caption = 'LC No.';
-            Editable = false;
+
         }
-        field(50004; "Bill of Entry No"; Code[20])
+        field(50111; "Bill of Entry No"; Code[20])
         {
-            Caption = 'Bill of Entry No.';
-            Editable = false;
+            Caption = 'Bill of Entry No';
+
+        }
+        field(50112; "EPCG No."; Code[20])
+        {
+            Caption = 'EPCG No';
         }
     }
 

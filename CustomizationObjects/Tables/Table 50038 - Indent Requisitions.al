@@ -12,7 +12,12 @@ table 50038 "Indent Requisitions"
         field(1; "Item No."; Code[20])
         {
             Editable = false;
-            TableRelation = Item;
+            TableRelation = IF ("Line Type" = CONST(Item)) Item
+            ELSE
+            IF ("Line Type" = CONST("Fixed Assets")) "Fixed Asset"
+            ELSE
+            IF ("Line Type" = CONST("G/L Account")) "G/L Account";
+            Caption = 'No.';
         }
         field(2; Description; Text[50])
         {
@@ -222,11 +227,16 @@ table 50038 "Indent Requisitions"
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2),
             Blocked = CONST(false));
         }
+        field(50014; "Line Type"; Option)
+        {
+            DataClassification = CustomerContent;
+            OptionMembers = Item,"Fixed Assets",Description,"G/L Account";
+        }
     }
 
     keys
     {
-        key(Key1; "Item No.", "Indent No.", "Indent Line No.")
+        key(Key1; "Indent No.", "Indent Line No.")
         {
         }
     }

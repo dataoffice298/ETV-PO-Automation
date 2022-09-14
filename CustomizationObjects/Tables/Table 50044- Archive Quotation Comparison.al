@@ -1,5 +1,6 @@
 table 50044 "Archive Quotation Comparison"
 {
+
     // version PH1.0,PO1.0
 
 
@@ -173,17 +174,41 @@ table 50044 "Archive Quotation Comparison"
         field(49; Quality; Decimal)
         {
         }
-        field(100; "Archived Version"; Integer)
+        field(100; "CWIP No."; Code[10])
         {
+            DataClassification = CustomerContent;
+            //TableRelation = "CWIP Masters";
+
         }
-        field(101; "Document Occurances"; Integer)
+        //Service08Jul2021>>
+        field(101; "Service Code"; Code[20])
         {
+            DataClassification = CustomerContent;
+        }
+
+        //Service08Jul2021<<
+        //B2BMSOn06Oct21>>
+        field(110; "Currency Code"; Code[10])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Currency Code';
+            TableRelation = Currency;
+        }
+        //B2BMSOn06Oct21<<
+        field(111; "Type"; Option)
+        {
+            DataClassification = CustomerContent;
+            OptionMembers = Item,"Fixed Assets",Description,"G/L Account";
+        }
+        field(112; Version; Integer)
+        {
+            DataClassification = CustomerContent;
         }
     }
 
     keys
     {
-        key(Key1; "Line No.", "RFQ No.")
+        key(Key1; "Line No.", "RFQ No.", Version)
         {
         }
         key(Key2; "RFQ No.")

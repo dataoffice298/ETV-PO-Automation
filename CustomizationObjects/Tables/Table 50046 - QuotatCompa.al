@@ -353,6 +353,7 @@ table 50046 "Quotation Comparison Test"
         {
             DataClassification = CustomerContent;
         }
+
         //Service08Jul2021<<
         //B2BMSOn06Oct21>>
         field(110; "Currency Code"; Code[10])
@@ -362,6 +363,12 @@ table 50046 "Quotation Comparison Test"
             TableRelation = Currency;
         }
         //B2BMSOn06Oct21<<
+        field(111; "Type"; Option)
+        {
+            DataClassification = CustomerContent;
+            OptionMembers = Item,"Fixed Assets",Description,"G/L Account";
+        }
+        //Do not use 112 Field id
 
     }
 

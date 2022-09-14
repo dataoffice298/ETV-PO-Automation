@@ -31,10 +31,16 @@ page 50127 QuotationComparSubForm
                     ApplicationArea = all;
 
                 }
+                field(Type; Type)
+                {
+                    ApplicationArea = all;
+
+                }
                 field("Item No."; Rec."Item No.")
                 {
                     Editable = false;
                     ApplicationArea = all;
+                    Caption = 'No.';
                 }
                 field(Description; Rec.Description)
                 {

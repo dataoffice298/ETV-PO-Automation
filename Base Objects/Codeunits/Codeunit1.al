@@ -7,6 +7,12 @@ codeunit 50016 "MyBaseSubscr"
 
     var
         myInt: Integer;
+        IndentLine: Record "Indent Line";
+        IssuedDateTime: DateTime;
+        FromLocation: Code[20];
+        ToLocation: Code[20];
+        IssuedTo: Text[50];
+        Comment: Text[500];
 
     [EventSubscriber(ObjectType::table, 83, 'OnBeforePostingItemJnlFromProduction', '', False, False)] //PKON22M17
     local procedure OnBeforePostingItemJnlFromProduction(var ItemJournalLine: Record "Item Journal Line"; Print: Boolean; var IsHandled: Boolean)
@@ -56,10 +62,7 @@ codeunit 50016 "MyBaseSubscr"
         RecNo: Code[20];
     begin
         case RecRef.Number of
-            DATABASE::"Sales Invoice Header",
-            DATABASE::"Sales Cr.Memo Header",
-            DATABASE::"Purch. Inv. Header",
-            DATABASE::"Purch. Cr. Memo Hdr.":
+            DATABASE::"Purch. Rcpt. Header":
                 begin
                     FieldRef := RecRef.Field(3);
                     RecNo := FieldRef.Value;
@@ -128,6 +131,186 @@ codeunit 50016 "MyBaseSubscr"
                 ToDocumentAttachment.Insert;
             until FromDocumentAttachment.Next() = 0;
         end;
+    end;
+
+    procedure CreateFAMovememt(var IndentLine: Record "Indent Line")
+    var
+        myInt: Integer;
+        FAMovementForm: Page "FA Movements Confirmation";
+    begin
+        FAMovementForm.Set(IndentLine);
+        if FAMovementForm.RunModal = ACTION::Yes then begin
+            FAMovementForm.ReturnPostingInfo(IssuedDateTime, IssuedTo, FromLocation, ToLocation, Comment);
+            if Comment = '' then
+                Error('Comment must have a value');
+            if IssuedDateTime = 0DT then
+                Error('Issued Date Time must have a value');
+            if FromLocation = '' then
+                Error('From Location must have a value');
+            if ToLocation = '' then
+                Error('To Location must have a value');
+            if IssuedTo = '' then
+                Error('Issued To User must have a value');
+            if FromLocation = ToLocation then
+                Error('From location and To location  must not be same value');
+            InsertMovementEntries(IndentLine, IssuedDateTime, IssuedTo, FromLocation, ToLocation, Comment);
+            Commit();
+            Message('FA Movement created Sucessfully');
+        end;
+    end;
+
+    local procedure InsertMovementEntries(IndentLine: Record "Indent Line";
+        IssuedDateTime: DateTime;
+        IssuedTo: Text[50];
+        FromLocation: Code[20];
+        ToLocation: Code[20];
+        Comment: Text[500])
+    var
+        InsertFAMovements: Record "Fixed Asset Movements";
+        FAMovements: Record "Fixed Asset Movements";
+        EntryNo: Integer;
+    begin
+        FAMovements.Reset();
+        if FAMovements.FindLast() then
+            EntryNo := FAMovements."Entry No." + 1
+        else
+            EntryNo := 1;
+        InsertFAMovements.Init();
+        InsertFAMovements."Entry No." := EntryNo;
+        InsertFAMovements."FA No." := IndentLine."No.";
+        InsertFAMovements."Document No." := IndentLine."Document No.";
+        InsertFAMovements."Document Line No." := IndentLine."Line No.";
+        InsertFAMovements."Issue to User Id" := IssuedTo;
+        InsertFAMovements."Issued Date Time" := IssuedDateTime;
+        InsertFAMovements."Created Date Time" := CurrentDateTime;
+        InsertFAMovements."From Location" := FromLocation;
+        InsertFAMovements."To Location" := ToLocation;
+        InsertFAMovements.Comment := Comment;
+        InsertFAMovements.Insert();
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPostCombineSalesOrderShipment', '', false, false)]
+    local procedure OnAfterPostCombineSalesOrderShipment(var PurchaseHeader: Record "Purchase Header"; var TempDropShptPostBuffer: Record "Drop Shpt. Post. Buffer" temporary)
+    var
+        CFactor: Decimal;
+        LCDetail: Record "LC Details";
+        LCOrder: Record "LC Orders";
+        Text13701: label 'The LC that you have attached is expired.';
+        Text13702: Label 'The order value %1 cannot be greater than the LC remaining value %2.';
+    begin
+        with PurchaseHeader do begin
+            IF ("LC No." <> '') AND Receive THEN BEGIN
+                IF "Currency Factor" <> 0 THEN
+                    CFactor := "Currency Factor"
+                ELSE
+                    CFactor := 1;
+                LCDetail.GET("LC No.");
+                IF "Expected Receipt Date" > LCDetail."Expiry Date" THEN
+                    ERROR(Text13701);
+                CALCFIELDS("Amount");
+                LCDetail.CALCFIELDS("Value Utilised");
+                LCOrder.SETRANGE("LC No.", "LC No.");
+                LCOrder.SETRANGE("Order No.", "No.");
+                IF NOT LCOrder.FINDFIRST THEN BEGIN
+                    IF ("Amount" / CFactor) > (LCDetail."Latest Amended Value" - LCDetail."Value Utilised") THEN
+                        ERROR(Text13702, "Amount" / CFactor, (LCDetail."Latest Amended Value" - LCDetail."Value Utilised"));
+                    LCOrder.INIT;
+                    LCOrder."LC No." := LCDetail."No.";
+                    LCOrder."Transaction Type" := LCDetail."Transaction Type";
+                    LCOrder."Issued To/Received From" := LCDetail."Issued To/Received From";
+                    LCOrder."Order No." := "No.";
+                    LCOrder."Shipment Date" := "Expected Receipt Date";
+                    LCOrder."Order Value" := "Amount" / CFactor;
+                    LCOrder.INSERT;
+                END;
+            END;
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnBeforePostDropOrderShipment', '', false, false)]
+    local procedure OnBeforePostDropOrderShipment(var SalesHeader: Record "Sales Header"; var TempDropShptPostBuffer: Record "Drop Shpt. Post. Buffer" temporary)
+    var
+        CFactor: Decimal;
+        LCDetail: Record "LC Details";
+        LCOrder: Record "LC Orders";
+        Text13700: label 'The LC that you have attached is expired.';
+        Text13701: Label 'The order value %1 cannot be greater than the LC remaining value %2.';
+    begin
+        with SalesHeader do begin
+            IF ("LC No." <> '') AND Ship THEN BEGIN
+                IF "Currency Factor" <> 0 THEN
+                    CFactor := "Currency Factor"
+                ELSE
+                    CFactor := 1;
+                LCDetail.GET("LC No.");
+                IF "Shipment Date" > LCDetail."Expiry Date" THEN
+                    ERROR(Text13700);
+                CALCFIELDS("Amount");
+                LCDetail.CALCFIELDS("Value Utilised");
+                LCOrder.SETRANGE("LC No.", "LC No.");
+                LCOrder.SETRANGE("Order No.", "No.");
+                IF NOT LCOrder.FINDFIRST THEN BEGIN
+                    IF ("Amount" / CFactor) > LCDetail."Latest Amended Value" - LCDetail."Value Utilised" THEN
+                        ERROR(Text13701, "Amount" / CFactor, (LCDetail."Latest Amended Value" - LCDetail."Value Utilised"));
+                    LCOrder.INIT;
+                    LCOrder."LC No." := LCDetail."No.";
+                    LCOrder."Transaction Type" := LCDetail."Transaction Type";
+                    LCOrder."Issued To/Received From" := LCDetail."Issued To/Received From";
+                    LCOrder."Order No." := "No.";
+                    LCOrder."Shipment Date" := "Shipment Date";
+                    LCOrder."Order Value" := "Amount" / CFactor;
+                    LCOrder.INSERT;
+                END;
+            END;
+        end;
+    end;
+
+    procedure LCRelease(LCDetail: Record "LC Details")
+    var
+        Text13700: Label 'Do you want to Release?';
+        Text13701: Label 'The LC has been Released.';
+        Text13702: Label 'The LC is already Released.';
+    begin
+        WITH LCDetail DO BEGIN
+            IF CONFIRM(Text13700) THEN
+                IF NOT Released THEN BEGIN
+                    TESTFIELD("LC Value");
+                    TESTFIELD("LC No.");
+                    TESTFIELD("Expiry Date");
+                    VALIDATE("LC Value");
+                    IF "Type of LC" = "Type of LC"::Foreign THEN
+                        TESTFIELD("Currency Code");
+                    IF "Type of Credit Limit" = "Type of Credit Limit"::Revolving THEN
+                        TESTFIELD("Revolving Cr. Limit Types");
+                    Released := TRUE;
+                    MODIFY;
+                    MESSAGE(Text13701);
+                END ELSE
+                    MESSAGE(Text13702)
+            ELSE
+                EXIT;
+        END;
+    end;
+
+
+    procedure LCClose(LCDetail: Record "LC Details")
+    var
+        Text13709: Label 'Do you want to close LC ?';
+        Text13707: Label 'The LC has been closed.';
+        Text13708: Label 'The LC is already closed.';
+    begin
+        WITH LCDetail DO BEGIN
+            IF CONFIRM(Text13709) THEN
+                IF NOT Closed THEN BEGIN
+                    TESTFIELD(Released);
+                    Closed := TRUE;
+                    MODIFY;
+                    MESSAGE(Text13707);
+                END ELSE
+                    MESSAGE(Text13708)
+            ELSE
+                EXIT;
+        END;
     end;
 }
 

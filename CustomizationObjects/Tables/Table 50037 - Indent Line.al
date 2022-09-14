@@ -86,9 +86,16 @@ table 50037 "Indent Line"
 
             trigger OnValidate();
             begin
-                TestStatusOpen;
+                //TestStatusOpen;
                 Amount := "Req.Quantity" * "Unit Cost";
                 UpdateIndentQtyBase; // Nov042016
+                //B2BMSOn13Sep2022>>
+                if (IndentHeader.Get("Document No.")) and (IndentHeader."Released Status" = IndentHeader."Released Status"::"Pending Approval") then begin
+                    IndentHeader.TestField("Ammendent Comments");
+                    if (xRec."Req.Quantity" <> 0) AND ("Prev Quantity" = 0) AND (xRec."Req.Quantity" <> Rec."Req.Quantity") then
+                        "Prev Quantity" := xRec."Req.Quantity";
+                end;
+                //B2BMSOn13Sep2022<<
             end;
         }
         field(6; "Available Stock"; Decimal)
@@ -237,6 +244,14 @@ table 50037 "Indent Line"
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2),
             Blocked = CONST(false));
         }
+        //B2BMSOn13Sep2022>>
+        field(50003; "Prev Quantity"; Decimal)
+        {
+        }
+        field(50004; "Transfer Order No."; Code[20])
+        {
+        }
+        //B2BMSOn13Sep2022<<
 
     }
 
@@ -293,8 +308,9 @@ table 50037 "Indent Line"
 
     local procedure TestStatusOpen();
     begin
-        IF IndentHeader.GET("Document No.") THEN;
-        IndentHeader.TESTFIELD("Released Status", IndentHeader."Released Status"::Open);
+        IF (IndentHeader.GET("Document No.")) THEN;
+        if IndentHeader."Released Status" <> IndentHeader."Released Status"::"Pending Approval" then
+            IndentHeader.TESTFIELD("Released Status", IndentHeader."Released Status"::Open);
         IndentHeader.MODIFY;
     end;
 

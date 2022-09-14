@@ -4,14 +4,19 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
     {
         addlast("Invoice Details")
         {
-            field("LC No."; "LC No.")
+            field("LC No."; Rec."LC No.")
             {
                 ApplicationArea = All;
             }
-            field("Bill of Entry No"; "Bill of Entry No")
+            field("Bill of Entry No"; Rec."Bill of Entry No")
             {
                 ApplicationArea = All;
             }
+            field("EPCG No.";Rec."EPCG No.")
+            {
+                ApplicationArea = all;
+            }
+        
         }
     }
     var

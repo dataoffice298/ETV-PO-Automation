@@ -9,8 +9,6 @@
             "server": "http://localhost",
             "serverInstance": "ETVLIVEUPG",
             "authentication": "Windows",
-            "startupObjectId": 22,
-            "startupObjectType": "Page",
             "breakOnError": true,
             "launchBrowser": true,
             "enableLongRunningSqlStatements": true,

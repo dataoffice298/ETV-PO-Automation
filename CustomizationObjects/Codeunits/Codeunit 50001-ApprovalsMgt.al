@@ -3,6 +3,55 @@ codeunit 50001 ApprovalMgt
     trigger OnRun();
     begin
     end;
+    //B2BMSOn13Sep2022>>
+    [EventSubscriber(ObjectType::Page, Page::"Requests to Approve", 'OnAfterActionEvent', 'Approve', false, false)]
+    local procedure InsertArchiveDocument(var Rec: Record "Approval Entry")
+    var
+        ArchiveVersion: Integer;
+        IndentLine: Record 50037;
+        IndentHeader: Record 50010;
+        ArchiveIndHdr: Record "Archive Indent Header";
+        ArchiveIndLine: record "Archive Indent Line";
+    begin
+        if (Rec."Table ID" = Database::"Indent Header") and (IndentHeader.Get(Rec."Document No.")) then begin
+            IndentLine.Reset();
+            IndentLine.SetRange("Document No.", IndentHeader."No.");
+            IndentLine.SetFilter("No.", '<>%1', '');
+            IndentLine.SetFilter("Prev Quantity", '<>%1', 0);
+            if IndentLine.FindFirst() then
+                if IndentLine."Req.Quantity" <> IndentLine."Prev Quantity" then begin
+                    Clear(ArchiveVersion);
+                    ArchiveIndHdr.Reset();
+                    ArchiveIndHdr.SetCurrentKey("Archived Version");
+                    ArchiveIndHdr.SetRange("No.", IndentHeader."No.");
+                    if ArchiveIndLine.FindLast() then
+                        ArchiveVersion := ArchiveIndLine."Archived Version" + 1
+                    else
+                        ArchiveVersion := 1;
+
+                    ArchiveIndHdr.Init();
+                    ArchiveIndHdr.TransferFields(IndentHeader);
+                    ArchiveIndHdr."Archived Version" := ArchiveVersion;
+                    ArchiveIndHdr."Archived By" := UserId;
+                    ArchiveIndHdr.Insert();
+
+                    IndentLine.Reset();
+                    IndentLine.SetRange("Document No.", IndentHeader."No.");
+                    if IndentLine.FindSet() then
+                        repeat
+                            ArchiveIndLine.Init();
+                            ArchiveIndLine.TransferFields(IndentLine);
+                            ArchiveIndLine."Archived Version" := ArchiveVersion;
+                            ArchiveIndLine."Archived By" := UserId;
+                            ArchiveIndLine.Insert();
+
+                            IndentLine."Prev Quantity" := 0;
+                            IndentLine.Modify();
+                        until IndentLine.Next() = 0;
+                end;
+        end;
+    end;
+    //B2BMSOn13Sep2022<<
 
     /*
         [IntegrationEvent(false, false)]

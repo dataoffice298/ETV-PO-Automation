@@ -75,7 +75,7 @@ page 50025 "Purchase Enquiry"
                     ApplicationArea = All;
                 }
             }
-            part(PurchLines; 50005)
+            part(PurchLines; "Purchase Enquiry Subform")
             {
                 SubPageLink = "Document No." = FIELD("No.");
                 ApplicationArea = All;

@@ -73,9 +73,40 @@ pageextension 50070 MyExtension1 extends "Purchases & Payables Setup"
             {
                 ApplicationArea = All;
             }
-
+            field("LC Detail Nos."; Rec."LC Detail Nos.")
+            {
+                ApplicationArea = All;
+            }
 
         }
+
+        //B2BMSOn13Sep2022>>
+        addlast(General)
+        {
+            group("Indent Issue")
+            {
+                field("Indent Issue Jnl. Template"; Rec."Indent Issue Jnl. Template")
+                {
+                    ApplicationArea = All;
+                }
+                field("Indent Issue Jnl. Batch"; "Indent Issue Jnl. Batch")
+                {
+                    ApplicationArea = All;
+                }
+            }
+            group("Indent Return")
+            {
+                field("Indent Return Jnl. Template"; "Indent Return Jnl. Template")
+                {
+                    ApplicationArea = All;
+                }
+                field("Indent Return Jnl. Batch"; "Indent Return Jnl. Batch")
+                {
+                    ApplicationArea = All;
+                }
+            }
+        }
+        //B2BMSOn13Sep2022<<
 
     }
 

@@ -53,6 +53,24 @@ pageextension 50102 FixedAssetCard extends "Fixed Asset Card"
                 end;
             }
         }
+        addafter("Ledger E&ntries")
+        {
+            action(OpenFAMovementEntries)
+            {
+                ApplicationArea = ALL;
+                Caption = 'FA Movement Entries';
+                Image = Entries;
+                trigger onaction()
+                var
+                    FAMovement: Record "Fixed Asset Movements";
+                BEGIN
+                    FAMovement.Reset();
+                    FAMovement.SetRange("FA No.", Rec."No.");
+                    if FAMovement.FindSet() then
+                        Page.Run(0, FAMovement);
+                END;
+            }
+        }
     }
 
     var

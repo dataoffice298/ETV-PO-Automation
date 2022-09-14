@@ -620,7 +620,7 @@ tableextension 50056 tableextension70000011 extends "Purchase Line"
         PurchasesPayablesSetup: Record 312;
 
     var
-        IndentLine: Record 50015;
+        IndentLine: Record "Indent Line";
         "--B2B1.0 13Dec2016--": Integer;
         FreePurchLine: Record 39;
 

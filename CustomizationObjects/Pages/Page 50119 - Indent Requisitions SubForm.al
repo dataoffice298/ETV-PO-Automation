@@ -32,6 +32,10 @@ page 50119 "Indent Requisitions SubForm"
                         //B2B.1.3
                     end;
                 }
+                field("Line Type"; Rec."Line Type")
+                {
+                    ApplicationArea = all;
+                }
                 field("Item No."; Rec."Item No.")
                 {
                     ApplicationArea = All;

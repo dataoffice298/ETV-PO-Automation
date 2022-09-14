@@ -11,6 +11,7 @@ page 50120 "Indent Requisition Document"
         {
             group(General)
             {
+
                 field("No."; Rec."No.")
                 {
                     ApplicationArea = All;

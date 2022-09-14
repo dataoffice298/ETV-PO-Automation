@@ -79,6 +79,11 @@ table 50043 "Indent Vendor Items"
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2),
             Blocked = CONST(false));
         }
+        field(50014; "Line Type"; Option)
+        {
+            DataClassification = CustomerContent;
+            OptionMembers = Item,"Fixed Assets",Description,"G/L Account";
+        }
     }
 
     keys

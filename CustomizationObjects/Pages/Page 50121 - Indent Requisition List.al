@@ -15,6 +15,7 @@ page 50121 "Indent Requisition List"
         {
             repeater(Group)
             {
+
                 field("No."; Rec."No.")
                 {
                     ApplicationArea = All;

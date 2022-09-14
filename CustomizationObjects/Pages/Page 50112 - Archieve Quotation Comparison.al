@@ -1,15 +1,14 @@
 page 50112 "Archieve Quotation Comparison"
 {
-    // version PH1.0,PO1.0
+
 
     Caption = 'Archived Quotations';
     PageType = Worksheet;
     SourceTable = "Archive Quotation Comparison";
     Editable = false;
-    //B2BESGOn19May2022++
     UsageCategory = Lists;
     ApplicationArea = all;
-    //B2BESGOn19May2022--
+
     layout
     {
 
@@ -28,8 +27,8 @@ page 50112 "Archieve Quotation Comparison"
                     Rec.SETCURRENTKEY("RFQ No.");
                     Rec.SETFILTER("RFQ No.", RFQNumber);
                 end;
-            }
-            */
+            } */
+
             repeater("Control")
             {
                 field("<RFQ No2>"; Rec."RFQ No.")
@@ -40,6 +39,7 @@ page 50112 "Archieve Quotation Comparison"
                 field("Quote No."; Rec."Quote No.")
                 {
                     ApplicationArea = All;
+
                 }
                 field("Vendor No."; Rec."Vendor No.")
                 {
@@ -193,14 +193,7 @@ page 50112 "Archieve Quotation Comparison"
                 {
                     ApplicationArea = All;
                 }
-                field("Archived Version"; Rec."Archived Version")
-                {
-                    ApplicationArea = All;
-                }
-                field("Document Occurances"; Rec."Document Occurances")
-                {
-                    ApplicationArea = All;
-                }
+
             }
         }
     }
@@ -211,8 +204,8 @@ page 50112 "Archieve Quotation Comparison"
 
     trigger OnOpenPage();
     begin
-        //Rec.RESET;
-        //Rec.SETRANGE("RFQ No.", RFQNumber);
+        //  Rec.RESET;
+        //  Rec.SETRANGE("RFQ No.", RFQNumber);
     end;
 
     var

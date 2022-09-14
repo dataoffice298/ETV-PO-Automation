@@ -53,14 +53,6 @@ tableextension 50052 tableextension70000003 extends "Purch. Rcpt. Line"
         {
             Description = 'B2B1.0 06 Dec2016';
         }
-        field(60001; "Indent No."; Code[20])
-        {
-            Description = 'B2B1.0';
-        }
-        field(60002; "Indent Line No."; Integer)
-        {
-            Description = 'B2B1.0';
-        }
         field(60003; "Indent Due Date"; Date)
         {
             Description = 'B2B1.0';
@@ -98,8 +90,20 @@ tableextension 50052 tableextension70000003 extends "Purch. Rcpt. Line"
                                                                               "Routing Reference No." = FIELD("Production Order Line No."),
                                                                               "Routing No." = FIELD("Routing No."));
         }
+        field(33002900; "Indent No."; Code[20])
+        {
+            Description = 'B2B1.0';
+        }
+        field(33002901; "Indent Line No."; Integer)
+        {
+            Description = 'B2B1.0';
+        }
+        
+        field(33002902; "Quotation No."; Code[20])
+        {
+            Description = 'PO1.0';
 
-
+        }
         field(33002903; "Delivery Rating"; Decimal)
         {
             Description = 'PO1.0';

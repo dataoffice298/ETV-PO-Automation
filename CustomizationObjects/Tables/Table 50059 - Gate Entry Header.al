@@ -44,41 +44,37 @@ table 50059 "Gate Entry Header_B2B"
             TableRelation = Location;
             trigger OnValidate();
             var
-                InvSetUp: Record "Inventory Setup";
+                //InvSetUp: Record "Inventory Setup";
+                Location: Record Location;
+
             begin
-                InvSetUp.Get();
+                Location.Get(Rec."Location Code");
                 case "Entry Type" of
                     "Entry Type"::Inward:
                         if GateEntryLocSetup.GET("Entry Type", "Type", "Location Code") and (GateEntryLocSetup."Posting No. Series" <> '') then
-                            /*if ("No. Series" <> '') and (InventSetup."Inward Gate Entry Nos. - RGP" = GateEntryLocSetup."Posting No. Series") then
-                                "Posting No. Series" := "No. Series"
-                            else*/
-                                NoSeriesMgt.SetDefaultSeries("Posting No. Series", GateEntryLocSetup."Posting No. Series")
+                            NoSeriesMgt.SetDefaultSeries("Posting No. Series", GateEntryLocSetup."Posting No. Series")
                         else begin
-                            InvSetUp.Get();
+
                             if Type = Type::RGP then begin
-                                InvSetUp.TestField("Inward RGP No. Series_B2B");
-                                NoSeriesMgt.SetDefaultSeries("Posting No. Series", InvSetUp."Inward RGP No. Series_B2B")
+                                Location.TestField("Inward RGP No. Series_B2B");
+                                NoSeriesMgt.SetDefaultSeries("Posting No. Series", Location."Inward RGP No. Series_B2B")
                             end else
                                 if Type = Type::NRGP then begin
-                                    InvSetUp.TestField("Inward NRGP No. Series_B2B");
-                                    NoSeriesMgt.SetDefaultSeries("Posting No. Series", InvSetUp."Inward NRGP No. Series_B2B")
+                                    Location.TestField("Inward NRGP No. Series_B2B");
+                                    NoSeriesMgt.SetDefaultSeries("Posting No. Series", Location."Inward NRGP No. Series_B2B")
                                 end;
                         end;
                     "Entry Type"::Outward:
                         if GateEntryLocSetup.GET("Entry Type", "Type", "Location Code") and (GateEntryLocSetup."Posting No. Series" <> '') then
-                            /*if ("No. Series" <> '') and (InventSetup."Outward Gate Entry Nos.-RGP" = GateEntryLocSetup."Posting No. Series") then
-                                "Posting No. Series" := "No. Series"
-                            else*/
-                                NoSeriesMgt.SetDefaultSeries("Posting No. Series", GateEntryLocSetup."Posting No. Series")
+                            NoSeriesMgt.SetDefaultSeries("Posting No. Series", GateEntryLocSetup."Posting No. Series")
                         else begin
                             if Type = Type::RGP then begin
-                                InvSetUp.TestField("Outward RGP No. Series_B2B");
-                                NoSeriesMgt.SetDefaultSeries("Posting No. Series", InvSetUp."Outward RGP No. Series_B2B")
+                                Location.TestField("Outward RGP No. Series_B2B");
+                                NoSeriesMgt.SetDefaultSeries("Posting No. Series", Location."Outward RGP No. Series_B2B")
                             end else
                                 if Type = Type::NRGP then begin
-                                    InvSetUp.TestField("Outward NRGP No. Series_B2B");
-                                    NoSeriesMgt.SetDefaultSeries("Posting No. Series", InvSetUp."Outward NRGP No. Series_B2B")
+                                    Location.TestField("Outward NRGP No. Series_B2B");
+                                    NoSeriesMgt.SetDefaultSeries("Posting No. Series", Location."Outward NRGP No. Series_B2B")
                                 end;
                         end;
                 //B2B FIX 19Apr2021<<
@@ -93,18 +89,7 @@ table 50059 "Gate Entry Header_B2B"
         {
             DataClassification = CustomerContent;
         }
-        field(10; "LR/RR No."; Code[20])
-        {
-            DataClassification = CustomerContent;
-            Caption = 'Posted Loading Slip No.';
-            Editable = false;//b2bpksalecorr12
-        }
-        field(11; "LR/RR Date"; Date)
-        {
-            DataClassification = CustomerContent;
-            Caption = 'Posted Loading Slip Date';
-            Editable = false;//b2bpksalecorr12
-        }
+
         field(12; "Vehicle No."; Code[20])
         {
             DataClassification = CustomerContent;
@@ -179,83 +164,83 @@ table 50059 "Gate Entry Header_B2B"
         {
             DataClassification = CustomerContent;
         }
-        field(24; "Transporter No."; Code[20])
-        {
-            DataClassification = CustomerContent;
+        // field(24; "Transporter No."; Code[20])
+        // {
+        //     DataClassification = CustomerContent;
 
 
-        }
-        field(25; "Transporter Name"; text[100])
-        {
-            DataClassification = CustomerContent;
-        }
-        field(26; StaffNo; code[20])
-        {
-            DataClassification = CustomerContent;
-            TableRelation = Employee;
-            trigger OnValidate()
-            Var
-                EmpGRec: Record Employee;
-            begin
-                IF EmpGRec.GET(StaffNo) THEN
-                    "Staff Name" := EmpGRec.FullName();
-            end;
-        }
-        field(27; "Staff Name"; code[250])
-        {
-            DataClassification = CustomerContent;
-            Editable = false;
-        }
-        field(28; "Global Dimension 1 Code"; Code[20])
-        {
-            CaptionClass = '1,1,1';
-            Caption = 'Global Dimension 1 Code';
-            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
+        // }
+        // field(25; "Transporter Name"; text[100])
+        // {
+        //     DataClassification = CustomerContent;
+        // }
+        // field(26; StaffNo; code[20])
+        // {
+        //     DataClassification = CustomerContent;
+        //     TableRelation = Employee;
+        //     trigger OnValidate()
+        //     Var
+        //         EmpGRec: Record Employee;
+        //     begin
+        //         IF EmpGRec.GET(StaffNo) THEN
+        //             "Staff Name" := EmpGRec.FullName();
+        //     end;
+        // }
+        // field(27; "Staff Name"; code[250])
+        // {
+        //     DataClassification = CustomerContent;
+        //     Editable = false;
+        // }
+        // field(28; "Global Dimension 1 Code"; Code[20])
+        // {
+        //     CaptionClass = '1,1,1';
+        //     Caption = 'Global Dimension 1 Code';
+        //     TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
 
-            trigger OnValidate()
-            begin
-                //ValidateShortcutDimCode(1, "Global Dimension 1 Code");
-            end;
-        }
-        field(29; "Global Dimension 2 Code"; Code[20])
-        {
-            CaptionClass = '1,1,2';
-            Caption = 'Global Dimension 2 Code';
-            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
+        //     trigger OnValidate()
+        //     begin
+        //         //ValidateShortcutDimCode(1, "Global Dimension 1 Code");
+        //     end;
+        // }
+        // field(29; "Global Dimension 2 Code"; Code[20])
+        // {
+        //     CaptionClass = '1,1,2';
+        //     Caption = 'Global Dimension 2 Code';
+        //     TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
 
-            trigger OnValidate()
-            begin
-                //ValidateShortcutDimCode(1, "Global Dimension 1 Code");
-            end;
-        }
-        field(30; "Comments"; Text[250])
-        {
-            DataClassification = CustomerContent;
-        }
-        field(31; "Vendor No"; code[20])
-        {
-            DataClassification = CustomerContent;
-            TableRelation = Vendor;
-            trigger OnValidate()
-            Var
-                VendRec: Record Vendor;
-            begin
-                IF VendRec.GET("Vendor No") THEN
-                    "Vendor Name" := VendRec.Name;
-                //"Vend Type" := VendRec."Vendor Type";
+        //     trigger OnValidate()
+        //     begin
+        //         //ValidateShortcutDimCode(1, "Global Dimension 1 Code");
+        //     end;
+        // }
+        // field(30; "Comments"; Text[250])
+        // {
+        //     DataClassification = CustomerContent;
+        // }
+        // field(31; "Vendor No"; code[20])
+        // {
+        //     DataClassification = CustomerContent;
+        //     TableRelation = Vendor;
+        //     trigger OnValidate()
+        //     Var
+        //         VendRec: Record Vendor;
+        //     begin
+        //         IF VendRec.GET("Vendor No") THEN
+        //             "Vendor Name" := VendRec.Name;
+        //         //"Vend Type" := VendRec."Vendor Type";
 
-            end;
-        }
-        field(32; "Vendor Name"; Text[100])
-        {
-            DataClassification = CustomerContent;
-            Editable = false;
-        }
-        field(33; "Vend Type"; enum PurchaseType)
-        {
-            DataClassification = CustomerContent;
-            Editable = false;
-        }
+        //     end;
+        // }
+        // field(32; "Vendor Name"; Text[100])
+        // {
+        //     DataClassification = CustomerContent;
+        //     Editable = false;
+        // }
+        // field(33; "Vend Type"; enum PurchaseType)
+        // {
+        //     DataClassification = CustomerContent;
+        //     Editable = false;
+        // }
         Field(34; "Driver Name"; Text[250])
         {
             DataClassification = CustomerContent;
@@ -294,38 +279,41 @@ table 50059 "Gate Entry Header_B2B"
     end;
 
     trigger OnInsert();
+    var
+        Location: Record Location;
     begin
         "Document Date" := WORKDATE;
         "Document Time" := TIME;
         "Posting Date" := WORKDATE;
         "Posting Time" := TIME;
         "User ID" := USERID;
-        InventSetup.GET;
+
+        Location.Get(Rec."Location Code");
         case "Entry Type" of
             "Entry Type"::Inward:
                 case Type of
                     type::RGP:
                         if "No." = '' then begin
-                            InventSetup.TESTFIELD("Inward Gate Entry Nos.-RGP_B2B");
-                            NoSeriesMgt.InitSeries(InventSetup."Inward Gate Entry Nos.-RGP_B2B", xRec."No. Series", "Posting Date", "No.", "No. Series");
+                            Location.TESTFIELD("Inward Gate Entry Nos.-RGP_B2B");
+                            NoSeriesMgt.InitSeries(Location."Inward Gate Entry Nos.-RGP_B2B", xRec."No. Series", "Posting Date", "No.", "No. Series");
                         end;
                     Type::NRGP:
                         if "No." = '' then begin
-                            InventSetup.TESTFIELD("Inward Gate Entry Nos.NRGP_B2B");
-                            NoSeriesMgt.InitSeries(InventSetup."Inward Gate Entry Nos.NRGP_B2B", xRec."No. Series", "Posting Date", "No.", "No. Series");
+                            Location.TESTFIELD("Inward Gate Entry Nos.NRGP_B2B");
+                            NoSeriesMgt.InitSeries(Location."Inward Gate Entry Nos.NRGP_B2B", xRec."No. Series", "Posting Date", "No.", "No. Series");
                         end;
                 end;
             "Entry Type"::Outward:
                 case Type of
                     type::RGP:
                         if "No." = '' then begin
-                            InventSetup.TESTFIELD("Outward Gate Entry Nos.RGP_B2B");
-                            NoSeriesMgt.InitSeries(InventSetup."Outward Gate Entry Nos.RGP_B2B", xRec."No. Series", "Posting Date", "No.", "No. Series");
+                            Location.TESTFIELD("Outward Gate Entry Nos.RGP_B2B");
+                            NoSeriesMgt.InitSeries(Location."Outward Gate Entry Nos.RGP_B2B", xRec."No. Series", "Posting Date", "No.", "No. Series");
                         end;
                     Type::NRGP:
                         if "No." = '' then begin
-                            InventSetup.TESTFIELD("Outward Gate EntryNos.NRGP_B2B");
-                            NoSeriesMgt.InitSeries(InventSetup."Outward Gate EntryNos.NRGP_B2B", xRec."No. Series", "Posting Date", "No.", "No. Series");
+                            Location.TESTFIELD("Outward Gate EntryNos.NRGP_B2B");
+                            NoSeriesMgt.InitSeries(Location."Outward Gate EntryNos.NRGP_B2B", xRec."No. Series", "Posting Date", "No.", "No. Series");
                         end;
                 end;
 
@@ -341,23 +329,25 @@ table 50059 "Gate Entry Header_B2B"
         NoSeriesMgt: Codeunit NoSeriesManagement;
 
     procedure AssistEdit(OldGateEntryHeader: Record "Gate Entry Header_B2B"): Boolean;
+    var
+        Location: Record Location;
     begin
-        InventSetup.GET;
+        Location.Get(Rec."Location Code");
         case "Entry Type" of
             "Entry Type"::Inward:
                 case Type of
                     type::RGP:
                         begin
-                            InventSetup.TESTFIELD("Inward Gate Entry Nos.-RGP_B2B");
-                            if NoSeriesMgt.SelectSeries(InventSetup."Inward Gate Entry Nos.-RGP_B2B", OldGateEntryHeader."No. Series", "No. Series") then begin
+                            Location.TESTFIELD("Inward Gate Entry Nos.-RGP_B2B");
+                            if NoSeriesMgt.SelectSeries(Location."Inward Gate Entry Nos.-RGP_B2B", OldGateEntryHeader."No. Series", "No. Series") then begin
                                 NoSeriesMgt.SetSeries("No.");
                                 exit(true);
                             end;
                         end;
                     Type::NRGP:
                         begin
-                            InventSetup.TESTFIELD("Inward Gate Entry Nos.NRGP_B2B");
-                            if NoSeriesMgt.SelectSeries(InventSetup."Inward Gate Entry Nos.NRGP_B2B", OldGateEntryHeader."No. Series", "No. Series") then begin
+                            Location.TESTFIELD("Inward Gate Entry Nos.NRGP_B2B");
+                            if NoSeriesMgt.SelectSeries(Location."Inward Gate Entry Nos.NRGP_B2B", OldGateEntryHeader."No. Series", "No. Series") then begin
                                 NoSeriesMgt.SetSeries("No.");
                                 exit(true);
                             end;
@@ -367,16 +357,16 @@ table 50059 "Gate Entry Header_B2B"
                 case Type of
                     type::RGP:
                         begin
-                            InventSetup.TESTFIELD("Outward Gate Entry Nos.RGP_B2B");
-                            if NoSeriesMgt.SelectSeries(InventSetup."Outward Gate Entry Nos.RGP_B2B", OldGateEntryHeader."No. Series", "No. Series") then begin
+                            Location.TESTFIELD("Outward Gate Entry Nos.RGP_B2B");
+                            if NoSeriesMgt.SelectSeries(Location."Outward Gate Entry Nos.RGP_B2B", OldGateEntryHeader."No. Series", "No. Series") then begin
                                 NoSeriesMgt.SetSeries("No.");
                                 exit(true);
                             end;
                         end;
                     Type::NRGP:
                         begin
-                            InventSetup.TESTFIELD("Outward Gate EntryNos.NRGP_B2B");
-                            if NoSeriesMgt.SelectSeries(InventSetup."Outward Gate EntryNos.NRGP_B2B", OldGateEntryHeader."No. Series", "No. Series") then begin
+                            Location.TESTFIELD("Outward Gate EntryNos.NRGP_B2B");
+                            if NoSeriesMgt.SelectSeries(Location."Outward Gate EntryNos.NRGP_B2B", OldGateEntryHeader."No. Series", "No. Series") then begin
                                 NoSeriesMgt.SetSeries("No.");
                                 exit(true);
                             end;
@@ -399,18 +389,6 @@ table 50059 "Gate Entry Header_B2B"
         else
             IF GAteENtLines.FINDSET then
                 repeat
-                    /*
-                        //b2bpksalecorr9 start
-                        if GAteENtLines."Source Type" = GAteENtLines."Source Type"::"Posted Loading Slip" then begin
-                            Pwhrrcplin.Reset();
-                            Pwhrrcplin.SetRange("Posted Loading Slip No.", GAteENtLines."Source No.");
-                            Pwhrrcplin.SetRange("Posted Loading Slip Line No.", GAteENtLines."Source Line No.");
-                            /* IF not Pwhrrcplin.FindFirst() then
-                                 Error('warehouse shipment for Loading Slip %1 is not yet posted', Pwhrrcplin."Source No.");*/
-                    //Commented on 06.05.2021 by PK-Nyoung
-                    //end;
-
-                    //b2bpksalecorr9 end
                     GAteENtLines.TestField("Source No.");
                     GAteENtLines.TestField("Challan No.");
                     GAteENtLines.TestField("Challan Date");

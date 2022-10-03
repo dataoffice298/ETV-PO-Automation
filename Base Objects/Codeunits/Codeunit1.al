@@ -312,5 +312,21 @@ codeunit 50016 "MyBaseSubscr"
                 EXIT;
         END;
     end;
+
+    [EventSubscriber(ObjectType::Codeunit, 22, 'OnAfterInitItemLedgEntry', '', false, false)]
+    procedure OnInsertILECostRefNo(VAR NewItemLedgEntry: Record "Item Ledger Entry"; ItemJournalLine: Record "Item Journal Line"; VAR ItemLedgEntryNo: Integer)
+    var
+        IndentLine: Record "Indent Line";
+    begin
+        NewItemLedgEntry."Indent No." := ItemJournalLine."Indent No.";
+        NewItemLedgEntry."Indent Line No." := ItemJournalLine."Indent Line No.";
+
+        if NewItemLedgEntry."Indent Line No." <> 0 then begin
+            IndentLine.Get(NewItemLedgEntry."Indent No.", NewItemLedgEntry."Indent Line No.");
+            IndentLine.NoHeadStatusCheck(true);
+            IndentLine.Validate("Delivery Location");
+            IndentLine.Modify();
+        end;
+    end;
 }
 

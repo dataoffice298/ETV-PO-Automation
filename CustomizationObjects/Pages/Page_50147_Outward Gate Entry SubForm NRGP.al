@@ -24,13 +24,9 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
                 field("Source Type"; "Source Type")
                 {
                     ApplicationArea = ALL;
-                    OptionCaption = ',Posted Loading Slip,Sales Shipment,,,Purchase Return Shipment,,Transfer Shipment,,';
+                    OptionCaption = ' ,Sales Shipment,Sales Return Order,Purchase Order,Purchase Return Shipment,Transfer Receipt,Transfer Shipment,Item,Fixed Asset,Others';
                     trigger OnValidate()
                     begin
-                        //PKON22JA5>>CR220003
-                        If "Source Type" = "Source Type"::"Posted Loading Slip" THEN
-                            Error('you cannot select posted loading slip');
-                        //PKON22JA5<<CR220003
                     end;
                 }
                 field("Source No."; "Source No.")
@@ -46,9 +42,6 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
                         ReturnShipHeader: Record "Return Shipment Header";
                         TransHeader: Record "Transfer Header";
                         TransShptHeader: Record "Transfer Shipment Header";
-                        //PostdLoadngSLip: Record "Posted Loading SLip Header";
-
-                        //PostdLoadSlpLRec: Record "Posted Loading Slip Line";
                         GateEntryLneLRec: Record "Gate Entry Line_B2B";
                         GateEntLneLRec: Record "Gate Entry Line_B2B";
                         LineNoLVar: Integer;
@@ -178,7 +171,7 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
                 }
                 field("Source Line No."; "Source Line No.")
                 {
-
+                    Visible = false;
                 }
             }
         }
@@ -187,43 +180,6 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
     actions
     {
     }
-    //PKON22JA5>>CR220003
-    trigger OnInsertRecord(BelowxRec: Boolean): Boolean
-    var
-        GatePassHdr: Record "Gate Entry Header_B2B";
-    begin
-        GatePassHdr.reset;
-        GatePassHdr.SetRange("Entry Type", "Entry Type");
-        GatePassHdr.SetRange("No.", "Gate Entry No.");
-        IF GatePassHdr.findfirst then
-            If GatePassHdr."LR/RR No." <> '' then
-                Error('You can not insert the lines manually');
-    end;
-
-    trigger OnModifyRecord(): Boolean
-    var
-        GatePassHdr: Record "Gate Entry Header_B2B";
-    begin
-        GatePassHdr.reset;
-        GatePassHdr.SetRange("Entry Type", "Entry Type");
-        GatePassHdr.SetRange("No.", "Gate Entry No.");
-        IF GatePassHdr.findfirst then
-            If GatePassHdr."LR/RR No." <> '' then
-                Error('You can not Modify the lines manually');
-    end;
-
-    trigger OnDeleteRecord(): Boolean
-    var
-        GatePassHdr: Record "Gate Entry Header_B2B";
-    begin
-        GatePassHdr.reset;
-        GatePassHdr.SetRange("Entry Type", "Entry Type");
-        GatePassHdr.SetRange("No.", "Gate Entry No.");
-        IF GatePassHdr.findfirst then
-            If GatePassHdr."LR/RR No." <> '' then
-                Error('You can not Delete the lines');
-    end;
-    //PKON22JA5<<CR220003
     var
         GatEntHdrGRec: Record "Gate Entry Header_B2B";
 }

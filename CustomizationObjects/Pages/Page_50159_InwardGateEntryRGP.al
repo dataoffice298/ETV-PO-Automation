@@ -19,7 +19,10 @@ page 50159 "Inward Gate Entry-RGP"
                  {
                      ApplicationArea = all;
                  }*/
-
+                field("Location Code"; "Location Code")
+                {
+                    ApplicationArea = ALL;
+                }
                 field("No."; "No.")
                 {
                     ApplicationArea = ALL;
@@ -36,10 +39,7 @@ page 50159 "Inward Gate Entry-RGP"
 
                     end;
                 }
-                field("Location Code"; "Location Code")
-                {
-                    ApplicationArea = ALL;
-                }
+
                 field("Station From/To"; "Station From/To")
                 {
                     ApplicationArea = ALL;
@@ -77,14 +77,7 @@ page 50159 "Inward Gate Entry-RGP"
                 {
                     ApplicationArea = ALL;
                 }
-                field("LR/RR No."; "LR/RR No.")
-                {
-                    ApplicationArea = ALL;
-                }
-                field("LR/RR Date"; "LR/RR Date")
-                {
-                    ApplicationArea = ALL;
-                }
+
                 field("Vehicle No."; "Vehicle No.")
                 {
                     ApplicationArea = ALL;

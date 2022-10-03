@@ -9,7 +9,9 @@ tableextension 50050 tableextension70000007 extends "Purch. Inv. Line"
 
 
         //Unsupported feature: Deletion on ""KK Cess Amount"(Field 16543)". Please convert manually.
-
+        field(50100; "Applies-to Cons. Entry No."; Integer)
+        {
+        }
         field(50101; "Free Item Type"; Option)
         {
             Description = 'B2B1.0 13Dec2016';
@@ -40,6 +42,17 @@ tableextension 50050 tableextension70000007 extends "Purch. Inv. Line"
             Description = 'B2B1.0 13Dec2016';
             Editable = false;
         }
+        field(50049; "Free Doc Type"; Option)
+        {
+            OptionCaption = 'Quote,Order,Invoice,Credit Memo,Blanket Order,Return Order,Enquiry';
+            OptionMembers = Quote,"Order",Invoice,"Credit Memo","Blanket Order","Return Order",Enquiry;
+        }
+        field(50050; "Free Doc No."; Code[20])
+        {
+        }
+        field(50051; "Free Line No."; Integer)
+        {
+        }
         field(50052; Free; Boolean)
         {
             Description = 'B2B1.0 13Dec2016';
@@ -53,6 +66,56 @@ tableextension 50050 tableextension70000007 extends "Purch. Inv. Line"
         {
             Description = 'B2B1.0 06 Dec2016';
         }
+        field(60003; "Indent Due Date"; Date)
+        {
+            Description = 'B2B1.0';
+        }
+        field(60004; "Indent Reference"; Text[50])
+        {
+            Description = 'B2B1.0';
+        }
+        field(60005; "Revision No."; Code[10])
+        {
+            Description = 'B2B1.0';
+        }
+        field(60006; "Production Order"; Code[20])
+        {
+            Description = 'B2B1.0';
+            Editable = false;
+            TableRelation = "Production Order"."No." WHERE(Status = CONST(Released));
+        }
+        field(60007; "Production Order Line No."; Integer)
+        {
+            Description = 'B2B1.0';
+            Editable = false;
+        }
+        field(60008; "Drawing No."; Code[20])
+        {
+            Description = 'B2B1.0';
+            Editable = false;
+            TableRelation = Item;
+        }
+        field(60009; "Sub Operation No."; Code[20])
+        {
+            Description = 'B2B1.0';
+            Editable = false;
+            TableRelation = "Prod. Order Routing Line"."Operation No." WHERE("Prod. Order No." = FIELD("Production Order"),
+                                                                              "Routing Reference No." = FIELD("Production Order Line No."),
+                                                                              "Routing No." = FIELD("Routing No."));
+        }
+        field(60010; "Sub Routing No."; Code[20])
+        {
+            Description = 'B2B1.0';
+            Editable = false;
+            Enabled = false;
+            TableRelation = "Routing Line"."Routing No.";
+        }
+        //B2BVCOn03Oct22>>>
+        field(60011; "Ref. Posted Gate Entry"; Code[20])
+        {
+            TableRelation = "Posted Gate Entry Line_B2B"."Source No." where("Source No." = field("Document No."));
+        }
+        //B2BVCOn03Oct22<<<
         field(33002900; "Indent No."; Code[20])
         {
             Description = 'PO1.0';

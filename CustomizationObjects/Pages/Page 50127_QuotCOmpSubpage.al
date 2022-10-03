@@ -531,7 +531,7 @@ page 50127 QuotationComparSubForm
 
     trigger OnModifyRecord(): Boolean;
     begin
-        IF Rec.Status <> Rec.Status::Open then
+        IF (Rec.Status <> Rec.Status::Open) or (Rec.Status <> Rec.Status::" ") then
             error('You can only Modify the lines when approval status is in open.');
 
     end;
@@ -577,7 +577,7 @@ page 50127 QuotationComparSubForm
         QuoteCompare: Record "Quotation Comparison Test";
         PurchHeader: Record 38;
         PurchLine: Record 39;
-        RFQNumbers: Record 50017;
+        //RFQNumbers: Record 50017;
         RFQNumber: Code[20];
         [InDataSet]
         POQty: Decimal;

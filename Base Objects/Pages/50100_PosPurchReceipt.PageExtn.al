@@ -18,14 +18,37 @@ pageextension 50100 PosPurchReceipt extends "Posted Purchase Receipt"
             }
 
 
+
         }
 
-        /*     actions
-             {
-
-             }
-
-             var
-                 myInt: Integer;*/
     }
+
+    actions
+    {
+        addafter(Approvals)
+        {
+            action(DocAttach)
+            {
+                ApplicationArea = All;
+                Caption = 'Attachments';
+                Image = Attach;
+                Promoted = true;
+                ToolTip = 'Add a file as an attachment. You can attach images as well as documents.';
+
+                trigger OnAction()
+                var
+                    DocumentAttachmentDetails: Page "Document Attachment Details";
+                    RecRef: RecordRef;
+                    PurchHdr: Record "Purchase Header";
+                begin
+                    if PurchHdr.get(PurchHdr."Document Type"::Order, Rec."Order No.") then begin
+                        RecRef.GetTable(PurchHdr);
+                        DocumentAttachmentDetails.OpenForRecRef(RecRef);
+                        DocumentAttachmentDetails.RunModal;
+                    end;
+                end;
+            }
+        }
+    }
+
 }

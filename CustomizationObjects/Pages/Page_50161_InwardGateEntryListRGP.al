@@ -45,14 +45,7 @@ page 50161 "Inward Gate Entry List-RGP"
                 {
                     ApplicationArea = ALL;
                 }
-                field("LR/RR No."; "LR/RR No.")
-                {
-                    ApplicationArea = ALL;
-                }
-                field("LR/RR Date"; "LR/RR Date")
-                {
-                    ApplicationArea = ALL;
-                }
+
             }
         }
     }

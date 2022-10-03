@@ -20,7 +20,10 @@ page 50157 "Outward Gate Entry - RGP"
                     ApplicationArea = all;
                     Editable = false;
                 }*/
-
+                field("Location Code"; "Location Code")
+                {
+                    ApplicationArea = ALL;
+                }
                 field("No."; "No.")
                 {
                     ApplicationArea = ALL;
@@ -38,10 +41,7 @@ page 50157 "Outward Gate Entry - RGP"
 
                     end;
                 }
-                field("Location Code"; "Location Code")
-                {
-                    ApplicationArea = ALL;
-                }
+
                 field("Station From/To"; "Station From/To")
                 {
                     ApplicationArea = ALL;
@@ -74,14 +74,7 @@ page 50157 "Outward Gate Entry - RGP"
                 {
                     ApplicationArea = ALL;
                 }
-                field("LR/RR No."; "LR/RR No.")
-                {
-                    ApplicationArea = ALL;
-                }
-                field("LR/RR Date"; "LR/RR Date")
-                {
-                    ApplicationArea = ALL;
-                }
+
                 field("Vehicle No."; "Vehicle No.")
                 {
                     ApplicationArea = ALL;
@@ -98,44 +91,7 @@ page 50157 "Outward Gate Entry - RGP"
                 {
                     ApplicationArea = ALL;
                 }
-                field(StaffNo; StaffNo)
-                {
-                    ApplicationArea = all;
 
-                }
-                field("Staff Name"; "Staff Name")
-                {
-                    ApplicationArea = all;
-
-                }
-                field("Global Dimension 1 Code"; "Global Dimension 1 Code")
-                {
-                    ApplicationArea = all;
-                }
-                field("Global Dimension 2 Code"; "Global Dimension 2 Code")
-                {
-                    ApplicationArea = all;
-                }
-                field(Comments; Comments)
-                {
-                    ApplicationArea = all;
-                }
-                field("Vendor No"; "Vendor No")
-                {
-                    ApplicationArea = all;
-
-                }
-                field("Vendor Name"; "Vendor Name")
-                {
-                    ApplicationArea = all;
-
-                }
-                field("Vend Type"; "Vend Type")
-                {
-                    ApplicationArea = all;
-
-
-                }
             }
             part(Control1500028; "Outward Gate Entry SubFrm-RGP")
             {

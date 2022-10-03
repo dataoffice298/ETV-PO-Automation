@@ -9,7 +9,7 @@ page 50023 "Indent Line"
     SourceTable = "Indent Line";
     Caption = 'Indent Line';
     UsageCategory = Lists;
-    ApplicationArea = All;
+
 
     layout
     {
@@ -39,6 +39,10 @@ page 50023 "Indent Line"
                     Caption = 'Location Code';
                     ApplicationArea = All;
                 }
+                field("Avail.Qty"; "Avail.Qty")
+                {
+                    ApplicationArea = all;
+                }
                 field("Req.Quantity"; rec."Req.Quantity")
                 {
                     ApplicationArea = All;
@@ -67,6 +71,24 @@ page 50023 "Indent Line"
                 {
                     ApplicationArea = all;
                 }
+                field("Qty To Issue"; Rec."Qty To Issue")
+                {
+                    ApplicationArea = all;
+                }
+                field("Qty Issued"; "Qty Issued")
+                {
+                    ApplicationArea = all;
+                    Editable = false;
+                }
+                field("Qty To Return"; "Qty To Return")
+                {
+                    ApplicationArea = all;
+                }
+                field("Qty Returned"; "Qty Returned")
+                {
+                    ApplicationArea = all;
+                    Editable = false;
+                }
             }
         }
     }
@@ -87,10 +109,12 @@ page 50023 "Indent Line"
                     var
                         ItemJournalLine: Record "Item Journal Line";
                         ItemJournal: Page "Item Journal";
+                        PurchaseSetup: Record "Purchases & Payables Setup";
                     BEGIN
+                        PurchaseSetup.Get();
                         ItemJournalLine.reset;
-                        ItemJournalLine.SetRange("Journal Template Name", 'ISSUE');
-                        ItemJournalLine.SetRange("Journal Batch Name", "Document No.");
+                        ItemJournalLine.SetRange("Journal Template Name", PurchaseSetup."Indent Issue Jnl. Template");
+                        ItemJournalLine.SetRange("Journal Batch Name", PurchaseSetup."Indent Issue Jnl. Batch");
                         ItemJournalLine.SetRange("Entry Type", ItemJournalLine."Entry Type"::"Negative Adjmt.");
                         ItemJournalLine.SetRange("Item No.", "No.");
                         IF ItemJournalLine.findset then;
@@ -107,10 +131,12 @@ page 50023 "Indent Line"
                     var
                         ItemJournalLine: Record "Item Journal Line";
                         ItemJournal: Page "Item Journal";
+                        PurchaseSetup: Record "Purchases & Payables Setup";
                     BEGIN
+                        PurchaseSetup.Get();
                         ItemJournalLine.reset;
-                        ItemJournalLine.SetRange("Journal Template Name", 'RETURN');
-                        ItemJournalLine.SetRange("Journal Batch Name", "Document No.");
+                        ItemJournalLine.SetRange("Journal Template Name", PurchaseSetup."Indent Return Jnl. Template");
+                        ItemJournalLine.SetRange("Journal Batch Name", PurchaseSetup."Indent Return Jnl. Batch");
                         ItemJournalLine.SetRange("Entry Type", ItemJournalLine."Entry Type"::"Positive Adjmt.");
                         ItemJournalLine.SetRange("Item No.", "No.");
                         IF ItemJournalLine.findset then;

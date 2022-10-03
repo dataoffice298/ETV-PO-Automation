@@ -23,7 +23,7 @@ table 50058 "Posted Gate Entry Line_B2B"
         field(4; "Source Type"; Option)
         {
             DataClassification = CustomerContent;
-            OptionMembers = " ","Posted Loading Slip","Sales Shipment","Sales Return Order","Purchase Order","Purchase Return Shipment","Transfer Receipt","Transfer Shipment","Item","Fixed Asset";
+            OptionMembers = " ","Sales Shipment","Sales Return Order","Purchase Order","Purchase Return Shipment","Transfer Receipt","Transfer Shipment","Item","Fixed Asset",Others;
         }
         field(5; "Source No."; Code[20])
         {

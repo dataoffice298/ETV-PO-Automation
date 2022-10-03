@@ -1,4 +1,4 @@
-tableextension 50121 MyExtension extends "Purch. Cr. Memo Hdr."
+tableextension 50121 PurCrMemoExt extends "Purch. Cr. Memo Hdr."
 {
     fields
     {
@@ -26,6 +26,16 @@ tableextension 50121 MyExtension extends "Purch. Cr. Memo Hdr."
         field(33002903; "Indent Req No"; Code[20])
         {
             Description = 'PO1.0';
+        }
+        field(33002904; "Approval Status"; Option)
+        {
+            OptionMembers = ,Open,"Pending Approval",Released;
+            OptionCaption = ' ,Open,Pending Approval,Released';
+        }
+
+        field(51000; Subject; Text[200])
+        {
+            Caption = 'Subject';
         }
         field(50110; "LC No."; Code[20])
         {

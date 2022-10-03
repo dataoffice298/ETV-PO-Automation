@@ -122,13 +122,56 @@ table 50048 "Archive Indent Line"
         field(50003; "Prev Quantity"; Decimal)
         {
         }
-        field(50004; "Archived Version"; Integer)
-        {
-        }
-        field(50005; "Archived By"; Code[30])
-        {
-        }
 
+        field(50004; "Transfer Order No."; Code[20])
+        {
+        }
+        //B2BMSOn13Sep2022<<
+
+        field(50005; "Qty To Issue"; Decimal)
+        {
+            DataClassification = CustomerContent;
+
+            trigger OnValidate()
+            begin
+                CalcFields("Qty issued");
+                if "Qty To Issue" > "Avail.Qty" then
+                    Error('Qty Should not be greater than Available Qty');
+
+                if "Qty To Issue" > (Rec."Req.Quantity" - abs(Rec."Qty Issued")) then
+                    Error('Qty to return should not be greater than %1', (Rec."Req.Quantity" - abs(Rec."Qty Issued")));
+            end;
+        }
+        field(50006; "Qty To Return"; Decimal)
+        {
+            DataClassification = CustomerContent;
+
+            trigger OnValidate()
+            begin
+                CalcFields("Qty Returned");
+                if "Qty To Return" > "Avail.Qty" then
+                    Error('Qty Should not be greater than Available Qty');
+
+                if "Qty To Return" > (Rec."Req.Quantity" - Abs(Rec."Qty Returned")) then
+                    Error('Qty to return should not be greater than %1', (Rec."Req.Quantity" - Abs(Rec."Qty Returned")));
+            end;
+        }
+        field(50007; "Qty Issued"; Decimal)
+        {
+            FieldClass = FlowField;
+            CalcFormula = sum("Item Ledger Entry".Quantity where("Indent No." = field("Document No."), "Indent Line No." = field("Line No."), Quantity = filter(< 0)));
+        }
+        field(50008; "Qty Returned"; Decimal)
+        {
+            FieldClass = FlowField;
+            CalcFormula = sum("Item Ledger Entry".Quantity where("Indent No." = field("Document No."), "Indent Line No." = field("Line No."), Quantity = filter(> 0)));
+        }
+        field(50009; "Archived Version"; Integer)
+        {
+        }
+        field(50010; "Archived By"; Code[30])
+        {
+        }
     }
 
 

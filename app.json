@@ -11,25 +11,21 @@
   "url": "",
   "logo": "",
   "dependencies": [
-    { 
-      "id": "8931d4c8-cbd4-45d2-a576-0f91107416da",
-      "name": "ETVBC19AL",
-      "publisher": "Default Publisher",
-      "version": "1.0.0.4"
-    },
-    {
-      "id": "01325bb4-7949-413b-908a-76409cd13dca",
-      "name": "ETVInvoice ",
-      "publisher": "Default Publisher ",
-      "version": "1.0.0.1"
-    },
     {
       "id": "7106d701-c601-4a5f-97c2-b8b323ae2c18",
       "publisher": "Microsoft",
       "name": "QR Generator",
       "version": "19.3.34541.35002"
-    }  
-    ],
+    },  
+    
+    {
+      "id": "db643212-b7fb-4dd4-b5a8-cb44ac714461",
+      "publisher": "Microsoft",
+      "name": "India GST",
+      "version" : "19.3.34541.35002"
+    }
+  ],
+    
   "screenshots": [],
   "platform": "1.0.0.0",
   "application": "19.0.0.0",

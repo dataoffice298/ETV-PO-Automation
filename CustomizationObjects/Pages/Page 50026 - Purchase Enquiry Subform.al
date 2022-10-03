@@ -21,6 +21,7 @@ page 50026 "Purchase Enquiry Subform"
                 field(Type; Rec.Type)
                 {
                     ApplicationArea = All;
+
                 }
                 field("No."; Rec."No.")
                 {
@@ -40,19 +41,23 @@ page 50026 "Purchase Enquiry Subform"
                 field(Description; Rec.Description)
                 {
                     ApplicationArea = All;
+
                 }
                 field("Location Code"; Rec."Location Code")
                 {
                     ApplicationArea = All;
+
                 }
                 field(Quantity; Rec.Quantity)
                 {
                     BlankZero = true;
                     ApplicationArea = All;
+
                 }
                 field("Unit of Measure Code"; Rec."Unit of Measure Code")
                 {
                     ApplicationArea = All;
+
                 }
             }
         }

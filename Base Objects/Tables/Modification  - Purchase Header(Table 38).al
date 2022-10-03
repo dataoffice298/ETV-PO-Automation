@@ -15,6 +15,32 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
         {
             Caption = 'Subject';
         }
+        field(50110; "LC No."; Code[20])
+        {
+            Caption = 'LC No.';
+            TableRelation = "LC Details"."No." WHERE("Transaction Type" = CONST(Purchase), "Issued To/Received From" = FIELD("Pay-to Vendor No."), Closed = CONST(false), Released = CONST(true));
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            var
+                LCDetail: Record "LC Details";
+                Text13700: Label 'The LC which you have selected is Foreign type you cannot utilise for this order.';
+            begin
+                IF "LC No." <> '' THEN BEGIN
+                    LCDetail.GET("LC No.");
+                    IF LCDetail."Type of LC" = LCDetail."Type of LC"::Foreign THEN
+                        IF "Currency Code" = '' THEN
+                            ERROR(Text13700);
+                END;
+            end;
+        }
+        Field(50111; "Bill of Entry No"; Code[20])
+        {
+            Caption = 'Bill of Entry No';
+        }
+        Field(50112; "EPCG No."; Code[20])
+        {
+            Caption = 'EPCG No';
+        }
         field(33002900; "RFQ No."; Code[20])
         {
             Description = 'PO1.0';
@@ -54,32 +80,7 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
             OptionMembers = ,Open,"Pending Approval",Released;
             OptionCaption = ' ,Open,Pending Approval,Released';
         }
-        field(50110; "LC No."; Code[20])
-        {
-            Caption = 'LC No.';
-            TableRelation = "LC Details"."No." WHERE("Transaction Type" = CONST(Purchase), "Issued To/Received From" = FIELD("Pay-to Vendor No."), Closed = CONST(false), Released = CONST(true));
-            DataClassification = CustomerContent;
-            trigger OnValidate()
-            var
-                LCDetail: Record "LC Details";
-                Text13700: Label 'The LC which you have selected is Foreign type you cannot utilise for this order.';
-            begin
-                IF "LC No." <> '' THEN BEGIN
-                    LCDetail.GET("LC No.");
-                    IF LCDetail."Type of LC" = LCDetail."Type of LC"::Foreign THEN
-                        IF "Currency Code" = '' THEN
-                            ERROR(Text13700);
-                END;
-            end;
-        }
-        Field(50111; "Bill of Entry No"; Code[20])
-        {
-            Caption = 'Bill of Entry No';
-        }
-        Field(50112; "EPCG No."; Code[20])
-        {
-            Caption = 'EPCG No';
-        }
+        
        
 
 

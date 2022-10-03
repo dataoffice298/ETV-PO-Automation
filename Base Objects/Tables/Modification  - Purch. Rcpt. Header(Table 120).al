@@ -4,6 +4,25 @@ tableextension 50051 tableextension70000002 extends "Purch. Rcpt. Header"
 
     fields
     {
+        
+        field(51000; Subject; Text[200])
+        {
+            Caption = 'Subject';
+        }
+        field(50110; "LC No."; Code[20])
+        {
+            Caption = 'LC No.';
+
+        }
+        field(50111; "Bill of Entry No"; Code[20])
+        {
+            Caption = 'Bill of Entry No';
+
+        }
+        field(50112; "EPCG No."; Code[20])
+        {
+            Caption = 'EPCG No';
+        }
         field(33002900; "RFQ No."; Code[20])
         {
             Description = 'PO1.0';
@@ -25,23 +44,17 @@ tableextension 50051 tableextension70000002 extends "Purch. Rcpt. Header"
             Editable = false;
             TableRelation = "Quotation Comparison";
         }
-        field(50110; "LC No."; Code[20])
+         field(33002903; "Indent Req No"; Code[20])
         {
-            Caption = 'LC No.';
-
+            Description = 'PO1.0';
         }
-        field(50111; "Bill of Entry No"; Code[20])
+        field(33002904; "Approval Status"; Option)
         {
-            Caption = 'Bill of Entry No';
-
-        }
-        field(50112; "EPCG No."; Code[20])
-        {
-            Caption = 'EPCG No';
+            OptionMembers = ,Open,"Pending Approval",Released;
+            OptionCaption = ' ,Open,Pending Approval,Released';
         }
     }
 
-    //Unsupported feature: PropertyChange. Please convert manually.
 
 }
 

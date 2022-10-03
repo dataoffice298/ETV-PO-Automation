@@ -60,15 +60,15 @@ table 50037 "Indent Line"
                 IF IndentHeader.GET("Document No.") THEN;
                 "Delivery Location" := IndentHeader."Delivery Location";
                 IndentHeader.MODIFY;//PO1.0
+                "Avail.Qty" := 0;
                 ItemLedgerEntry.RESET;
                 ItemLedgerEntry.SETRANGE("Item No.", "No.");
                 ItemLedgerEntry.SETRANGE("Variant Code", "Variant Code");
-                //ItemLedgerEntry.SETRANGE("Location Code","Delivery Location");
+                ItemLedgerEntry.SETRANGE("Location Code", "Delivery Location");
                 IF ItemLedgerEntry.FINDFIRST THEN
-                    "Avail.Qty" := 0;
-                REPEAT
-                    "Avail.Qty" += ItemLedgerEntry."Remaining Quantity";
-                UNTIL ItemLedgerEntry.NEXT = 0;
+                    REPEAT
+                        "Avail.Qty" += ItemLedgerEntry."Remaining Quantity";
+                    UNTIL ItemLedgerEntry.NEXT = 0;
             end;
         }
         field(4; Description; Text[50])
@@ -100,6 +100,7 @@ table 50037 "Indent Line"
         }
         field(6; "Available Stock"; Decimal)
         {
+
         }
         field(10; "Due Date"; Date)
         {
@@ -116,12 +117,23 @@ table 50037 "Indent Line"
             trigger OnValidate();
             begin
                 TestStatusOpen;
+
+                "Avail.Qty" := 0;
+                ItemLedgerEntry.RESET;
+                ItemLedgerEntry.SETRANGE("Item No.", "No.");
+                ItemLedgerEntry.SETRANGE("Variant Code", "Variant Code");
+                ItemLedgerEntry.SETRANGE("Location Code", "Delivery Location");
+                IF ItemLedgerEntry.FINDFIRST THEN
+                    REPEAT
+                        "Avail.Qty" += ItemLedgerEntry."Remaining Quantity";
+                    UNTIL ItemLedgerEntry.NEXT = 0;
             end;
         }
         field(12; "Unit of Measure"; Code[10])
         {
             Description = 'PO1.0';
-            TableRelation = IF (Type = CONST(Item)) "Item Unit of Measure".Code WHERE("Item No." = FIELD("No."));
+            //TableRelation = IF (Type = CONST(Item)) "Item Unit of Measure".Code WHERE("Item No." = FIELD("No."));
+            TableRelation = "Item Unit of Measure".Code WHERE("Item No." = FIELD("No."));
 
             trigger OnValidate();
             begin
@@ -253,6 +265,50 @@ table 50037 "Indent Line"
         }
         //B2BMSOn13Sep2022<<
 
+        field(50005; "Qty To Issue"; Decimal)
+        {
+            DataClassification = CustomerContent;
+
+            trigger OnValidate()
+            begin
+                CalcFields("Qty issued");
+                if "Qty To Issue" > "Avail.Qty" then
+                    Error('Qty Should not be greater than Available Qty');
+
+                if "Qty To Issue" > (Rec."Req.Quantity" - abs(Rec."Qty Issued")) then
+                    Error('Qty to return should not be greater than %1', (Rec."Req.Quantity" - abs(Rec."Qty Issued")));
+            end;
+        }
+        field(50006; "Qty To Return"; Decimal)
+        {
+            DataClassification = CustomerContent;
+
+            trigger OnValidate()
+            begin
+                CalcFields("Qty Returned");
+                if "Qty To Return" > "Avail.Qty" then
+                    Error('Qty Should not be greater than Available Qty');
+
+                if "Qty To Return" > (Rec."Req.Quantity" - Abs(Rec."Qty Returned")) then
+                    Error('Qty to return should not be greater than %1', (Rec."Req.Quantity" - Abs(Rec."Qty Returned")));
+            end;
+        }
+        field(50007; "Qty Issued"; Decimal)
+        {
+            FieldClass = FlowField;
+            CalcFormula = sum("Item Ledger Entry".Quantity where("Indent No." = field("Document No."), "Indent Line No." = field("Line No."), Quantity = filter(< 0)));
+        }
+        field(50008; "Qty Returned"; Decimal)
+        {
+            FieldClass = FlowField;
+            CalcFormula = sum("Item Ledger Entry".Quantity where("Indent No." = field("Document No."), "Indent Line No." = field("Line No."), Quantity = filter(> 0)));
+        }
+        field(50009; "Archived Version"; Integer)
+        {
+        }
+        field(50010; "Archived By"; Code[30])
+        {
+        }
     }
 
     keys
@@ -279,8 +335,6 @@ table 50037 "Indent Line"
         Compsetup.GET;
         "Delivery Location" := Compsetup."Location Code";
         If IndHdr.GET("Document No.") then begin
-            // "Shortcut Dimension 1 Code" := IndHdr."Shortcut Dimension 1 Code";
-            // "Shortcut Dimension 2 Code" := IndHdr."Shortcut Dimension 2 Code";
             Validate("Shortcut Dimension 1 Code", IndHdr."Shortcut Dimension 1 Code");
             Validate("Shortcut Dimension 2 Code", IndHdr."Shortcut Dimension 2 Code");
         End;
@@ -305,13 +359,21 @@ table 50037 "Indent Line"
         Compsetup: Record 79;
         Fixedasset: Record 5600;
         GLAccount: Record 15;
+        NoStatusCheck: Boolean;
+
+    procedure NoHeadStatusCheck(StatusCheck: Boolean)
+    begin
+        NoStatusCheck := StatusCheck;
+    end;
 
     local procedure TestStatusOpen();
     begin
-        IF (IndentHeader.GET("Document No.")) THEN;
-        if IndentHeader."Released Status" <> IndentHeader."Released Status"::"Pending Approval" then
-            IndentHeader.TESTFIELD("Released Status", IndentHeader."Released Status"::Open);
-        IndentHeader.MODIFY;
+        if not NoStatusCheck then begin
+            IF (IndentHeader.GET("Document No.")) THEN;
+            if IndentHeader."Released Status" <> IndentHeader."Released Status"::"Pending Approval" then
+                IndentHeader.TESTFIELD("Released Status", IndentHeader."Released Status"::Open);
+            IndentHeader.MODIFY;
+        end;
     end;
 
     procedure ChangePurchaser();
@@ -332,7 +394,9 @@ table 50037 "Indent Line"
                 "Quantity (Base)" := "Req.Quantity"
             ELSE
                 "Quantity (Base)" := "Req.Quantity" * ItemUnitofMeasure."Qty. per Unit of Measure";
-        END;
+        END else begin
+            "Quantity (Base)" := "Req.Quantity";
+        end;
     end;
 }
 

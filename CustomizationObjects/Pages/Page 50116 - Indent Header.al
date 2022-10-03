@@ -8,6 +8,7 @@ page 50116 "Indent Header"
     UsageCategory = Administration;
     ApplicationArea = all;
 
+
     layout
     {
         area(content)
@@ -18,8 +19,8 @@ page 50116 "Indent Header"
                 field("No."; rec."No.")
                 {
                     AssistEdit = true;
+                    Editable = PageEditable;//B2BVCOn28Sep22
                     ApplicationArea = All;
-
                     trigger OnAssistEdit();
                     begin
                         IF rec.AssistEdit(xRec) THEN
@@ -29,30 +30,42 @@ page 50116 "Indent Header"
                 field(Description; rec.Description)
                 {
                     ApplicationArea = all;
+                    Editable = PageEditable;//B2BVCOn28Sep22
+
                 }
                 field(Indentor; rec.Indentor)
                 {
                     Caption = 'Indentor';
                     ApplicationArea = all;
+                    Editable = PageEditable;//B2BVCOn28Sep22
+
                 }
                 field(Department; rec.Department)
                 {
                     Visible = false;
                     ApplicationArea = all;
+                    Editable = PageEditable;//B2BVCOn28Sep22
+
                 }
                 field("Document Date"; rec."Document Date")
                 {
                     Caption = 'Order Date';
                     ApplicationArea = all;
+                    Editable = PageEditable;//B2BVCOn28Sep22
+
                 }
                 field("Released Status"; rec."Released Status")
                 {
                     Caption = 'Status';
                     ApplicationArea = all;
+                    Editable = PageEditable;//B2BVCOn28Sep22
+
                 }
                 field("User Id"; rec."User Id")
                 {
                     ApplicationArea = all;
+                    Editable = PageEditable;//B2BVCOn28Sep22
+
                 }
                 field(Authorized; rec.Authorized)
                 {
@@ -64,10 +77,14 @@ page 50116 "Indent Header"
                 field("No. of Archived Versions"; Rec."No. of Archived Versions")
                 {
                     ApplicationArea = All;
+                    Editable = PageEditable;//B2BVCOn28Sep22
+
                 }
                 field("Ammendent Comments"; Rec."Ammendent Comments")
                 {
                     ApplicationArea = All;
+                    Editable = PageEditable;//B2BVCOn28Sep22
+
                 }
                 //B2BMSOn13Sep2022<<
 
@@ -76,11 +93,13 @@ page 50116 "Indent Header"
                 {
                     ApplicationArea = all;
                     Caption = 'Shortcut Dimension 1 Code';
+
                 }
                 field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = all;
                     Caption = 'Shortcut Dimension 2 Code';
+
                 }
                 field("Transfer-from Code"; Rec."Transfer-from Code")
                 {
@@ -88,6 +107,8 @@ page 50116 "Indent Header"
                     //Editable = (Status = Status::Open) AND EnableTransferFields;
                     Importance = Promoted;
                     ToolTip = 'Specifies the code of the location that items are transferred from.';
+                    Editable = PageEditable;//B2BVCOn28Sep22
+
                 }
                 field("Transfer-to Code"; Rec."Transfer-to Code")
                 {
@@ -95,6 +116,8 @@ page 50116 "Indent Header"
                     // Editable = (Status = Status::Open) AND EnableTransferFields;
                     Importance = Promoted;
                     ToolTip = 'Specifies the code of the location that the items are transferred to.';
+                    Editable = PageEditable;//B2BVCOn28Sep22
+
                 }
                 field("In-Transit Code"; "In-Transit Code")
                 {
@@ -102,6 +125,8 @@ page 50116 "Indent Header"
                     // Editable = EnableTransferFields;
                     // Enabled = (NOT "Direct Transfer") AND (Status = Status::Open);
                     ToolTip = 'Specifies the in-transit code for the transfer order, such as a shipping agent.';
+                    Editable = PageEditable;//B2BVCOn28Sep22
+
                 }
             }
             //B2BPAV<<
@@ -109,6 +134,7 @@ page 50116 "Indent Header"
             {
                 SubPageLink = "Document No." = FIELD("No.");
                 ApplicationArea = All;
+                Editable = PageEditable;//B2BVCOn28Sep22
             }
         }
 
@@ -123,7 +149,7 @@ page 50116 "Indent Header"
             {
                 ApplicationArea = All;
                 Image = Action;
-                //Visible = openapp;
+                Visible = OpenApprEntrEsists;
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Process;
@@ -217,7 +243,7 @@ page 50116 "Indent Header"
             {
                 ApplicationArea = All;
                 Image = SendApprovalRequest;
-                Visible = Not OpenApprEntrEsists and CanrequestApprovForFlow;
+                Visible = (Not OpenApprEntrEsists);
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Process;
@@ -226,6 +252,8 @@ page 50116 "Indent Header"
                 begin
                     Rec.TESTFIELD("Released Status", Rec."Released Status"::Open);
                     Rec.TESTFIELD(Indentor);
+                    Rec.TestField("Shortcut Dimension 1 Code");
+                    Rec.TestField("Shortcut Dimension 2 Code");
                     Rec.LOCKTABLE;
                     IndentLine.RESET;
                     IndentLine.SETRANGE("Document No.", Rec."No.");
@@ -271,6 +299,45 @@ page 50116 "Indent Header"
             {
                 Caption = 'F&unctions';
                 Visible = true;
+                action("Archive Document")
+                {
+                    ApplicationArea = All;
+                    Image = Archive;
+                    Promoted = true;
+                    PromotedIsBig = true;
+                    PromotedCategory = Process;
+                    PromotedOnly = true;
+                    trigger OnAction()
+                    var
+                        ArchiveVersion: Integer;
+                    begin
+                        ArchiveIndHdr.Reset();
+                        ArchiveIndHdr.SetCurrentKey("Archived Version");
+                        ArchiveIndHdr.SetRange("No.", Rec."No.");
+                        if ArchiveIndHdr.FindLast() then
+                            ArchiveVersion := ArchiveIndHdr."Archived Version" + 1
+                        else
+                            ArchiveVersion := 1;
+
+                        ArchiveIndHdr.Init();
+                        ArchiveIndHdr.TransferFields(Rec);
+                        ArchiveIndHdr."Archived Version" := ArchiveVersion;
+                        ArchiveIndHdr."Archived By" := UserId;
+                        ArchiveIndHdr.Insert();
+
+                        IndentLine.Reset();
+                        IndentLine.SetRange("Document No.", Rec."No.");
+                        if IndentLine.FindSet() then
+                            repeat
+                                ArchiveIndLine.Init();
+                                ArchiveIndLine.TransferFields(IndentLine);
+                                ArchiveIndLine."Archived Version" := ArchiveVersion;
+                                ArchiveIndLine."Archived By" := UserId;
+                                ArchiveIndLine.Insert();
+                            until IndentLine.Next() = 0;
+                        Message('Archived Document %1', Rec."No.");
+                    end;
+                }
                 action("Create Issue Jounal Batch")
                 {
                     ApplicationArea = all;
@@ -278,27 +345,14 @@ page 50116 "Indent Header"
                     image = CreateLinesFromJob;
                     trigger OnAction();
                     begin
+                        Rec.TestField("Released Status", Rec."Released Status"::Released);
                         IndentLineRec.SETCURRENTKEY("Document No.", "Line No.");
                         IndentLineRec.RESET();
                         IndentLineRec.SETRANGE("Document No.", "No.");
-                        //  IndentLineRec.SETFILTER("Qty. to Issue", '<>%1', 0);
                         if not IndentLineRec.FINDFIRST() then
                             ERROR('No Line with Qty. to Issue > 0');
 
-                        /*
-                        IndentLineRec.RESET();
-                        IndentLineRec.SETCURRENTKEY("Document No.", "Line No.");
-                        IndentLineRec.SETRANGE("Document No.", "No.");
-                        //  IndentLineRec.SETFILTER("Qty. to Issue", '<>%1', 0);
-                        if IndentLineRec.FINDSET() then
-                            repeat
-                                IndentLineRec.CALCFIELDS("Req.Quantity");
-                                IndentLineRec.CALCFIELDS("Available Stock");
-                            //          IndentLineRec.CALCFIELDS("Quantity Issued");
-                            //          if IndentLineRec."Qty. to Issue" > (IndentLineRec.Quantity - IndentLineRec."Quantity Issued") then
-                            //              ERROR(Text002Lbl, (IndentLineRec.Quantity - IndentLineRec."Quantity Issued"));
-                            until IndentLineRec.NEXT() = 0;
-                            */
+
                         Rec.CreateItemJnlLine();
                         CurrPage.Update();
                     end;
@@ -310,6 +364,7 @@ page 50116 "Indent Header"
                     image = Create;
                     trigger OnAction();
                     begin
+                        Rec.TestField("Released Status", Rec."Released Status"::Released);
                         IndentLineRec.Reset();
                         IndentLineRec.SETRANGE("Document No.", "No.");
                         IndentLineRec.SETFILTER("Req.Quantity", '<>%1', 0);
@@ -320,6 +375,51 @@ page 50116 "Indent Header"
                         CurrPage.Update();
                     end;
                 }
+                action(ShowItemJournalIssue)
+                {
+                    ApplicationArea = ALL;
+                    Caption = 'Show Item Journal Issue';
+                    Image = ShowList;
+                    trigger onaction()
+                    var
+                        ItemJournalLine: Record "Item Journal Line";
+                        ItemJournal: Page "Item Journal";
+                        PurchaseSetup: Record "Purchases & Payables Setup";
+                    BEGIN
+                        Rec.TestField("Released Status", Rec."Released Status"::Released);
+                        PurchaseSetup.Get();
+                        ItemJournalLine.reset;
+                        ItemJournalLine.SetRange("Journal Template Name", PurchaseSetup."Indent Issue Jnl. Template");
+                        ItemJournalLine.SetRange("Journal Batch Name", PurchaseSetup."Indent Issue Jnl. Batch");
+                        ItemJournalLine.SetRange("Entry Type", ItemJournalLine."Entry Type"::"Negative Adjmt.");
+                        ItemJournalLine.SetRange("Indent No.", Rec."No.");
+                        IF ItemJournalLine.findset then;
+                        Page.RunModal(40, ItemJournalLine);
+                    END;
+                }
+
+                action(ShowItemJournalBatchReturn)
+                {
+                    ApplicationArea = ALL;
+                    Caption = 'Show ItemJournal Batch Return';
+                    Image = ShowList;
+                    trigger onaction()
+                    var
+                        ItemJournalLine: Record "Item Journal Line";
+                        ItemJournal: Page "Item Journal";
+                        PurchaseSetup: Record "Purchases & Payables Setup";
+                    BEGIN
+                        Rec.TestField("Released Status", Rec."Released Status"::Released);
+                        PurchaseSetup.Get();
+                        ItemJournalLine.reset;
+                        ItemJournalLine.SetRange("Journal Template Name", PurchaseSetup."Indent Return Jnl. Template");
+                        ItemJournalLine.SetRange("Journal Batch Name", PurchaseSetup."Indent Return Jnl. Batch");
+                        ItemJournalLine.SetRange("Entry Type", ItemJournalLine."Entry Type"::"Positive Adjmt.");
+                        ItemJournalLine.SetRange("Indent No.", Rec."No.");
+                        IF ItemJournalLine.findset then;
+                        Page.RunModal(40, ItemJournalLine);
+                    END;
+                }
                 //B2BMSOn13Sep2022>>
                 action("Generate Transfer")
                 {
@@ -327,7 +427,8 @@ page 50116 "Indent Header"
                     Applicationarea = all;
                     trigger OnAction()
                     begin
-                        CreateTransferOrder();
+                        Rec.TestField("Released Status", Rec."Released Status"::Released);
+                        Rec.CreateTransferOrder();
                     end;
                 }
                 action("Copy BOM Lines")
@@ -369,7 +470,7 @@ page 50116 "Indent Header"
                         RelError: Label 'This document is enabled for workflow. Manual release is not possible.';
                     begin
                         //B2BMSOn13Sep2022>>
-                        IF allinoneCU.CheckIndentDocApprovalsWorkflowEnabled(Rec) then
+                        IF allinoneCU.ISIndentDocworkflowenabled(Rec) then
                             Error(RelError);
                         //B2BMSOn13Sep2022<<
                         Rec.TESTFIELD("Document Date");
@@ -455,6 +556,15 @@ page 50116 "Indent Header"
         workflowwebhookmangt.GetCanRequestAndCanCancel(RecordId(), CanrequestApprovForFlow, CanCancelapprovalforflow);
         //Approval visible conditions - B2BMSOn09Sep2022<<
     end;
+    //B2BVCOn28Sep22>>>
+    trigger OnOpenPage()
+    begin
+        if (Rec."Released Status" = Rec."Released Status"::Released) then
+            PageEditable := false
+        else
+            PageEditable := true;
+    end;
+    //B2BVCOn28Sep22>>>
 
     var
         IndentLine: Record 50037;
@@ -522,6 +632,7 @@ page 50116 "Indent Header"
         CanCancelapprovalforrecord: Boolean;
         CanCancelapprovalforflow: Boolean;
         CanrequestApprovForFlow: Boolean;
-    //Approval Actions Variables - B2BMSOn09Sep2022<<
+        //Approval Actions Variables - B2BMSOn09Sep2022<<
+        PageEditable: Boolean;//B2BVCOn28Sep22
 }
 

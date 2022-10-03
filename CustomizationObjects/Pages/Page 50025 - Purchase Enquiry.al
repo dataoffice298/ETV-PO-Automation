@@ -15,6 +15,7 @@ page 50025 "Purchase Enquiry"
             group(General)
             {
                 Caption = 'General';
+                Editable = PageEditable; //B2BVCOn28Sep22
                 field("No."; Rec."No.")
                 {
                     ApplicationArea = All;
@@ -79,10 +80,12 @@ page 50025 "Purchase Enquiry"
             {
                 SubPageLink = "Document No." = FIELD("No.");
                 ApplicationArea = All;
+                Editable = PageEditable; //B2BVCOn28Sep22
             }
             group(Invoicing)
             {
                 Caption = 'Invoicing';
+                Editable = PageEditable; //B2BVCOn28Sep22
                 field("Pay-to Vendor No."; Rec."Pay-to Vendor No.")
                 {
                     ApplicationArea = All;
@@ -133,6 +136,7 @@ page 50025 "Purchase Enquiry"
             group(Shipping)
             {
                 Caption = 'Shipping';
+                Editable = PageEditable; //B2BVCOn28Sep22
                 field("Ship-to Name"; Rec."Ship-to Name")
                 {
                     ApplicationArea = All;
@@ -321,12 +325,21 @@ page 50025 "Purchase Enquiry"
                 trigger OnAction();
                 begin
                     //DocPrint.PrintPurchHeader(Rec);
-                    PurchHeader.SETRANGE(PurchHeader."No.", Rec."No.");
-                    REPORT.RUN(50006, TRUE, FALSE, PurchHeader);
+                    PurchHeader.SETRANGE("No.", Rec."No.");
+                    REPORT.RUN(50073, TRUE, FALSE, PurchHeader);
                 end;
             }
         }
     }
+    //B2BVCOn28Sep22>>>
+    trigger OnOpenPage()
+    begin
+        if (Rec.Status = Rec.Status::Released) then
+            PageEditable := false
+        else
+            PageEditable := true;
+    end;
+    //B2BVCOn28Sep22>>>
 
     var
         PurchSetup: Record 312;
@@ -344,6 +357,7 @@ page 50025 "Purchase Enquiry"
         MLTransactionType: Option Purchase,Sale;
         PurchHeader: Record 38;
         POAutomation: Codeunit 50026;
+        PageEditable: Boolean;//B2BVCOn28Sep22
 
     local procedure PaytoVendorNoOnAfterValidate();
     begin

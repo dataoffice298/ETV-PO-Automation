@@ -15,6 +15,12 @@ tableextension 50055 tableextension70000016 extends "Purchase Line Archive"
         field(50100; "Applies-to Cons. Entry No."; Integer)
         {
         }
+        field(50101; "Free Item Type"; Option)
+        {
+            Description = 'B2B1.0 13Dec2016';
+            OptionCaption = '" ,Same Item,Different Item"';
+            OptionMembers = " ","Same Item","Different Item";
+        }
 
         field(50102; "Free Item No."; Code[20])
         {
@@ -66,14 +72,7 @@ tableextension 50055 tableextension70000016 extends "Purchase Line Archive"
         {
             Description = 'B2B1.0 06 Dec2016';
         }
-        field(33002900; "Indent No."; Code[20])
-        {
-            Description = 'B2B1.0';
-        }
-        field(60002; "Indent Line No."; Integer)
-        {
-            Description = 'B2B1.0';
-        }
+        
         field(60003; "Indent Due Date"; Date)
         {
             Description = 'B2B1.0';
@@ -120,8 +119,20 @@ tableextension 50055 tableextension70000016 extends "Purchase Line Archive"
             Enabled = false;
             TableRelation = "Routing Line"."Routing No.";
         }
+        field(33002900; "Indent No."; Code[20])
+        {
+            Description = 'B2B1.0';
+        }
+        field(33002901; "Indent Line No."; Integer)
+        {
+            Description = 'B2B1.0';
+        }
     
         field(33002902; "Quotation No."; Code[20])
+        {
+            Description = 'PO1.0';
+        }
+        field(33002903; "Delivery Rating"; Decimal)
         {
             Description = 'PO1.0';
         }

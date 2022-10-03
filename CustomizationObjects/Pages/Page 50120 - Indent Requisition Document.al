@@ -11,7 +11,7 @@ page 50120 "Indent Requisition Document"
         {
             group(General)
             {
-
+                Editable = FieldEditable;//B2BVCOn28Sep22
                 field("No."; Rec."No.")
                 {
                     ApplicationArea = All;
@@ -58,6 +58,7 @@ page 50120 "Indent Requisition Document"
             {
                 SubPageLink = "Document No." = FIELD("No.");
                 ApplicationArea = All;
+                Editable = FieldEditable;//B2BVCOn28Sep22
             }
         }
     }
@@ -74,6 +75,7 @@ page 50120 "Indent Requisition Document"
 
                 trigger OnAction();
                 begin
+                    Clear(IndentReqLines);
                     IndentReqLines.GetValue(Rec."No.", Rec."Resposibility Center");
                     IndentReqLines.RUN;
                 end;
@@ -152,7 +154,8 @@ page 50120 "Indent Requisition Document"
                         VendorList.SetSelection(Vendor);
                         IF Vendor.COUNT >= 1 THEN BEGIN
                             POAutomation.CreateQuotes(CreateIndents, Vendor, Rec."No.Series");
-                            MESSAGE(Text0011)
+                            MESSAGE(Text0011);
+
                         END ELSE
                             EXIT;
                     END;
@@ -299,6 +302,7 @@ page 50120 "Indent Requisition Document"
         Text005: Label 'Do you want to create Orders?';
         Text0010: Label 'Enquiries Created Successfully';
         Text0011: Label 'Quotes Created Successfully';
+        FieldEditable: Boolean; //B2BVCOn28Sep22
 
     procedure CheckRemainingQuantity();
     var
@@ -418,6 +422,12 @@ page 50120 "Indent Requisition Document"
 
     trigger OnOpenPage()
     begin
+        //B2BVCOn28Sep22>>>>
+        if (Rec.Status = Rec.Status::Release) then
+            FieldEditable := false
+        else
+            FieldEditable := true;
+        //B2BVCOn28Sep22<<<<
         Rec.Status := Rec.Status::Open;
     end;
 

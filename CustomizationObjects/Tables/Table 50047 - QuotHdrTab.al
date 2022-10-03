@@ -29,7 +29,13 @@ table 50047 QuotCompHdr
             OptionMembers = " ",Open,"Pending Approval",Released;
             OptionCaption = ' ,Open,Pending Approval,Released';
             trigger OnValidate();
+            var
+                QuotationLines: Record 50046;
             begin
+                QuotationLines.Reset();
+                QuotationLines.SetRange("Quot Comp No.", rec."No.");
+                if QuotationLines.FindSet() then
+                    QuotationLines.ModifyAll(Status, Rec.Status);
             end;
 
 

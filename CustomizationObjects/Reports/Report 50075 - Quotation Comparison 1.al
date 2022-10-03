@@ -213,10 +213,10 @@ report 50075 "Quotation Comparison 1"
         Vendor: array[10] of Code[20];
         VendorName: array[10] of Text[50];
         QuoteNo: array[10] of Code[20];
-        QuotationComparision2: Record 50018;
-        QuotationComparision3: Record 50018;
-        QuotationComparision4: Record 50018;
-        QuotationComparision5: Record 50018;
+        //QuotationComparision2: Record 50018;
+        //QuotationComparision3: Record 50018;
+        //QuotationComparision4: Record 50018;
+        //QuotationComparision5: Record 50018;
         VendorAmount: array[15] of Decimal;
         VendorDup: Code[20];
         Pf: array[10] of Decimal;

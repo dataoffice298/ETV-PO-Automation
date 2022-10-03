@@ -27,7 +27,7 @@ page 50145 "Inward Gate Entry SubFrm-NRGP"
                 field("Source Type"; "Source Type")
                 {
                     ApplicationArea = ALL;
-                    OptionCaption = ',,,Sales Return Order,Purchase Order,,Transfer Receipt,,,';
+                    OptionCaption = ' ,Sales Shipment,Sales Return Order,Purchase Order,Purchase Return Shipment,Transfer Receipt,Transfer Shipment,Item,Fixed Asset,Others';
 
 
                 }
@@ -82,9 +82,6 @@ page 50145 "Inward Gate Entry SubFrm-NRGP"
                         ReturnShipHeader: Record "Return Shipment Header";
                         TransHeader: Record "Transfer Header";
                         TransShptHeader: Record "Transfer Shipment Header";
-                        // PostdLoadngSLip: Record "Posted Loading SLip Header";
-
-                        //PostdLoadSlpLRec: Record "Posted Loading Slip Line";
                         GateEntryLneLRec: Record "Gate Entry Line_B2B";
                         GateEntLneLRec: Record "Gate Entry Line_B2B";
                         LineNoLVar: Integer;
@@ -147,55 +144,6 @@ page 50145 "Inward Gate Entry SubFrm-NRGP"
                             if PAGE.RUNMODAL(0, TransShptHeader) = ACTION::LookupOK then
                                 VALIDATE("Source No.", TransShptHeader."No.");
                         end;*/
-                        /*
-                    "Source Type"::"Posted Loading Slip":
-                        begin
-                            PostdLoadngSLip.RESET;
-                            IF PAGE.RunModal(0, PostdLoadngSLip) = Action::LookupOK then BEGIN
-                                "Source No." := PostdLoadngSLip."No.";
-                                GatEntHdrGRec.reset;
-                                GatEntHdrGRec.SetRange("Entry Type", "Entry Type");
-                                GatEntHdrGRec.SetRange("No.", "Gate Entry No.");
-                                IF GatEntHdrGRec.findfirst then BEGIN
-                                    GatEntHdrGRec."Vehicle No." := PostdLoadngSLip."Vehicle No.";
-                                    GatEntHdrGRec.modify;
-                                END;
-
-                                CurrPage.update();
-                                PostdLoadSlpLRec.Reset();
-                                PostdLoadSlpLRec.SetRange("Document No.", "Source No.");
-                                IF PostdLoadSlpLRec.findset then
-                                    repeat
-                                        GateEntryLneLRec.reset;
-                                        GateEntryLneLRec.SetRange("Gate Entry No.", "Gate Entry No.");
-                                        GateEntryLneLRec.SetFilter("Source Line No.", '=%1', 0);
-                                        IF GateEntryLneLRec.FindFirst() then begin
-                                            GateEntryLneLRec."Source Line No." := PostdLoadSlpLRec."Line No.";
-                                            GateEntryLneLRec.Description := PostdLoadSlpLRec.Description;
-                                            GateEntryLneLRec.modify;
-                                        end ELSE BEGIN
-                                            GateEntLneLRec.reset;
-                                            GateEntLneLRec.SetRange("Gate Entry No.", "Gate Entry No.");
-                                            IF GateEntLneLRec.findlast then
-                                                LineNoLVar := GateEntLneLRec."Line No."
-                                            else
-                                                LineNoLVar := 0;
-
-                                            GateEntLneLRec.Init();
-                                            GateEntLneLRec."Gate Entry No." := "Gate Entry No.";
-                                            GateEntLneLRec."Line No." := (LineNoLVar + 10000);
-
-                                            GateEntLneLRec."Source No." := "Source No.";
-                                            GateEntLneLRec."Source Type" := GateEntLneLRec."Source Type"::"Posted Loading Slip";
-                                            GateEntLneLRec.Description := PostdLoadSlpLRec.Description;
-                                            GateEntLneLRec."Source Line No." := PostdLoadSlpLRec."Line No.";
-                                            GateEntLneLRec.Insert();
-
-
-                                        END;
-                                    until PostdLoadSlpLRec.next = 0;
-                            end;
-                        end;*/
                         end;
                     end;
 
@@ -212,6 +160,7 @@ page 50145 "Inward Gate Entry SubFrm-NRGP"
                 field("Source Line No."; "Source Line No.")
                 {
                     ApplicationArea = ALL;
+                    Visible = false;
                 }
             }
         }

@@ -258,6 +258,7 @@ table 50010 "Indent Header"
     procedure CreateReturnItemJnlLine();
     var
         ItemJnlLine: Record "Item Journal Line";
+        LastItemJnlLine: Record "Item Journal Line";
         ItemJnlBatch: Record "Item Journal Batch";
         ItemJnlTemp: Record "Item Journal Template";
         TempLocation: Record Location temporary;
@@ -266,99 +267,57 @@ table 50010 "Indent Header"
         LineNo: Integer;
         PurchPaySetup: Record "Purchases & Payables Setup";
     begin
-        //B2BMSOn13Sep2022>>
-        //if not ItemJnlLine.GET('RETURN', "No.") then begin
-        //ItemJnlTemp.SETFILTER(Name, 'RETURN');
-        //ItemJnlBatch.SETRANGE("Journal Template Name", 'RETURN');
-        //ItemJnlBatch.SETRANGE(Name, "No.");
+        PurchPaySetup.Get();
         if ItemJnlTemp.Get(PurchPaySetup."Indent Return Jnl. Template") then;
-        ItemJnlTemp.TestField("No. Series");
-        DocNo := NoSeriesMgt.GetNextNo(ItemJnlTemp."No. Series", TODAY(), true);
+
         ItemJnlBatch.Reset();
-        ItemJnlBatch.SETRANGE("Journal Template Name", PurchPaySetup."Indent Return Jnl. Template");
-        ItemJnlBatch.SETRANGE(Name, PurchPaySetup."Indent Return Jnl. Batch");
-        //B2BMSOn13Sep2022<<
-        if ItemJnlBatch.ISEMPTY() then begin
-            ItemJnlBatch.INIT();
-            //B2BMSOn13Sep2022>>
-            //ItemJnlBatch."Journal Template Name" := 'RETURN';
-            //ItemJnlBatch.Description := 'MRS Return Journal Batch';
-            ItemJnlBatch."Journal Template Name" := PurchPaySetup."Indent Return Jnl. Template";
-            ItemJnlBatch.Description := PurchaseSetup."Indent Return Jnl. Batch";
-            //B2BMSOn13Sep2022<<
-            ItemJnlBatch."Reason Code" := ItemJnlTemp."Reason Code";
-            ItemJnlBatch.VALIDATE(Name, "No.");
-            ItemJnlBatch.INSERT();
-        end;
-        //Group Locations
-        IndentLineRec.RESET();
+        ItemJnlBatch.SetRange(ItemJnlBatch."Journal Template Name", PurchPaySetup."Indent Return Jnl. Template");
+        ItemJnlBatch.SetRange(ItemJnlBatch.Name, PurchPaySetup."Indent Return Jnl. Batch");
+        if ItemJnlBatch.FindFirst() then;
+
+        DocNo := NoSeriesMgt.GetNextNo(ItemJnlBatch."No. Series", TODAY(), false);
+
+        LineNo := 0;
         IndentLineRec.SETCURRENTKEY("Delivery Location");
         IndentLineRec.SETRANGE(IndentLineRec."Document No.", "No.");
-        //    IndentLineRec.SETFILTER("Qty. to Return", '<>%1', 0);
-        if IndentLineRec.FIND('-') then
+        IndentLineRec.SETRANGE("Delivery Location", Rec."Delivery Location");
+        IndentLineRec.SetFilter("Qty To Return", '<>%1', 0);
+        if IndentLineRec.FindSet() then begin
             repeat
-                TempLocation.INIT();
-                TempLocation.Code := IndentLineRec."Delivery Location";
-                if TempLocation.INSERT() then;//PKONJ22.2
-            until IndentLineRec.NEXT() = 0;
+                LastItemJnlLine.Reset();
+                LastItemJnlLine.SetRange(LastItemJnlLine."Journal Template Name", PurchPaySetup."Indent Return Jnl. Template");
+                LastItemJnlLine.SetRange(LastItemJnlLine."Journal Batch Name", PurchPaySetup."Indent Return Jnl. Batch");
+                if LastItemJnlLine.FindLast() then;
+                LineNo := LastItemJnlLine."Line No." + 10000;
 
-        //Create Docs according to Location
-        TempLocation.RESET();
-        if TempLocation.FINDFIRST() then
-            repeat
-                //Get Location No. Series
-                if Location.GET(TempLocation.Code) then;
-                //       Location.TESTFIELD("Return Journal Nos.");
-                //       DocNo := NoSeriesMgt.GetNextNo(Location."Return Journal Nos.", TODAY(), true);
-                LineNo := 0;
-                IndentLineRec.SETCURRENTKEY("Delivery Location");
-                IndentLineRec.SETRANGE(IndentLineRec."Document No.", "No.");
-                IndentLineRec.SETRANGE("Delivery Location", TempLocation.Code);
-                //       IndentLineRec.SETFILTER("Qty. to Return", '<>%1', 0);
-                if IndentLineRec.FIND('-') then
-                    repeat
-                        //          IndentLineRec.CALCFIELDS("Quantity Returned Acknowledged");
-                        //            if (IndentLineRec."Qty. to Return" + IndentLineRec."Quantity Returned Acknowledged") > MRSLine."Return Quantity" then
-                        //               ERROR(Text007Lbl, 'Total Qty to Return', (IndentLineRec."Qty. to Return" + IndentLineRec."Quantity Returned Acknowledged"),
-                        //                               IndentLineRec.FIELDCAPTION("Return Quantity"), IndentLineRec."Return Quantity");
-                        LineNo += 10000;
-                        ItemJnlLine.INIT();
-                        ItemJnlLine."Source Code" := ItemJnlTemp."Source Code";
-                        ItemJnlLine."Entry Type" := ItemJnlLine."Entry Type"::"Positive Adjmt.";
-                        ItemJnlLine.VALIDATE("Journal Template Name", PurchPaySetup."Indent Return Jnl. Template");
-                        ItemJnlLine.VALIDATE("Gen. Bus. Posting Group", 'RETURN');
-                        ItemJnlLine."Line No." := LineNo;
-                        ItemJnlLine.VALIDATE("Journal Batch Name", PurchPaySetup."Indent Return Jnl. Batch");
-                        //            IF "Manual MRS No." <> '' THEN
-                        //                ItemJnlLine."External Document No." := "Manual MRS No." + '\' + "MRS No."
-                        //            else
-                        //                ItemJnlLine."External Document No." := "MRS No.";
-                        //PKONJ11
-                        ItemJnlLine.INSERT(true);
-                        ItemJnlLine.VALIDATE(ItemJnlLine."Document Type", ItemJnlLine."Document Type"::"Sales Shipment");
-                        ItemJnlLine.VALIDATE(ItemJnlLine."Document No.", DocNo);
-                        ItemJnlLine.VALIDATE(ItemJnlLine."Posting Date", WORKDATE());
-                        ItemJnlLine."Reason Code" := ItemJnlTemp."Reason Code";
-                        ItemJnlLine."No." := "No.";
-                        ItemJnlLine.VALIDATE(ItemJnlLine."Item No.", IndentLineRec."No.");
-                        ItemJnlLine.VALIDATE(ItemJnlLine."Unit of Measure Code", IndentLineRec."Unit of Measure");//PKON22M9
-                                                                                                                  //ItemJnlLine.VALIDATE("Gen. Bus. Posting Group", ItemJnlTemp."Gen. Bus. posting group");B2B
-                                                                                                                  //            ItemJnlLine.VALIDATE(ItemJnlLine."Shortcut Dimension 1 Code", IndentLineRec."Shortcut Dimension 1 Code");
-                                                                                                                  //            ItemJnlLine.VALIDATE(ItemJnlLine."Shortcut Dimension 2 Code", IndentLineRec."Shortcut Dimension 2 Code");
-                                                                                                                  //            ItemJnlLine.VALIDATE(ItemJnlLine.Quantity, IndentLineRec."Qty. to Return");
-                        ItemJnlLine.VALIDATE("Location Code", IndentLineRec."Delivery Location");
-                        ItemJnlLine."Reason Code" := 'ISSUE';
-                        //            ItemJnlLine."MRS Ref. No." := "MRS No.";
-                        //            B2B
-                        ItemJnlLine.MODIFY();
-                    //            IndentLineRec."Qty. to Return" := 0;
-                    //IndentLineRec.MODIFY();
-                    until IndentLineRec.NEXT() = 0;
-                //    MESSAGE('The Journal Batch has been successfully created with batch name %1', "MRS No.");
-                Message('Item Journals are created successfully.');
-            until TempLocation.NEXT() = 0;
-        //end else
-        //   ERROR(Text006Lbl, FIELDCAPTION("No."), "No."); //B2BMSOn13Sep2022
+                ItemJnlLine.INIT();
+                ItemJnlLine.VALIDATE("Journal Template Name", PurchPaySetup."Indent Return Jnl. Template");
+                ItemJnlLine.VALIDATE("Journal Batch Name", PurchPaySetup."Indent Return Jnl. Batch");
+                ItemJnlLine."Line No." := LineNo;
+                ItemJnlLine.INSERT(true);
+                ItemJnlLine."Source Code" := ItemJnlTemp."Source Code";
+                ItemJnlLine."Entry Type" := ItemJnlLine."Entry Type"::"Positive Adjmt.";
+                ItemJnlLine.VALIDATE(ItemJnlLine."Document Type", ItemJnlLine."Document Type"::"Sales Shipment");
+                ItemJnlLine.VALIDATE(ItemJnlLine."Document No.", DocNo);
+                ItemJnlLine.VALIDATE(ItemJnlLine."Posting Date", WORKDATE());
+                ItemJnlLine."Reason Code" := ItemJnlTemp."Reason Code";
+                ItemJnlLine."No." := "No.";
+                ItemJnlLine.VALIDATE(ItemJnlLine."Item No.", IndentLineRec."No.");
+                ItemJnlLine.VALIDATE(ItemJnlLine."Unit of Measure Code", IndentLineRec."Unit of Measure");
+                ItemJnlLine.VALIDATE(ItemJnlLine."Shortcut Dimension 1 Code", IndentLineRec."Shortcut Dimension 1 Code");
+                ItemJnlLine.VALIDATE(ItemJnlLine."Shortcut Dimension 2 Code", IndentLineRec."Shortcut Dimension 2 Code");
+                ItemJnlLine.VALIDATE(ItemJnlLine.Quantity, IndentLineRec."Qty To Return");
+                ItemJnlLine.VALIDATE("Location Code", IndentLineRec."Delivery Location");
+                ItemJnlLine."Indent No." := IndentLineRec."Document No.";
+                ItemJnlLine."Indent Line No." := IndentLineRec."Line No.";
+                ItemJnlLine.MODIFY();
+                IndentLineRec.NoHeadStatusCheck(true);
+                IndentLineRec."Qty To Return" := 0;
+                IndentLineRec.Modify();
+            until IndentLineRec.NEXT() = 0;
+            Message('Return Journals are created successfully.');
+        end else
+            Error('Noting to Retrun');
 
 
     end;
@@ -366,111 +325,85 @@ table 50010 "Indent Header"
     procedure CreateItemJnlLine();
     var
         ItemJnlLine: Record "Item Journal Line";
+        LastItemJnlLine: Record "Item Journal Line";
         ItemJnlBatch: Record "Item Journal Batch";
         ItemJnlTemp: Record "Item Journal Template";
-        TempLocation: Record Location temporary;
         Bincontent: Record "Bin Content";
-        PurchPaySetup: Record "Purchases & Payables Setup"; //B2BMSOn13Sep2022
+        PurchPaySetup: Record "Purchases & Payables Setup";
         DocNo: Code[20];
         LineNo: Integer;
     begin
-        //B2BMSOn13Sep2022>>
-        //if not ItemJnlLine.GET('ISSUE', "No.") then begin 
-        //ItemJnlTemp.SETFILTER(Name, 'ISSUE');
+
         PurchPaySetup.Get();
         PurchPaySetup.TestField("Indent Issue Jnl. Batch");
         PurchPaySetup.TestField("Indent Issue Jnl. Template");
+
         ItemJnlTemp.Reset();
         ItemJnlTemp.SETFILTER(Name, PurchPaySetup."Indent Issue Jnl. Template");
-        //B2BMSOn13Sep2022<<
         if ItemJnlTemp.FINDFIRST() then;
-        ItemJnlTemp.TESTFIELD("No. Series");
-        DocNo := NoSeriesMgt.GetNextNo(ItemJnlTemp."No. Series", TODAY(), true);
-        //B2BMSOn13Sep2022>>
-        //ItemJnlBatch.SETRANGE("Journal Template Name", 'ISSUE');
-        ItemJnlBatch.SETRANGE("Journal Template Name", PurchPaySetup."Indent Issue Jnl. Template");
-        //B2BMSOn13Sep2022<<
-        ItemJnlBatch.SETRANGE(Name, PurchPaySetup."Indent Issue Jnl. Batch");
-        if ItemJnlBatch.ISEMPTY() then begin
-            ItemJnlBatch.INIT();
-            ItemJnlBatch."Journal Template Name" := PurchPaySetup."Indent Issue Jnl. Template";
-            ItemJnlBatch.Description := PurchPaySetup."Indent Issue Jnl. Batch";
-            ItemJnlBatch."Reason Code" := 'ISSUE';
-            ItemJnlBatch.VALIDATE(Name, "No.");
-            ItemJnlBatch.INSERT();
-        end;
-        //Group Locations
-        IndentLineRec.SETCURRENTKEY("Delivery Location");
-        IndentLineRec.RESET();
-        IndentLineRec.SETRANGE(IndentLineRec."Document No.", "No.");
-        //   IndentLineRec.SETFILTER("Qty. to Issue", '<>%1', 0);
-        if IndentLineRec.FIND('-') then
-            repeat
-                TempLocation.INIT();
-                TempLocation.Code := IndentLineRec."Delivery Location";
-                if TempLocation.INSERT() then;
-            until IndentLineRec.NEXT() = 0;
 
+
+        ItemJnlBatch.Reset();
+        ItemJnlBatch.SetRange(ItemJnlBatch."Journal Template Name", PurchPaySetup."Indent Issue Jnl. Template");
+        ItemJnlBatch.SetRange(ItemJnlBatch.Name, PurchPaySetup."Indent Issue Jnl. Batch");
+        if ItemJnlBatch.FindFirst() then;
+
+        DocNo := NoSeriesMgt.GetNextNo(ItemJnlBatch."No. Series", TODAY(), false);
+
+        IndentLineRec.Reset();
         IndentLineRec.SETCURRENTKEY("Delivery Location");
         IndentLineRec.SETRANGE(IndentLineRec."Document No.", "No.");
-        IndentLineRec.SETRANGE("Delivery Location", TempLocation.Code);
-        //    IndentLineRec.SETFILTER("Qty. to Issue", '<>%1', 0);
-        if IndentLineRec.FIND('-') then
+        IndentLineRec.SETRANGE("Delivery Location", Rec."Delivery Location");
+        IndentLineRec.SetFilter("Qty To Issue", '<>%1', 0);
+        if IndentLineRec.FindSet() then begin
             repeat
-                LineNo += 10000;
+                LastItemJnlLine.Reset();
+                LastItemJnlLine.SetRange(LastItemJnlLine."Journal Template Name", PurchPaySetup."Indent Issue Jnl. Template");
+                LastItemJnlLine.SetRange(LastItemJnlLine."Journal Batch Name", PurchPaySetup."Indent Issue Jnl. Batch");
+                if LastItemJnlLine.FindLast() then;
+                LineNo := LastItemJnlLine."Line No." + 10000;
 
                 ItemJnlLine.INIT();
+                ItemJnlLine.VALIDATE("Journal Template Name", PurchPaySetup."Indent Issue Jnl. Template");
+                ItemJnlLine.VALIDATE("Journal Batch Name", PurchPaySetup."Indent Issue Jnl. Batch");
+                ItemJnlLine."Line No." := LineNo;
+                ItemJnlLine.INSERT(true);
+
                 ItemJnlLine."Source Code" := ItemJnlTemp."Source Code";
                 ItemJnlLine."Entry Type" := ItemJnlLine."Entry Type"::"Negative Adjmt.";
-                ItemJnlLine.VALIDATE("Journal Template Name", PurchPaySetup."Indent Issue Jnl. Template");
-                ItemJnlLine.VALIDATE("Gen. Bus. Posting Group", 'ISSUE');
-                ItemJnlLine.VALIDATE("Journal Batch Name", PurchPaySetup."Indent Issue Jnl. Batch");
                 ItemJnlLine.VALIDATE(ItemJnlLine."Document Type", ItemJnlLine."Document Type"::" ");
                 ItemJnlLine.VALIDATE(ItemJnlLine."Document No.", DocNo);
                 ItemJnlLine.VALIDATE(ItemJnlLine."Posting Date", WORKDATE());
                 ItemJnlLine."Reason Code" := ItemJnlTemp."Reason Code";
-                //if IndentHeaderRec.GET(IndentLineRec."Document No.") then
-                //    ItemJnlLine."No." := IndentHeaderRec."No."; //B2BMSOn13Sep2022
                 ItemJnlLine."No." := "No.";
-                ItemJnlLine."Line No." := LineNo;
                 ItemJnlLine.VALIDATE(ItemJnlLine."Item No.", IndentLineRec."No.");
-                ItemJnlLine.VALIDATE(ItemJnlLine."Unit of Measure Code", IndentLineRec."Unit of Measure");//PKON22M9
-                ItemJnlLine."Reason Code" := 'ISSUE';
-                //    ItemJnlLine.VALIDATE(ItemJnlLine."Shortcut Dimension 1 Code", indentlinerec."Shortcut Dimension 1 Code");
-                //    ItemJnlLine.VALIDATE(ItemJnlLine."Shortcut Dimension 2 Code", IndentLineRec."Shortcut Dimension 2 Code");
-                //    ItemJnlLine.VALIDATE(ItemJnlLine."Dimension Set ID", IndentLineRec."Dimension Set ID");//B2BPkON06012021
-                ItemJnlLine.VALIDATE(ItemJnlLine.Quantity, IndentLineRec."Quantity (Base)");
+                ItemJnlLine.VALIDATE(ItemJnlLine."Unit of Measure Code", IndentLineRec."Unit of Measure");
+                ItemJnlLine."Reason Code" := ItemJnlTemp."Reason Code";
+                ItemJnlLine.VALIDATE(ItemJnlLine."Shortcut Dimension 1 Code", indentlinerec."Shortcut Dimension 1 Code");
+                ItemJnlLine.VALIDATE(ItemJnlLine."Shortcut Dimension 2 Code", IndentLineRec."Shortcut Dimension 2 Code");
+                ItemJnlLine.VALIDATE(ItemJnlLine.Quantity, IndentLineRec."Qty To Issue");
                 ItemJnlLine.VALIDATE("Location Code", IndentLineRec."Delivery Location");
                 ItemJnlLine."Variant Code" := IndentLineRec."Variant Code";
                 ItemJnlLine."External Document No." := "No.";
-                //PKONJ11
-                //Fix12Jul2021Cwip>>
-                //    ItemJnlLine."CWIP No." := IndentLineRec."CWIPNo.";
-                //    ItemJnlLine."Capex No." := IndentLineRec."Capex No.";
-                //    ItemJnlLine."Capex Line No." := IndentLineRec."Capex Line No.";
-                //Fix12Jul2021Cwip<<
-                ItemJnlLine.INSERT(true);
-                //   if MRSLine."Bin Code" <> '' then
-                //       ItemJnlLine.VALIDATE("Bin Code", IndentLineRec."Bin Code")
-                //   else begin
+                ItemJnlLine."Indent No." := Rec."No.";
+                ItemJnlLine."Indent Line No." := IndentLineRec."Line No.";
+
                 Bincontent.RESET();
                 Bincontent.SETRANGE("Item No.", IndentLineRec."No.");
                 Bincontent.SETRANGE("Location Code", IndentLineRec."Delivery Location");
                 Bincontent.SETFILTER(Bincontent.Quantity, '<>%1', 0);
                 if Bincontent.FINDFIRST() then
                     ItemJnlLine.VALIDATE("Bin Code", Bincontent."Bin Code");
-                //    end;
+
                 ItemJnlLine.MODIFY();
-            //    IndentLineRec."Qty. to Issue" := 0;
-            //IndentLineRec.MODIFY(); //B2BMSOn13Sep2022
+
+                IndentLineRec."Qty To issue" := 0;
+                IndentLineRec.Modify();
             until IndentLineRec.NEXT() = 0;
-        //B2BMSOn13Sep2022>>
-        //MESSAGE('The Journal Batch has been successfully created with batch name %1', "No.");
-        MESSAGE('Item journals are created successfully.');
-        //B2BMSOn13Sep2022<<
-        //until TempLocation.NEXT = 0;
-        //end else
-        //    ERROR(Text006Lbl, FIELDCAPTION("No."), "No.");
+            MESSAGE('Issue journals are created successfully.');
+        end else
+            Error('Nothing to Issue');
+
     end;
 
     Procedure CheckIndentHeaderApprovalsWorkflowEnabled(var IndentHeader: Record "Indent Header"): Boolean
@@ -599,7 +532,7 @@ table 50010 "Indent Header"
     var
         FromIndentLine: Record 50037;
         ToIndentLine: Record 50037;
-        IndentHeader: Record 50037;
+        IndentHeader: Record 50010;
         ToIndentLine1: Record 50037;
         ToIndentLine2: Record 50037;
     begin
@@ -660,6 +593,7 @@ table 50010 "Indent Header"
                     TransHead.Insert(true);
                     TransHead.Validate("Transfer-from Code", "Transfer-from Code");
                     TransHead.Validate("Transfer-to Code", "Transfer-to Code");
+                    TransHead.Validate("In-Transit Code", "In-Transit Code"); //B2BPAV
                     TransHead.Validate("Posting Date", WorkDate());
 
                     TransHead.Modify(true);
@@ -690,10 +624,10 @@ table 50010 "Indent Header"
     begin
         IndentHdr := Rec;
         PurchaseSetup.GET;
-        PurchaseSetup.TESTFIELD("Indent Req No.");
-        IF NoSeriesMgt.SelectSeries(PurchaseSetup."Indent Req No.", OldIndentHdr."No.", IndentHdr."No.") THEN BEGIN
+        PurchaseSetup.TESTFIELD("Indent Nos.");
+        IF NoSeriesMgt.SelectSeries(PurchaseSetup."Indent Nos.", OldIndentHdr."No.", IndentHdr."No.") THEN BEGIN
             PurchaseSetup.GET;
-            PurchaseSetup.TESTFIELD("Indent Req No.");
+            PurchaseSetup.TESTFIELD("Indent Nos.");
             NoSeriesMgt.SetSeries(IndentHdr."No.");
             Rec := IndentHdr;
             EXIT(TRUE);

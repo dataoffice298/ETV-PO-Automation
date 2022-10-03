@@ -56,7 +56,7 @@ tableextension 50042 tableextension70000017 extends "Item Vendor"
         field(33002902; "Avg. Delivery Rating"; Decimal)
         {
             Description = 'PO1.0';
-            Editable = false;
+            //Editable = false;
         }
         field(33002903; "Total Qty. Supplied"; Decimal)
         {
@@ -70,7 +70,7 @@ tableextension 50042 tableextension70000017 extends "Item Vendor"
         field(33002910; "Avg. Quality Rating"; Decimal)
         {
             Description = 'PO1.0';
-            Editable = false;
+            //Editable = false;
         }
     }
 

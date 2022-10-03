@@ -11,7 +11,7 @@ table 50038 "Indent Requisitions"
     {
         field(1; "Item No."; Code[20])
         {
-            Editable = false;
+
             TableRelation = IF ("Line Type" = CONST(Item)) Item
             ELSE
             IF ("Line Type" = CONST("Fixed Assets")) "Fixed Asset"
@@ -21,7 +21,7 @@ table 50038 "Indent Requisitions"
         }
         field(2; Description; Text[50])
         {
-            Editable = false;
+
         }
         field(3; Quantity; Decimal)
         {
@@ -35,7 +35,7 @@ table 50038 "Indent Requisitions"
         }
         field(4; "Indent No."; Code[20])
         {
-            Editable = false;
+
             TableRelation = "Indent Header";
         }
         field(5; "Indent Line No."; Integer)
@@ -109,7 +109,7 @@ table 50038 "Indent Requisitions"
         {
             CalcFormula = Sum("Purch. Rcpt. Line".Quantity WHERE("Indent Req No" = FIELD("Document No."),
                                                                   "Indent Req Line No" = FIELD("Line No.")));
-            Editable = false;
+
             FieldClass = FlowField;
         }
         field(27; "Document Type"; Option)
@@ -150,7 +150,7 @@ table 50038 "Indent Requisitions"
         }
         field(50003; "Remaining Quantity"; Decimal)
         {
-            Editable = false;
+
 
             trigger OnValidate();
             begin

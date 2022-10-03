@@ -11,6 +11,23 @@ tableextension 50053 tableextension70000014 extends "Purchase Header Archive"
             //Unsupported feature: Change OptionString on ""Document Type"(Field 1)". Please convert manually.
 
         }
+        
+        field(51000; Subject; Text[200])
+        {
+            Caption = 'Subject';
+        }
+        field(50110; "LC No."; Code[20])
+        {
+            Caption = 'LC No.';
+        }
+        Field(50111; "Bill of Entry No"; Code[20])
+        {
+            Caption = 'Bill of Entry No';
+        }
+        Field(50112; "EPCG No."; Code[20])
+        {
+            Caption = 'EPCG No';
+        }
         field(33002900; "RFQ No."; Code[20])
         {
             Description = 'PO1.0';
@@ -36,21 +53,10 @@ tableextension 50053 tableextension70000014 extends "Purchase Header Archive"
         {
             Description = 'PO1.0';
         }
-        field(51000; Subject; Text[200])
+        field(33002904; "Approval Status"; Option)
         {
-            Caption = 'Subject';
-        }
-        field(50110; "LC No."; Code[20])
-        {
-            Caption = 'LC No.';
-        }
-        Field(50111; "Bill of Entry No"; Code[20])
-        {
-            Caption = 'Bill of Entry No';
-        }
-        Field(50112; "EPCG No."; Code[20])
-        {
-            Caption = 'EPCG No';
+            OptionMembers = ,Open,"Pending Approval",Released;
+            OptionCaption = ' ,Open,Pending Approval,Released';
         }
     }
 

@@ -28,7 +28,7 @@ report 50001 "Indent Requestion Lines"
                 DataItemTableView = SORTING("Document No.", "Line No.")
                                     ORDER(Ascending)
                                     WHERE("Indent Status" = CONST(Indent),
-                                          "Indent Req No" = FILTER(= ''));
+                                          "Indent Req No" = FILTER(''));
 
                 trigger OnAfterGetRecord();
                 begin
@@ -47,9 +47,9 @@ report 50001 "Indent Requestion Lines"
                         ItemVendorGvar.RESET;
                         ItemVendorGvar.SETRANGE("Item No.", IndentRequisitions."Item No.");
                         ItemVendorGvar.SETRANGE("Vendor No.", IndentRequisitions."Manufacturer Code");
-                        IF ItemVendorGvar.FINDFIRST THEN
-                            //IndentRequisitions."Vendor Min.Ord.Qty" := ItemVendorGvar."Vendor Min.Ord.Qty"; B2B1.1
-                            IndentRequisitions.MODIFY;
+                        IF ItemVendorGvar.FINDFIRST THEN;
+                        //IndentRequisitions."Vendor Min.Ord.Qty" := ItemVendorGvar."Vendor Min.Ord.Qty"; B2B1.1
+                        IndentRequisitions.MODIFY;
                         //B2B.1.3 E
                     END ELSE BEGIN
                         IndentRequisitions.INIT;
@@ -57,7 +57,7 @@ report 50001 "Indent Requestion Lines"
                         IndentRequisitions."Line No." := TempLineNo;
                         IndentRequisitions."Line Type" := Type; //ETVPO1.1
                         IndentRequisitions."Item No." := "No.";
-                        Message('%1..%2...%3', "No.", "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code");
+                        //Message('%1..%2...%3', "No.", "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code");
                         IndentRequisitions.Description := Description;
                         IF RecItem.GET(IndentRequisitions."Item No.") THEN
                             IndentRequisitions."Unit of Measure" := RecItem."Base Unit of Measure";
@@ -122,7 +122,10 @@ report 50001 "Indent Requestion Lines"
                 end;
             }
 
-
+            trigger OnPreDataItem()
+            begin
+                //Message('Hi');
+            end;
         }
     }
 

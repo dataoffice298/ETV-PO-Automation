@@ -24,7 +24,7 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
                 field("Source Type"; "Source Type")
                 {
                     ApplicationArea = ALL;
-                    OptionCaption = ',,,,,,,,Item,Fixed Asset';
+                    OptionCaption = ' ,Sales Shipment,Sales Return Order,Purchase Order,Purchase Return Shipment,Transfer Receipt,Transfer Shipment,Item,Fixed Asset,Others';
                     Editable = false;
                 }
                 field("Source No."; "Source No.")

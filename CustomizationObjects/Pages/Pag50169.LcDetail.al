@@ -127,6 +127,7 @@ page 50169 "Lc Detail"
                 }
                 field("Remaining Amount"; Rec."Remaining Amount")
                 {
+                    Editable = false;
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Remaining Amount field.';
                 }
@@ -191,6 +192,16 @@ page 50169 "Lc Detail"
                         PurchaseInvForm.SETTABLEVIEW(PInvHeader);
                         PurchaseInvForm.RUN;
                     END;
+                end;
+            }
+            action(Orders)
+            {
+                ApplicationArea = All;
+                RunObject = Page "LC Order Details";
+                RunPageLink = "Transaction Type" = FIELD("Transaction Type"), "LC No." = FIELD("No.");
+                trigger OnAction()
+                begin
+
                 end;
             }
         }

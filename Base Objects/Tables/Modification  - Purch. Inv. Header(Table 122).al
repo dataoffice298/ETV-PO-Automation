@@ -5,7 +5,27 @@ tableextension 50049 tableextension70000004 extends "Purch. Inv. Header"
     fields
     {
         
-        field(33002900; "RFQ No."; Code[20])
+       
+        field(51000; Subject; Text[200])
+        {
+            Caption = 'Subject';
+        }
+        field(50110; "LC No."; Code[20])
+        {
+            Caption = 'LC No.';
+            DataClassification = CustomerContent;
+
+        }
+        field(50111; "Bill of Entry No"; Code[20])
+        {
+            Caption = 'Bill of Entry No.';
+            Editable = false;
+        }
+        Field(50112; "EPCG No."; Code[20])
+        {
+            Caption = 'EPCG No';
+        }
+         field(33002900; "RFQ No."; Code[20])
         {
             Description = 'PO1.0';
             TableRelation = "RFQ Numbers"."RFQ No." WHERE(Completed = FILTER(false));
@@ -30,24 +50,13 @@ tableextension 50049 tableextension70000004 extends "Purch. Inv. Header"
         {
             Description = 'PO1.0';
         }
-        field(50110; "LC No."; Code[20])
+        field(33002904; "Approval Status"; Option)
         {
-            Caption = 'LC No.';
-            DataClassification = CustomerContent;
-
-        }
-        field(50111; "Bill of Entry No"; Code[20])
-        {
-            Caption = 'Bill of Entry No.';
-            Editable = false;
-        }
-        Field(50112; "EPCG No."; Code[20])
-        {
-            Caption = 'EPCG No';
+            OptionMembers = ,Open,"Pending Approval",Released;
+            OptionCaption = ' ,Open,Pending Approval,Released';
         }
     }
 
-    //Unsupported feature: PropertyChange. Please convert manually.
-
+    
 }
 

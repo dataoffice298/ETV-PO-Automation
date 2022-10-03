@@ -16,6 +16,10 @@ page 50146 "Outward Gate Entry - NRGP"
         {
             group(General)
             {
+                field("Location Code"; "Location Code")
+                {
+                    ApplicationArea = ALL;
+                }
                 field(Type; Type)
                 {
                     ApplicationArea = all;
@@ -33,10 +37,7 @@ page 50146 "Outward Gate Entry - NRGP"
                             CurrPage.UPDATE;
                     end;
                 }
-                field("Location Code"; "Location Code")
-                {
-                    ApplicationArea = ALL;
-                }
+
                 field("Station From/To"; "Station From/To")
                 {
                     ApplicationArea = ALL;
@@ -65,14 +66,6 @@ page 50146 "Outward Gate Entry - NRGP"
                 {
                     ApplicationArea = ALL;
                 }
-                field("LR/RR No."; "LR/RR No.")
-                {
-                    ApplicationArea = ALL;
-                }
-                field("LR/RR Date"; "LR/RR Date")
-                {
-                    ApplicationArea = ALL;
-                }
                 field("Vehicle No."; "Vehicle No.")
                 {
                     ApplicationArea = ALL;
@@ -85,16 +78,7 @@ page 50146 "Outward Gate Entry - NRGP"
                 {
                     ApplicationArea = ALL;
                 }
-                field("Transporter No."; "Transporter No.")
-                {
-                    ApplicationArea = all;
-                    Caption = 'Driver Contact No.';//PKONAU23
-                }
-                field("Transporter Name"; "Transporter Name")
-                {
-                    ApplicationArea = all;
-                    Caption = 'Driver Name'; //PKONAU23
-                }
+
             }
             part(Control1500028; "Outward Gate Entry SubFrm-NRGP")
             {

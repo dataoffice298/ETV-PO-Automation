@@ -51,14 +51,7 @@ page 50155 "Outward Gate Entry List-NRGP"
                 {
                     ApplicationArea = ALL;
                 }
-                field("LR/RR No."; "LR/RR No.")
-                {
-                    ApplicationArea = ALL;
-                }
-                field("LR/RR Date"; "LR/RR Date")
-                {
-                    ApplicationArea = ALL;
-                }
+
             }
         }
     }

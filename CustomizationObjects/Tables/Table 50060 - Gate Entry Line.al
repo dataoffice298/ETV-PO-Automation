@@ -24,7 +24,7 @@ table 50060 "Gate Entry Line_B2B"
         field(4; "Source Type"; Option)
         {
             DataClassification = CustomerContent;
-            OptionMembers = " ","Posted Loading Slip","Sales Shipment","Sales Return Order","Purchase Order","Purchase Return Shipment","Transfer Receipt","Transfer Shipment","Item","Fixed Asset";
+            OptionMembers = " ","Sales Shipment","Sales Return Order","Purchase Order","Purchase Return Shipment","Transfer Receipt","Transfer Shipment","Item","Fixed Asset",Others;
 
 
             trigger OnValidate();
@@ -110,7 +110,7 @@ table 50060 "Gate Entry Line_B2B"
     }
     trigger OnDelete()
     var
-        //PostdLneLRec: Record "Posted Loading Slip Line";
+
         PostedLnesCount: integer;
         GateEntLRec: Record "Gate Entry Line_B2B";
         GateLocSetup: Record "Gate Entry Location Setup_B2B";
@@ -141,13 +141,6 @@ table 50060 "Gate Entry Line_B2B"
         error('You cannot delete Gate entry Lines.');
     end else begin
             */
-        if "Source Type" = "Source Type"::"Posted Loading Slip" then begin
-            GateEntLRec.Reset();
-            GateEntLRec.SetRange("Gate Entry No.", "Gate Entry No.");
-            GateEntLRec.SetRange("Source No.", "Source No.");
-            IF gateEntLRec.findset then
-                GateEntLRec.DeleteAll();
-        end;
     END;
 
     trigger OnInsert()
@@ -164,6 +157,5 @@ table 50060 "Gate Entry Line_B2B"
         TransShptHeader: Record "Transfer Shipment Header";
         GateEntryHeader: Record "Gate Entry Header_B2B";
         Text16500: Label 'Source Type must not be blank in %1 %2.';
-    //PostdLoadngSLip: Record "Posted Loading SLip Header";
 }
 

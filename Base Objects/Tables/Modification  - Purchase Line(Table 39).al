@@ -233,6 +233,12 @@ tableextension 50056 tableextension70000011 extends "Purchase Line"
                 //B2B1.0 13Dec2016<<
             end;
         }*///Balu
+        field(50101; "Free Item Type"; Option)
+        {
+            Description = 'B2B1.0 13Dec2016';
+            OptionCaption = '" ,Same Item,Different Item"';
+            OptionMembers = " ","Same Item","Different Item";
+        }
         field(50102; "Free Item No."; Code[20])
         {
             Description = 'B2B1.0 12Dec2016';
@@ -314,14 +320,7 @@ tableextension 50056 tableextension70000011 extends "Purchase Line"
         {
             Description = 'B2B1.0 06 Dec2016';
         }
-        field(60001; "Indent No."; Code[20])
-        {
-            Description = 'B2B1.0';
-        }
-        field(60002; "Indent Line No."; Integer)
-        {
-            Description = 'B2B1.0';
-        }
+
         field(60003; "Indent Due Date"; Date)
         {
             Description = 'B2B1.0';
@@ -368,6 +367,54 @@ tableextension 50056 tableextension70000011 extends "Purchase Line"
             Enabled = false;
             TableRelation = "Routing Line"."Routing No.";
         }
+        //B2BVCOn03Oct22>>>
+        field(60011; "Ref. Posted Gate Entry"; Code[20])
+        {
+            TableRelation = "Posted Gate Entry Line_B2B"."Source No." where("Source No." = field("Document No."));
+
+            trigger OnValidate()
+            var
+                PurchRcptLine: Record "Purch. Rcpt. Line";
+                RGPErr: Label 'This gate entry is already used for GRN No. %1.';
+            begin
+                PurchRcptLine.Reset();
+                PurchRcptLine.SetRange("Order No.", "Document No.");
+                PurchRcptLine.SetRange("Order Line No.", "Line No.");
+                if PurchRcptLine.FindSet() then
+                    repeat
+                        if PurchRcptLine."Ref. Posted Gate Entry" = "Ref. Posted Gate Entry" then
+                            Error(RGPErr, PurchRcptLine."Document No.");
+                    until PurchRcptLine.Next() = 0;
+            end;
+        }
+        //B2BVCOn03Oct22<<<
+        field(33002900; "Indent No."; Code[20])
+        {
+            Description = 'B2B1.0';
+        }
+        field(33002901; "Indent Line No."; Integer)
+        {
+            Description = 'B2B1.0';
+        }
+        field(33002902; "Quotation No."; Code[20])
+        {
+            Description = 'PO1.0';
+        }
+        field(33002903; "Delivery Rating"; Decimal)
+        {
+            Description = 'PO1.0';
+        }
+        field(33002904; "Indent Req No"; Code[20])
+        {
+            Description = 'PO1.0';
+            Editable = false;
+        }
+        field(33002905; "Indent Req Line No"; Integer)
+        {
+            Description = 'PO1.0';
+            Editable = false;
+        }
+
         /*
         field(33000250; "Spec ID"; Code[20])
         {
@@ -469,17 +516,17 @@ tableextension 50056 tableextension70000011 extends "Purchase Line"
         {
             Description = 'PO1.0';
         }*///Balu
-        /*
-        field(33002904; "Indent Req No"; Code[20])
-        {
-            Description = 'PO1.0';
-            Editable = false;
-        }
-        field(33002905; "Indent Req Line No"; Integer)
-        {
-            Description = 'PO1.0';
-            Editable = false;
-        }*///Balu
+           /*
+           field(33002904; "Indent Req No"; Code[20])
+           {
+               Description = 'PO1.0';
+               Editable = false;
+           }
+           field(33002905; "Indent Req Line No"; Integer)
+           {
+               Description = 'PO1.0';
+               Editable = false;
+           }*///Balu
     }
     keys
     {

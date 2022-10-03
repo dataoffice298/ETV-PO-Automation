@@ -16,6 +16,10 @@ page 50144 "Inward Gate Entry-NRGP"
         {
             group(General)
             {
+                field("Location Code"; "Location Code")
+                {
+                    ApplicationArea = ALL;
+                }
                 field(Type; Type)
                 {
                     ApplicationArea = all;
@@ -39,10 +43,7 @@ page 50144 "Inward Gate Entry-NRGP"
 
                     end;
                 }
-                field("Location Code"; "Location Code")
-                {
-                    ApplicationArea = ALL;
-                }
+
                 field("Station From/To"; "Station From/To")
                 {
                     ApplicationArea = ALL;
@@ -77,14 +78,6 @@ page 50144 "Inward Gate Entry-NRGP"
                     ApplicationArea = ALL;
                 }
                 field("Posting Time"; "Posting Time")
-                {
-                    ApplicationArea = ALL;
-                }
-                field("LR/RR No."; "LR/RR No.")
-                {
-                    ApplicationArea = ALL;
-                }
-                field("LR/RR Date"; "LR/RR Date")
                 {
                     ApplicationArea = ALL;
                 }

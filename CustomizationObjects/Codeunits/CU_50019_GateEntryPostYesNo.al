@@ -8,6 +8,7 @@ codeunit 50019 "Gate Entry- Post"
     trigger OnRun();
     var
         InvSetUp: Record "Inventory Setup";
+        Location: Record Location;
     begin
         GateEntryHeader := Rec;
         with GateEntryHeader do begin
@@ -43,24 +44,24 @@ codeunit 50019 "Gate Entry- Post"
                     COMMIT;
                     //B2B FIX 19Apr2021>>
                 end else begin
-                    InvSetUp.Get();
+                    Location.Get(GateEntryHeader."Location Code");
                     if "Entry Type" = "Entry Type"::Inward then
                         if Type = Type::RGP then begin
-                            InvSetUp.TestField("Inward RGP No. Series_B2B");
-                            "Posting No. Series" := InvSetUp."Inward RGP No. Series_B2B";
+                            Location.TestField("Inward RGP No. Series_B2B");
+                            "Posting No. Series" := Location."Inward RGP No. Series_B2B";
                         end else
                             if Type = Type::NRGP then begin
-                                InvSetUp.TestField("Inward NRGP No. Series_B2B");
-                                "Posting No. Series" := InvSetUp."Inward NRGP No. Series_B2B";
+                                Location.TestField("Inward NRGP No. Series_B2B");
+                                "Posting No. Series" := Location."Inward NRGP No. Series_B2B";
                             end;
                     if "Entry Type" = "Entry Type"::Outward then
                         if Type = Type::RGP then begin
-                            InvSetUp.TestField("Outward RGP No. Series_B2B");
-                            "Posting No. Series" := InvSetUp."Outward RGP No. Series_B2B";
+                            Location.TestField("Outward RGP No. Series_B2B");
+                            "Posting No. Series" := Location."Outward RGP No. Series_B2B";
                         end else
                             if Type = Type::NRGP then begin
-                                InvSetUp.TestField("Outward NRGP No. Series_B2B");
-                                "Posting No. Series" := InvSetUp."Outward NRGP No. Series_B2B";
+                                Location.TestField("Outward NRGP No. Series_B2B");
+                                "Posting No. Series" := Location."Outward NRGP No. Series_B2B";
                             end;
                     MODIFY;
                     COMMIT;

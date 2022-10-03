@@ -41,6 +41,7 @@ page 50126 "Quotation Comparision Doc"
                 {
                     ToolTip = 'Specifies the value of the Orders Created field.';
                     ApplicationArea = All;
+                    Editable = False;
                 }
                 field("Purch. Req. Ref. No."; Rec."Purch. Req. Ref. No.")
                 {
@@ -284,7 +285,8 @@ page 50126 "Quotation Comparision Doc"
                 ShortCutKey = 'Ctrl+F11';
                 Image = ReleaseDoc;
                 trigger OnAction()
-
+                var
+                    QuotationLines: Record 50046;
                 begin
                     IF WorkflowManagement.CanExecuteWorkflow(Rec, allinoneCU.RunworkflowOnSendQuoteComparisionCusforApprovalCode()) then
                         error('Workflow is enabled. You can not release manually.');
@@ -292,6 +294,10 @@ page 50126 "Quotation Comparision Doc"
                     IF Rec.Status <> Rec.Status::Released then BEGIN
                         Rec.Status := Rec.Status::Released;
                         Rec.Modify();
+                        QuotationLines.Reset();
+                        QuotationLines.SetRange("Quot Comp No.", rec."No.");
+                        if QuotationLines.FindSet() then
+                            QuotationLines.ModifyAll(Status, QuotationLines.Status::Released);
                         Message('Document is Released.');
                     end;
                 end;
@@ -304,6 +310,7 @@ page 50126 "Quotation Comparision Doc"
                 trigger OnAction();
                 var
                     RecordRest: Record "Restricted Record";
+                    QuotationLines: Record 50046;
                 begin
 
                     IF Rec.Status = Rec.Status::"Pending Approval" THEN
@@ -316,6 +323,11 @@ page 50126 "Quotation Comparision Doc"
                     IF Rec.Status <> Rec.Status::Open then BEGIN
                         Rec.Status := Rec.Status::Open;
                         Rec.Modify();
+
+                        QuotationLines.Reset();
+                        QuotationLines.SetRange("Quot Comp No.", rec."No.");
+                        if QuotationLines.FindSet() then
+                            QuotationLines.ModifyAll(Status, QuotationLines.Status::Open);
                         Message('Document is Reopened.');
                     end;
                 end;

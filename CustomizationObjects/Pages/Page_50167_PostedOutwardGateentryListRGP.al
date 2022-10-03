@@ -64,5 +64,6 @@ page 50167 "PostedOutwardGateEntryList-RGP"
     actions
     {
     }
+    
 }
 

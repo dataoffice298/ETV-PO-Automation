@@ -130,6 +130,7 @@ page 50114 "Indent Req Header"
                         END;
                     end;
                 }
+
                 action("Create &Quote")
                 {
                     Caption = 'Create &Quote';

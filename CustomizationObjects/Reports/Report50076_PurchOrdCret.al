@@ -102,6 +102,12 @@ report 50076 "Purchase Order Creation New"
                             PurchaseLineOrder.Validate("Shortcut Dimension 1 Code");
                             PurchaseLineOrder.validate("Shortcut Dimension 2 Code");
                             PurchaseLineOrder.Validate("Dimension Set ID");
+                            //B2BMSOn21Sep2022>>
+                            PurchaseLineOrder."Indent No." := PurchaseLine."Indent No.";
+                            PurchaseLineOrder."Indent Line No." := PurchaseLine."Indent Line No.";
+                            PurchaseLineOrder."Indent Req No" := PurchaseLine."Indent Req No";
+                            PurchaseLineOrder."Indent Req Line No" := PurchaseLine."Indent Req Line No";
+                            //B2BMSOn21Sep2022<<
                             PurchaseLineOrder.Modify();
                             LneLVar += 10000;
                         until PurchaseLine.Next() = 0;

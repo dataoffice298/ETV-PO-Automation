@@ -16,9 +16,26 @@ pageextension 50100 PosPurchReceipt extends "Posted Purchase Receipt"
             {
                 ApplicationArea = all;
             }
+            field("EPCG Scheme"; rec."EPCG Scheme")
+            {
+                ApplicationArea = all;
+            }
+            field("Import Type"; rec."Import Type")
+            {
+                ApplicationArea = all;
+            }
 
+        }
 
-
+        addfirst(factboxes)
+        {
+            part("Attached Documents"; "Document Attachment Factbox")
+            {
+                ApplicationArea = All;
+                Caption = 'Attachments';
+                SubPageLink = "Table ID" = CONST(120),
+                              "No." = FIELD("No.");
+            }
         }
 
     }
@@ -39,13 +56,11 @@ pageextension 50100 PosPurchReceipt extends "Posted Purchase Receipt"
                 var
                     DocumentAttachmentDetails: Page "Document Attachment Details";
                     RecRef: RecordRef;
-                    PurchHdr: Record "Purchase Header";
                 begin
-                    if PurchHdr.get(PurchHdr."Document Type"::Order, Rec."Order No.") then begin
-                        RecRef.GetTable(PurchHdr);
-                        DocumentAttachmentDetails.OpenForRecRef(RecRef);
-                        DocumentAttachmentDetails.RunModal;
-                    end;
+                    RecRef.GetTable(Rec);
+                    DocumentAttachmentDetails.OpenForRecRef(RecRef);
+                    DocumentAttachmentDetails.RunModal;
+
                 end;
             }
         }

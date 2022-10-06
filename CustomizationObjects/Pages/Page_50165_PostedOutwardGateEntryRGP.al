@@ -2,7 +2,6 @@ page 50165 "Posted Outward Gate Entry-RGP"
 {
     Caption = 'Posted RGP-OUTWARD';
     UsageCategory = Documents;
-    ApplicationArea = ALL;
     Editable = false;
     PageType = Document;
     SourceTable = "Posted Gate Entry Header_B2B";

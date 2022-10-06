@@ -85,6 +85,8 @@ codeunit 50016 "MyBaseSubscr"
         if PurchRcptHeader.IsTemporary() then
             exit;
 
+        ToRecRef.GetTable(PurchRcptHeader); //B2BMSOn06Oct2022
+
         FromRecRef.GetTable(PurchaseHeader);
 
         if ToRecRef.Number > 0 then
@@ -132,6 +134,25 @@ codeunit 50016 "MyBaseSubscr"
             until FromDocumentAttachment.Next() = 0;
         end;
     end;
+
+    //B2BMSOn06Oct2022>>
+    [EventSubscriber(ObjectType::Page, Page::"Document Attachment Factbox", 'OnBeforeDrillDown', '', false, false)]
+    local procedure OnBeforeDrillDownAttachDoc(DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef)
+    var
+        PurchRcptHdr: Record "Purch. Rcpt. Header";
+    begin
+        case DocumentAttachment."Table ID" of
+            0:
+                exit;
+            DATABASE::"Purch. Rcpt. Header":
+                begin
+                    RecRef.Open(DATABASE::"Purch. Rcpt. Header");
+                    if PurchRcptHdr.Get(DocumentAttachment."No.") then
+                        RecRef.GetTable(PurchRcptHdr);
+                end;
+        end;
+    end;
+    //B2BMSOn06Oct2022<<
 
     procedure CreateFAMovememt(var IndentLine: Record "Indent Line")
     var

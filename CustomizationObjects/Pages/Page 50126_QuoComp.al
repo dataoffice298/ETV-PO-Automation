@@ -1,7 +1,6 @@
 page 50126 "Quotation Comparision Doc"
 {
     PageType = Document;
-    ApplicationArea = All;
     Caption = 'Quotation Comparison Doc';
     UsageCategory = Administration;
     SourceTable = QuotCompHdr;

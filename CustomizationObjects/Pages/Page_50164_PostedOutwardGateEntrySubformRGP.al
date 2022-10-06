@@ -1,8 +1,6 @@
 page 50164 "Posted Outward Gate SubFm-RGP"
 {
     Caption = 'Posted RGP-OUTWARD Subform';
-    UsageCategory = Tasks;
-    ApplicationArea = ALL;
     AutoSplitKey = true;
     Editable = false;
     PageType = ListPart;

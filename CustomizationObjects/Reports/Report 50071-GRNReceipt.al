@@ -9,8 +9,14 @@ report 50071 "GRN RECEIPT"
 
     dataset
     {
-        dataitem("Indent Header"; "Indent Header")
+        dataitem("Purch. Rcpt. Header"; "Purch. Rcpt. Header")
         {
+            column(PONo; "Order No.")
+            { }
+            column(ReceiptDate; "Document Date")
+            { }
+            column(Buy_from_Vendor_Name; "Buy-from Vendor Name")
+            { }
             column(CompanyInfoName; CompanyInfo.Name)
             { }
             column(CompanyInfoName2; CompanyInfo."Name 2")
@@ -117,6 +123,48 @@ report 50071 "GRN RECEIPT"
             { }
             column(RamojiFCCapLbl; RamojiFCCapLbl)
             { }
+            dataitem("Purch. Rcpt. Line"; "Purch. Rcpt. Line")
+            {
+                DataItemLink = "Document No." = field("No.");
+                column(Indent_No_; "Indent No.")
+                { }
+                column(POReqNo; "Indent Req No")
+                { }
+                column(InwardNo; "Ref. Posted Gate Entry")
+                { }
+                trigger OnAfterGetRecord()
+                begin
+                    PurchInvln.Reset();
+                    PurchInvln.SetRange("Receipt No.", "Document No.");
+                    PurchInvln.SetRange("Receipt Line No.", "Line No.");
+                    if PurchInvln.FindFirst() then begin
+                        InvNo := PurchInvln."Document No.";
+                        InvDate := PurchInvln."Posting Date";
+                    end;
+                    IndentHdr.Reset();
+                    IndentHdr.SetRange("No.", "Indent No.");
+                    if IndentHdr.FindFirst() then
+                        IndntDate := IndentHdr."Document Date";
+                    Indentor := IndentHdr.Indentor;
+                    PostGateEnthdrB2B.Reset();
+                    PostGateEnthdrB2B.SetRange("No.", "Document No.");
+                    if PostGateEnthdrB2B.FindFirst() then
+                        InwrdDate := PostGateEnthdrB2B."Document Date";
+
+
+                end;
+            }
+            trigger OnAfterGetRecord()
+            begin
+                PostGateEntLinB2B.Reset();
+                PostGateEntLinB2B.SetRange("Source No.", "Order No.");
+                if PostGateEntLinB2B.FindFirst() then begin
+                    DCNO := PostGateEntLinB2B."Challan No.";
+                    DCDate := PostGateEntLinB2B."Challan Date";
+                end;
+
+
+            end;
 
             trigger OnPreDataItem();
             begin
@@ -150,6 +198,18 @@ report 50071 "GRN RECEIPT"
      }*/
 
     var
+        InwrdDate: Date;
+        Indentor: Text[50];
+
+        DCNO: Code[20];
+        IndntDate: Date;
+        DCDate: Date;
+        InvNo: Code[20];
+        InvDate: Date;
+        IndentHdr: Record "Indent Header";
+        PurchInvln: Record "Purch. Inv. line";
+        PostGateEntLinB2B: Record "Posted Gate Entry Line_B2B";
+        PostGateEnthdrB2B: record "Posted Gate Entry Header_B2B";
         CompanyInfo: Record "Company Information";
         StoresReceiptCapLbl: Label 'STORES RECEIPT CUM INSPECTION REPORT';
         TechnicalStoresCapLbl: Label 'TECHNICAL STORES';

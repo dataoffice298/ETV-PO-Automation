@@ -9,7 +9,6 @@ page 50113 "Indent SubForm List"
     PageType = ListPart;
     SourceTable = "Indent Line";
     UsageCategory = Lists;
-    ApplicationArea = All;
 
     layout
     {

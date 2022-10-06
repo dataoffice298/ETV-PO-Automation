@@ -1,4 +1,4 @@
-pageextension 50110 PurchaseOrderSubform extends "Purchase Order Subform"
+pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
 {
     //B2BVCOn03Oct22>>>
     layout

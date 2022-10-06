@@ -3,8 +3,6 @@ page 50145 "Inward Gate Entry SubFrm-NRGP"
     // version NAVIN7.00
     Caption = 'NRGP-INWARD Subform';
     AutoSplitKey = true;
-    UsageCategory = Tasks;
-    ApplicationArea = all;
     DelayedInsert = TRUE;
 
     PageType = ListPart;

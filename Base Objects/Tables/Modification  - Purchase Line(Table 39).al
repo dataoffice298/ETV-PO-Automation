@@ -370,7 +370,7 @@ tableextension 50056 tableextension70000011 extends "Purchase Line"
         //B2BVCOn03Oct22>>>
         field(60011; "Ref. Posted Gate Entry"; Code[20])
         {
-            TableRelation = "Posted Gate Entry Line_B2B"."Source No." where("Source No." = field("Document No."));
+            TableRelation = "Posted Gate Entry Line_B2B"."Gate Entry No." where("Source No." = field("Document No."));
 
             trigger OnValidate()
             var

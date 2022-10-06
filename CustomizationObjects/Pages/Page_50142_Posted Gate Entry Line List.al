@@ -2,8 +2,6 @@ page 50142 "Posted Gate Entry Line List"
 {
     // version NAVIN7.00
     UsageCategory = Lists;
-    ApplicationArea = ALL;
-
     Editable = false;
     PageType = List;
     SourceTable = "Posted Gate Entry Line_B2B";

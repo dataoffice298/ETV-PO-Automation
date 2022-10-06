@@ -1,8 +1,6 @@
 page 50151 "Posted Inward Gate SubFm-NRGP"
 {
     Caption = 'Posted NRGP-INWARD Subform';
-    UsageCategory = Tasks;
-    ApplicationArea = ALL;
     Editable = false;
     PageType = ListPart;
     SourceTable = "Posted Gate Entry Line_B2B";

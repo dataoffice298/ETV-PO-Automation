@@ -2880,6 +2880,15 @@ End Function
   <DataSets>
     <DataSet Name="DataSet_Result">
       <Fields>
+        <Field Name="PONo">
+          <DataField>PONo</DataField>
+        </Field>
+        <Field Name="ReceiptDate">
+          <DataField>ReceiptDate</DataField>
+        </Field>
+        <Field Name="Buy_from_Vendor_Name">
+          <DataField>Buy_from_Vendor_Name</DataField>
+        </Field>
         <Field Name="CompanyInfoName">
           <DataField>CompanyInfoName</DataField>
         </Field>
@@ -3038,6 +3047,15 @@ End Function
         </Field>
         <Field Name="RamojiFCCapLbl">
           <DataField>RamojiFCCapLbl</DataField>
+        </Field>
+        <Field Name="Indent_No_">
+          <DataField>Indent_No_</DataField>
+        </Field>
+        <Field Name="POReqNo">
+          <DataField>POReqNo</DataField>
+        </Field>
+        <Field Name="InwardNo">
+          <DataField>InwardNo</DataField>
         </Field>
       </Fields>
       <Query>

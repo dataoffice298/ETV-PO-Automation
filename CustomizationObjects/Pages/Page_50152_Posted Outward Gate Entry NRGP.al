@@ -2,7 +2,6 @@ page 50152 "Posted Outward Gate Entry-NRGP"
 {
     Caption = 'Posted NRGP-OUTWARD';
     UsageCategory = Documents;
-    ApplicationArea = ALL;
     Editable = false;
     DeleteAllowed = false;
     PageType = Document;

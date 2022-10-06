@@ -21,7 +21,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
     }
     actions
     {
-        //B2BVCOn03Sep2022>>
+        //B2BVCOn03Oct2022>>
         modify(Post)
         {
             trigger OnBeforeAction()
@@ -40,12 +40,29 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
 
             end;
         }
-        //B2BVCOn03Sep2022<<
+        //B2BVCOn03Oct2022<<
+        //B2BVCOn04Oct2022>>>
+        modify(Release)
+        {
+            trigger OnBeforeAction()
+            begin
+                if (Rec."LC No." = '') then begin
+                    LCDetails.Reset();
+                    LCDetails.SetRange("Issued To/Received From", Rec."Buy-from Vendor No.");
+                    LCDetails.SetRange("Transaction Type", LCDetails."Transaction Type"::Purchase);
+                    LCDetails.SetRange(Released, true);
+                    if LCDetails.FindFirst() then
+                        Error('There is a Released LC document against this Vendor. To proceed, please provide LC No. in Purchase Order');
+                end;
+            end;
+        }
+        //B2BVCOn04Oct2022<<<
     }
     var
         cu90: Codeunit "Purch.-Post";
         GateEntry: Record "Posted Gate Entry Line_B2B";
         PurchLine: Record "Purchase Line";
+        LCDetails: Record "LC Details";
 
     /*   actions
        {

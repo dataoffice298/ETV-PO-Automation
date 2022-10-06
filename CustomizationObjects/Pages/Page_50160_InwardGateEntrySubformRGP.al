@@ -2,8 +2,6 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
 {
     Caption = 'RGP-INWARD Subform';
     AutoSplitKey = true;
-    UsageCategory = Tasks;
-    ApplicationArea = all;
     DelayedInsert = TRUE;
     PageType = ListPart;
     SourceTable = "Gate Entry Line_B2B";
@@ -25,12 +23,12 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
                 {
                     ApplicationArea = ALL;
                     OptionCaption = ' ,Sales Shipment,Sales Return Order,Purchase Order,Purchase Return Shipment,Transfer Receipt,Transfer Shipment,Item,Fixed Asset,Others';
-                    Editable = false;
+
                 }
                 field("Source No."; "Source No.")
                 {
                     ApplicationArea = ALL;
-                    Editable = false;
+
                 }
                 field("Source Name"; "Source Name")
                 {
@@ -40,7 +38,7 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
                 field("Posted RGP OUT NO."; "Posted RGP OUT NO.")
                 {
                     ApplicationArea = all;
-                    Editable = false;
+
                 }
                 field(Quantity; Quantity)
                 {
@@ -67,13 +65,12 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
                 field("Unit of Measure"; "Unit of Measure")
                 {
                     ApplicationArea = all;
-                    Editable = false;
+
                 }
                 field(Description; Description)
                 {
                     ApplicationArea = ALL;
-                    Editable = false;
-                    Visible = false;
+
                 }
                 field("Source Line No."; "Source Line No.")
                 {

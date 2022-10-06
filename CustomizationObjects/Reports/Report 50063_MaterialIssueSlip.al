@@ -11,6 +11,7 @@ report 50063 "Material Issue Slip"
     {
         dataitem("Indent Header"; "Indent Header")
         {
+            RequestFilterFields = "No.";
             column(CompanyInfoName; Companyinfo.Name)
             { }
             column(CompanyInfoAddress; CompanyInfo.Address)
@@ -63,6 +64,53 @@ report 50063 "Material Issue Slip"
             { }
             column(RamojiFCCapLbl; RamojiFCCapLbl)
             { }
+            column(Indentor; Indentor)
+            { }
+            column(Department; Department)
+            { }
+            column(No_; "No.")
+            { }
+            column(Document_Date; "Document Date")
+            { }
+            column(Delivery_Location; "Delivery Location")
+            { }
+            column(IssNo; ItemJournalLine."Document No.")
+            { }
+            column(IssDate; ItemJournalLine."Posting Date")
+            { }
+
+            dataitem("Indent Line"; "Indent Line")
+            {
+                DataItemLink = "Document No." = field("No.");
+                column(SNo; SNo)
+                { }
+                column(DescriptionGrec; DescriptionGrec)
+                { }
+                column(CategoryName; CategoryName)
+                { }
+                column(UomGrec; UomGrec)
+                { }
+                column(ReqQty; ReqQty)
+                { }
+                column(QtyIssue; QtyIssue)
+                { }
+
+                trigger OnAfterGetRecord()
+                begin
+                    "Indent Line".Reset();
+                    "Indent Line".SetRange("Document No.", "No.");
+                    if "Indent Line".FindSet() then begin
+                        repeat
+                            SNo += 1;
+                            DescriptionGrec := "Indent Line".Description;
+                            CategoryName := "Indent Line".Type;
+                            UomGrec := "Indent Line"."Unit of Measure";
+                            ReqQty := "Indent Line"."Req.Quantity";
+                            QtyIssue := "Indent Line"."Qty To Issue";
+                        until "Indent Line".Next = 0;
+                    end;
+                end;
+            }
 
             trigger OnPreDataItem();
             begin
@@ -121,4 +169,11 @@ report 50063 "Material Issue Slip"
         StoresAssCapLbl: Label 'Stores Assistant';
         ReceiversSigCapLbl: Label 'Receivers Signature';
         RamojiFCCapLbl: Label 'RAMOJI FILM CITY - HYDERBAD';
+        ItemJournalLine: Record "Item Journal Line";
+        DescriptionGrec: Text[50];
+        CategoryName: Option;
+        UomGrec: Code[10];
+        ReqQty: Decimal;
+        QtyIssue: Decimal;
+        SNo: Integer;
 }

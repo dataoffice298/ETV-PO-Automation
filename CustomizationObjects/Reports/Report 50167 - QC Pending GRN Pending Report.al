@@ -8,7 +8,7 @@ report 50167 "QC Pending GRN Pending Report"
 
     dataset
     {
-        dataitem("Indent Header"; "Indent Header")
+        dataitem(IndentHeader; "Indent Header")
         {
             dataitem("Indent Line"; "Indent Line")
             {
@@ -16,48 +16,49 @@ report 50167 "QC Pending GRN Pending Report"
                 trigger OnAfterGetRecord()
                 var
                     Item: Record Item;
-                    IndentHeader: Record "Indent Header";
                     Users: Record User;
                     PurchLine: Record "Purchase Line";
                     PurchHdr: Record "Purchase Header";
-
-
-
+                    PostGateEntryHdr: Record "Posted Gate Entry Header_B2B";
                 begin
                     Clear(PurchLine);
                     Clear(Item);
                     Clear(PurchHdr);
 
                     SNo += 1;
-                    if IndentHeader.Get("Indent Line"."Document No.") then begin
-                        Users.Reset();
-                        Users.SetRange("User Name", IndentHeader.Indentor);
-                        if Users.FindFirst() then;
-                    end;
+
+                    Users.Reset();
+                    Users.SetRange("User Name", IndentHeader.Indentor);
+                    if Users.FindFirst() then;
+
                     if Item.Get("No.") then;
                     Clear(PurchHdr);
                     PurchLine.Reset;
                     PurchLine.SetRange("Indent No.", "Indent Line"."Document No.");
                     PurchLine.SetRange("Indent Line No.", "Indent Line"."Line No.");
                     if PurchLine.FindFirst() then
-                        // if PurchHdr.get(PurchLine."Document No.") then;
+                        if PurchHdr.get(PurchHdr."Document Type"::Order, PurchLine."Document No.") then;
+
+                    PostGateEntryHdr.Reset();
+                    PostGateEntryHdr.SetRange("No.", PurchLine."Ref. Posted Gate Entry");
+                    if PostGateEntryHdr.FindFirst() then;
 
                     WindPa.Update(1, "Document No.");
                     TempExcelBuffer.NewRow();
                     TempExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn("Document No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    TempExcelBuffer.AddColumn("Document No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn(IndentHeader."Document Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
-                    TempExcelBuffer.AddColumn('', FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn('', FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn(PurchLine."Document No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    TempExcelBuffer.AddColumn(PurchLine."Ref. Posted Gate Entry", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn(PostGateEntryHdr."Document Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
+                    TempExcelBuffer.AddColumn(PurchLine."Document No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn(PurchHdr."Posting Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
                     TempExcelBuffer.AddColumn(PurchHdr."Buy-from Vendor Name", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn(PurchLine."Delivery Challan Posted", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn(PurchLine."Delivery Challan Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn(Item."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    TempExcelBuffer.AddColumn(PurchLine."Delivery Challan Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
+                    TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn(Item."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn(Item.Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn("Unit of Measure", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    TempExcelBuffer.AddColumn("Unit of Measure", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("Quantity (Base)", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn("Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn(Amount, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
@@ -119,16 +120,18 @@ report 50167 "QC Pending GRN Pending Report"
         WindPa.OPEN('Processing #1###############');
         TempExcelBuffer.NewRow();
         TempExcelBuffer.AddColumn('', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-        TempExcelBuffer.AddColumn('QC Pending GRN Pending', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-        IF StartDate <> 0D THEN
-            TempExcelBuffer.AddColumn('From Date', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-        TempExcelBuffer.AddColumn(StartDate, FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
+        TempExcelBuffer.AddColumn(CompanyName, FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        TempExcelBuffer.NewRow();
         TempExcelBuffer.AddColumn('', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-        IF EndDate <> 0D THEN
-            TempExcelBuffer.AddColumn('To Date', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-        TempExcelBuffer.AddColumn(EndDate, FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
+        TempExcelBuffer.AddColumn('QC Pending GRN Details', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        TempExcelBuffer.NewRow();
+        TempExcelBuffer.AddColumn('', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        TempExcelBuffer.AddColumn('', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        IF (StartDate <> 0D) or (EndDate <> 0D) THEN
+            TempExcelBuffer.AddColumn('QC Pending GRN: ' + Format(StartDate) + ' to ' + Format(EndDate), FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+
         TempExcelBuffer.NewRow();
         TempExcelBuffer.AddColumn('SNo.', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('INDENT NO.', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);

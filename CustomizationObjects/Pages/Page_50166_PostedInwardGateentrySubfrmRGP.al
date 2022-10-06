@@ -2,8 +2,6 @@ page 50166 "Posted Inward Gate SubFm-RGP"
 {
 
     Caption = 'Posted RGP-INWARD Subform';
-    UsageCategory = Tasks;
-    ApplicationArea = ALL;
     Editable = false;
     PageType = ListPart;
     SourceTable = "Posted Gate Entry Line_B2B";

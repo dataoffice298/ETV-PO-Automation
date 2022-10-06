@@ -15,8 +15,10 @@ report 50162 "Issuance Report"
                 trigger OnAfterGetRecord()
                 var
                     Item: Record Item;
-                    //IndentHeader: Record "Indent Header";
+                    ILE: Record "Item Ledger Entry";
                     Users: Record User;
+                    PurchLine: Record "Purchase Line";
+                    PostGateEntryLine: Record "Posted Gate Entry Line_B2B";
                 begin
                     SNo += 1;
 
@@ -26,6 +28,20 @@ report 50162 "Issuance Report"
                     ;
                     if Item.Get("No.") then;
                     CalcFields("Qty Issued");
+
+                    ILE.Reset();
+                    ILE.SetRange("Indent No.", "Document No.");
+                    ILE.SetRange("Indent Line No.", "Line No.");
+                    if ILE.FindFirst() then;
+
+                    PurchLine.Reset();
+                    PurchLine.SetRange("Indent No.", "Document No.");
+                    PurchLine.SetRange("Indent Line No.", "Line No.");
+                    if PurchLine.FindFirst() then begin
+                        PostGateEntryLine.Reset();
+                        PostGateEntryLine.SetRange("Source No.", PurchLine."Document No.");
+                        if PostGateEntryLine.FindFirst() then;
+                    end;
 
                     WindPa.Update(1, "Document No.");
                     TempExcelBuffer.NewRow();
@@ -38,8 +54,8 @@ report 50162 "Issuance Report"
                     TempExcelBuffer.AddColumn(Users."Full Name", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("Document No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("Indent Header"."Document Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
-                    TempExcelBuffer.AddColumn('', FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn('', FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn(ILE."Document No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn(ILE."Posting Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn(Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("Quantity (Base)", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
@@ -47,7 +63,7 @@ report 50162 "Issuance Report"
                     TempExcelBuffer.AddColumn("Qty Issued", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn(Amount, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn('', FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn(PostGateEntryLine."Gate Entry No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                 end;
             }
             trigger OnPreDataItem()

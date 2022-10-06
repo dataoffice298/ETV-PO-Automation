@@ -41,6 +41,16 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
         {
             Caption = 'EPCG No';
         }
+        field(50113; "EPCG Scheme"; Option)
+        {
+            OptionMembers = "Under EPCG","Non EPCG";
+            OptionCaption = 'Under EPCG,Non EPCG';
+        }
+        field(50114; "Import Type"; Option)
+        {
+            OptionMembers = Import,Indigenous;
+            OptionCaption = 'Import,Indigenous';
+        }
         field(33002900; "RFQ No."; Code[20])
         {
             Description = 'PO1.0';
@@ -80,8 +90,8 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
             OptionMembers = ,Open,"Pending Approval",Released;
             OptionCaption = ' ,Open,Pending Approval,Released';
         }
-        
-       
+
+
 
 
 

@@ -3,7 +3,6 @@ page 50134 "Archived Quotation Document"
     Caption = 'Archived Quotation Document';
     PageType = Document;
     SourceTable = "Archive Quotation Header";
-    ApplicationArea = All;
     UsageCategory = Administration;
 
     layout

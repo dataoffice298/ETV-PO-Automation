@@ -2,7 +2,6 @@ page 50146 "Outward Gate Entry - NRGP"
 {
     Caption = 'NRGP-OUTWARD';
     UsageCategory = Documents;
-    ApplicationArea = ALL;
     PageType = Document;
     DeleteAllowed = false;
     SourceTable = "Gate Entry Header_B2B";

@@ -5,8 +5,6 @@ page 50158 "Outward Gate Entry SubFrm-RGP"
     DelayedInsert = true;
     PageType = ListPart;
     SourceTable = "Gate Entry Line_B2B";
-    UsageCategory = Tasks;
-    ApplicationArea = ALL;
 
     layout
     {

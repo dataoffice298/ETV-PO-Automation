@@ -180,7 +180,7 @@ table 50054 "LC Details"
                 END ELSE
                     "LC Value LCY" := "LC Value";
                 CALCFIELDS("Value Utilised");
-                "Remaining Amount" := "LC Value LCY" - "Value Utilised";
+                "Remaining Amount" := "LC Value" - "Value Utilised"; //B2BVCOn04Oct22
                 "Latest Amended Value" := "LC Value LCY";
             end;
         }

@@ -4,7 +4,7 @@ tableextension 50051 tableextension70000002 extends "Purch. Rcpt. Header"
 
     fields
     {
-        
+
         field(51000; Subject; Text[200])
         {
             Caption = 'Subject';
@@ -22,6 +22,16 @@ tableextension 50051 tableextension70000002 extends "Purch. Rcpt. Header"
         field(50112; "EPCG No."; Code[20])
         {
             Caption = 'EPCG No';
+        }
+        field(50113; "EPCG Scheme"; Option)
+        {
+            OptionMembers = "Under EPCG","Non EPCG";
+            OptionCaption = 'Under EPCG,Non EPCG';
+        }
+        field(50114; "Import Type"; Option)
+        {
+            OptionMembers = Import,Indigenous;
+            OptionCaption = 'Import,Indigenous';
         }
         field(33002900; "RFQ No."; Code[20])
         {
@@ -44,7 +54,7 @@ tableextension 50051 tableextension70000002 extends "Purch. Rcpt. Header"
             Editable = false;
             TableRelation = "Quotation Comparison";
         }
-         field(33002903; "Indent Req No"; Code[20])
+        field(33002903; "Indent Req No"; Code[20])
         {
             Description = 'PO1.0';
         }

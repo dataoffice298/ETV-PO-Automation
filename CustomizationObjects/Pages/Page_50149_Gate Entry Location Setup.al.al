@@ -2,7 +2,7 @@ page 50149 "Gate Entry Location Setup"
 {
     PageType = List;
     SourceTable = "Gate Entry Location Setup_B2B";
-    UsageCategory = Tasks;
+    UsageCategory = Administration;
     ApplicationArea = ALL;
     layout
     {

@@ -9,7 +9,6 @@ page 50047 "Archive Indent Subform"
     Caption = 'Archive Indent Lines';
     Editable = false;
     UsageCategory = Lists;
-    ApplicationArea = All;
 
     layout
     {

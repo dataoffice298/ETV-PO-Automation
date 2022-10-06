@@ -5,8 +5,6 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
     DelayedInsert = true;
     PageType = ListPart;
     SourceTable = "Gate Entry Line_B2B";
-    UsageCategory = Tasks;
-    ApplicationArea = ALL;
     layout
     {
         area(content)

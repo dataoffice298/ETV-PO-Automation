@@ -1,8 +1,6 @@
 page 50153 "Posted Outward Gate SubFm-NRGP"
 {
     Caption = 'Posted NRGP-OUTWARD Subform';
-    UsageCategory = Tasks;
-    ApplicationArea = ALL;
     AutoSplitKey = true;
     Editable = false;
     PageType = ListPart;

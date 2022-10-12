@@ -7,7 +7,8 @@ table 50037 "Indent Line"
     // SM  PO1.0  05/06/08  "Indent Req No" and "Indent Req Line No" fields added and Changed option values of Type field
     //                      and code in "No." field OnValidate
 
-    LookupPageID = 50026;
+    LookupPageID = "Indent Line";
+    DrillDownPageId = "Indent Line";
 
     fields
     {

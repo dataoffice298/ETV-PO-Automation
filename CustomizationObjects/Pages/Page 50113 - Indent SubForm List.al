@@ -8,7 +8,6 @@ page 50113 "Indent SubForm List"
     MultipleNewLines = true;
     PageType = ListPart;
     SourceTable = "Indent Line";
-    UsageCategory = Lists;
 
     layout
     {

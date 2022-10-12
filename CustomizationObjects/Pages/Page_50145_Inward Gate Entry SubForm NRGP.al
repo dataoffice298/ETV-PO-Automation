@@ -4,7 +4,6 @@ page 50145 "Inward Gate Entry SubFrm-NRGP"
     Caption = 'NRGP-INWARD Subform';
     AutoSplitKey = true;
     DelayedInsert = TRUE;
-
     PageType = ListPart;
     SourceTable = "Gate Entry Line_B2B";
 

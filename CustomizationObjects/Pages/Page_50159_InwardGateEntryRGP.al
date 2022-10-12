@@ -1,7 +1,6 @@
 page 50159 "Inward Gate Entry-RGP"
 {
     Caption = 'RGP-INWARD';
-    UsageCategory = Documents;
     PageType = Document;
     SourceTable = "Gate Entry Header_B2B";
     SourceTableView = SORTING("Entry Type", "No.")

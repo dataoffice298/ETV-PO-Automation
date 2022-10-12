@@ -16,7 +16,7 @@ page 50029 "Quotation Comparison"
 
     PageType = Worksheet;
     SourceTable = "Quotation Comparison";
-    UsageCategory = Tasks;
+    //UsageCategory = Tasks;
     //ApplicationArea = all;
 
     layout
@@ -250,24 +250,24 @@ page 50029 "Quotation Comparison"
                         QuoteCompareLocal: Record 50041;
                     begin
 
-                       /*    QuoteCompareArchive.SETRANGE("RFQ No.", rec."RFQ No.");
-                           IF QuoteCompareArchive.FIND('-') THEN
-                               REPEAT
-                                   QuoteCompareArchive.DELETE;
-                               UNTIL QuoteCompareArchive.NEXT = 0;
-                           QuoteCompareArchive.RESET;
-                           QuoteCompareArchive.SETFILTER("Line No.", '>%1', 1);
-                           QuoteCompareArchive.SETRANGE("RFQ No.", '');
-                           IF QuoteCompareArchive.FIND('-') THEN
-                               QuoteCompareArchive.DELETE;
-                           QuotationComparisionDelete.RESET;
-                           REPEAT
-                               ArchiveQCS(QuotationComparisionDelete);
-                           UNTIL QuotationComparisionDelete.NEXT = 0;
+                        /*    QuoteCompareArchive.SETRANGE("RFQ No.", rec."RFQ No.");
+                            IF QuoteCompareArchive.FIND('-') THEN
+                                REPEAT
+                                    QuoteCompareArchive.DELETE;
+                                UNTIL QuoteCompareArchive.NEXT = 0;
+                            QuoteCompareArchive.RESET;
+                            QuoteCompareArchive.SETFILTER("Line No.", '>%1', 1);
+                            QuoteCompareArchive.SETRANGE("RFQ No.", '');
+                            IF QuoteCompareArchive.FIND('-') THEN
+                                QuoteCompareArchive.DELETE;
+                            QuotationComparisionDelete.RESET;
+                            REPEAT
+                                ArchiveQCS(QuotationComparisionDelete);
+                            UNTIL QuotationComparisionDelete.NEXT = 0;
 
-                         //  REPORT.RUN(REPORT::"Purchase Order Creation"); //REP1.0
-                           QuotationComparisionDelete.DELETEALL;
-                           CurrPage.UPDATE; */
+                          //  REPORT.RUN(REPORT::"Purchase Order Creation"); //REP1.0
+                            QuotationComparisionDelete.DELETEALL;
+                            CurrPage.UPDATE; */
 
 
 

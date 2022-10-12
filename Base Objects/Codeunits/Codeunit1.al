@@ -243,6 +243,8 @@ codeunit 50016 "MyBaseSubscr"
                     LCOrder."Shipment Date" := "Expected Receipt Date";
                     LCOrder."Order Value" := "Amount" / CFactor;
                     LCOrder.INSERT;
+                    LCDetail.Validate("LC Value"); //B2BMSOn06Oct2022
+                    LCDetail.Modify(); //B2BMSOn06Oct2022
                 END;
             END;
         end;

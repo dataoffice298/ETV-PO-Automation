@@ -4,8 +4,7 @@ page 50127 QuotationComparSubForm
     PageType = ListPart;
     SourceTable = "Quotation Comparison Test";
     Caption = 'Quotation Comparison Subform';
-    UsageCategory = Tasks;
-    //SourceTableView = WHERE("Quote No." = FILTER(''));
+
     layout
     {
         area(content)

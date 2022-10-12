@@ -2,7 +2,6 @@ page 50144 "Inward Gate Entry-NRGP"
 {
     // version NAVIN7.00
     Caption = 'NRGP-INWARD ';
-    UsageCategory = Documents;
     PageType = Document;
     SourceTable = "Gate Entry Header_B2B";
     SourceTableView = SORTING("Entry Type", "No.")

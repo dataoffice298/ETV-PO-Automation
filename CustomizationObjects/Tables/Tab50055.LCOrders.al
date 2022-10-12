@@ -49,7 +49,7 @@ table 50055 "LC Orders"
     }
     keys
     {
-        key(PK; "LC No.")
+        key(PK; "LC No.", "Order No.")
         {
             Clustered = true;
         }

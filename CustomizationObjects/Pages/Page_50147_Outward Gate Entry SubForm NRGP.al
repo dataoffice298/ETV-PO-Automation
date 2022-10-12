@@ -23,6 +23,7 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
                 {
                     ApplicationArea = ALL;
                     OptionCaption = ' ,Sales Shipment,Sales Return Order,Purchase Order,Purchase Return Shipment,Transfer Receipt,Transfer Shipment,Item,Fixed Asset,Others';
+
                     trigger OnValidate()
                     begin
                     end;

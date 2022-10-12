@@ -5,8 +5,6 @@ page 50116 "Indent Header"
     PageType = ListPlus;
     SourceTable = "Indent Header";
     Caption = 'Indent Document';
-    UsageCategory = Administration;
-    ApplicationArea = all;
 
 
     layout
@@ -15,11 +13,12 @@ page 50116 "Indent Header"
         {
             group(General)
             {
+                Editable = PageEditable; //B2BPGON10OCT2022
                 Caption = 'General';
                 field("No."; rec."No.")
                 {
                     AssistEdit = true;
-                    Editable = PageEditable;//B2BVCOn28Sep22
+                    //Editable = PageEditable;//B2BVCOn28Sep22
                     ApplicationArea = All;
                     trigger OnAssistEdit();
                     begin
@@ -30,41 +29,41 @@ page 50116 "Indent Header"
                 field(Description; rec.Description)
                 {
                     ApplicationArea = all;
-                    Editable = PageEditable;//B2BVCOn28Sep22
+                    //Editable = PageEditable;//B2BVCOn28Sep22
 
                 }
                 field(Indentor; rec.Indentor)
                 {
                     Caption = 'Indentor';
                     ApplicationArea = all;
-                    Editable = PageEditable;//B2BVCOn28Sep22
+                    // Editable = PageEditable;//B2BVCOn28Sep22
 
                 }
                 field(Department; rec.Department)
                 {
                     Visible = false;
                     ApplicationArea = all;
-                    Editable = PageEditable;//B2BVCOn28Sep22
+                    // Editable = PageEditable;//B2BVCOn28Sep22
 
                 }
                 field("Document Date"; rec."Document Date")
                 {
                     Caption = 'Order Date';
                     ApplicationArea = all;
-                    Editable = PageEditable;//B2BVCOn28Sep22
+                    //Editable = PageEditable;//B2BVCOn28Sep22
 
                 }
                 field("Released Status"; rec."Released Status")
                 {
                     Caption = 'Status';
                     ApplicationArea = all;
-                    Editable = PageEditable;//B2BVCOn28Sep22
+                    //Editable = false;//B2BVCOn28Sep22
 
                 }
                 field("User Id"; rec."User Id")
                 {
                     ApplicationArea = all;
-                    Editable = PageEditable;//B2BVCOn28Sep22
+                    //Editable = PageEditable;//B2BVCOn28Sep22
 
                 }
                 field(Authorized; rec.Authorized)
@@ -77,13 +76,13 @@ page 50116 "Indent Header"
                 field("No. of Archived Versions"; Rec."No. of Archived Versions")
                 {
                     ApplicationArea = All;
-                    Editable = PageEditable;//B2BVCOn28Sep22
+                    // Editable = PageEditable;//B2BVCOn28Sep22
 
                 }
                 field("Ammendent Comments"; Rec."Ammendent Comments")
                 {
                     ApplicationArea = All;
-                    Editable = PageEditable;//B2BVCOn28Sep22
+                    // Editable = PageEditable;//B2BVCOn28Sep22
 
                 }
                 //B2BMSOn13Sep2022<<
@@ -93,13 +92,12 @@ page 50116 "Indent Header"
                 {
                     ApplicationArea = all;
                     Caption = 'Shortcut Dimension 1 Code';
-
+                    //Editable =  PageEditable;
                 }
                 field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = all;
                     Caption = 'Shortcut Dimension 2 Code';
-
                 }
                 field("Transfer-from Code"; Rec."Transfer-from Code")
                 {
@@ -107,7 +105,7 @@ page 50116 "Indent Header"
                     //Editable = (Status = Status::Open) AND EnableTransferFields;
                     Importance = Promoted;
                     ToolTip = 'Specifies the code of the location that items are transferred from.';
-                    Editable = PageEditable;//B2BVCOn28Sep22
+                    // Editable = PageEditable;//B2BVCOn28Sep22
 
                 }
                 field("Transfer-to Code"; Rec."Transfer-to Code")
@@ -116,7 +114,7 @@ page 50116 "Indent Header"
                     // Editable = (Status = Status::Open) AND EnableTransferFields;
                     Importance = Promoted;
                     ToolTip = 'Specifies the code of the location that the items are transferred to.';
-                    Editable = PageEditable;//B2BVCOn28Sep22
+                    //Editable = PageEditable;//B2BVCOn28Sep22
 
                 }
                 field("In-Transit Code"; "In-Transit Code")
@@ -125,7 +123,7 @@ page 50116 "Indent Header"
                     // Editable = EnableTransferFields;
                     // Enabled = (NOT "Direct Transfer") AND (Status = Status::Open);
                     ToolTip = 'Specifies the in-transit code for the transfer order, such as a shipping agent.';
-                    Editable = PageEditable;//B2BVCOn28Sep22
+                    // Editable = PageEditable;//B2BVCOn28Sep22
 
                 }
             }
@@ -543,6 +541,21 @@ page 50116 "Indent Header"
                     REPORT.RUNMODAL(REPORT::Indent, TRUE, TRUE, IndentHeader);
                 end;
             }
+            action("PrintMaterialIssue")
+            {
+                Caption = 'Print Material Issues';
+                Ellipsis = true;
+                Image = Print;
+                Promoted = true;
+                PromotedCategory = Process;
+                ApplicationArea = All;
+
+                trigger OnAction();
+                begin
+                    IndentHeader.SETRANGE(IndentHeader."No.", Rec."No.");
+                    REPORT.RUNMODAL(REPORT::"Material Issue Slip", TRUE, false, IndentHeader);
+                end;
+            }
 
         }
     }
@@ -555,14 +568,20 @@ page 50116 "Indent Header"
         CanCancelapprovalforrecord := approvalmngmt.CanCancelApprovalForRecord(RecordId());
         workflowwebhookmangt.GetCanRequestAndCanCancel(RecordId(), CanrequestApprovForFlow, CanCancelapprovalforflow);
         //Approval visible conditions - B2BMSOn09Sep2022<<
-    end;
-    //B2BVCOn28Sep22>>>
-    trigger OnOpenPage()
-    begin
+
+        //B2BPGON10OCT2022
         if (Rec."Released Status" = Rec."Released Status"::Released) then
             PageEditable := false
         else
             PageEditable := true;
+    end;
+    //B2BVCOn28Sep22>>>
+    trigger OnOpenPage()
+    begin
+        /*if (Rec."Released Status" = Rec."Released Status"::Released) then
+            PageEditable := false
+        else
+            PageEditable := true;*/ //B2BPGON10OCT2022
     end;
     //B2BVCOn28Sep22>>>
 

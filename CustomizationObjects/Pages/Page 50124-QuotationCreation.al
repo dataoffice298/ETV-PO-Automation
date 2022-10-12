@@ -4,7 +4,7 @@ page 50124 "Quotation Creation"
     Editable = false;
     Caption = 'Quotation Comparision Cus';
     PageType = List;
-    UsageCategory = Lists;
+    //UsageCategory = Lists;
     SourceTable = 50045;
     //ApplicationArea = all;
 

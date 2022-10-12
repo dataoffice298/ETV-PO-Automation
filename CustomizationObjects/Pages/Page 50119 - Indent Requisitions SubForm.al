@@ -131,8 +131,9 @@ page 50119 "Indent Requisitions SubForm"
                 }
                 field("Payment Method Code"; Rec."Payment Method Code")
                 {
-                    Caption = '<Payment Method Code>';
+                    Caption = 'Payment Method Code';
                     ApplicationArea = All;
+                    Visible = false; //B2BMSOn10Oct2022
 
                     trigger OnValidate();
                     begin
@@ -143,11 +144,13 @@ page 50119 "Indent Requisitions SubForm"
                 {
                     Caption = 'Shortcut Dimension 1 Code';
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
                 {
                     Caption = 'Shortcut Dimension 2 Code';
                     ApplicationArea = All;
+                    Editable = false;
                 }
 
             }

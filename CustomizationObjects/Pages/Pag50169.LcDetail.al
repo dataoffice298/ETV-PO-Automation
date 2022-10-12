@@ -1,6 +1,6 @@
 page 50169 "Lc Detail"
 {
-    Caption = 'Lc Detail';
+    Caption = 'LC Detail';
     PageType = Card;
     SourceTable = "LC Details";
 
@@ -10,6 +10,7 @@ page 50169 "Lc Detail"
         {
             group(General)
             {
+                Editable = PageEditable;  //B2BPGON11OCT2022
                 field("No."; Rec."No.")
                 {
                     ApplicationArea = All;
@@ -239,4 +240,17 @@ page 50169 "Lc Detail"
             }
         }
     }
+    //B2BPGON11OCT2022
+    trigger OnAfterGetRecord();
+    begin
+        if Rec.Released = true then
+            PageEditable := false
+        else
+            PageEditable := true;
+    end;
+
+
+
+    var
+        PageEditable: Boolean;//B2BPGON11OCT2022
 }

@@ -4,9 +4,8 @@ page 50046 "Archive Indent"
     PageType = ListPlus;
     SourceTable = "Archive Indent Header";
     Caption = 'Archive Indent Document';
-    UsageCategory = Administration;
     Editable = false;
-    ApplicationArea = all;
+
 
     layout
     {

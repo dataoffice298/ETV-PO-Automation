@@ -595,6 +595,8 @@ table 50010 "Indent Header"
                     TransHead.Validate("Transfer-to Code", "Transfer-to Code");
                     TransHead.Validate("In-Transit Code", "In-Transit Code"); //B2BPAV
                     TransHead.Validate("Posting Date", WorkDate());
+                    TransHead.Validate("Shortcut Dimension 1 Code", "Shortcut Dimension 1 Code"); //B2BMSOn10Oct2022
+                    TransHead.Validate("Shortcut Dimension 2 Code", "Shortcut Dimension 2 Code"); //B2BMSOn10Oct2022
 
                     TransHead.Modify(true);
                     TransferOrderNo := TransHead."No.";
@@ -609,8 +611,11 @@ table 50010 "Indent Header"
                 TransLine.Insert(true);
                 LastTransferLine += 10000;
                 IndentLine."Transfer Order No." := TransferOrderNo;
-
+                IndentLine.NoHeadStatusCheck(true);
+                TransLine.Validate("Shortcut Dimension 1 Code", "Shortcut Dimension 1 Code"); //B2BMSOn10Oct2022
+                TransLine.Validate("Shortcut Dimension 2 Code", "Shortcut Dimension 2 Code"); //B2BMSOn10Oct2022
                 IndentLine.Modify(true);
+
             until IndentLine.Next() = 0;
             Message('Transfer Order %1 Generated', TransferOrderNo);
         end else

@@ -2,7 +2,7 @@ report 50063 "Material Issue Slip"
 {
     UsageCategory = ReportsAndAnalysis;
     ApplicationArea = All;
-    Caption = 'Material Issue Slip';
+    Caption = 'Material Issue Slip_50063';
     RDLCLayout = './MaterialIssueSlip.rdl';
     DefaultLayout = RDLC;
 
@@ -12,6 +12,13 @@ report 50063 "Material Issue Slip"
         dataitem("Indent Header"; "Indent Header")
         {
             RequestFilterFields = "No.";
+            column(Indentor1; Indentor)
+            { }
+            column(IndentNo1; "No.")
+            { }
+
+            column(IndentDate; "Document Date")
+            { }
             column(CompanyInfoName; Companyinfo.Name)
             { }
             column(CompanyInfoAddress; CompanyInfo.Address)
@@ -74,19 +81,35 @@ report 50063 "Material Issue Slip"
             { }
             column(Delivery_Location; "Delivery Location")
             { }
-            column(IssNo; ItemJournalLine."Document No.")
-            { }
-            column(IssDate; ItemJournalLine."Posting Date")
-            { }
 
             dataitem("Indent Line"; "Indent Line")
             {
                 DataItemLink = "Document No." = field("No.");
+
+                column(Req_Quantity; "Req.Quantity")
+                { }
+                column(Item_Category_Code; ItemCategoryCode)
+                { }
+                column(Qty_Issued; "Qty Issued")
+                { }
+
+                column(Unit_of_Measure_Code; "Unit of Measure")
+                { }
+                column(ISSNo1; ISSNo1)
+                { }
+                column(ISSDate1; ISSDate1)
+                { }
+                column(Location_Code; "delivery location")
+                { }
+                column(channel; ItemLedgerEntry."Global Dimension 1 Code")
+                { }
+                column(Dept; ItemLedgerEntry."Global Dimension 2 Code")
+                { }
+                column(Description; Description)
+                { }
                 column(SNo; SNo)
                 { }
                 column(DescriptionGrec; DescriptionGrec)
-                { }
-                column(CategoryName; CategoryName)
                 { }
                 column(UomGrec; UomGrec)
                 { }
@@ -97,66 +120,47 @@ report 50063 "Material Issue Slip"
 
                 trigger OnAfterGetRecord()
                 begin
-                    "Indent Line".Reset();
-                    "Indent Line".SetRange("Document No.", "No.");
-                    if "Indent Line".FindSet() then begin
-                        repeat
-                            SNo += 1;
-                            DescriptionGrec := "Indent Line".Description;
-                            CategoryName := "Indent Line".Type;
-                            UomGrec := "Indent Line"."Unit of Measure";
-                            ReqQty := "Indent Line"."Req.Quantity";
-                            QtyIssue := "Indent Line"."Qty To Issue";
-                        until "Indent Line".Next = 0;
+                    CalcFields("Qty Issued");
+                    SNo += 1;
+                    ItemLedgerEntry.Reset();
+                    ItemLedgerEntry.SetRange("Indent No.", "Document No.");
+                    ItemLedgerEntry.SetRange("Indent Line No.", "Line No.");
+                    ItemLedgerEntry.SetFilter(Quantity, '<%1', 0);
+                    if ItemLedgerEntry.FindFirst() then begin
+                        ISSNo1 := ItemLedgerEntry."Document No.";
+                        ISSDate1 := ItemLedgerEntry."Posting Date";
+                        ItemCategoryCode := ItemLedgerEntry."Item Category Code";
                     end;
                 end;
+
             }
 
             trigger OnPreDataItem();
             begin
-
-                CompanyInfo.FIND('-');
+                Clear(SNo);
+                CompanyInfo.get;
                 CompanyInfo.CALCFIELDS(Picture);
             end;
-
         }
     }
-
-    requestpage
-    {
-        layout
-        {
-
-        }
-
-        actions
-        {
-
-        }
-    }
-
-    /*  rendering
-      {
-          layout(LayoutName)
-          {
-              Type = RDLC;
-              LayoutFile = 'mylayout.rdl';
-          }
-      }*/
 
     var
+    pa:Page "Purchase Invoice Statistics";
+        ItemCategoryCode: Code[20];
+        ISSNo1: Code[20];
+        ISSDate1: Date;
         CompanyInfo: Record "Company Information";
         TechnicalStoresCapLbl: Label 'TECHNICAL STORES';
         MatIssueSlipCapLbl: Label 'MATERIAL ISSUE SLIP';
-        IndentorCapLbl: Label 'Indentor    :';
-        DeptCapLbl: Label 'Dept    :   ';
-        LocationCapLbl: Label 'Location    :';
-        ProgNamCapLbl: Label 'Programme Name    :';
-        IndentNoCapLbl: Label 'Indent No    :';
-        IndentDateCapLbl: Label 'Indent Date    :';
-        ChannelCapLbl: Label 'Channel    :';
-        IssNoCapLbl: Label 'ISS.NO    :';
-        IssDateCapLbl: Label 'ISS.Date    :';
+        IndentorCapLbl: Label 'Indentor';
+        DeptCapLbl: Label 'Dept';
+        LocationCapLbl: Label 'Location';
+        ProgNamCapLbl: Label 'Programme Name';
+        IndentNoCapLbl: Label 'Indent No';
+        IndentDateCapLbl: Label 'Indent Date';
+        ChannelCapLbl: Label 'Channel';
+        IssNoCapLbl: Label 'ISS.NO';
+        IssDateCapLbl: Label 'ISS.Date';
         SNoCapLbl: Label 'SNO.';
         DescofMatCapLbl: Label 'DESCRIPTION OF MATERIAL';
         CatNameCapLbl: Label 'CATERGORY NAME';
@@ -165,15 +169,14 @@ report 50063 "Material Issue Slip"
         UOMCapLbl: Label 'UOM';
         ReqQtyCapLbl: Label 'REQ QTY';
         IssQtyCapLbl: Label 'ISS QTY';
-        PurposeCapLbl: Label 'PURPOSE:';
+        PurposeCapLbl: Label 'PURPOSE';
         StoresAssCapLbl: Label 'Stores Assistant';
         ReceiversSigCapLbl: Label 'Receivers Signature';
         RamojiFCCapLbl: Label 'RAMOJI FILM CITY - HYDERBAD';
-        ItemJournalLine: Record "Item Journal Line";
         DescriptionGrec: Text[50];
-        CategoryName: Option;
         UomGrec: Code[10];
         ReqQty: Decimal;
         QtyIssue: Decimal;
         SNo: Integer;
+        ItemLedgerEntry: Record "Item Ledger Entry";
 }

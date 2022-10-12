@@ -331,15 +331,26 @@ page 50025 "Purchase Enquiry"
             }
         }
     }
-    //B2BVCOn28Sep22>>>
-    trigger OnOpenPage()
+
+    //B2BPGON11OCT2022
+    trigger OnAfterGetRecord();
+
     begin
         if (Rec.Status = Rec.Status::Released) then
             PageEditable := false
         else
             PageEditable := true;
     end;
+
     //B2BVCOn28Sep22>>>
+    /* trigger OnOpenPage()
+     begin
+         if (Rec.Status = Rec.Status::Released) then
+             PageEditable := false
+         else
+             PageEditable := true;
+     end;
+     //B2BVCOn28Sep22>>>*/
 
     var
         PurchSetup: Record 312;

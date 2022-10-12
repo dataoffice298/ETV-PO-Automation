@@ -1,5 +1,6 @@
 pageextension 50111 PostedPurchRcptSubform extends "Posted Purchase Rcpt. Subform"
 {
+    Editable = false;
     layout
     {
         addafter(Description)

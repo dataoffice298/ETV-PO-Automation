@@ -46,11 +46,14 @@ page 50120 "Indent Requisition Document"
                 {
                     ApplicationArea = All;
                     Caption = 'Shortcut Dimension 1 Code';
+                    //Editable = False; //B2BPGON11OCT2022
+
                 }
                 field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = All;
                     Caption = 'Shortcut Dimension 2 Code';
+                    //Editable = False; //B2BPGON11OCT2022
 
                 }
             }
@@ -78,6 +81,7 @@ page 50120 "Indent Requisition Document"
                     Clear(IndentReqLines);
                     IndentReqLines.GetValue(Rec."No.", Rec."Resposibility Center");
                     IndentReqLines.RUN;
+                    Message('Indent Lines Inserted Successfully'); //B2BPAV
                 end;
             }
             action("Create &Enquiry")
@@ -420,15 +424,27 @@ page 50120 "Indent Requisition Document"
         Rec.Status := Rec.Status::Open;
     end;
 
-    trigger OnOpenPage()
+    //B2BPGON11OCT2022
+    trigger OnAfterGetRecord();
     begin
-        //B2BVCOn28Sep22>>>>
+
         if (Rec.Status = Rec.Status::Release) then
             FieldEditable := false
         else
             FieldEditable := true;
-        //B2BVCOn28Sep22<<<<
+
         Rec.Status := Rec.Status::Open;
+    end;
+
+    trigger OnOpenPage()
+    begin
+        /*   //B2BVCOn28Sep22>>>>
+           if (Rec.Status = Rec.Status::Release) then
+               FieldEditable := false
+           else
+               FieldEditable := true;
+           //B2BVCOn28Sep22<<<<
+           Rec.Status := Rec.Status::Open;*/  //B2BPGON11OCT2022
     end;
 
     trigger OnNewRecord(BelowxRec: Boolean)

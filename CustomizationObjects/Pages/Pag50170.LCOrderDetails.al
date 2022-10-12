@@ -3,7 +3,8 @@ page 50170 "LC Order Details"
     Caption = 'LC Order Details';
     PageType = List;
     SourceTable = "LC Orders";
-    UsageCategory = None;
+    UsageCategory = Lists;
+    ApplicationArea = all;
     Editable = false;
 
     layout

@@ -4,7 +4,6 @@ page 50123 "IndentRequisitionDocument New"
 
     PageType = Document;
     SourceTable = "Indent Req Header";
-    UsageCategory = Lists;
     Caption = 'Quotation Comparision Doc';
     layout
     {

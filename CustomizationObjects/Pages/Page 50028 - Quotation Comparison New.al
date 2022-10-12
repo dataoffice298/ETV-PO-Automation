@@ -16,7 +16,7 @@ page 50028 "Quotation Comparison New" //PKON22J1
 
     PageType = Worksheet;
     SourceTable = 50041;
-    UsageCategory = Tasks;
+    //UsageCategory = Tasks;
     //ApplicationArea = all;
 
     layout

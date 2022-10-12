@@ -2,7 +2,6 @@ page 50126 "Quotation Comparision Doc"
 {
     PageType = Document;
     Caption = 'Quotation Comparison Doc';
-    UsageCategory = Administration;
     SourceTable = QuotCompHdr;
     DelayedInsert = true;
 
@@ -311,7 +310,10 @@ page 50126 "Quotation Comparision Doc"
                     RecordRest: Record "Restricted Record";
                     QuotationLines: Record 50046;
                 begin
-
+                    //B2BMSOn11Oct2022>>
+                    if Rec."Orders Created" then
+                        Error('You can not reopen the document when orders arealready created.');
+                    //B2BMSOn11Oct2022<<
                     IF Rec.Status = Rec.Status::"Pending Approval" THEN
                         ERROR('You can not reopen the document when approval status is in %1', Rec.Status);
                     RecordRest.Reset();

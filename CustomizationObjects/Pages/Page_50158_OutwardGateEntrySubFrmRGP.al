@@ -24,6 +24,7 @@ page 50158 "Outward Gate Entry SubFrm-RGP"
                 {
                     ApplicationArea = ALL;
                     OptionCaption = ' ,Sales Shipment,Sales Return Order,Purchase Order,Purchase Return Shipment,Transfer Receipt,Transfer Shipment,Item,Fixed Asset,Others';
+
                 }
                 field("Source No."; "Source No.")
                 {

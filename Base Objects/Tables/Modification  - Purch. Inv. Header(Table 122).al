@@ -4,8 +4,8 @@ tableextension 50049 tableextension70000004 extends "Purch. Inv. Header"
 
     fields
     {
-        
-       
+
+
         field(51000; Subject; Text[200])
         {
             Caption = 'Subject';
@@ -25,7 +25,7 @@ tableextension 50049 tableextension70000004 extends "Purch. Inv. Header"
         {
             Caption = 'EPCG No';
         }
-         field(33002900; "RFQ No."; Code[20])
+        field(33002900; "RFQ No."; Code[20])
         {
             Description = 'PO1.0';
             TableRelation = "RFQ Numbers"."RFQ No." WHERE(Completed = FILTER(false));
@@ -57,6 +57,6 @@ tableextension 50049 tableextension70000004 extends "Purch. Inv. Header"
         }
     }
 
-    
+
 }
 

@@ -8,7 +8,6 @@ page 50023 "Indent Line"
     PageType = ListPart;
     SourceTable = "Indent Line";
     Caption = 'Indent Line';
-    UsageCategory = Lists;
 
 
     layout

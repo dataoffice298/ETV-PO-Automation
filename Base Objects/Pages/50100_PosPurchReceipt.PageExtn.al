@@ -1,5 +1,6 @@
 pageextension 50100 PosPurchReceipt extends "Posted Purchase Receipt"
 {
+    Editable = false;
     layout
     {
         addlast(Invoicing)
@@ -42,6 +43,27 @@ pageextension 50100 PosPurchReceipt extends "Posted Purchase Receipt"
 
     actions
     {
+        //B2BMMOn06Oct2022>>
+        addafter("&Print")
+        {
+            action("Posted Purchase Receipt")
+            {
+                ApplicationArea = All;
+                Caption = 'GRN Receipt';
+                Image = Report2;
+                Promoted = true;
+
+                trigger OnAction()
+                var
+                    PurRcptHeader: Record "Purch. Rcpt. Header";
+                begin
+                    PurRcptHeader.RESET;
+                    PurRcptHeader.SETRANGE("No.", Rec."No.");
+                    REPORT.RUNMODAL(50071, TRUE, TRUE, PurRcptHeader);
+                end;
+                //B2BMMOn06Oct2022<<
+            }
+        }
         addafter(Approvals)
         {
             action(DocAttach)

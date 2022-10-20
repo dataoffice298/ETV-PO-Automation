@@ -236,7 +236,7 @@ table 50038 "Indent Requisitions"
 
     keys
     {
-        key(Key1; "Indent No.", "Indent Line No.")
+        key(Key1; "Document No.", "Line No.")
         {
         }
     }

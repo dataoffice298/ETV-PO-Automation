@@ -11,6 +11,23 @@ report 50071 "GRN RECEIPT"
     {
         dataitem("Purch. Rcpt. Header"; "Purch. Rcpt. Header")
         {
+            column(DCNO; DCNO)//B2BPGON12OCT2022
+            { }
+            column(GrnNo; "No.")//B2BPGON12OCT2022
+            { }
+            column(GrnDate; "Document Date")//B2BPGON12OCT2022
+            { }
+            column(Order_No_; "Order No.")
+            { }
+            column(DCDate; DCDate)//B2BPGON12OCT2022
+            { }
+            column(InvNo; InvNo)//B2BPGON12OCT2022
+            { }
+            column(InvDate; InvDate)//B2BPGON12OCT2022
+            { }
+
+            column(Spot; "Location Code")//B2BPGON12OCT2022
+            { }
             column(PONo; "Order No.")
             { }
             column(ReceiptDate; "Document Date")
@@ -138,6 +155,10 @@ report 50071 "GRN RECEIPT"
                 column(InwardNo; "Ref. Posted Gate Entry")
                 { }
                 //B2BMMOn06Oct2022>>
+                column(InwrdDate; InwrdDate)//B2BPGON12OCT2022
+                { }
+                column(Indentor; Indentor)
+                { }//B2BPGON12OCT2022
                 column(Item_Category_Code; "Item Category Code")
                 { }
                 column(Description; Description)
@@ -382,7 +403,9 @@ report 50071 "GRN RECEIPT"
         SGSTLbl: Label 'SGST';
         CGSTLbl: Label 'CGST';
         InvDiscAmount: Decimal;
-
+        Spot: Code[20];//B2BPGON12OCT2022
+        GrnNo: Code[20];//B2BPGON12OCT2022
+        GrnDate: Date;//B2BPGON12OCT2022
         NetTotal: Decimal;
         BasicAmount: Decimal;
 

@@ -50,12 +50,58 @@ table 50046 "Quotation Comparison Test"
             BlankZero = true;
             DecimalPlaces = 0 : 5;
             DataClassification = CustomerContent;
+            //B2BMSOn14Oct2022>>
+            trigger OnValidate()
+            var
+                QuoCompLine: Record "Quotation Comparison Test";
+                QuoCompLine1: Record "Quotation Comparison Test";
+            begin
+                Rec.Amount := Rec.Quantity * Rec.Rate;
+                Rec.Modify();
+                QuoCompLine.Reset();
+                QuoCompLine.SetRange("Vendor No.", Rec."Vendor No.");
+                QuoCompLine.SetFilter("Item No.", '<>%1', '');
+                if QuoCompLine.FindSet() then begin
+                    QuoCompLine.CalcSums(Amount);
+                    QuoCompLine1.Reset();
+                    QuoCompLine1.SetRange("Vendor No.", "Vendor No.");
+                    QuoCompLine1.SetFilter("Item No.", '');
+                    if QuoCompLine1.FindFirst() then begin
+                        QuoCompLine1."Total Amount" := QuoCompLine.Amount;
+                        QuoCompLine1.Modify();
+                    end;
+                end;
+            end;
+            //B2BMSOn14Oct2022<<
         }
         field(9; Rate; Decimal)
         {
             BlankZero = true;
-            Editable = false;
+            //Editable = false;
             DataClassification = CustomerContent;
+            //B2BMSOn14Oct2022>>
+            trigger OnValidate()
+            var
+                QuoCompLine: Record "Quotation Comparison Test";
+                QuoCompLine1: Record "Quotation Comparison Test";
+            begin
+                Rec.Amount := Rec.Quantity * Rec.Rate;
+                Rec.Modify();
+                QuoCompLine.Reset();
+                QuoCompLine.SetRange("Vendor No.", Rec."Vendor No.");
+                QuoCompLine.SetFilter("Item No.", '<>%1', '');
+                if QuoCompLine.FindSet() then begin
+                    QuoCompLine.CalcSums(Amount);
+                    QuoCompLine1.Reset();
+                    QuoCompLine1.SetRange("Vendor No.", "Vendor No.");
+                    QuoCompLine1.SetFilter("Item No.", '');
+                    if QuoCompLine1.FindFirst() then begin
+                        QuoCompLine1."Total Amount" := QuoCompLine.Amount;
+                        QuoCompLine1.Modify();
+                    end;
+                end;
+            end;
+            //B2BMSOn14Oct2022<<
         }
         field(10; Amount; Decimal)
         {

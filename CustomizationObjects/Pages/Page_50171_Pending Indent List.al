@@ -1,14 +1,11 @@
-page 50024 "Indent List"
+page 50171 "Pending Indent List"
 {
-    // version PH1.0,PO1.0
-
-    CardPageID = "Indent Header";
-    Editable = false;
     PageType = List;
-    SourceTable = "Indent Header";
+    ApplicationArea = All;
     UsageCategory = Lists;
-    ApplicationArea = all;
-    SourceTableView = where("Indent Transfer" = const(false));//BaluOn19Oct2022>>
+    SourceTable = "Indent Header";
+    CardPageId = "Indent Header";
+    SourceTableView = where("Released Status" = const("Pending Approval"));
 
     layout
     {
@@ -63,4 +60,3 @@ page 50024 "Indent List"
         }
     }
 }
-

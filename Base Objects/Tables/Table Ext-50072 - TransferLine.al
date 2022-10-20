@@ -12,6 +12,6 @@ tableextension 50072 TransferLine extends "Transfer Line"
         {
 
         }
-    }
+    }   //B2BPGON11OCT2022
 
 }

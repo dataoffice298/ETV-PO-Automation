@@ -33,6 +33,12 @@ tableextension 50051 tableextension70000002 extends "Purch. Rcpt. Header"
             OptionMembers = Import,Indigenous;
             OptionCaption = 'Import,Indigenous';
         }
+        //B2BMSOn18Oct2022>>
+        Field(50115; "Regularization"; Boolean)
+        {
+            Caption = 'Regularization';
+        }
+        //B2BMSOn18Oct2022<<
         field(33002900; "RFQ No."; Code[20])
         {
             Description = 'PO1.0';

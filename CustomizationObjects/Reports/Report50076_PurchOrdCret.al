@@ -8,8 +8,7 @@ report 50076 "Purchase Order Creation New"
 
     dataset
     {
-        dataitem("Quotation Comparison1";
-        "Quotation Comparison Test")
+        dataitem("Quotation Comparison1"; "Quotation Comparison Test")
         {
             DataItemTableView = SORTING("Line No.")
                                 WHERE("Carry Out Action" = FILTER(true),
@@ -29,6 +28,8 @@ report 50076 "Purchase Order Creation New"
                 PPSetup: Record "Purchases & Payables Setup";
                 PurchaseHeader: Record "Purchase Header";
                 PurchaseLine: Record "Purchase Line";
+                PurchaseHeader1: Record "Purchase Header";
+                PurchaseLine1: Record "Purchase Line";
                 PurchaseLineOrder2: Record "Purchase Line";
                 VendorL: Record Vendor;
                 NoSeriesMgt: Codeunit NoSeriesManagement;
@@ -41,6 +42,7 @@ report 50076 "Purchase Order Creation New"
                 GLAcc: Record "G/L Account";
                 GLAccBool: Boolean;
                 FADepBook: Record "FA Depreciation Book";
+                QuotCompHdr: Record QuotCompHdr; //B2BMSOn18Oct2022
             begin
 
                 PurchaseHeader.RESET;
@@ -48,68 +50,92 @@ report 50076 "Purchase Order Creation New"
                 PurchaseHeader.SETRANGE("No.", "Parent Quote No.");
                 PurchaseHeader.SetRange("Buy-from Vendor No.", "Vendor No.");
                 IF PurchaseHeader.FindFirst() THEN BEGIN
-                    PurchaseHeaderOrder."Document Type" := PurchaseHeaderOrder."Document Type"::Order;
-                    PPSetup.GET;
-                    PurchaseHeaderOrder."No." := '';
-                    VendorL.GET(PurchaseHeader."Buy-from Vendor No.");
-                    IF PurchaseLineOrder2.GET(PurchaseHeaderOrder."Document Type"::Order, PurchaseHeaderOrder."No.") THEN
-                        ERROR('Record already Existed.');
-                    //PurchaseHeaderOrder."Posting Date" := WORKDATE();
-                    PurchaseHeaderOrder.INSERT(true);
-                    PurchaseHeaderOrder."Posting Date" := Today;
-                    PurchaseHeaderOrder."Document Date" := WORKDATE();
-                    PurchaseHeaderOrder.Validate("Order Date", WorkDate());
-                    PurchaseHeaderOrder.VALIDATE("Buy-from Vendor No.", PurchaseHeader."Buy-from Vendor No.");
-                    PurchaseHeaderOrder."Quotation No." := "Parent Quote No.";
-                    PurchaseHeaderOrder."Quote No." := "Parent Quote No.";
-                    PurchaseHeaderOrder."Expected Receipt Date" := "Quotation Comparison1"."Due Date";
-                    PurchaseHeaderOrder."Currency Code" := "Quotation Comparison1"."Currency Code";
-                    PurchaseHeaderOrder.Validate("Shortcut Dimension 1 Code", "Quotation Comparison1"."Shortcut Dimension 1 Code");//B2BPAV
-                    PurchaseHeaderOrder.Validate("Shortcut Dimension 2 Code", "Quotation Comparison1"."Shortcut Dimension 2 Code");//B2BPAV
-                    PurchaseHeaderOrder.Modify();
+                    //B2BMSOn18Oct2022>>
+                    PurchaseHeader1.Reset();
+                    PurchaseHeader1.SetRange("Document Type", PurchaseHeader1."Document Type"::Order);
+                    PurchaseHeader1.SetRange("Buy-from Vendor No.", PurchaseHeader."Buy-from Vendor No.");
+                    PurchaseHeader1.SetRange("No.", OrderNo);
+                    if not PurchaseHeader1.FindFirst() then begin
+                        //B2BMSOn18Oct2022<<
+                        PurchaseHeaderOrder."Document Type" := PurchaseHeaderOrder."Document Type"::Order;
+                        PPSetup.GET;
+                        PurchaseHeaderOrder."No." := '';
+                        VendorL.GET(PurchaseHeader."Buy-from Vendor No.");
+                        IF PurchaseLineOrder2.GET(PurchaseHeaderOrder."Document Type"::Order, PurchaseHeaderOrder."No.") THEN
+                            ERROR('Record already Existed.');
+                        //PurchaseHeaderOrder."Posting Date" := WORKDATE();
+                        PurchaseHeaderOrder.INSERT(true);
+                        OrderNo := PurchaseHeaderOrder."No."; //B2BMSOn18Oct2022
+                        PurchaseHeaderOrder."Posting Date" := Today;
+                        PurchaseHeaderOrder."Document Date" := WORKDATE();
+                        PurchaseHeaderOrder.Validate("Order Date", WorkDate());
+                        PurchaseHeaderOrder.VALIDATE("Buy-from Vendor No.", PurchaseHeader."Buy-from Vendor No.");
+                        PurchaseHeaderOrder."Quotation No." := "Parent Quote No.";
+                        PurchaseHeaderOrder."Quote No." := "Parent Quote No.";
+                        PurchaseHeaderOrder."Expected Receipt Date" := "Quotation Comparison1"."Due Date";
+                        PurchaseHeaderOrder."Currency Code" := "Quotation Comparison1"."Currency Code";
+                        PurchaseHeaderOrder.Validate("Shortcut Dimension 1 Code", "Quotation Comparison1"."Shortcut Dimension 1 Code");//B2BPAV
+                        PurchaseHeaderOrder.Validate("Shortcut Dimension 2 Code", "Quotation Comparison1"."Shortcut Dimension 2 Code");//B2BPAV
+                        //B2BMSOn18Oct2022>>
+                        if QuotCompHdr.Get("Quotation Comparison1"."Quot Comp No.") then
+                            PurchaseHeaderOrder.Regularization := QuotCompHdr.Regularization;
+                        //B2BMSOn18Oct2022<<
+                        PurchaseHeaderOrder.Modify();
+                    end; //B2BMSOn18Oct2022
                     PurchaseLine.Reset();
                     PurchaseLine.SETRANGE("Document Type", PurchaseLine."Document Type"::Quote);
                     PurchaseLine.SETRANGE("Document No.", "Parent Quote No.");
                     PurchaseLine.SETRANGE("Buy-from Vendor No.", "Vendor No.");
                     PurchaseLine.SetRange("No.", "Item No.");
                     IF PurchaseLine.FindFirst() THEN BEGIN
+                        LneLVar := PurchaseLine."Line No."; //B2BMSOn18Oct2022
                         repeat
-                            clear(LneLVar);
-                            LneLVar := PurchaseLine."Line No." + 10000;
-                            PurchaseLineOrder.INIT();
-                            PurchaseLineOrder.RESET();
-                            PurchaseLineOrder."Document Type" := PurchaseHeaderOrder."Document Type";
-                            PurchaseLineOrder."Document No." := PurchaseHeaderOrder."No.";
-                            PurchaseLineOrder."Line No." := LneLVar;
-                            PurchaseLineOrder."Buy-from Vendor No." := PurchaseHeaderOrder."Buy-from Vendor No.";
-                            PurchaseLineOrder.VALIDATE("Buy-from Vendor No.");
-                            PurchaseLineOrder.Type := PurchaseLine.type;
-                            PurchaseLineOrder.VALIDATE("No.", "Item No.");
-                            PurchaseLineOrder."Description 2" := "Quotation Comparison1".Description2;
-                            PurchaseLineOrder.VALIDATE(Quantity, "Quotation Comparison1".Quantity);
-                            PurchaseLineOrder."Direct Unit Cost" := "Quotation Comparison1".Rate;
-                            PurchaseLineOrder.VALIDATE("Direct Unit Cost");
-                            PurchaseLineOrder.VALIDATE("Variant Code", "Quotation Comparison1"."Variant Code");
-                            PurchaseLineOrder."Location Code" := "Quotation Comparison1"."Location Code";
-                            PurchaseLineOrder."Shortcut Dimension 1 Code" := "Quotation Comparison1"."Shortcut Dimension 1 Code";//B2BPAV
-                            PurchaseLineOrder."Shortcut Dimension 2 Code" := "Quotation Comparison1"."Shortcut Dimension 2 Code";//B2BPAV
-                            PurchaseLineOrder."Dimension Set ID" := "Quotation Comparison1"."Dimension Set ID";
-                            PurchaseLineOrder."Shortcut Dimension 1 Code" := "Quotation Comparison1"."Shortcut Dimension 1 Code";
-                            PurchaseLineOrder."Shortcut Dimension 2 Code" := "Quotation Comparison1"."Shortcut Dimension 2 Code";
-                            PurchaseLineOrder."Dimension Set ID" := "Quotation Comparison1"."Dimension Set ID";
-                            PurchaseLineOrder."Currency Code" := "Quotation Comparison1"."Currency Code";
-                            PurchaseLineOrder.INSERT();
-                            PurchaseLineOrder.Validate("Shortcut Dimension 1 Code");
-                            PurchaseLineOrder.validate("Shortcut Dimension 2 Code");
-                            PurchaseLineOrder.Validate("Dimension Set ID");
-                            //B2BMSOn21Sep2022>>
-                            PurchaseLineOrder."Indent No." := PurchaseLine."Indent No.";
-                            PurchaseLineOrder."Indent Line No." := PurchaseLine."Indent Line No.";
-                            PurchaseLineOrder."Indent Req No" := PurchaseLine."Indent Req No";
-                            PurchaseLineOrder."Indent Req Line No" := PurchaseLine."Indent Req Line No";
-                            //B2BMSOn21Sep2022<<
-                            PurchaseLineOrder.Modify();
-                            LneLVar += 10000;
+                            //B2BMSOn18Oct2022>>
+                            //clear(LneLVar);
+                            //LneLVar := PurchaseLine."Line No." + 10000;
+                            PurchaseLine1.Reset();
+                            PurchaseLine1.SetRange("Document No.", PurchaseHeaderOrder."No.");
+                            PurchaseLine1.SetRange("Line No.", LneLVar);
+                            if not PurchaseLine1.FindFirst() then begin
+                                //B2BMSOn18Oct2022<<
+                                PurchaseLineOrder.INIT();
+                                //B2BMSOn18Oct2022>>
+                                //PurchaseLineOrder.RESET();
+                                //PurchaseLineOrder."Document No." := PurchaseHeaderOrder."No.";
+                                PurchaseLineOrder."Document No." := OrderNo;
+                                //B2BMSOn18Oct2022<<
+                                PurchaseLineOrder."Document Type" := PurchaseLineOrder."Document Type"::Order;
+                                PurchaseLineOrder."Line No." := LneLVar;
+                                PurchaseLineOrder."Buy-from Vendor No." := PurchaseHeaderOrder."Buy-from Vendor No.";
+                                PurchaseLineOrder.VALIDATE("Buy-from Vendor No.");
+                                PurchaseLineOrder.Type := PurchaseLine.type;
+                                PurchaseLineOrder.VALIDATE("No.", "Item No.");
+                                PurchaseLineOrder."Description 2" := "Quotation Comparison1".Description2;
+                                PurchaseLineOrder.VALIDATE(Quantity, "Quotation Comparison1".Quantity);
+                                PurchaseLineOrder."Direct Unit Cost" := "Quotation Comparison1".Rate;
+                                PurchaseLineOrder.VALIDATE("Direct Unit Cost");
+                                PurchaseLineOrder.VALIDATE("Variant Code", "Quotation Comparison1"."Variant Code");
+                                PurchaseLineOrder."Location Code" := "Quotation Comparison1"."Location Code";
+                                PurchaseLineOrder."Shortcut Dimension 1 Code" := "Quotation Comparison1"."Shortcut Dimension 1 Code";//B2BPAV
+                                PurchaseLineOrder."Shortcut Dimension 2 Code" := "Quotation Comparison1"."Shortcut Dimension 2 Code";//B2BPAV
+                                PurchaseLineOrder."Dimension Set ID" := "Quotation Comparison1"."Dimension Set ID";
+                                PurchaseLineOrder."Shortcut Dimension 1 Code" := "Quotation Comparison1"."Shortcut Dimension 1 Code";
+                                PurchaseLineOrder."Shortcut Dimension 2 Code" := "Quotation Comparison1"."Shortcut Dimension 2 Code";
+                                PurchaseLineOrder."Dimension Set ID" := "Quotation Comparison1"."Dimension Set ID";
+                                PurchaseLineOrder."Currency Code" := "Quotation Comparison1"."Currency Code";
+                                PurchaseLineOrder.INSERT();
+                                PurchaseLineOrder.Validate("Shortcut Dimension 1 Code");
+                                PurchaseLineOrder.validate("Shortcut Dimension 2 Code");
+                                PurchaseLineOrder.Validate("Dimension Set ID");
+                                //B2BMSOn21Sep2022>>
+                                PurchaseLineOrder."Indent No." := PurchaseLine."Indent No.";
+                                PurchaseLineOrder."Indent Line No." := PurchaseLine."Indent Line No.";
+                                PurchaseLineOrder."Indent Req No" := PurchaseLine."Indent Req No";
+                                PurchaseLineOrder."Indent Req Line No" := PurchaseLine."Indent Req Line No";
+                                //B2BMSOn21Sep2022<<
+                                PurchaseLineOrder.Modify();
+                                LneLVar += 10000;
+                            end;
                         until PurchaseLine.Next() = 0;
                     END;
                 end;

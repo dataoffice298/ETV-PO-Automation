@@ -10,6 +10,19 @@ tableextension 50066 ItemJnlLine extends "Item Journal Line"
         {
             DataClassification = ToBeClassified;
         }
+        //BaluOn19Oct2022<<
+        field(50152; "Issue Location"; Code[20])
+        {
+            DataClassification = CustomerContent;
+            TableRelation = Location.Code;
+        }
+        field(50153; "Issue Sub Location"; Code[20])
+        {
+            DataClassification = CustomerContent;
+            TableRelation = Location.Code;
+        }
+        //BaluOn19Oct2022>>
+
     }
 
 }

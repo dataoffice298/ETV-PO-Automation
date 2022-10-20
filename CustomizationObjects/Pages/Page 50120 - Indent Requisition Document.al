@@ -433,7 +433,7 @@ page 50120 "Indent Requisition Document"
         else
             FieldEditable := true;
 
-        Rec.Status := Rec.Status::Open;
+        //Rec.Status := Rec.Status::Open;
     end;
 
     trigger OnOpenPage()

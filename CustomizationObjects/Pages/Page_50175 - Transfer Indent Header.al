@@ -1,11 +1,11 @@
-page 50116 "Indent Header"
+page 50175 "Transfer Indent Header"
 {
     // version PH1.0,PO1.0,REP1.0
 
     PageType = ListPlus;
     SourceTable = "Indent Header";
-    Caption = 'Indent Document';
-    SourceTableView = where("Indent Transfer" = const(false));//BaluOn19Oct2022>>
+    Caption = 'Transfer Indent Document';
+    SourceTableView = where("Indent Transfer" = const(true));
 
 
     layout
@@ -100,10 +100,36 @@ page 50116 "Indent Header"
                     ApplicationArea = all;
                     Caption = 'Shortcut Dimension 2 Code';
                 }
+                field("Transfer-from Code"; Rec."Transfer-from Code")
+                {
+                    ApplicationArea = Location;
+                    //Editable = (Status = Status::Open) AND EnableTransferFields;
+                    Importance = Promoted;
+                    ToolTip = 'Specifies the code of the location that items are transferred from.';
+                    // Editable = PageEditable;//B2BVCOn28Sep22
 
+                }
+                field("Transfer-to Code"; Rec."Transfer-to Code")
+                {
+                    ApplicationArea = Location;
+                    // Editable = (Status = Status::Open) AND EnableTransferFields;
+                    Importance = Promoted;
+                    ToolTip = 'Specifies the code of the location that the items are transferred to.';
+                    //Editable = PageEditable;//B2BVCOn28Sep22
+
+                }
+                field("In-Transit Code"; "In-Transit Code")
+                {
+                    ApplicationArea = Location;
+                    // Editable = EnableTransferFields;
+                    // Enabled = (NOT "Direct Transfer") AND (Status = Status::Open);
+                    ToolTip = 'Specifies the in-transit code for the transfer order, such as a shipping agent.';
+                    // Editable = PageEditable;//B2BVCOn28Sep22
+
+                }
             }
             //B2BPAV<<
-            part(indentLine; 50023)
+            part(TransferindentLine; 50174)
             {
                 SubPageLink = "Document No." = FIELD("No.");
                 ApplicationArea = All;
@@ -316,6 +342,7 @@ page 50116 "Indent Header"
                     ApplicationArea = all;
                     Caption = 'Create Issue Jounal Batch';
                     image = CreateLinesFromJob;
+                    Visible = false;//BaluOn19Oct2022
                     trigger OnAction();
                     begin
                         Rec.TestField("Released Status", Rec."Released Status"::Released);
@@ -332,6 +359,7 @@ page 50116 "Indent Header"
                 }
                 action("Create Return Jnl. Batch")
                 {
+                    Visible = false;//BaluOn19Oct2022
                     ApplicationArea = all;
                     Caption = 'Create Return Jnl. Batch';
                     image = Create;
@@ -350,6 +378,7 @@ page 50116 "Indent Header"
                 }
                 action(ShowItemJournalIssue)
                 {
+                    Visible = false;//BaluOn19Oct2022
                     ApplicationArea = ALL;
                     Caption = 'Show Item Journal Issue';
                     Image = ShowList;
@@ -373,6 +402,7 @@ page 50116 "Indent Header"
 
                 action(ShowItemJournalBatchReturn)
                 {
+                    Visible = false;//BaluOn19Oct2022
                     ApplicationArea = ALL;
                     Caption = 'Show ItemJournal Batch Return';
                     Image = ShowList;
@@ -407,6 +437,7 @@ page 50116 "Indent Header"
                 }
                 action("Copy BOM Lines")
                 {
+                    Visible = false;//BaluOn19Oct2022
                     ApplicationArea = All;
 
                     trigger OnAction();
@@ -524,6 +555,7 @@ page 50116 "Indent Header"
                 Image = Print;
                 Promoted = true;
                 PromotedCategory = Process;
+                Visible = false;//BaluOn19Oct2022
                 ApplicationArea = All;
 
                 trigger OnAction();
@@ -560,6 +592,12 @@ page 50116 "Indent Header"
             PageEditable := true;*/ //B2BPGON10OCT2022
     end;
     //B2BVCOn28Sep22>>>
+    //BaluOn19Oct2022>>
+    trigger OnInsertRecord(BelowxRec: Boolean): Boolean
+    begin
+        rec."Indent Transfer" := true;
+    end;
+    //BaluOn19Oct2022<<
 
     var
         IndentLine: Record 50037;

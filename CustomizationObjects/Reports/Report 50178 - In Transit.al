@@ -14,34 +14,35 @@ report 50178 "In Transit"
             dataitem("Transfer Line"; "Transfer Line")
             {
                 DataItemLink = "Document No." = field("No.");
+                DataItemTableView = where("Qty. in Transit" = filter(<> 0));
                 trigger OnAfterGetRecord()
                 var
                     Item: Record Item;
-
+                    FA: Record "Fixed Asset";
                 begin
                     clear(Item);
                     if Item.Get("Item No.") then;
+                    if FA.Get("Item No.") then;
                     SNo += 1;
                     ExcelBuffer1.NewRow();
                     ExcelBuffer1.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Number);
                     ExcelBuffer1.AddColumn("Transfer Header"."Transfer-from Code", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
                     ExcelBuffer1.AddColumn("Transfer Header"."Transfer-to City", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn("Transfer Header"."Transfer-from Code", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn('indent no', FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn('indent date', FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
+                    ExcelBuffer1.AddColumn("Transfer Line"."Indent No.", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
+                    ExcelBuffer1.AddColumn("Transfer Line"."Indent Date", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
                     ExcelBuffer1.AddColumn("Transfer Header"."No.", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
                     ExcelBuffer1.AddColumn("Transfer Header"."Posting Date", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
                     ExcelBuffer1.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn('Sub Category', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn("Transfer Line"."Item No.", FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn("Transfer Line".Description, FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn("Transfer Line"."Unit of Measure", FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn('Make', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn('Model No', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn('Serial No', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn("Transfer Line".Quantity, FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn("Transfer Line"."Transfer Price", FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn("Transfer Line".Amount, FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
+                    ExcelBuffer1.AddColumn('', FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
+                    ExcelBuffer1.AddColumn("Transfer Line"."Item No.", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
+                    ExcelBuffer1.AddColumn("Transfer Line".Description, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
+                    ExcelBuffer1.AddColumn("Transfer Line"."Unit of Measure Code", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
+                    ExcelBuffer1.AddColumn('', FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
+                    ExcelBuffer1.AddColumn(FA."Model No.", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
+                    ExcelBuffer1.AddColumn(FA."Serial No.", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
+                    ExcelBuffer1.AddColumn("Transfer Line".Quantity, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
+                    ExcelBuffer1.AddColumn("Transfer Line"."Transfer Price", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
+                    ExcelBuffer1.AddColumn("Transfer Line".Amount, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
 
                 end;
 

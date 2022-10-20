@@ -185,6 +185,12 @@ table 50010 "Indent Header"
             DataClassification = CustomerContent;
         }
         //B2BMSOn13Sep2022<<
+        //BaluOn19Oct2022<<
+        field(50012; "Indent Transfer"; Boolean)
+        {
+            DataClassification = CustomerContent;
+        }
+        //BaluOn19Oct2022>>
 
     }
 
@@ -383,6 +389,8 @@ table 50010 "Indent Header"
                 ItemJnlLine.VALIDATE(ItemJnlLine."Shortcut Dimension 2 Code", IndentLineRec."Shortcut Dimension 2 Code");
                 ItemJnlLine.VALIDATE(ItemJnlLine.Quantity, IndentLineRec."Qty To Issue");
                 ItemJnlLine.VALIDATE("Location Code", IndentLineRec."Delivery Location");
+                ItemJnlLine."Issue Location" := IndentLineRec."Issue Location";//BaluOn19Oct2022
+                ItemJnlLine."Issue Sub Location" := IndentLineRec."Issue Sub Location";//BaluOn19Oct2022
                 ItemJnlLine."Variant Code" := IndentLineRec."Variant Code";
                 ItemJnlLine."External Document No." := "No.";
                 ItemJnlLine."Indent No." := Rec."No.";
@@ -608,6 +616,8 @@ table 50010 "Indent Header"
                 TransLine.Validate("Item No.", IndentLine."No.");
                 //TransLine.Validate("Transfer-from Bin Code", IndentLine."Transfer From BinCode");
                 TransLine.Validate(Quantity, IndentLine."Req.Quantity");
+                TransLine.Validate("Indent No.", IndentLine."No."); //B2BPGOn12Oct2022
+                TransLine.Validate("Indent Date", IndentLine."Due Date"); //B2BPGOn12Oct2022
                 TransLine.Insert(true);
                 LastTransferLine += 10000;
                 IndentLine."Transfer Order No." := TransferOrderNo;

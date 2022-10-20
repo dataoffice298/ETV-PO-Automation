@@ -119,6 +119,12 @@ table 50047 QuotCompHdr
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2),
             Blocked = CONST(false));
         }
+        //B2BMSOn18Oct2022>>
+        Field(50003; "Regularization"; Boolean)
+        {
+            Caption = 'Regularization';
+        }
+        //B2BMSOn18Oct2022<<
     }
     keys
     {

@@ -648,7 +648,7 @@ page 50127 QuotationComparSubForm
 
     procedure CheckQtyBeforePO();
     begin
-        IF RFQNumber = '' THEN
+        IF Rec."RFQ No." = '' THEN
             ERROR('Please select the RFQ Number');
 
         POQty := 0;

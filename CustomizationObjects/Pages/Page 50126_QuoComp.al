@@ -183,6 +183,14 @@ page 50126 "Quotation Comparision Doc"
                         Error('Please select atleast one quotation');
                     //POCreationReport.GetValues(Rec.RFQNumber);
                     //POCreationReport.RUN();
+                    //B2BMSOn18Oct2022>>
+                    if Confirm('Regularization Activity?', true) then
+                        Rec.Regularization := true
+                    else
+                        Rec.Regularization := false;
+                    Rec.Modify();
+
+                    //B2BMSOn18Oct2022<<
                     POCreation.GetValues(Rec.RFQNumber);
                     POCreation.RUN();
                     Rec."Orders Created" := true;

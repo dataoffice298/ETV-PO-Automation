@@ -212,6 +212,18 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
+                                                  <TextRun>
+                                                    <Value xml:space="preserve"> </Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!Buy_from_Vendor_Name.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -260,6 +272,12 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!InwardNo.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -292,6 +310,12 @@
                                                 <TextRuns>
                                                   <TextRun>
                                                     <Value>=Fields!InwardDateCapLbl.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!InwrdDate.Value</Value>
                                                     <Style>
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
@@ -346,6 +370,10 @@
                                                     <Value> : </Value>
                                                     <Style />
                                                   </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!DCNO.Value</Value>
+                                                    <Style />
+                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -380,6 +408,13 @@
                                                     <Value>=Fields!DCDateCapLbl.Value</Value>
                                                     <Style>
                                                       <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!DCDate.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                      <Format>MM/dd/yyyy</Format>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -418,6 +453,12 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!GrnNo.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -447,6 +488,13 @@
                                                     <Value>=Fields!GRNDateCapLbl.Value</Value>
                                                     <Style>
                                                       <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!GrnDate.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                      <Format>MM/dd/yyyy</Format>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -490,6 +538,18 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
+                                                  <TextRun>
+                                                    <Value xml:space="preserve"> </Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!InvNo.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -526,6 +586,18 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
+                                                  <TextRun>
+                                                    <Value xml:space="preserve"> </Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!InvDate.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -558,6 +630,12 @@
                                                 <TextRuns>
                                                   <TextRun>
                                                     <Value>=Fields!SpotCapLbl.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!Spot.Value</Value>
                                                     <Style>
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
@@ -632,6 +710,13 @@
                                                     <Value>=Fields!ReceiptDateCapLbl.Value</Value>
                                                     <Style>
                                                       <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!ReceiptDate.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                      <Format>MM/dd/yyyy</Format>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -745,6 +830,12 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!Indent_No_.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -813,6 +904,12 @@
                                                 <TextRuns>
                                                   <TextRun>
                                                     <Value>=Fields!IndentorNameCapLbl.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!Indentor.Value</Value>
                                                     <Style>
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
@@ -889,6 +986,12 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!PONo.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -926,6 +1029,12 @@
                                                 <TextRuns>
                                                   <TextRun>
                                                     <Value>=Fields!POReqNoCapLbl.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!POReqNo.Value</Value>
                                                     <Style>
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
@@ -3402,7 +3511,6 @@
                             </Border>
                           </Style>
                         </Rectangle>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -3487,6 +3595,30 @@ End Function
   <DataSets>
     <DataSet Name="DataSet_Result">
       <Fields>
+        <Field Name="DCNO">
+          <DataField>DCNO</DataField>
+        </Field>
+        <Field Name="GrnNo">
+          <DataField>GrnNo</DataField>
+        </Field>
+        <Field Name="GrnDate">
+          <DataField>GrnDate</DataField>
+        </Field>
+        <Field Name="Order_No_">
+          <DataField>Order_No_</DataField>
+        </Field>
+        <Field Name="DCDate">
+          <DataField>DCDate</DataField>
+        </Field>
+        <Field Name="InvNo">
+          <DataField>InvNo</DataField>
+        </Field>
+        <Field Name="InvDate">
+          <DataField>InvDate</DataField>
+        </Field>
+        <Field Name="Spot">
+          <DataField>Spot</DataField>
+        </Field>
         <Field Name="PONo">
           <DataField>PONo</DataField>
         </Field>
@@ -3672,6 +3804,12 @@ End Function
         </Field>
         <Field Name="InwardNo">
           <DataField>InwardNo</DataField>
+        </Field>
+        <Field Name="InwrdDate">
+          <DataField>InwrdDate</DataField>
+        </Field>
+        <Field Name="Indentor">
+          <DataField>Indentor</DataField>
         </Field>
         <Field Name="Item_Category_Code">
           <DataField>Item_Category_Code</DataField>

@@ -310,6 +310,22 @@ table 50037 "Indent Line"
         field(50010; "Archived By"; Code[30])
         {
         }
+        //BaluOn19Oct2022<<
+        field(50012; "Indent Transfer"; Boolean)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50013; "Issue Location"; Code[20])
+        {
+            DataClassification = CustomerContent;
+            TableRelation = Location.Code;
+        }
+        field(50014; "Issue Sub Location"; Code[20])
+        {
+            DataClassification = CustomerContent;
+            TableRelation = Location.Code;
+        }
+        //BaluOn19Oct2022>>
     }
 
     keys

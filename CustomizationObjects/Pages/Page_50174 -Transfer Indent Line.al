@@ -1,4 +1,4 @@
-page 50023 "Indent Line"
+page 50174 "Transfer Indent Line"
 {
     // version PH1.0,PO1.0
 
@@ -7,8 +7,8 @@ page 50023 "Indent Line"
     MultipleNewLines = true;
     PageType = ListPart;
     SourceTable = "Indent Line";
-    Caption = 'Indent Line';
-    SourceTableView = where("Indent Transfer" = const(false));//BaluOn19Oct2022>>
+    Caption = 'Transfer Indent Line';
+    SourceTableView = where("Indent Transfer" = const(true));//BaluOn19Oct2022>>
 
 
     layout
@@ -88,14 +88,6 @@ page 50023 "Indent Line"
                 {
                     ApplicationArea = all;
                     Editable = false;
-                }
-                field("Issue Location"; rec."Issue Location")
-                {
-                    ApplicationArea = all;
-                }
-                field("Issue Sub Location"; rec."Issue sub Location")
-                {
-                    ApplicationArea = all;
                 }
             }
         }
@@ -186,7 +178,12 @@ page 50023 "Indent Line"
         }
 
     }
-
+    //BaluOn19Oct2022>>
+    trigger OnInsertRecord(BelowxRec: Boolean): Boolean
+    begin
+        rec."Indent Transfer" := true;
+    end;
+    //BaluOn19Oct2022<<
 
     var
         ItemLedgerEntry: Record 32;

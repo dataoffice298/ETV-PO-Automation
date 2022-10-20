@@ -1,4 +1,4 @@
-page 50024 "Indent List"
+page 50173 "Transfer Indent List"
 {
     // version PH1.0,PO1.0
 
@@ -8,7 +8,8 @@ page 50024 "Indent List"
     SourceTable = "Indent Header";
     UsageCategory = Lists;
     ApplicationArea = all;
-    SourceTableView = where("Indent Transfer" = const(false));//BaluOn19Oct2022>>
+    Caption = 'Transfer Indent List';
+    SourceTableView = where("Indent Transfer" = const(true));//BaluOn19Oct2022>>
 
     layout
     {
@@ -33,6 +34,10 @@ page 50024 "Indent List"
                     ApplicationArea = all;
                 }
                 field(Indentor; rec.Indentor)
+                {
+                    ApplicationArea = all;
+                }
+                field("Indent Transfer"; "Indent Transfer")
                 {
                     ApplicationArea = all;
                 }

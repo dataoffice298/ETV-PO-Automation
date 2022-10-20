@@ -16,7 +16,12 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             {
                 ApplicationArea = all;
             }
-
+            //B2BMSOn18Oct2022>>
+            field(Regularization; Rec.Regularization)
+            {
+                ApplicationArea = all;
+            }
+            //B2BMSOn18Oct2022<<
         }
     }
     actions
@@ -26,8 +31,9 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         {
             trigger OnBeforeAction()
             begin
+
                 GateEntry.Reset();
-                GateEntry.SetRange("Source No.", PurchLine."Document No.");
+                GateEntry.SetRange("Source No.", Rec."No.");
                 if GateEntry.FindFirst() then begin
                     PurchLine.Reset();
                     PurchLine.SetRange("Document No.", Rec."No.");

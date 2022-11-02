@@ -1,7 +1,7 @@
 page 50126 "Quotation Comparision Doc"
 {
     PageType = Document;
-    Caption = 'Quotation Comparison Doc';
+    Caption = 'Quotation Comparison Document';
     SourceTable = QuotCompHdr;
     DelayedInsert = true;
 
@@ -110,6 +110,12 @@ page 50126 "Quotation Comparision Doc"
                     Visible = false;
 
                 }
+                //B2BMSOn28Oct2022>>
+                field("No. of Archived Versions"; Rec."No. of Archived Versions")
+                {
+                    ApplicationArea = all;
+                }
+                //B2BMSOn28Oct2022<<
             }
 
 
@@ -330,6 +336,7 @@ page 50126 "Quotation Comparision Doc"
                     IF NOt RecordRest.IsEmpty() THEN
                         error('This record is under in workflow process. Please cancel approval request if not required.');
                     IF Rec.Status <> Rec.Status::Open then BEGIN
+                        ArchiveQCS; //B2BMSOn28Oct2022
                         Rec.Status := Rec.Status::Open;
                         Rec.Modify();
 
@@ -337,7 +344,7 @@ page 50126 "Quotation Comparision Doc"
                         QuotationLines.SetRange("Quot Comp No.", rec."No.");
                         if QuotationLines.FindSet() then
                             QuotationLines.ModifyAll(Status, QuotationLines.Status::Open);
-                        Message('Document is Reopened.');
+                        Message('Document is Archived and Reopened.');
                     end;
                 end;
             }

@@ -351,5 +351,25 @@ codeunit 50016 "MyBaseSubscr"
             IndentLine.Modify();
         end;
     end;
+
+    //B2BMSOn28Oct2022>>
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Page Management", 'OnBeforeGetConditionalCardPageID', '', false, false)]
+    local procedure OnBeforeGetConditionalCardPageID(RecRef: RecordRef; var CardPageID: Integer; var IsHandled: Boolean);
+    var
+        IndHdr: Record "Indent Header";
+    begin
+        case RecRef.Number of
+            DATABASE::"Indent Header":
+                begin
+                    RecRef.SetTable(IndHdr);
+                    if not IndHdr."Indent Transfer" then
+                        CardPageID := Page::"Indent Header"
+                    else
+                        CardPageID := Page::"Transfer Indent Header";
+                    IsHandled := true;
+                end;
+        end;
+    end;
+    //B2BMSOn28Oct2022<<
 }
 

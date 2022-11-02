@@ -70,12 +70,13 @@ report 50076 "Purchase Order Creation New"
                         PurchaseHeaderOrder."Document Date" := WORKDATE();
                         PurchaseHeaderOrder.Validate("Order Date", WorkDate());
                         PurchaseHeaderOrder.VALIDATE("Buy-from Vendor No.", PurchaseHeader."Buy-from Vendor No.");
-                        PurchaseHeaderOrder."Quotation No." := "Parent Quote No.";
+                        PurchaseHeaderOrder."Quotation No." := "Quot Comp No.";
                         PurchaseHeaderOrder."Quote No." := "Parent Quote No.";
                         PurchaseHeaderOrder."Expected Receipt Date" := "Quotation Comparison1"."Due Date";
                         PurchaseHeaderOrder."Currency Code" := "Quotation Comparison1"."Currency Code";
                         PurchaseHeaderOrder.Validate("Shortcut Dimension 1 Code", "Quotation Comparison1"."Shortcut Dimension 1 Code");//B2BPAV
                         PurchaseHeaderOrder.Validate("Shortcut Dimension 2 Code", "Quotation Comparison1"."Shortcut Dimension 2 Code");//B2BPAV
+                        PurchaseHeaderOrder.Validate("Payment Terms Code", "Quotation Comparison1"."Payment Term Code");
                         //B2BMSOn18Oct2022>>
                         if QuotCompHdr.Get("Quotation Comparison1"."Quot Comp No.") then
                             PurchaseHeaderOrder.Regularization := QuotCompHdr.Regularization;

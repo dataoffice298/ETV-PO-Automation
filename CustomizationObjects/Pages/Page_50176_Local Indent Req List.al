@@ -1,11 +1,10 @@
-page 50121 "Indent Requisition List"
+page 50176 "Local Indent Req List"
 {
-    // version PO1.0
-
+    Caption = 'Local Indent Requisition List';
     CardPageID = "Indent Requisition Document";
     PageType = List;
     SourceTable = "Indent Req Header";
-    SourceTableView = where(Status = const(Open)); //B2BMS
+    SourceTableView = where("Resposibility Center" = const('LOCAL REQ'), Status = const(Release));
     UsageCategory = Lists;
     ApplicationArea = all;
     Editable = false;

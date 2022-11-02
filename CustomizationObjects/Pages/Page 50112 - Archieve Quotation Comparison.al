@@ -6,9 +6,6 @@ page 50112 "Archieve Quotation Comparison"
     PageType = Worksheet;
     SourceTable = "Archive Quotation Comparison";
     Editable = false;
-    UsageCategory = Lists;
-    ApplicationArea = all;
-
     layout
     {
 

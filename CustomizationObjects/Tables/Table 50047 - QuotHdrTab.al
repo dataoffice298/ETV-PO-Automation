@@ -125,6 +125,16 @@ table 50047 QuotCompHdr
             Caption = 'Regularization';
         }
         //B2BMSOn18Oct2022<<
+
+        //B2BMSOn28Oct2022>>
+        Field(50004; "No. of Archived Versions"; Integer)
+        {
+            Caption = 'No. of Archived Versions';
+            Editable = false;
+            FieldClass = FlowField;
+            CalcFormula = max("Archive Quotation Header".Version where("No." = field("No.")));
+        }
+        //B2BMSOn28Oct2022<<
     }
     keys
     {

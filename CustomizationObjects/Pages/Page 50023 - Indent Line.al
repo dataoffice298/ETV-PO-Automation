@@ -29,6 +29,11 @@ page 50023 "Indent Line"
                 {
                     ApplicationArea = All;
                 }
+                field("Variant Code"; Rec."Variant Code")
+                {
+                    //Caption = 'Make';
+                    ApplicationArea = All;
+                }
                 field(Department; rec.Department)
                 {
                     Visible = false;

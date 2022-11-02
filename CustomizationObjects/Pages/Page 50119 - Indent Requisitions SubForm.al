@@ -44,6 +44,12 @@ page 50119 "Indent Requisitions SubForm"
                 {
                     ApplicationArea = All;
                 }
+                //B2BMSOn01Nov2022>>
+                field("Variant Code"; Rec."Variant Code")
+                {
+                    ApplicationArea = all;
+                }
+                //B2BMSOn01Nov2022<<
                 field("Carry out Action"; Rec."Carry out Action")
                 {
                     Visible = false;
@@ -150,6 +156,16 @@ page 50119 "Indent Requisitions SubForm"
                 {
                     Caption = 'Shortcut Dimension 2 Code';
                     ApplicationArea = All;
+                    Editable = false;
+                }
+                field("Indent No."; Rec."Indent No.")
+                {
+                    ApplicationArea = all;
+                    Editable = false;
+                }
+                field("Indent Line No."; Rec."Indent Line No.")
+                {
+                    ApplicationArea = all;
                     Editable = false;
                 }
 

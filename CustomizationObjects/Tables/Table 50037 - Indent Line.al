@@ -225,6 +225,16 @@ table 50037 "Indent Line"
                 ItemVariant.GET("No.", "Variant Code");
                 Description := ItemVariant.Description;
                 "Description 2" := ItemVariant."Description 2";
+
+                "Avail.Qty" := 0;
+                ItemLedgerEntry.RESET;
+                ItemLedgerEntry.SETRANGE("Item No.", "No.");
+                ItemLedgerEntry.SETRANGE("Variant Code", "Variant Code");
+                ItemLedgerEntry.SETRANGE("Location Code", "Delivery Location");
+                IF ItemLedgerEntry.FINDFIRST THEN
+                    REPEAT
+                        "Avail.Qty" += ItemLedgerEntry."Remaining Quantity";
+                    UNTIL ItemLedgerEntry.NEXT = 0;
             end;
         }
         field(39; Remarks; Text[30])

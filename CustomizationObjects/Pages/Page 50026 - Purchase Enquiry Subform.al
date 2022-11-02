@@ -59,6 +59,26 @@ page 50026 "Purchase Enquiry Subform"
                     ApplicationArea = All;
 
                 }
+                field("Indent No."; Rec."Indent No.")
+                {
+                    ApplicationArea = all;
+                    Editable = false;
+                }
+                field("Indent Line No."; Rec."Indent Line No.")
+                {
+                    ApplicationArea = all;
+                    Editable = false;
+                }
+                field("Indent Req No"; Rec."Indent Req No")
+                {
+                    ApplicationArea = all;
+                    Editable = false;
+                }
+                field("Indent Req Line No"; Rec."Indent Req Line No")
+                {
+                    ApplicationArea = all;
+                    Editable = false;
+                }
             }
         }
     }

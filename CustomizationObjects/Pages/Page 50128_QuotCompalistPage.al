@@ -2,7 +2,7 @@ page 50128 "Quotation Comparisions"
 {
     PageType = list;
     ApplicationArea = All;
-    UsageCategory = Administration;
+    UsageCategory = Lists;
     SourceTable = QuotCompHdr;
     Caption = 'Quotation Comparison';
     CardPageId = "Quotation Comparision Doc";

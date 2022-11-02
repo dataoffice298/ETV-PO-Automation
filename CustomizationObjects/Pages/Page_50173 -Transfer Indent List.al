@@ -2,7 +2,7 @@ page 50173 "Transfer Indent List"
 {
     // version PH1.0,PO1.0
 
-    CardPageID = "Indent Header";
+    CardPageID = "Transfer Indent Header";
     Editable = false;
     PageType = List;
     SourceTable = "Indent Header";

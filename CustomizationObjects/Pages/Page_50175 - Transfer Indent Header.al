@@ -108,6 +108,16 @@ page 50175 "Transfer Indent Header"
                     ToolTip = 'Specifies the code of the location that items are transferred from.';
                     // Editable = PageEditable;//B2BVCOn28Sep22
 
+                    //B2BMSOn27Oct2022>>
+                    trigger OnValidate()
+                    begin
+                        if (Rec."Transfer-from Code" <> '') and (Rec."Transfer-to Code" <> '') then begin
+                            if Rec."Transfer-from Code" = Rec."Transfer-to Code" then
+                                Error('Transfer-From and Transfer-To Codes must not be the same.');
+                        end;
+                    end;
+                    //B2BMSOn27Oct2022<<
+
                 }
                 field("Transfer-to Code"; Rec."Transfer-to Code")
                 {
@@ -116,6 +126,16 @@ page 50175 "Transfer Indent Header"
                     Importance = Promoted;
                     ToolTip = 'Specifies the code of the location that the items are transferred to.';
                     //Editable = PageEditable;//B2BVCOn28Sep22
+
+                    //B2BMSOn27Oct2022>>
+                    trigger OnValidate()
+                    begin
+                        if (Rec."Transfer-from Code" <> '') and (Rec."Transfer-to Code" <> '') then begin
+                            if Rec."Transfer-from Code" = Rec."Transfer-to Code" then
+                                Error('Transfer-From and Transfer-To Codes must not be the same.');
+                        end;
+                    end;
+                    //B2BMSOn27Oct2022<<
 
                 }
                 field("In-Transit Code"; "In-Transit Code")
@@ -129,7 +149,7 @@ page 50175 "Transfer Indent Header"
                 }
             }
             //B2BPAV<<
-            part(TransferindentLine; 50174)
+            part(TransferindentLine; "Transfer Indent Line")
             {
                 SubPageLink = "Document No." = FIELD("No.");
                 ApplicationArea = All;
@@ -426,7 +446,7 @@ page 50175 "Transfer Indent Header"
                 //B2BMSOn13Sep2022>>
                 action("Generate Transfer")
                 {
-                    Visible = false;
+                    //Visible = false;
                     Image = TransferOrder;
                     Applicationarea = all;
                     trigger OnAction()
@@ -596,12 +616,19 @@ page 50175 "Transfer Indent Header"
     trigger OnInsertRecord(BelowxRec: Boolean): Boolean
     begin
         rec."Indent Transfer" := true;
+        //B2BMSOn27Oct2022>>
+        LocationRec.Reset();
+        LocationRec.SetRange("Use As In-Transit", true);
+        if LocationRec.FindFirst() then
+            Rec."In-Transit Code" := LocationRec.Code;
+        //B2BMSOn27Oct2022<<
     end;
     //BaluOn19Oct2022<<
 
     var
         IndentLine: Record 50037;
         IndentHeader: Record 50010;
+        LocationRec: Record Location;
         //B2BMSOn13Sep2022>>
         ArchiveIndHdr: Record "Archive Indent Header";
         ArchiveIndLine: record "Archive Indent Line";

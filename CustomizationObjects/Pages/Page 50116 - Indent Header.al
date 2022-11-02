@@ -6,7 +6,7 @@ page 50116 "Indent Header"
     SourceTable = "Indent Header";
     Caption = 'Indent Document';
     SourceTableView = where("Indent Transfer" = const(false));//BaluOn19Oct2022>>
-
+    PromotedActionCategories = 'New,Process,Report,Functions';
 
     layout
     {
@@ -236,6 +236,13 @@ page 50116 "Indent Header"
                                 IndentLine.TESTFIELD(IndentLine."No.");
                                 IndentLine.TESTFIELD(IndentLine."Req.Quantity");
                             END;
+                            //B2BMSOn27Oct2022>>
+                            if IndentLine."Qty To Issue" <> 0 then begin
+                                IndentLine.TestField("Issue Location");
+                                IndentLine.TestField("Issue Sub Location");
+                            end;
+                            IndentLine.TestField("Variant Code");
+                        //B2BMSOn27Oct2022<<
                         UNTIL IndentLine.NEXT = 0;
                     IF allinoneCU.CheckIndentDocApprovalsWorkflowEnabled(Rec) then
                         allinoneCU.OnSendIndentDocForApproval(Rec);
@@ -311,48 +318,60 @@ page 50116 "Indent Header"
                         Message('Archived Document %1', Rec."No.");
                     end;
                 }
-                action("Create Issue Jounal Batch")
+                group(MaterialIssue)
                 {
-                    ApplicationArea = all;
-                    Caption = 'Create Issue Jounal Batch';
-                    image = CreateLinesFromJob;
-                    trigger OnAction();
-                    begin
-                        Rec.TestField("Released Status", Rec."Released Status"::Released);
-                        IndentLineRec.SETCURRENTKEY("Document No.", "Line No.");
-                        IndentLineRec.RESET();
-                        IndentLineRec.SETRANGE("Document No.", "No.");
-                        if not IndentLineRec.FINDFIRST() then
-                            ERROR('No Line with Qty. to Issue > 0');
+                    Caption = 'Material Issue/Return';
+                    action("Create Issue Jounal Batch")
+                    {
+                        ApplicationArea = all;
+                        Caption = 'Material Issue';
+                        image = CreateLinesFromJob;
+                        Promoted = true;
+                        //PromotedIsBig = true;
+                        PromotedCategory = Process;
+                        trigger OnAction();
+                        begin
+                            Rec.TestField("Released Status", Rec."Released Status"::Released);
+                            IndentLineRec.SETCURRENTKEY("Document No.", "Line No.");
+                            IndentLineRec.RESET();
+                            IndentLineRec.SETRANGE("Document No.", "No.");
+                            if not IndentLineRec.FINDFIRST() then
+                                ERROR('No Line with Qty. to Issue > 0');
 
 
-                        Rec.CreateItemJnlLine();
-                        CurrPage.Update();
-                    end;
-                }
-                action("Create Return Jnl. Batch")
-                {
-                    ApplicationArea = all;
-                    Caption = 'Create Return Jnl. Batch';
-                    image = Create;
-                    trigger OnAction();
-                    begin
-                        Rec.TestField("Released Status", Rec."Released Status"::Released);
-                        IndentLineRec.Reset();
-                        IndentLineRec.SETRANGE("Document No.", "No.");
-                        IndentLineRec.SETFILTER("Req.Quantity", '<>%1', 0);
-                        if IndentLineRec.FIND('-') then
-                            Rec.CreateReturnItemJnlLine()
-                        else
-                            Error('Please check value in Qty. to Return field. It should not be empty and atleast have in one line.');
-                        CurrPage.Update();
-                    end;
+                            Rec.CreateItemJnlLine();
+                            CurrPage.Update();
+                        end;
+                    }
+                    action("Create Return Jnl. Batch")
+                    {
+                        ApplicationArea = all;
+                        Caption = 'Material Return';
+                        Promoted = true;
+                        //PromotedIsBig = true;
+                        PromotedCategory = Process;
+                        image = Return;
+                        trigger OnAction();
+                        begin
+                            Rec.TestField("Released Status", Rec."Released Status"::Released);
+                            IndentLineRec.Reset();
+                            IndentLineRec.SETRANGE("Document No.", "No.");
+                            IndentLineRec.SETFILTER("Req.Quantity", '<>%1', 0);
+                            if IndentLineRec.FIND('-') then
+                                Rec.CreateReturnItemJnlLine()
+                            else
+                                Error('Please check value in Qty. to Return field. It should not be empty and atleast have in one line.');
+                            CurrPage.Update();
+                        end;
+                    }
                 }
                 action(ShowItemJournalIssue)
                 {
                     ApplicationArea = ALL;
                     Caption = 'Show Item Journal Issue';
                     Image = ShowList;
+                    PromotedCategory = Category4;
+                    Promoted = true;
                     trigger onaction()
                     var
                         ItemJournalLine: Record "Item Journal Line";
@@ -376,6 +395,8 @@ page 50116 "Indent Header"
                     ApplicationArea = ALL;
                     Caption = 'Show ItemJournal Batch Return';
                     Image = ShowList;
+                    PromotedCategory = Category4;
+                    Promoted = true;
                     trigger onaction()
                     var
                         ItemJournalLine: Record "Item Journal Line";
@@ -408,6 +429,7 @@ page 50116 "Indent Header"
                 action("Copy BOM Lines")
                 {
                     ApplicationArea = All;
+                    Visible = false; //B2BMSOn27Oct2022
 
                     trigger OnAction();
                     var
@@ -426,6 +448,7 @@ page 50116 "Indent Header"
 
                     trigger OnAction();
                     begin
+                        Rec.TestField("Released Status", Rec."Released Status"::Open);
                         Rec.CopyIndent;
                     end;
                 }
@@ -438,20 +461,42 @@ page 50116 "Indent Header"
                     Image = ReleaseDoc;
                     ShortCutKey = 'Ctrl+F9';
                     ApplicationArea = All;
+                    Promoted = true;
+                    PromotedCategory = Category4;
+                    PromotedIsBig = true;
 
                     trigger OnAction()
                     var
                         RelError: Label 'This document is enabled for workflow. Manual release is not possible.';
+                        ItemVariantLRec: Record "Item Variant";
                     begin
                         //B2BMSOn13Sep2022>>
                         IF allinoneCU.ISIndentDocworkflowenabled(Rec) then
                             Error(RelError);
                         //B2BMSOn13Sep2022<<
                         Rec.TESTFIELD("Document Date");
+                        IndentLine.Reset();
                         IndentLine.SETRANGE("Document No.", Rec."No.");
-                        IF IndentLine.FIND('-') THEN
+                        IF IndentLine.FIND('-') THEN begin
+                            repeat
+                                //B2BMSOn27Oct2022>>
+                                if IndentLine."Qty To Issue" <> 0 then begin
+                                    IndentLine.TestField("Issue Location");
+                                    IndentLine.TestField("Issue Sub Location");
+                                end;
+                                //B2BMSOn27Oct2022<<
+                                //B2BMSOn01Nov2022>>
+                                if IndentLine."Variant Code" = '' then begin
+                                    ItemVariantLRec.Reset();
+                                    ItemVariantLRec.SetRange("Item No.", IndentLine."No.");
+                                    if ItemVariantLRec.FindFirst() then
+                                        Error('Variant Code must not be empty as variants are defined against to the item - %1 in Line No. - %2.',
+                                             IndentLine."No.", IndentLine."Line No.");
+                                end;
+                            //B2BMSOn01Nov2022
+                            until IndentLine.Next() = 0;
                             Rec.ReleaseIndent
-                        ELSE
+                        end ELSE
                             MESSAGE(Text001, Rec."No.");
                         CurrPage.UPDATE;
                     end;
@@ -461,12 +506,43 @@ page 50116 "Indent Header"
                     Caption = 'Re&open';
                     Image = ReOpen;
                     ApplicationArea = All;
+                    Promoted = true;
+                    PromotedCategory = Category4;
+                    PromotedIsBig = true;
 
                     trigger OnAction();
                     var
                         text000: Label 'Cannot Reopen the indent if the status is Cancel/Closed.';
+                        ArchiveVersion: Integer;
                     begin
                         IF NOT (Rec."Indent Status" = Rec."Indent Status"::Close) OR (Rec."Indent Status" = Rec."Indent Status"::Cancel) THEN BEGIN
+                            //B2BMSOn02Nov2022>>
+                            ArchiveIndHdr.Reset();
+                            ArchiveIndHdr.SetCurrentKey("Archived Version");
+                            ArchiveIndHdr.SetRange("No.", Rec."No.");
+                            if ArchiveIndHdr.FindLast() then
+                                ArchiveVersion := ArchiveIndHdr."Archived Version" + 1
+                            else
+                                ArchiveVersion := 1;
+
+                            ArchiveIndHdr.Init();
+                            ArchiveIndHdr.TransferFields(Rec);
+                            ArchiveIndHdr."Archived Version" := ArchiveVersion;
+                            ArchiveIndHdr."Archived By" := UserId;
+                            ArchiveIndHdr.Insert();
+
+                            IndentLine.Reset();
+                            IndentLine.SetRange("Document No.", Rec."No.");
+                            if IndentLine.FindSet() then
+                                repeat
+                                    ArchiveIndLine.Init();
+                                    ArchiveIndLine.TransferFields(IndentLine);
+                                    ArchiveIndLine."Archived Version" := ArchiveVersion;
+                                    ArchiveIndLine."Archived By" := UserId;
+                                    ArchiveIndLine.Insert();
+                                until IndentLine.Next() = 0;
+                            Message('Document Archived %1', Rec."No.");
+                            //B2BMSOn02Nov2022<<
                             Rec.ReopenIndent;
                             CurrPage.UPDATE;
                         END ELSE

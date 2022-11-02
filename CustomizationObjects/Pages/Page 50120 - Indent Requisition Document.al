@@ -56,6 +56,7 @@ page 50120 "Indent Requisition Document"
                     //Editable = False; //B2BPGON11OCT2022
 
                 }
+
             }
             part(Indentrequisations; 50119)
             {
@@ -235,7 +236,7 @@ page 50120 "Indent Requisition Document"
                         Error('No Lines Found');
                     end;
                     //B2BESGOn19May2022--
-
+                    Rec.TestField("Resposibility Center"); //B2BMS
                     Rec.TESTFIELD("Document Date");
                     IF Rec.Status = Rec.Status::Release THEN
                         EXIT

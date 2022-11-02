@@ -3,6 +3,8 @@ table 50049 "Archive Quotation Header"
 
     DataClassification = CustomerContent;
     Caption = 'Archive Quotation Header';
+    LookupPageId = "Archive Quotation List";
+    DrillDownPageId = "Archive Quotation List";
 
     fields
     {

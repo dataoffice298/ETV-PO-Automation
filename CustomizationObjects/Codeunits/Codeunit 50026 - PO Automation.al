@@ -881,8 +881,7 @@ codeunit 50026 "PO Automation"
                                 QuoteCompare.Delivery
                                  := CalculateDelivery(PurchaseLine."Buy-from Vendor No.", PurchaseLine."No.", PurchaseHeader."RFQ No.");
                             IF PurchaseSetup."Quality Required" = TRUE THEN
-                                QuoteCompare.Quality := CalculateQuality(PurchaseLine."Buy-from Vendor No.", PurchaseLine."No.", PurchaseHeader."RFQ No.")
-                      ;
+                                QuoteCompare.Quality := CalculateQuality(PurchaseLine."Buy-from Vendor No.", PurchaseLine."No.", PurchaseHeader."RFQ No.");
 
                             QuoteCompare.Structure := '';
                             QuoteCompare."Line Amount" := 0;
@@ -893,7 +892,6 @@ codeunit 50026 "PO Automation"
                                 IF QuoteCompare."Payment Term Code" = '' THEN
                                     ERROR(Text006Lbl, QuoteCompare."Parent Quote No.");
                                 IF PaymentTerms.GET(QuoteCompare."Payment Term Code") THEN BEGIN
-                                    PurchaseSetup.GET();
                                     QuoteCompare.Rating := PaymentTerms.Rating;
                                     IF QuoteCompare.Rating = 0 THEN
                                         ERROR(Text005Lbl, QuoteCompare."Payment Term Code");
@@ -1123,7 +1121,8 @@ codeunit 50026 "PO Automation"
         IF ItemVendor.FIND('-') THEN BEGIN
             ItemVendor.CALCFIELDS("Total Qty. Supplied");
             IF ItemVendor."Qty. Supplied With in DueDate" = 0 THEN BEGIN
-                EXIT(((PPSetup."Default Delivery Rating" / MaxDeliveryPoints)) * PPSetup."Delivery Weightage")
+                if MaxDeliveryPoints <> 0 then
+                    EXIT(((PPSetup."Default Delivery Rating" / MaxDeliveryPoints)) * PPSetup."Delivery Weightage")
             END ELSE
                 IF (ItemVendor."Total Qty. Supplied" <> 0) AND (ItemVendor."Qty. Supplied With in DueDate" <> 0) THEN BEGIN
                     EXIT(((ItemVendor."Avg. Delivery Rating" / MaxDeliveryPoints)) * PPSetup."Delivery Weightage");
@@ -1441,8 +1440,10 @@ codeunit 50026 "PO Automation"
                         PurchaseLine.VALIDATE(Quantity, IndentVendorEnquiry.Quantity);
                         PurchaseLine."Outstanding Quantity" := PurchaseLine.Quantity;
                         PurchaseLine."Outstanding Qty. (Base)" := PurchaseLine.Quantity;
-                        PurchaseLine."Indent No." := IndentVendorEnquiry."Indent Req No";
-                        PurchaseLine."Indent Line No." := IndentVendorEnquiry."Indent Req Line No";
+                        PurchaseLine."Indent No." := IndentVendorEnquiry."Indent No.";
+                        PurchaseLine."Indent Line No." := IndentVendorEnquiry."Indent Line No.";
+                        PurchaseLine."Indent Req No" := IndentVendorEnquiry."Indent Req No";
+                        PurchaseLine."Indent Req Line No" := IndentVendorEnquiry."Indent Req Line No";
                         PurchaseLine."Location Code" := IndentVendorEnquiry."Location Code";
                         //PurchaseLine."Shortcut Dimension 1 Code" := IndentVendorEnquiry."Project No.";
                         //PurchaseLine."Shortcut Dimension 2 Code" := IndentVendorEnquiry.Department;
@@ -1538,5 +1539,13 @@ codeunit 50026 "PO Automation"
         if PurchaseHeader."Document Type" = PurchaseHeader."Document Type"::Enquiry then
             IsHandled := true;
     end;
+
+    //B2BMSOn02Nov2022>>
+    [EventSubscriber(ObjectType::Table, database::"Purchase Header", 'OnInitFromPurchHeader', '', false, false)]
+    local procedure OnInitFromPurchHeader(var PurchaseHeader: Record "Purchase Header"; SourcePurchaseHeader: Record "Purchase Header")
+    begin
+        PurchaseHeader."Payment Terms Code" := SourcePurchaseHeader."Payment Terms Code";
+    end;
+    //B2BMSOn02Nov2022<<
 }
 

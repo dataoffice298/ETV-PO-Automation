@@ -35,6 +35,12 @@
       "publisher": "Microsoft",
       "name": "Tax Engine",
       "version" : "19.3.34541.35002"
+    },
+    {
+      "id": "d3c551dd-5903-4194-b153-04ced9d29a2c",
+      "publisher": "Microsoft",
+      "name": "India Tax Base",
+      "version" : "19.3.34541.35002"
     }
   ],
     

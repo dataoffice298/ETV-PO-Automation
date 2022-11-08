@@ -117,6 +117,15 @@ codeunit 50019 "Gate Entry- Post"
 
                 until GateEntryLine.NEXT = 0;
 
+            //B2BMSOn04Nov2022>>
+            PurchLine.Reset();
+            PurchLine.SetRange("Ref. Posted Gate Entry", GateEntryHeader."No.");
+            if PurchLine.FindFirst() then begin
+                PurchLine."Ref. Posted Gate Entry" := PostedGateEntryHeader."No.";
+                PurchLine.Modify();
+            end;
+            //B2BMSOn04Nov2022<<
+
             //PostGate();
             Message('Posted GateEntry No is %1', PostedGateEntryHeader."No.");
 
@@ -150,6 +159,7 @@ codeunit 50019 "Gate Entry- Post"
         ModifyHeader: Boolean;
         LineCount: Integer;
         Mailmng: Codeunit "Mail Management";
+        PurchLine: Record "Purchase Line"; //B2BMSOn04Nov2022
 
     procedure CopyCommentLines(FromEntryType: Integer; ToEntryType: Integer; FromNumber: Code[20]; ToNumber: Code[20]);
     begin

@@ -509,10 +509,7 @@ page 50127 QuotationComparSubForm
     }
 
 
-    trigger OnAfterGetRecord();
-    begin
 
-    end;
 
     trigger OnDeleteRecord(): Boolean;
     begin

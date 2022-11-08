@@ -116,6 +116,15 @@ page 50126 "Quotation Comparision Doc"
                     ApplicationArea = all;
                 }
                 //B2BMSOn28Oct2022<<
+
+                //B2BMSOn04Nov2022>>
+                field(Indentor; IndentHdr.Indentor)
+                {
+                    Caption = 'Indentor';
+                    ApplicationArea = all;
+                    Editable = false;
+                }
+                //B2BMSOn04Nov2022<<
             }
 
 
@@ -357,6 +366,15 @@ page 50126 "Quotation Comparision Doc"
         OpenApprEntrEsists := approvalmngmt.HasOpenApprovalEntries(RecordId());
         CanCancelapprovalforrecord := approvalmngmt.CanCancelApprovalForRecord(RecordId());
         workflowwebhookmangt.GetCanRequestAndCanCancel(RecordId(), CanrequestApprovForFlow, CanCancelapprovalforflow);
+
+        //B2BMSOn04Nov2022>>
+        Clear(IndentHdr);
+        QuoteLines.Reset();
+        QuoteLines.SetRange("Quot Comp No.", Rec."No.");
+        QuoteLines.SetFilter("Indent No.", '<>%1', '');
+        if QuoteLines.FindFirst() then
+            if IndentHdr.Get(QuoteLines."Indent No.") then;
+        //B2BMSOn04Nov2022<<
     end;
 
     trigger OnDeleteRecord(): Boolean
@@ -400,6 +418,8 @@ page 50126 "Quotation Comparision Doc"
         CanCancelapprovalforrecord: Boolean;
         CanCancelapprovalforflow: Boolean;
         CanrequestApprovForFlow: Boolean;
+        IndentHdr: Record "Indent Header"; //B2BMSOn04Nov2022
+        QuoteLines: Record "Quotation Comparison Test";
 
 
 

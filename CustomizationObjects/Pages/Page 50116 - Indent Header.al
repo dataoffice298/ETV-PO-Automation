@@ -103,11 +103,11 @@ page 50116 "Indent Header"
 
             }
             //B2BPAV<<
-            part(indentLine; 50023)
+            part(indentLine; "Indent Line")
             {
                 SubPageLink = "Document No." = FIELD("No.");
                 ApplicationArea = All;
-                Editable = PageEditable;//B2BVCOn28Sep22
+                //Editable = PageEditable;//B2BVCOn28Sep22
             }
         }
 
@@ -337,7 +337,6 @@ page 50116 "Indent Header"
                             IndentLineRec.SETRANGE("Document No.", "No.");
                             if not IndentLineRec.FINDFIRST() then
                                 ERROR('No Line with Qty. to Issue > 0');
-
 
                             Rec.CreateItemJnlLine();
                             CurrPage.Update();

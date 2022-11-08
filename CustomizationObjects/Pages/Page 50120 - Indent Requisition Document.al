@@ -4,6 +4,7 @@ page 50120 "Indent Requisition Document"
 
     PageType = Document;
     SourceTable = "Indent Req Header";
+    PromotedActionCategories = 'New,Process,Reports,Functions,Navigate';
 
     layout
     {
@@ -73,16 +74,20 @@ page 50120 "Indent Requisition Document"
         {
             action("Get Requisition Lines")
             {
-                Caption = 'Get Requisition Lines';
+                Caption = 'Get Indent Lines';
                 Promoted = true;
                 ApplicationArea = All;
+                Image = GetLines;
+                PromotedCategory = Category4;
+                PromotedIsBig = true;
 
                 trigger OnAction();
                 begin
+                    Rec.TestField(Status, Rec.Status::Open);
                     Clear(IndentReqLines);
                     IndentReqLines.GetValue(Rec."No.", Rec."Resposibility Center");
                     IndentReqLines.RUN;
-                    Message('Indent Lines Inserted Successfully'); //B2BPAV
+                    Message('Lines Inserted Successfully.'); //B2BPAV
                 end;
             }
             action("Create &Enquiry")
@@ -90,6 +95,9 @@ page 50120 "Indent Requisition Document"
                 Caption = 'Create &Enquiry';
                 Promoted = true;
                 ApplicationArea = All;
+                Image = Create;
+                PromotedCategory = Category4;
+                PromotedIsBig = true;
 
                 trigger OnAction();
                 begin
@@ -117,7 +125,7 @@ page 50120 "Indent Requisition Document"
                             VendorList.SetSelection(Vendor);
                             IF Vendor.COUNT >= 1 THEN BEGIN
                                 POAutomation.CreateEnquiries(CreateIndents, Vendor, Rec."No.Series");
-                                MESSAGE(Text0010)
+                                MESSAGE(Text0010);
                             END ELSE
                                 EXIT;
                         END;
@@ -129,6 +137,9 @@ page 50120 "Indent Requisition Document"
                 Caption = 'Create &Quote';
                 Promoted = true;
                 ApplicationArea = All;
+                Image = NewSalesQuote;
+                PromotedCategory = Category4;
+                PromotedIsBig = true;
 
                 trigger OnAction();
                 begin
@@ -171,6 +182,9 @@ page 50120 "Indent Requisition Document"
                 Caption = 'Create &Purchase Order';
                 Promoted = true;
                 ApplicationArea = All;
+                Image = MakeOrder;
+                PromotedCategory = Category4;
+                PromotedIsBig = true;
 
                 trigger OnAction();
                 begin
@@ -207,7 +221,7 @@ page 50120 "Indent Requisition Document"
 
                         UpdateReqQty;
                         POAutomation.CreateOrder2(CreateIndents, Vendor, Rec."No.Series");
-
+                        MESSAGE(Text001);
                         /*
                         MESSAGE(Text001);
                        END ELSE
@@ -224,11 +238,16 @@ page 50120 "Indent Requisition Document"
                 Image = ReleaseDoc;
                 Promoted = true;
                 ApplicationArea = All;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
 
                 trigger OnAction();
                 var
                     IndentReqLine: Record "Indent Requisitions";
+                    RelText1: Label 'Document released and Moved to Local Indent Requisition List.';
+                    RelText2: Label 'Document released and Moved to Central Indent Requisition List.';
                 begin
+                    Rec.TestField(Status, Rec.Status::Open);
                     //B2BESGOn19May2022++
                     IndentReqLine.Reset();
                     IndentReqLine.SetRange("Document No.", Rec."No.");
@@ -238,11 +257,13 @@ page 50120 "Indent Requisition Document"
                     //B2BESGOn19May2022--
                     Rec.TestField("Resposibility Center"); //B2BMS
                     Rec.TESTFIELD("Document Date");
-                    IF Rec.Status = Rec.Status::Release THEN
-                        EXIT
-                    ELSE
-                        Rec.Status := Rec.Status::Release;
+
+                    Rec.Status := Rec.Status::Release;
                     Rec.MODIFY;
+                    if Rec."Resposibility Center" = 'LOCAL REQ' then
+                        Message(RelText1);
+                    if Rec."Resposibility Center" = 'CENTRL REQ' then
+                        Message(RelText2);
                 end;
 
             }
@@ -252,15 +273,17 @@ page 50120 "Indent Requisition Document"
                 Image = ReOpen;
                 Promoted = true;
                 ApplicationArea = All;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
 
                 trigger OnAction();
+                var
+                    ReText01: Label 'Document has been re-opened and moved to Indent Requisition List.';
                 begin
-
-                    IF Rec.Status = Rec.Status::Open THEN
-                        EXIT
-                    ELSE
-                        Rec.Status := Rec.Status::Open;
+                    Rec.TestField(Status, Rec.Status::Release);
+                    Rec.Status := Rec.Status::Open;
                     Rec.MODIFY;
+                    Message(ReText01);
                 end;
             }
         }
@@ -270,12 +293,58 @@ page 50120 "Indent Requisition Document"
             {
                 action("Created &Order")
                 {
-                    Image = Card;
+                    Caption = 'Open Created Order';
+                    Promoted = true;
                     ApplicationArea = All;
+                    Image = Open;
+                    PromotedCategory = Category5;
+                    PromotedIsBig = true;
 
                     trigger OnAction();
                     begin
                         CreatedOrders;
+                    end;
+                }
+
+                action(OpenEnquiries)
+                {
+                    Caption = 'Open Created Enquiries';
+                    Promoted = true;
+                    ApplicationArea = All;
+                    Image = ShowList;
+                    PromotedCategory = Category5;
+                    PromotedIsBig = true;
+
+                    trigger OnAction()
+                    var
+                        PurchHeader: Record 38;
+                    begin
+                        PurchHeader.RESET;
+                        PurchHeader.SETRANGE("Document Type", PurchHeader."Document Type"::Enquiry);
+                        PurchHeader.SETRANGE("Indent Requisition No", Rec."No.");
+                        IF PurchHeader.FINDSET THEN
+                            PAGE.RUNMODAL(0, PurchHeader);
+                    end;
+                }
+
+                action(OpenQuotes)
+                {
+                    Caption = 'Open Created Quotes';
+                    Promoted = true;
+                    ApplicationArea = All;
+                    Image = EntriesList;
+                    PromotedCategory = Category5;
+                    PromotedIsBig = true;
+
+                    trigger OnAction()
+                    var
+                        PurchHeader: Record 38;
+                    begin
+                        PurchHeader.RESET;
+                        PurchHeader.SETRANGE("Document Type", PurchHeader."Document Type"::Enquiry);
+                        PurchHeader.SETRANGE("Indent Requisition No", Rec."No.");
+                        IF PurchHeader.FINDSET THEN
+                            PAGE.RUNMODAL(0, PurchHeader);
                     end;
                 }
             }

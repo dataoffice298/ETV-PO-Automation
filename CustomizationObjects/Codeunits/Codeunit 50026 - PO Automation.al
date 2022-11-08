@@ -233,7 +233,6 @@ codeunit 50026 "PO Automation"
                     PurchaseHeader."Document Type" := PurchaseHeader."Document Type"::Enquiry;
                     PPSetup.GET;
                     PurchaseHeader."No." := NoSeriesMgt.GetNextNo(Noseries, WORKDATE, TRUE);
-                    MESSAGE('Purchaser Enquiry No %1 ', PurchaseHeader."No.");
                     PurchaseHeader.Insert(true);
                     PurchaseHeader."Buy-from Vendor No." := IndentVendorEnquiry."Vendor No.";
                     PurchaseHeader.VALIDATE(PurchaseHeader."Buy-from Vendor No.");
@@ -244,6 +243,7 @@ codeunit 50026 "PO Automation"
                     PurchaseHeader."Order Date" := WORKDATE;
                     PurchaseHeader."Document Date" := WORKDATE;
                     PurchaseHeader."Indent Requisition No" := IndentVendorEnquiry."Indent Req No";
+                    ;
                     //PurchaseHeader.VALIDATE("Location Code", IndentVendorEnquiry."Location Code");//B2BESGOn19May2022
                     PurchaseHeader."Location Code" := IndentVendorEnquiry."Location Code";
                     PurchaseHeader.Validate("Shortcut Dimension 1 Code", IndentVendorEnquiry."Shortcut Dimension 1 Code");//B2BPAV
@@ -1545,7 +1545,33 @@ codeunit 50026 "PO Automation"
     local procedure OnInitFromPurchHeader(var PurchaseHeader: Record "Purchase Header"; SourcePurchaseHeader: Record "Purchase Header")
     begin
         PurchaseHeader."Payment Terms Code" := SourcePurchaseHeader."Payment Terms Code";
+        PurchaseHeader."Indent Requisition No" := SourcePurchaseHeader."Indent Requisition No";
     end;
     //B2BMSOn02Nov2022<<
+
+    //B2BMSOn03Nov2022>>
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnPostUpdateOrderLineOnPurchHeaderReceive', '', false, false)]
+    local procedure OnPostUpdateOrderLineOnPurchHeaderReceive(var TempPurchLine: Record "Purchase Line"; PurchRcptHeader: Record "Purch. Rcpt. Header")
+    var
+        ItemLRec: Record Item;
+    begin
+        if (ItemLRec.Get(TempPurchLine."No.")) and (ItemLRec."QC Enabled B2B") then begin
+            TempPurchLine."Quantity Accepted B2B" += TempPurchLine."Qty. to Accept B2B";
+            TempPurchLine."Quantity Rejected B2B" += TempPurchLine."Quantity Rejected B2B";
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnRunOnBeforePostPurchLine', '', false, false)]
+    local procedure OnRunOnBeforePostPurchLine(var PurchLine: Record "Purchase Line")
+    var
+        ItemLRec: Record Item;
+        Err0001: Label 'Either Qty. to Accept or Qty. to Reject must have a value as QC was enabled.';
+    begin
+        if (ItemLRec.Get(PurchLine."No.")) and (ItemLRec."QC Enabled B2B") then
+            if (PurchLine."Qty. to Receive" <> 0)
+                and ((PurchLine."Qty. to Accept B2B" = 0) and (PurchLine."Qty. to Reject B2B" = 0)) then
+                Error(Err0001);
+    end;
+    //B2BMSOn03Nov2022<<
 }
 

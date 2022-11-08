@@ -1,15 +1,15 @@
-report 50181 "Non Returnable Gatepass"
+report 50183 "Returnable Gatepass"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './NonReturnableGatepass.rdl';
-    Caption = 'Non Returnable Gatepass_50181';
+    RDLCLayout = './ReturnableGatepass.rdl';
+    Caption = 'Returnable Gatepass_50183';
     ApplicationArea = Manufacturing;
     UsageCategory = ReportsAndAnalysis;
 
 
     dataset
     {
-        dataitem("Gate Entry Header_B2B"; "Gate Entry Header_B2B")
+        dataitem(Integer; Integer)
         {
             MaxIteration = 1;
             column(CompanyInfoName; CompanyInfo.Name)
@@ -30,7 +30,11 @@ report 50181 "Non Returnable Gatepass"
             { }
             column(DepartmentCapLbl; DepartmentCapLbl)
             { }
+            column(ChannelCapLbl; ChannelCapLbl)
+            { }
             column(PurposeCapLbl; PurposeCapLbl)
+            { }
+            column(ProgramCapLbl; ProgramCapLbl)
             { }
             column(GatepassDate; GatepassDate)
             { }
@@ -80,12 +84,11 @@ report 50181 "Non Returnable Gatepass"
             { }
             column(CheckedCapLbl; CheckedCapLbl)
             { }
-            dataitem("Gate Entry Line_B2B"; "Gate Entry Line_B2B")
-            {
-                DataItemLink = "Entry Type" = FIELD("Entry Type"),
-                "type" = field("Type"),
-                              "Gate Entry No." = FIELD("No.");
-            }
+            column(IncomingVerCapLbl; IncomingVerCapLbl)
+            { }
+            column(ReturntoCapLbl; ReturntoCapLbl)
+            { }
+
             trigger OnAfterGetRecord()
             begin
 
@@ -138,13 +141,15 @@ report 50181 "Non Returnable Gatepass"
 
     var
         CompanyInfo: Record "Company Information";
-        NonReturnCapLbl: Label 'NON RETURNABLE GATEPASS';
+        NonReturnCapLbl: Label 'RETURNABLE GATEPASS';
         GatepassCapLbl: Label 'GATEPASS NO:';
         NameCapLbl: Label 'Name';
         DesigCapLbl: Label 'DESIGNATION';
+        PurposeCapLbl: Label 'PURPOSE';
         UseridCapLbl: Label 'USERID';
         DepartmentCapLbl: Label 'DEPARTMENT';
-        PurposeCapLbl: Label 'PURPOSE';
+        ChannelCapLbl: Label 'CHANNEL';
+        ProgramCapLbl: Label 'PROGRAM';
         GatepassDate: Label 'GATEPASS DATE';
         InstallationDateCap: Label 'INSTALLATION DATE-FROM';
         ShootingCapLbl: Label 'SHOOTING DATE -  FROM';
@@ -169,6 +174,7 @@ report 50181 "Non Returnable Gatepass"
         OutgoingVerCapLbl: Label 'Outgoing Verification:';
         ItematerialCapLbl: Label '1)Item/Material checked and entered in Returnable Items Register on________________Time_____________Signature of SI/SS___________________';
         CheckedCapLbl: Label '2)Checked and allowed at the gate on_____________________Time____________________';
-
+        IncomingVerCapLbl: Label 'Incoming Verification';
+        ReturntoCapLbl: Label 'Returned to back on___________________________Time____________and Entered in R/I Register by SI/SS________________________';
 
 }

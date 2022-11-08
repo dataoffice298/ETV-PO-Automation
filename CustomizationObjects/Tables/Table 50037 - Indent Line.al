@@ -150,6 +150,7 @@ table 50037 "Indent Line"
         field(18; "Avail.Qty"; Decimal)
         {
             Editable = false;
+
         }
         field(20; Department; Code[20])
         {
@@ -369,7 +370,7 @@ table 50037 "Indent Line"
 
     trigger OnModify();
     begin
-        TestStatusOpen;
+        //TestStatusOpen;
     end;
 
     var

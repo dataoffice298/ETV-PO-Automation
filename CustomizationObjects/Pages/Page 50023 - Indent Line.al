@@ -20,61 +20,75 @@ page 50023 "Indent Line"
                 field(Type; rec.Type)
                 {
                     ApplicationArea = All;
+                    Editable = FieldEditable;
                 }
                 field("No."; rec."No.")
                 {
                     ApplicationArea = All;
+                    Editable = FieldEditable;
                 }
                 field(Description; rec.Description)
                 {
                     ApplicationArea = All;
+                    Editable = FieldEditable;
                 }
                 field("Variant Code"; Rec."Variant Code")
                 {
                     //Caption = 'Make';
                     ApplicationArea = All;
+                    Editable = FieldEditable;
                 }
                 field(Department; rec.Department)
                 {
                     Visible = false;
                     ApplicationArea = All;
+                    Editable = FieldEditable;
                 }
                 field("Delivery Location"; rec."Delivery Location")
                 {
                     Caption = 'Location Code';
                     ApplicationArea = All;
+                    Editable = FieldEditable;
                 }
                 field("Avail.Qty"; "Avail.Qty")
                 {
                     ApplicationArea = all;
+                    Editable = FieldEditable;
                 }
                 field("Req.Quantity"; rec."Req.Quantity")
                 {
                     ApplicationArea = All;
+                    Editable = FieldEditable;
                 }
                 field("Unit of Measure"; rec."Unit of Measure")
                 {
                     ApplicationArea = All;
+                    Editable = FieldEditable;
                 }
                 field("Due Date"; rec."Due Date")
                 {
                     ApplicationArea = All;
+                    Editable = FieldEditable;
                 }
                 field("Indent Status"; rec."Indent Status")
                 {
                     ApplicationArea = All;
+                    Editable = FieldEditable;
                 }
                 field(Remarks; rec.Remarks)
                 {
                     ApplicationArea = All;
+                    Editable = FieldEditable;
                 }
                 field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {
                     ApplicationArea = all;
+                    Editable = FieldEditable;
                 }
                 field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = all;
+                    Editable = FieldEditable;
                 }
                 field("Qty To Issue"; Rec."Qty To Issue")
                 {
@@ -192,11 +206,30 @@ page 50023 "Indent Line"
 
     }
 
+    //B2BMSOn04Nov2022>>
+    trigger OnInit()
+    begin
+        FieldEditable := true;
+    end;
+
+    trigger OnAfterGetRecord()
+    var
+        IndentHdr: Record "Indent Header";
+    begin
+        if IndentHdr.Get(Rec."Document No.") then;
+        if (IndentHdr."Released Status" = IndentHdr."Released Status"::Released) then
+            FieldEditable := false
+        else
+            FieldEditable := true;
+    end;
+    //B2BMSOn04Nov2022<<
+
 
     var
         ItemLedgerEntry: Record 32;
         IndentHeader: Record 50010;
         IndentLine: Record 50037;
+        FieldEditable: Boolean;
 
 }
 

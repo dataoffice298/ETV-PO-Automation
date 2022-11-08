@@ -24,7 +24,7 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>=First(Fields!GatepassCapLbl.Value, "DataSet_Result")</Value>
+                        <Value>=First(Fields!ReturnRcptNo.Value, "DataSet_Result")</Value>
                         <Style>
                           <FontSize>9pt</FontSize>
                           <FontWeight>Bold</FontWeight>
@@ -56,7 +56,7 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>=First(Fields!NameCapLbl.Value, "DataSet_Result")</Value>
+                        <Value>=First(Fields!GatepassCapLbl.Value, "DataSet_Result")</Value>
                         <Style>
                           <FontSize>9pt</FontSize>
                           <FontWeight>Bold</FontWeight>
@@ -89,7 +89,7 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>=First(Fields!DesigCapLbl.Value, "DataSet_Result")</Value>
+                        <Value>=First(Fields!NameCapLbl.Value, "DataSet_Result")</Value>
                         <Style>
                           <FontSize>9pt</FontSize>
                           <FontWeight>Bold</FontWeight>
@@ -188,7 +188,7 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>=First(Fields!PurposeCapLbl.Value, "DataSet_Result")</Value>
+                        <Value>=First(Fields!ChannelCapLbl.Value, "DataSet_Result")</Value>
                         <Style>
                           <FontSize>9pt</FontSize>
                           <FontWeight>Bold</FontWeight>
@@ -419,7 +419,7 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>=First(Fields!GatepassDate.Value, "DataSet_Result")</Value>
+                        <Value>Receipt Date</Value>
                         <Style>
                           <FontSize>9pt</FontSize>
                           <FontWeight>Bold</FontWeight>
@@ -452,7 +452,7 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>=First(Fields!InstallationDateCap.Value, "DataSet_Result")</Value>
+                        <Value>=First(Fields!GatepassDate.Value, "DataSet_Result")</Value>
                         <Style>
                           <FontSize>9pt</FontSize>
                           <FontWeight>Bold</FontWeight>
@@ -485,7 +485,7 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>=First(Fields!ShootingCapLbl.Value, "DataSet_Result")</Value>
+                        <Value>=First(Fields!DesigCapLbl.Value, "DataSet_Result")</Value>
                         <Style>
                           <FontSize>9pt</FontSize>
                           <FontWeight>Bold</FontWeight>
@@ -529,7 +529,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>2.08961cm</Top>
+                <Top>2.75636cm</Top>
                 <Left>8.39159cm</Left>
                 <Height>0.6cm</Height>
                 <Width>4.52847cm</Width>
@@ -562,7 +562,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>2.72489cm</Top>
+                <Top>3.39164cm</Top>
                 <Left>8.39159cm</Left>
                 <Height>0.6cm</Height>
                 <Width>4.49319cm</Width>
@@ -595,7 +595,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>3.36017cm</Top>
+                <Top>4.02692cm</Top>
                 <Left>8.39159cm</Left>
                 <Height>0.6cm</Height>
                 <Width>4.45791cm</Width>
@@ -727,7 +727,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>2.16017cm</Top>
+                <Top>2.82692cm</Top>
                 <Left>12.92006cm</Left>
                 <Height>0.6cm</Height>
                 <Width>5.63696cm</Width>
@@ -760,7 +760,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>2.83073cm</Top>
+                <Top>3.49748cm</Top>
                 <Left>12.92006cm</Left>
                 <Height>0.49417cm</Height>
                 <Width>5.67224cm</Width>
@@ -793,7 +793,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>3.43073cm</Top>
+                <Top>4.09748cm</Top>
                 <Left>12.95534cm</Left>
                 <Height>0.52944cm</Height>
                 <Width>5.60168cm</Width>
@@ -808,11 +808,143 @@
                   <PaddingBottom>2pt</PaddingBottom>
                 </Style>
               </Textbox>
+              <Textbox Name="Textbox52">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!ProgramCapLbl.Value, "DataSet_Result")</Value>
+                        <Style>
+                          <FontSize>9pt</FontSize>
+                          <FontWeight>Bold</FontWeight>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox3</rd:DefaultName>
+                <Top>3.98805cm</Top>
+                <Left>0.44662cm</Left>
+                <Height>0.6cm</Height>
+                <Width>3.34667cm</Width>
+                <ZIndex>24</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox53">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value />
+                        <Style>
+                          <FontSize>9pt</FontSize>
+                          <FontWeight>Bold</FontWeight>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox3</rd:DefaultName>
+                <Top>4.05861cm</Top>
+                <Left>3.86384cm</Left>
+                <Height>0.52944cm</Height>
+                <Width>4.21979cm</Width>
+                <ZIndex>25</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox54">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!PurposeCapLbl.Value, "DataSet_Result")</Value>
+                        <Style>
+                          <FontSize>9pt</FontSize>
+                          <FontWeight>Bold</FontWeight>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox3</rd:DefaultName>
+                <Top>2.08962cm</Top>
+                <Left>8.39161cm</Left>
+                <Height>0.6cm</Height>
+                <Width>4.52847cm</Width>
+                <ZIndex>26</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox55">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value />
+                        <Style>
+                          <FontSize>9pt</FontSize>
+                          <FontWeight>Bold</FontWeight>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox3</rd:DefaultName>
+                <Top>2.16017cm</Top>
+                <Left>12.95536cm</Left>
+                <Height>0.6cm</Height>
+                <Width>5.60168cm</Width>
+                <ZIndex>27</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
             </ReportItems>
             <KeepTogether>true</KeepTogether>
             <Top>0.01764cm</Top>
             <Left>0cm</Left>
-            <Height>4.33444cm</Height>
+            <Height>5.12819cm</Height>
             <Width>18.5923cm</Width>
             <Style>
               <Border>
@@ -858,7 +990,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>4.49319cm</Top>
+            <Top>5.44569cm</Top>
             <Left>0.22437cm</Left>
             <Height>0.6cm</Height>
             <Width>9.485cm</Width>
@@ -891,7 +1023,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>5.12847cm</Top>
+            <Top>6.08097cm</Top>
             <Left>0.22437cm</Left>
             <Height>0.6cm</Height>
             <Width>9.485cm</Width>
@@ -924,7 +1056,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>5.76375cm</Top>
+            <Top>6.71625cm</Top>
             <Left>0.22437cm</Left>
             <Height>0.6cm</Height>
             <Width>9.485cm</Width>
@@ -957,7 +1089,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>6.39903cm</Top>
+            <Top>7.35153cm</Top>
             <Left>0.22437cm</Left>
             <Height>0.6cm</Height>
             <Width>17.95061cm</Width>
@@ -1738,7 +1870,7 @@
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <Top>7.41354cm</Top>
+            <Top>8.36604cm</Top>
             <Left>0.44662cm</Left>
             <Height>1.2cm</Height>
             <Width>18.1104cm</Width>
@@ -1787,7 +1919,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>9.27792cm</Top>
+            <Top>10.23042cm</Top>
             <Left>2.21932cm</Left>
             <Height>0.6cm</Height>
             <Width>3.34667cm</Width>
@@ -1820,7 +1952,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>9.27792cm</Top>
+            <Top>10.23042cm</Top>
             <Left>7.6581cm</Left>
             <Height>0.6cm</Height>
             <Width>3.34667cm</Width>
@@ -1853,7 +1985,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>9.27792cm</Top>
+            <Top>10.23042cm</Top>
             <Left>14.40497cm</Left>
             <Height>0.6cm</Height>
             <Width>3.34667cm</Width>
@@ -1888,7 +2020,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>10.44208cm</Top>
+            <Top>11.39458cm</Top>
             <Left>7.3406cm</Left>
             <Height>0.6cm</Height>
             <Width>4.7225cm</Width>
@@ -1903,14 +2035,14 @@
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
-          <Textbox Name="Textbox49">
+          <Textbox Name="Textbox56">
             <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
             <Paragraphs>
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!OutgoingVerCapLbl.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!IncomingVerCapLbl.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontSize>9pt</FontSize>
                       <FontWeight>Bold</FontWeight>
@@ -1922,8 +2054,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>11.07736cm</Top>
-            <Left>0.47752cm</Left>
+            <Top>12.42581cm</Top>
+            <Left>0.48789cm</Left>
             <Height>0.6cm</Height>
             <Width>6.57459cm</Width>
             <ZIndex>10</ZIndex>
@@ -1937,17 +2069,18 @@
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
-          <Textbox Name="Textbox50">
+          <Textbox Name="Textbox57">
             <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
             <Paragraphs>
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=First(Fields!ItematerialCapLbl.Value, "DataSet_Result")</Value>
+                    <Value>=First(Fields!ReturntoCapLbl.Value, "DataSet_Result")</Value>
                     <Style>
                       <FontSize>9pt</FontSize>
                       <FontWeight>Bold</FontWeight>
+                      <TextDecoration>Underline</TextDecoration>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -1955,10 +2088,10 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>11.71264cm</Top>
-            <Left>0.47752cm</Left>
+            <Top>13.09637cm</Top>
+            <Left>0.48789cm</Left>
             <Height>0.6cm</Height>
-            <Width>17.68709cm</Width>
+            <Width>17.67672cm</Width>
             <ZIndex>11</ZIndex>
             <Style>
               <Border>
@@ -1970,47 +2103,14 @@
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
-          <Textbox Name="Textbox51">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!CheckedCapLbl.Value, "DataSet_Result")</Value>
-                    <Style>
-                      <FontSize>9pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>12.34792cm</Top>
-            <Left>0.48789cm</Left>
-            <Height>0.6cm</Height>
-            <Width>17.68709cm</Width>
-            <ZIndex>12</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
         </ReportItems>
-        <Height>13.59958cm</Height>
+        <Height>14.10229cm</Height>
         <Style />
       </Body>
-      <Width>18.66286cm</Width>
+      <Width>18.66285cm</Width>
       <Page>
         <PageHeader>
-          <Height>2.00766cm</Height>
+          <Height>2.77496cm</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
@@ -2038,7 +2138,7 @@
                   <Top>0.26141cm</Top>
                   <Left>2.21932cm</Left>
                   <Height>0.67938cm</Height>
-                  <Width>15.25292cm</Width>
+                  <Width>15.53232cm</Width>
                   <Style>
                     <Border>
                       <Style>None</Style>
@@ -2057,7 +2157,7 @@
                     <Paragraph>
                       <TextRuns>
                         <TextRun>
-                          <Value>=First(Fields!NonReturnCapLbl.Value, "DataSet_Result")</Value>
+                          <Value>=First(Fields!CompanyInfoAdd.Value, "DataSet_Result")</Value>
                           <Style>
                             <FontWeight>Bold</FontWeight>
                           </Style>
@@ -2072,8 +2172,43 @@
                   <Top>1.01134cm</Top>
                   <Left>2.21932cm</Left>
                   <Height>0.67938cm</Height>
-                  <Width>15.25292cm</Width>
+                  <Width>15.53232cm</Width>
                   <ZIndex>1</ZIndex>
+                  <Style>
+                    <Border>
+                      <Style>None</Style>
+                    </Border>
+                    <VerticalAlign>Middle</VerticalAlign>
+                    <PaddingLeft>2pt</PaddingLeft>
+                    <PaddingRight>2pt</PaddingRight>
+                    <PaddingTop>2pt</PaddingTop>
+                    <PaddingBottom>2pt</PaddingBottom>
+                  </Style>
+                </Textbox>
+                <Textbox Name="Textbox58">
+                  <CanGrow>true</CanGrow>
+                  <KeepTogether>true</KeepTogether>
+                  <Paragraphs>
+                    <Paragraph>
+                      <TextRuns>
+                        <TextRun>
+                          <Value>=First(Fields!NonReturnCapLbl.Value, "DataSet_Result")</Value>
+                          <Style>
+                            <FontWeight>Bold</FontWeight>
+                          </Style>
+                        </TextRun>
+                      </TextRuns>
+                      <Style>
+                        <TextAlign>Center</TextAlign>
+                      </Style>
+                    </Paragraph>
+                  </Paragraphs>
+                  <rd:DefaultName>Textbox1</rd:DefaultName>
+                  <Top>1.726cm</Top>
+                  <Left>2.21932cm</Left>
+                  <Height>0.67938cm</Height>
+                  <Width>15.53232cm</Width>
+                  <ZIndex>2</ZIndex>
                   <Style>
                     <Border>
                       <Style>None</Style>
@@ -2087,8 +2222,8 @@
                 </Textbox>
               </ReportItems>
               <KeepTogether>true</KeepTogether>
-              <Height>0.78347in</Height>
-              <Width>7.30592in</Width>
+              <Height>1.02306in</Height>
+              <Width>7.34758in</Width>
               <Style>
                 <Border>
                   <Style>Solid</Style>
@@ -2175,11 +2310,17 @@ End Function
   <DataSets>
     <DataSet Name="DataSet_Result">
       <Fields>
+        <Field Name="ReturnRcptNo">
+          <DataField>ReturnRcptNo</DataField>
+        </Field>
         <Field Name="CompanyInfoName">
           <DataField>CompanyInfoName</DataField>
         </Field>
         <Field Name="CompanyInfoPic">
           <DataField>CompanyInfoPic</DataField>
+        </Field>
+        <Field Name="CompanyInfoAdd">
+          <DataField>CompanyInfoAdd</DataField>
         </Field>
         <Field Name="NonReturnCapLbl">
           <DataField>NonReturnCapLbl</DataField>
@@ -2199,8 +2340,14 @@ End Function
         <Field Name="DepartmentCapLbl">
           <DataField>DepartmentCapLbl</DataField>
         </Field>
+        <Field Name="ChannelCapLbl">
+          <DataField>ChannelCapLbl</DataField>
+        </Field>
         <Field Name="PurposeCapLbl">
           <DataField>PurposeCapLbl</DataField>
+        </Field>
+        <Field Name="ProgramCapLbl">
+          <DataField>ProgramCapLbl</DataField>
         </Field>
         <Field Name="GatepassDate">
           <DataField>GatepassDate</DataField>
@@ -2268,11 +2415,11 @@ End Function
         <Field Name="OutgoingVerCapLbl">
           <DataField>OutgoingVerCapLbl</DataField>
         </Field>
-        <Field Name="ItematerialCapLbl">
-          <DataField>ItematerialCapLbl</DataField>
+        <Field Name="IncomingVerCapLbl">
+          <DataField>IncomingVerCapLbl</DataField>
         </Field>
-        <Field Name="CheckedCapLbl">
-          <DataField>CheckedCapLbl</DataField>
+        <Field Name="ReturntoCapLbl">
+          <DataField>ReturntoCapLbl</DataField>
         </Field>
       </Fields>
       <Query>

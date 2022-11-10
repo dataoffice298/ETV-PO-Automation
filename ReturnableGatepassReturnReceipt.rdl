@@ -254,10 +254,10 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!No_.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -287,10 +287,10 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!Users.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -320,10 +320,10 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!User_ID.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -353,10 +353,10 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!Shortcut_Dimension_2_Code.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -386,10 +386,10 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!Shortcut_Dimension_1_Code.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -617,10 +617,11 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!GatepassDt.Value, "DataSet_Result")</Value>
                         <Style>
                           <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontWeight>Normal</FontWeight>
+                          <Format>MM/dd/yyyy</Format>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -650,10 +651,11 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!GatepassDt.Value, "DataSet_Result")</Value>
                         <Style>
                           <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontWeight>Normal</FontWeight>
+                          <Format>MM/dd/yyyy</Format>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -683,10 +685,10 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!Designation.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -716,10 +718,10 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!ExpectedDateofReturn.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -749,10 +751,10 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!Location_Code.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -782,10 +784,10 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!SubLocation.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -848,10 +850,10 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!Program.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -914,10 +916,10 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!Purpose.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -1511,8 +1513,10 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
-                                  <Style />
+                                  <Value>=RowNumber(Nothing)</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -1560,8 +1564,10 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
-                                  <Style />
+                                  <Value>=Fields!Source_No_.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -1609,8 +1615,11 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
-                                  <Style />
+                                  <Value>=Fields!Source_Name.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -1658,8 +1667,11 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
-                                  <Style />
+                                  <Value>=Fields!Quantity.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -1707,8 +1719,11 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
-                                  <Style />
+                                  <Value>=Fields!Make.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -1756,8 +1771,11 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
-                                  <Style />
+                                  <Value>=Fields!ModelNo.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -1805,8 +1823,11 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
-                                  <Style />
+                                  <Value>=Fields!SerialNo.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -1870,6 +1891,7 @@
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
+            <DataSetName>DataSet_Result</DataSetName>
             <Top>8.36604cm</Top>
             <Left>0.44662cm</Left>
             <Height>1.2cm</Height>
@@ -2310,6 +2332,51 @@ End Function
   <DataSets>
     <DataSet Name="DataSet_Result">
       <Fields>
+        <Field Name="Program">
+          <DataField>Program</DataField>
+        </Field>
+        <Field Name="No_">
+          <DataField>No_</DataField>
+        </Field>
+        <Field Name="Designation">
+          <DataField>Designation</DataField>
+        </Field>
+        <Field Name="Shortcut_Dimension_1_Code">
+          <DataField>Shortcut_Dimension_1_Code</DataField>
+        </Field>
+        <Field Name="Shortcut_Dimension_2_Code">
+          <DataField>Shortcut_Dimension_2_Code</DataField>
+        </Field>
+        <Field Name="Purpose">
+          <DataField>Purpose</DataField>
+        </Field>
+        <Field Name="InstallationFromDate">
+          <DataField>InstallationFromDate</DataField>
+        </Field>
+        <Field Name="InstallationToDate">
+          <DataField>InstallationToDate</DataField>
+        </Field>
+        <Field Name="ShootingStartDate">
+          <DataField>ShootingStartDate</DataField>
+        </Field>
+        <Field Name="ShootingEndDate">
+          <DataField>ShootingEndDate</DataField>
+        </Field>
+        <Field Name="ExpectedDateofReturn">
+          <DataField>ExpectedDateofReturn</DataField>
+        </Field>
+        <Field Name="SubLocation">
+          <DataField>SubLocation</DataField>
+        </Field>
+        <Field Name="User_ID">
+          <DataField>User_ID</DataField>
+        </Field>
+        <Field Name="GatepassDt">
+          <DataField>GatepassDt</DataField>
+        </Field>
+        <Field Name="Location_Code">
+          <DataField>Location_Code</DataField>
+        </Field>
         <Field Name="ReturnRcptNo">
           <DataField>ReturnRcptNo</DataField>
         </Field>
@@ -2420,6 +2487,30 @@ End Function
         </Field>
         <Field Name="ReturntoCapLbl">
           <DataField>ReturntoCapLbl</DataField>
+        </Field>
+        <Field Name="Source_No_">
+          <DataField>Source_No_</DataField>
+        </Field>
+        <Field Name="Source_Name">
+          <DataField>Source_Name</DataField>
+        </Field>
+        <Field Name="Quantity">
+          <DataField>Quantity</DataField>
+        </Field>
+        <Field Name="QuantityFormat">
+          <DataField>QuantityFormat</DataField>
+        </Field>
+        <Field Name="Users">
+          <DataField>Users</DataField>
+        </Field>
+        <Field Name="Make">
+          <DataField>Make</DataField>
+        </Field>
+        <Field Name="ModelNo">
+          <DataField>ModelNo</DataField>
+        </Field>
+        <Field Name="SerialNo">
+          <DataField>SerialNo</DataField>
         </Field>
       </Fields>
       <Query>

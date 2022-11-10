@@ -865,8 +865,10 @@ codeunit 50026 "PO Automation"
                             QuoteCompare."RFQ No." := RFQNumber;
                             QuoteCompare."Indent No." := PurchaseLine."Indent No.";
                             QuoteCompare."Indent Line No." := PurchaseLine."Indent Line No.";
-                            QuoteCompare."Purc. Req No" := PurchaseLine."Indent Req No";
-                            QuoteCompare."Purch. Req Line No" := PurchaseLine."Indent Req Line No";
+                            //QuoteCompare."Purc. Req No" := PurchaseLine."Indent Req No";
+                            //QuoteCompare."Purch. Req Line No" := PurchaseLine."Indent Req Line No";
+                            QuoteCompare."Indent Req. No." := PurchaseLine."Indent Req No";
+                            QuoteCompare."Indent Req. Line No." := PurchaseLine."Indent Req Line No";
 
                             //PhaniFeb102021 >>
                             QuoteCompare."VAT Bus. Posting Group" := PurchaseLine."VAT Bus. Posting Group";

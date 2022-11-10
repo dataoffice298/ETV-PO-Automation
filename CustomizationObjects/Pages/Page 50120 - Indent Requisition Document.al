@@ -317,13 +317,13 @@ page 50120 "Indent Requisition Document"
 
                     trigger OnAction()
                     var
-                        PurchHeader: Record 38;
+                        PurchHeader: Record "Purchase Header";
                     begin
                         PurchHeader.RESET;
                         PurchHeader.SETRANGE("Document Type", PurchHeader."Document Type"::Enquiry);
                         PurchHeader.SETRANGE("Indent Requisition No", Rec."No.");
                         IF PurchHeader.FINDSET THEN
-                            PAGE.RUNMODAL(0, PurchHeader);
+                            PAGE.RUNMODAL(Page::"Purchase Enquiry List", PurchHeader);
                     end;
                 }
 
@@ -338,13 +338,13 @@ page 50120 "Indent Requisition Document"
 
                     trigger OnAction()
                     var
-                        PurchHeader: Record 38;
+                        PurchHeader: Record "Purchase Header";
                     begin
                         PurchHeader.RESET;
-                        PurchHeader.SETRANGE("Document Type", PurchHeader."Document Type"::Enquiry);
+                        PurchHeader.SETRANGE("Document Type", PurchHeader."Document Type"::Quote);
                         PurchHeader.SETRANGE("Indent Requisition No", Rec."No.");
                         IF PurchHeader.FINDSET THEN
-                            PAGE.RUNMODAL(0, PurchHeader);
+                            PAGE.RUNMODAL(Page::"Purchase Quotes", PurchHeader);
                     end;
                 }
             }

@@ -221,10 +221,10 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!No_.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -254,10 +254,10 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!Users.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -287,10 +287,10 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!Designation.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -320,10 +320,10 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!User_ID.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -353,10 +353,10 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!Shortcut_Dimension_2_Code.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -386,10 +386,10 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!Purpose.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -617,10 +617,11 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!GatepassDate.Value, "DataSet_Result")</Value>
                         <Style>
                           <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontWeight>Normal</FontWeight>
+                          <Format>MM/dd/yyyy</Format>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -631,7 +632,7 @@
                 <Top>0.18378cm</Top>
                 <Left>12.92006cm</Left>
                 <Height>0.6cm</Height>
-                <Width>5.63696cm</Width>
+                <Width>6.91578cm</Width>
                 <ZIndex>18</ZIndex>
                 <Style>
                   <Border>
@@ -650,10 +651,11 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!InstallationFromDate.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
+                          <Format>MM/dd/yyyy</Format>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -664,7 +666,7 @@
                 <Top>0.85434cm</Top>
                 <Left>12.95534cm</Left>
                 <Height>0.6cm</Height>
-                <Width>5.63696cm</Width>
+                <Width>2.56779cm</Width>
                 <ZIndex>19</ZIndex>
                 <Style>
                   <Border>
@@ -683,10 +685,11 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!ShootingStartDate.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
+                          <Format>MM/dd/yyyy</Format>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -697,7 +700,7 @@
                 <Top>1.52489cm</Top>
                 <Left>12.95534cm</Left>
                 <Height>0.6cm</Height>
-                <Width>5.60168cm</Width>
+                <Width>2.56779cm</Width>
                 <ZIndex>20</ZIndex>
                 <Style>
                   <Border>
@@ -716,10 +719,10 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!ExpectedDateofReturn.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -730,7 +733,7 @@
                 <Top>2.16017cm</Top>
                 <Left>12.92006cm</Left>
                 <Height>0.6cm</Height>
-                <Width>5.63696cm</Width>
+                <Width>6.91578cm</Width>
                 <ZIndex>21</ZIndex>
                 <Style>
                   <Border>
@@ -749,10 +752,10 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!Location_Code.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -763,7 +766,7 @@
                 <Top>2.83073cm</Top>
                 <Left>12.92006cm</Left>
                 <Height>0.49417cm</Height>
-                <Width>5.67224cm</Width>
+                <Width>6.91578cm</Width>
                 <ZIndex>22</ZIndex>
                 <Style>
                   <Border>
@@ -782,10 +785,10 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value />
+                        <Value>=First(Fields!SubLocation.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -796,8 +799,136 @@
                 <Top>3.43073cm</Top>
                 <Left>12.95534cm</Left>
                 <Height>0.52944cm</Height>
-                <Width>5.60168cm</Width>
+                <Width>6.8805cm</Width>
                 <ZIndex>23</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox52">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!InstallationToDate.Value, "DataSet_Result")</Value>
+                        <Style>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
+                          <Format>MM/dd/yyyy</Format>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox3</rd:DefaultName>
+                <Top>0.81167cm</Top>
+                <Left>16.49899cm</Left>
+                <Height>0.6cm</Height>
+                <Width>3.33685cm</Width>
+                <ZIndex>24</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox53">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>To</Value>
+                        <Style />
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox53</rd:DefaultName>
+                <Top>0.81906cm</Top>
+                <Left>15.55841cm</Left>
+                <Height>0.63528cm</Height>
+                <Width>0.94057cm</Width>
+                <ZIndex>25</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox54">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>To</Value>
+                        <Style />
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox53</rd:DefaultName>
+                <Top>1.5249cm</Top>
+                <Left>15.55841cm</Left>
+                <Height>0.63528cm</Height>
+                <Width>0.94057cm</Width>
+                <ZIndex>26</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox55">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!ShootingEndDate.Value, "DataSet_Result")</Value>
+                        <Style>
+                          <FontSize>8pt</FontSize>
+                          <FontWeight>Normal</FontWeight>
+                          <Format>MM/dd/yyyy</Format>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox3</rd:DefaultName>
+                <Top>1.48961cm</Top>
+                <Left>16.53426cm</Left>
+                <Height>0.6cm</Height>
+                <Width>3.30158cm</Width>
+                <ZIndex>27</ZIndex>
                 <Style>
                   <Border>
                     <Style>None</Style>
@@ -813,7 +944,7 @@
             <Top>0.01764cm</Top>
             <Left>0cm</Left>
             <Height>4.33444cm</Height>
-            <Width>18.5923cm</Width>
+            <Width>19.95049cm</Width>
             <Style>
               <Border>
                 <Style>Solid</Style>
@@ -960,7 +1091,7 @@
             <Top>6.39903cm</Top>
             <Left>0.22437cm</Left>
             <Height>0.6cm</Height>
-            <Width>17.95061cm</Width>
+            <Width>19.61147cm</Width>
             <ZIndex>4</ZIndex>
             <Style>
               <Border>
@@ -976,25 +1107,25 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>2.5872cm</Width>
+                  <Width>2.80164cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.5872cm</Width>
+                  <Width>2.80164cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.5872cm</Width>
+                  <Width>2.80164cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.5872cm</Width>
+                  <Width>2.80164cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.5872cm</Width>
+                  <Width>2.80164cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.5872cm</Width>
+                  <Width>2.80164cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.5872cm</Width>
+                  <Width>2.80164cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -1428,8 +1559,10 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
-                                  <Style />
+                                  <Value>=First(Fields!Source_No_.Value, "DataSet_Result")</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -1477,8 +1610,10 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
-                                  <Style />
+                                  <Value>=First(Fields!Source_Name.Value, "DataSet_Result")</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -1526,8 +1661,10 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
-                                  <Style />
+                                  <Value>=First(Fields!Quantity.Value, "DataSet_Result")</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -1575,8 +1712,10 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
-                                  <Style />
+                                  <Value>=First(Fields!Make.Value, "DataSet_Result")</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -1624,8 +1763,10 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
-                                  <Style />
+                                  <Value>=First(Fields!ModelNo.Value, "DataSet_Result")</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -1673,8 +1814,10 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
-                                  <Style />
+                                  <Value>=First(Fields!SerialNo.Value, "DataSet_Result")</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -1739,9 +1882,9 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <Top>7.41354cm</Top>
-            <Left>0.44662cm</Left>
+            <Left>0.22437cm</Left>
             <Height>1.2cm</Height>
-            <Width>18.1104cm</Width>
+            <Width>19.61147cm</Width>
             <ZIndex>5</ZIndex>
             <Style>
               <Border>
@@ -2004,10 +2147,10 @@
             </Style>
           </Textbox>
         </ReportItems>
-        <Height>13.59958cm</Height>
+        <Height>13.14979cm</Height>
         <Style />
       </Body>
-      <Width>18.66286cm</Width>
+      <Width>19.95049cm</Width>
       <Page>
         <PageHeader>
           <Height>2.00766cm</Height>
@@ -2038,7 +2181,7 @@
                   <Top>0.26141cm</Top>
                   <Left>2.21932cm</Left>
                   <Height>0.67938cm</Height>
-                  <Width>15.25292cm</Width>
+                  <Width>16.73459cm</Width>
                   <Style>
                     <Border>
                       <Style>None</Style>
@@ -2072,7 +2215,7 @@
                   <Top>1.01134cm</Top>
                   <Left>2.21932cm</Left>
                   <Height>0.67938cm</Height>
-                  <Width>15.25292cm</Width>
+                  <Width>16.73459cm</Width>
                   <ZIndex>1</ZIndex>
                   <Style>
                     <Border>
@@ -2088,7 +2231,7 @@
               </ReportItems>
               <KeepTogether>true</KeepTogether>
               <Height>0.78347in</Height>
-              <Width>7.30592in</Width>
+              <Width>7.80939in</Width>
               <Style>
                 <Border>
                   <Style>Solid</Style>
@@ -2273,6 +2416,72 @@ End Function
         </Field>
         <Field Name="CheckedCapLbl">
           <DataField>CheckedCapLbl</DataField>
+        </Field>
+        <Field Name="No_">
+          <DataField>No_</DataField>
+        </Field>
+        <Field Name="Designation">
+          <DataField>Designation</DataField>
+        </Field>
+        <Field Name="Shortcut_Dimension_1_Code">
+          <DataField>Shortcut_Dimension_1_Code</DataField>
+        </Field>
+        <Field Name="Shortcut_Dimension_2_Code">
+          <DataField>Shortcut_Dimension_2_Code</DataField>
+        </Field>
+        <Field Name="Purpose">
+          <DataField>Purpose</DataField>
+        </Field>
+        <Field Name="InstallationFromDate">
+          <DataField>InstallationFromDate</DataField>
+        </Field>
+        <Field Name="InstallationToDate">
+          <DataField>InstallationToDate</DataField>
+        </Field>
+        <Field Name="ShootingStartDate">
+          <DataField>ShootingStartDate</DataField>
+        </Field>
+        <Field Name="ShootingEndDate">
+          <DataField>ShootingEndDate</DataField>
+        </Field>
+        <Field Name="ExpectedDateofReturn">
+          <DataField>ExpectedDateofReturn</DataField>
+        </Field>
+        <Field Name="SubLocation">
+          <DataField>SubLocation</DataField>
+        </Field>
+        <Field Name="User_ID">
+          <DataField>User_ID</DataField>
+        </Field>
+        <Field Name="GatepassDt">
+          <DataField>GatepassDt</DataField>
+        </Field>
+        <Field Name="Location_Code">
+          <DataField>Location_Code</DataField>
+        </Field>
+        <Field Name="Source_No_">
+          <DataField>Source_No_</DataField>
+        </Field>
+        <Field Name="Source_Name">
+          <DataField>Source_Name</DataField>
+        </Field>
+        <Field Name="Quantity">
+          <DataField>Quantity</DataField>
+        </Field>
+        <Field Name="QuantityFormat">
+          <DataField>QuantityFormat</DataField>
+        </Field>
+        <Field Name="Users">
+          <DataField>Users</DataField>
+        </Field>
+        <Field Name="Make">
+          <DataField>Make</DataField>
+        </Field>
+        <Field Name="ModelNo">
+          <DataField>ModelNo</DataField>
+        </Field>
+        <Field Name="SerialNo">
+          <DataField>SerialNo</DataField>
         </Field>
       </Fields>
       <Query>

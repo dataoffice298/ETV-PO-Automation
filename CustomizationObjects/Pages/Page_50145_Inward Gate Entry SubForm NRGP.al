@@ -159,6 +159,20 @@ page 50145 "Inward Gate Entry SubFrm-NRGP"
                     ApplicationArea = ALL;
                     Visible = false;
                 }
+                //BaluonNov82022>>
+                field(Variant; rec.Variant)
+                {
+                    ApplicationArea = all;
+                }
+                field(ModelNo; rec.ModelNo)
+                {
+                    ApplicationArea = all;
+                }
+                field(SerialNo; rec.SerialNo)
+                {
+                    ApplicationArea = all;
+                }
+                //BaluonNov82022<<
             }
         }
     }

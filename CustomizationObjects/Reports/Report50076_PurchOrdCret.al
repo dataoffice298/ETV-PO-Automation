@@ -80,6 +80,7 @@ report 50076 "Purchase Order Creation New"
                         //B2BMSOn18Oct2022>>
                         if QuotCompHdr.Get("Quotation Comparison1"."Quot Comp No.") then
                             PurchaseHeaderOrder.Regularization := QuotCompHdr.Regularization;
+                        PurchaseHeaderOrder."Indent Requisition No" := "Quotation Comparison1"."Indent Req. No.";
                         //B2BMSOn18Oct2022<<
                         PurchaseHeaderOrder.Modify();
                     end; //B2BMSOn18Oct2022
@@ -129,10 +130,10 @@ report 50076 "Purchase Order Creation New"
                                 PurchaseLineOrder.validate("Shortcut Dimension 2 Code");
                                 PurchaseLineOrder.Validate("Dimension Set ID");
                                 //B2BMSOn21Sep2022>>
-                                PurchaseLineOrder."Indent No." := PurchaseLine."Indent No.";
-                                PurchaseLineOrder."Indent Line No." := PurchaseLine."Indent Line No.";
-                                PurchaseLineOrder."Indent Req No" := PurchaseLine."Indent Req No";
-                                PurchaseLineOrder."Indent Req Line No" := PurchaseLine."Indent Req Line No";
+                                PurchaseLineOrder."Indent No." := "Quotation Comparison1"."Indent No.";
+                                PurchaseLineOrder."Indent Line No." := "Quotation Comparison1"."Indent Line No.";
+                                PurchaseLineOrder."Indent Req No" := "Quotation Comparison1"."Indent Req. No.";
+                                PurchaseLineOrder."Indent Req Line No" := "Quotation Comparison1"."Indent Req. Line No.";
                                 //B2BMSOn21Sep2022<<
                                 PurchaseLineOrder.Modify();
                                 LneLVar += 10000;

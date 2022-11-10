@@ -204,6 +204,16 @@ table 50044 "Archive Quotation Comparison"
         {
             DataClassification = CustomerContent;
         }
+        //B2BMSOn08Nov2022>>
+        field(120; "Indent Req. No."; Code[20])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(121; "Indent Req. Line No."; Integer)
+        {
+            DataClassification = CustomerContent;
+        }
+        //B2BMSOn08Nov2022<<
     }
 
     keys

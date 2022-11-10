@@ -250,6 +250,64 @@ table 50059 "Gate Entry Header_B2B"
             DataClassification = CustomerContent;
             Editable = false;//b2bpksalecorr12
         }
+        //BaluonNov82022>>
+        field(37; Purpose; Text[100])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(38; InstallationFromDate; Date)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Installation From Date';
+        }
+        field(39; InstallationToDate; Date)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Installation To Date';
+        }
+        field(40; ShootingStartDate; Date)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Shooting Start Date';
+        }
+        field(41; ShootingEndDate; Date)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Shooting End Date';
+        }
+        field(42; ExpectedDateofReturn; Date)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Expected Date of Return';
+        }
+        field(43; SubLocation; Text[100])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Sub Location';
+        }
+        field(44; "Shortcut Dimension 1 Code"; Code[20])
+        {
+            CaptionClass = '1,2,1';
+            Caption = 'Shortcut Dimension 1 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1),
+            Blocked = CONST(false));
+        }
+        field(45; "Shortcut Dimension 2 Code"; Code[20])
+        {
+            CaptionClass = '1,2,2';
+            Caption = 'Shortcut Dimension 2 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2),
+            Blocked = CONST(false));
+        }
+        field(46; Designation; Text[100])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(47; Program; Text[100])
+        {
+            DataClassification = CustomerContent;
+        }
+        //BaluonNov82022<<
     }
 
     keys

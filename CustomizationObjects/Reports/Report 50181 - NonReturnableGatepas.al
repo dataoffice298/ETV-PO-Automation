@@ -11,7 +11,9 @@ report 50181 "Non Returnable Gatepass"
     {
         dataitem("Gate Entry Header_B2B"; "Gate Entry Header_B2B")
         {
-            MaxIteration = 1;
+            DataItemTableView = WHERE("Entry Type" = const(Inward),
+                                      Type = FILTER('NRGP'));
+
             column(CompanyInfoName; CompanyInfo.Name)
             { }
             column(CompanyInfoPic; CompanyInfo.Picture)
@@ -80,11 +82,64 @@ report 50181 "Non Returnable Gatepass"
             { }
             column(CheckedCapLbl; CheckedCapLbl)
             { }
+            column(No_; "No.")
+            { }
+            column(Designation; Designation)
+            {
+
+            }
+            column(Shortcut_Dimension_1_Code; "Shortcut Dimension 1 Code")
+            { }
+            column(Shortcut_Dimension_2_Code; "Shortcut Dimension 2 Code")
+            { }
+            column(Purpose; Purpose)
+            { }
+            column(InstallationFromDate; InstallationFromDate)
+            { }
+            column(InstallationToDate; InstallationToDate)
+            { }
+            column(ShootingStartDate; ShootingStartDate)
+            { }
+            column(ShootingEndDate; ShootingEndDate)
+            { }
+            column(ExpectedDateofReturn; ExpectedDateofReturn)
+            { }
+            column(SubLocation; SubLocation)
+            { }
+            column(User_ID; "User ID")
+            { }
+            column(GatepassDt; "Document Date")
+            { }
+            column(Location_Code; "Location Code")
+            { }
             dataitem("Gate Entry Line_B2B"; "Gate Entry Line_B2B")
             {
                 DataItemLink = "Entry Type" = FIELD("Entry Type"),
                 "type" = field("Type"),
                               "Gate Entry No." = FIELD("No.");
+                column(Source_No_; "Source No.")
+                { }
+                column(Source_Name; "Source Name")
+                { }
+                column(Quantity; Quantity)
+                {
+
+                }
+                column(Users; Users."Full Name")
+                { }
+                column(Make; Variant)
+                { }
+                column(ModelNo; ModelNo)
+                { }
+                column(SerialNo; SerialNo)
+                { }
+                trigger OnAfterGetRecord()
+                begin
+                    Users.Reset();
+                    Users.SetRange("User Name", "Gate Entry Header_B2B"."User ID");
+                    if Users.FindFirst() then;
+                end;
+
             }
             trigger OnAfterGetRecord()
             begin
@@ -137,6 +192,7 @@ report 50181 "Non Returnable Gatepass"
 
 
     var
+        Users: Record User;
         CompanyInfo: Record "Company Information";
         NonReturnCapLbl: Label 'NON RETURNABLE GATEPASS';
         GatepassCapLbl: Label 'GATEPASS NO:';

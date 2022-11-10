@@ -180,7 +180,7 @@ page 50126 "Quotation Comparision Doc"
                     POCreationReport: Report "Purchase Order Creation";
                     QuoteCompLine: Record "Quotation Comparison Test";
                     POCreation: Report "Purchase Order Creation New";
-                    QuotationComparisionDelete: Record 50041;
+                    QuotationComparisionDelete: Record "Quotation Comparison Test";
                     POAutomation: Codeunit 50026;
                     QuoteCompareArchive: Record 50044;
                     ArchiveQuotationHeader: Record "Archive Quotation Header";
@@ -211,22 +211,22 @@ page 50126 "Quotation Comparision Doc"
                     Rec."Orders Created" := true;
                     CurrPage.UPDATE();
 
-                    QuoteCompareArchive.SETRANGE("RFQ No.", Rec.RFQNumber);
-                    IF QuoteCompareArchive.FIND('-') THEN
-                        REPEAT
-                            QuoteCompareArchive.DELETE;
-                        UNTIL QuoteCompareArchive.NEXT = 0;
+                    // QuoteCompareArchive.SETRANGE("RFQ No.", Rec.RFQNumber);
+                    // IF QuoteCompareArchive.FIND('-') THEN
+                    //     REPEAT
+                    //         QuoteCompareArchive.DELETE;
+                    //     UNTIL QuoteCompareArchive.NEXT = 0;
 
 
                     ArchiveQCS(); //ETVPO1.1
                     //B2B1.1START
-                    QuotationComparisionDelete.RESET;
-                    QuotationComparisionDelete.SETRANGE("Carry Out Action", TRUE);
-                    IF QuotationComparisionDelete.FINDFIRST THEN BEGIN
-                        QuotationComparisionDelete.DELETE;//B2B1.1
-                    END;
+                    // QuotationComparisionDelete.RESET;
+                    // QuotationComparisionDelete.SETRANGE("Carry Out Action", TRUE);
+                    // IF QuotationComparisionDelete.FINDFIRST THEN BEGIN
+                    //     QuotationComparisionDelete.DELETE;//B2B1.1
+                    // END;
                     //END B2B1.1
-                    CurrPage.UPDATE;
+                    //CurrPage.UPDATE;
 
 
                 end;
@@ -375,6 +375,8 @@ page 50126 "Quotation Comparision Doc"
         if QuoteLines.FindFirst() then
             if IndentHdr.Get(QuoteLines."Indent No.") then;
         //B2BMSOn04Nov2022<<
+
+
     end;
 
     trigger OnDeleteRecord(): Boolean

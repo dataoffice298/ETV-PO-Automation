@@ -217,6 +217,20 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
                     ApplicationArea = ALL;
                     Visible = false;
                 }
+                //BaluonNov82022>>
+                field(Variant; rec.Variant)
+                {
+                    ApplicationArea = all;
+                }
+                field(ModelNo; rec.ModelNo)
+                {
+                    ApplicationArea = all;
+                }
+                field(SerialNo; rec.SerialNo)
+                {
+                    ApplicationArea = all;
+                }
+                //BaluonNov82022<<
             }
         }
 

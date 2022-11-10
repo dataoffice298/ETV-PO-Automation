@@ -156,8 +156,8 @@ table 50047 QuotCompHdr
         PurchaseSetUp.GET();
 
         if "No." = '' then begin
-            TestNoSeries();
-            NoSeriesMgt.InitSeries(GetNoSeriesCode(), xRec."No. Series", "Document Date", "No.", "No. Series");
+            PurchaseSetUp.TESTFIELD("Quote Comparision");
+            NoSeriesMgt.InitSeries(PurchaseSetUp."Quote Comparision", xRec."No. Series", 0D, "No.", "No. Series");
         end;
 
         "Document Date" := WORKDATE();

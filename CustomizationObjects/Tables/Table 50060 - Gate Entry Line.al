@@ -95,6 +95,23 @@ table 50060 "Gate Entry Line_B2B"
         {
             DataClassification = CustomerContent;//Pk-N on 14.05.2021
         }
+        //BaluonNov82022>>
+        field(31; Variant; Code[20])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(32; ModelNo; Code[20])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Model No';
+        }
+        field(33; SerialNo; Code[20])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Serial No';
+        }
+        
+        //BaluonNov82022<<
 
     }
 

@@ -87,6 +87,50 @@ page 50144 "Inward Gate Entry-NRGP"
                 {
                     ApplicationArea = ALL;
                 }
+                //BaluonNov82022>>
+                field(Purpose; rec.Purpose)
+                { }
+                field(InstallationFromDate; rec.InstallationFromDate)
+                {
+                    ApplicationArea = all;
+                }
+                field(InstallationToDate; rec.InstallationToDate)
+                {
+                    ApplicationArea = all;
+                }
+                field(ShootingStartDate; rec.ShootingStartDate)
+                {
+                    ApplicationArea = all;
+                }
+                field(ShootingEndDate; rec.ShootingEndDate)
+                {
+                    ApplicationArea = all;
+                }
+                field(ExpectedDateofReturn; rec.ExpectedDateofReturn)
+                {
+                    ApplicationArea = all;
+                }
+                field(SubLocation; rec.SubLocation)
+                {
+                    ApplicationArea = all;
+                }
+                field("Shortcut Dimension 1 Code"; "Shortcut Dimension 1 Code")
+                {
+                    ApplicationArea = all;
+                }
+                field("Shortcut Dimension 2 Code"; "Shortcut Dimension 2 Code")
+                {
+                    ApplicationArea = all;
+                }
+                field(Designation; rec.Designation)
+                {
+                    ApplicationArea = all;
+                }
+                field(Program; rec.Program)
+                {
+                    ApplicationArea = all;
+                }
+                //BaluonNov82022<<
             }
             part(Control1500028; "Inward Gate Entry SubFrm-NRGP")
             {

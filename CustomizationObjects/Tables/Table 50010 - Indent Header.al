@@ -125,7 +125,7 @@ table 50010 "Indent Header"
             Caption = 'Declined';
         }
         //B2BPAVOn09Sep2022>>
-        field(50001; "Shortcut Dimension 1 Code"; Code[20])
+        field(50001; "Shortcut Dimension 1 Code"; Code[20]) 
         {
             CaptionClass = '1,2,1';
             Caption = 'Shortcut Dimension 1 Code';

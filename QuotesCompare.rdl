@@ -3721,11 +3721,149 @@ End Function
   <DataSets>
     <DataSet Name="DataSet_Result">
       <Fields>
-        <Field Name="No_">
-          <DataField>No_</DataField>
+        <Field Name="Number_Integer">
+          <DataField>Number_Integer</DataField>
         </Field>
-        <Field Name="ComparitiveStatementCapLbl">
-          <DataField>ComparitiveStatementCapLbl</DataField>
+        <Field Name="ComparitiveCapLbl">
+          <DataField>ComparitiveCapLbl</DataField>
+        </Field>
+        <Field Name="CompanyInfoName">
+          <DataField>CompanyInfoName</DataField>
+        </Field>
+        <Field Name="QuotationComparisonStatementCaptionLbl">
+          <DataField>QuotationComparisonStatementCaptionLbl</DataField>
+        </Field>
+        <Field Name="REQNoCaptionLbl">
+          <DataField>REQNoCaptionLbl</DataField>
+        </Field>
+        <Field Name="VendorNoCaptionLbl">
+          <DataField>VendorNoCaptionLbl</DataField>
+        </Field>
+        <Field Name="VendorNameCaptionLbl">
+          <DataField>VendorNameCaptionLbl</DataField>
+        </Field>
+        <Field Name="QuoteNoCaptionLbl">
+          <DataField>QuoteNoCaptionLbl</DataField>
+        </Field>
+        <Field Name="ItemNoCaptionLbl">
+          <DataField>ItemNoCaptionLbl</DataField>
+        </Field>
+        <Field Name="DescriptionCaptionLbl">
+          <DataField>DescriptionCaptionLbl</DataField>
+        </Field>
+        <Field Name="UOMCaptionLbl">
+          <DataField>UOMCaptionLbl</DataField>
+        </Field>
+        <Field Name="QuantityCaptionLbl">
+          <DataField>QuantityCaptionLbl</DataField>
+        </Field>
+        <Field Name="RateCaptionLbl">
+          <DataField>RateCaptionLbl</DataField>
+        </Field>
+        <Field Name="AmountCaptionLbl">
+          <DataField>AmountCaptionLbl</DataField>
+        </Field>
+        <Field Name="TotalBasicValueCaptionLbl">
+          <DataField>TotalBasicValueCaptionLbl</DataField>
+        </Field>
+        <Field Name="ExiseDutyCaptionLbl">
+          <DataField>ExiseDutyCaptionLbl</DataField>
+        </Field>
+        <Field Name="SalesTaxCaptionLbl">
+          <DataField>SalesTaxCaptionLbl</DataField>
+        </Field>
+        <Field Name="VATCaptionLbl">
+          <DataField>VATCaptionLbl</DataField>
+        </Field>
+        <Field Name="OtherChargesCaptionLbl">
+          <DataField>OtherChargesCaptionLbl</DataField>
+        </Field>
+        <Field Name="TotalAmountCaptionLbl">
+          <DataField>TotalAmountCaptionLbl</DataField>
+        </Field>
+        <Field Name="PaymentTermCodeCaptionLbl">
+          <DataField>PaymentTermCodeCaptionLbl</DataField>
+        </Field>
+        <Field Name="RFQNo_QuotationComparison">
+          <DataField>RFQNo_QuotationComparison</DataField>
+        </Field>
+        <Field Name="ItemNo_QuotationComparison">
+          <DataField>ItemNo_QuotationComparison</DataField>
+        </Field>
+        <Field Name="VariantCode_QuotationComparison">
+          <DataField>VariantCode_QuotationComparison</DataField>
+        </Field>
+        <Field Name="Description_QuotationComparison">
+          <DataField>Description_QuotationComparison</DataField>
+        </Field>
+        <Field Name="UOM">
+          <DataField>UOM</DataField>
+        </Field>
+        <Field Name="Vendor1">
+          <DataField>Vendor1</DataField>
+        </Field>
+        <Field Name="VendorName1">
+          <DataField>VendorName1</DataField>
+        </Field>
+        <Field Name="QuoteNo1">
+          <DataField>QuoteNo1</DataField>
+        </Field>
+        <Field Name="Qty1">
+          <DataField>Qty1</DataField>
+        </Field>
+        <Field Name="Qty1Format">
+          <DataField>Qty1Format</DataField>
+        </Field>
+        <Field Name="QRate1">
+          <DataField>QRate1</DataField>
+        </Field>
+        <Field Name="QRate1Format">
+          <DataField>QRate1Format</DataField>
+        </Field>
+        <Field Name="QAmount1">
+          <DataField>QAmount1</DataField>
+        </Field>
+        <Field Name="QAmount1Format">
+          <DataField>QAmount1Format</DataField>
+        </Field>
+        <Field Name="VendorAmount1">
+          <DataField>VendorAmount1</DataField>
+        </Field>
+        <Field Name="VendorAmount1Format">
+          <DataField>VendorAmount1Format</DataField>
+        </Field>
+        <Field Name="ExciseDuty1">
+          <DataField>ExciseDuty1</DataField>
+        </Field>
+        <Field Name="ExciseDuty1Format">
+          <DataField>ExciseDuty1Format</DataField>
+        </Field>
+        <Field Name="SalesTax1">
+          <DataField>SalesTax1</DataField>
+        </Field>
+        <Field Name="SalesTax1Format">
+          <DataField>SalesTax1Format</DataField>
+        </Field>
+        <Field Name="VAT11">
+          <DataField>VAT11</DataField>
+        </Field>
+        <Field Name="VAT11Format">
+          <DataField>VAT11Format</DataField>
+        </Field>
+        <Field Name="Pf1">
+          <DataField>Pf1</DataField>
+        </Field>
+        <Field Name="Pf1Format">
+          <DataField>Pf1Format</DataField>
+        </Field>
+        <Field Name="TotalAmount1_1">
+          <DataField>TotalAmount1_1</DataField>
+        </Field>
+        <Field Name="TotalAmount1_1Format">
+          <DataField>TotalAmount1_1Format</DataField>
+        </Field>
+        <Field Name="PaymentTermCode1">
+          <DataField>PaymentTermCode1</DataField>
         </Field>
         <Field Name="IndentNoCapLbl">
           <DataField>IndentNoCapLbl</DataField>
@@ -3736,12 +3874,6 @@ End Function
         <Field Name="NameoftheIndentorCapLbl">
           <DataField>NameoftheIndentorCapLbl</DataField>
         </Field>
-        <Field Name="DateCapLbl">
-          <DataField>DateCapLbl</DataField>
-        </Field>
-        <Field Name="Quot_Comp_No_">
-          <DataField>Quot_Comp_No_</DataField>
-        </Field>
         <Field Name="SNoCapLbl">
           <DataField>SNoCapLbl</DataField>
         </Field>
@@ -3751,8 +3883,8 @@ End Function
         <Field Name="HSNCodeCapLbl">
           <DataField>HSNCodeCapLbl</DataField>
         </Field>
-        <Field Name="QtyCapLabl">
-          <DataField>QtyCapLabl</DataField>
+        <Field Name="QtyCapLbl">
+          <DataField>QtyCapLbl</DataField>
         </Field>
         <Field Name="UnitsCapLbl">
           <DataField>UnitsCapLbl</DataField>
@@ -3760,86 +3892,23 @@ End Function
         <Field Name="UnitRateCapLbl">
           <DataField>UnitRateCapLbl</DataField>
         </Field>
-        <Field Name="RSCapLbl">
-          <DataField>RSCapLbl</DataField>
-        </Field>
-        <Field Name="UnitRateCapLbl1">
-          <DataField>UnitRateCapLbl1</DataField>
-        </Field>
-        <Field Name="RSCapLbl1">
-          <DataField>RSCapLbl1</DataField>
-        </Field>
         <Field Name="ModelCapLbl">
           <DataField>ModelCapLbl</DataField>
         </Field>
         <Field Name="MRPCapLbl">
           <DataField>MRPCapLbl</DataField>
         </Field>
-        <Field Name="TermsCondCapLbl">
-          <DataField>TermsCondCapLbl</DataField>
+        <Field Name="TermsConditionsCapLbl">
+          <DataField>TermsConditionsCapLbl</DataField>
         </Field>
-        <Field Name="QtnNoDateCapLbl">
-          <DataField>QtnNoDateCapLbl</DataField>
+        <Field Name="QtnNoCapLbl">
+          <DataField>QtnNoCapLbl</DataField>
         </Field>
         <Field Name="RatesCapLbl">
           <DataField>RatesCapLbl</DataField>
         </Field>
         <Field Name="GSTCapLbl">
           <DataField>GSTCapLbl</DataField>
-        </Field>
-        <Field Name="TransportationCapLbl">
-          <DataField>TransportationCapLbl</DataField>
-        </Field>
-        <Field Name="DeliveryCapLbl">
-          <DataField>DeliveryCapLbl</DataField>
-        </Field>
-        <Field Name="PaymentCapLbl">
-          <DataField>PaymentCapLbl</DataField>
-        </Field>
-        <Field Name="WarrantyCapLbl">
-          <DataField>WarrantyCapLbl</DataField>
-        </Field>
-        <Field Name="ContactPersonCapLbl">
-          <DataField>ContactPersonCapLbl</DataField>
-        </Field>
-        <Field Name="PhoneNoCapLbl">
-          <DataField>PhoneNoCapLbl</DataField>
-        </Field>
-        <Field Name="Item_No_">
-          <DataField>Item_No_</DataField>
-        </Field>
-        <Field Name="Description">
-          <DataField>Description</DataField>
-        </Field>
-        <Field Name="Quantity">
-          <DataField>Quantity</DataField>
-        </Field>
-        <Field Name="QuantityFormat">
-          <DataField>QuantityFormat</DataField>
-        </Field>
-        <Field Name="HSNCode">
-          <DataField>HSNCode</DataField>
-        </Field>
-        <Field Name="Vendor_Name">
-          <DataField>Vendor_Name</DataField>
-        </Field>
-        <Field Name="UOM">
-          <DataField>UOM</DataField>
-        </Field>
-        <Field Name="UnitPrice">
-          <DataField>UnitPrice</DataField>
-        </Field>
-        <Field Name="UnitPriceFormat">
-          <DataField>UnitPriceFormat</DataField>
-        </Field>
-        <Field Name="Indent_No_">
-          <DataField>Indent_No_</DataField>
-        </Field>
-        <Field Name="Document_Date">
-          <DataField>Document_Date</DataField>
-        </Field>
-        <Field Name="Indentor">
-          <DataField>Indentor</DataField>
         </Field>
       </Fields>
       <Query>

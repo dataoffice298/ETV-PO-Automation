@@ -63,6 +63,34 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             end;
         }
         //B2BVCOn04Oct2022<<<
+
+        //B2BMSOn11Nov2022>>
+        addafter(Print)
+        {
+            action(PrintRegularization)
+            {
+                ApplicationArea = Suite;
+                Caption = 'Print Regularization Order';
+                Ellipsis = true;
+                Image = PrintReport;
+                Promoted = true;
+                PromotedCategory = Category10;
+                ToolTip = 'Prepare to print the regularization document. The report request window for the document opens where you can specify what to include on the print-out.';
+
+                trigger OnAction()
+                var
+                    PurchaseHeader: Record "Purchase Header";
+                    RegErr: Label 'This is not a regularization order';
+                begin
+                    if not Rec.Regularization then
+                        Error(RegErr);
+                    PurchaseHeader.Reset();
+                    PurchaseHeader.SetRange("Document Type", Rec."Document Type");
+                    PurchaseHeader.SetRange("No.", Rec."No.");
+                    Report.RunModal(Report::"Regularization Order", true, false, PurchaseHeader);
+                end;
+            }
+        }
     }
     var
         cu90: Codeunit "Purch.-Post";

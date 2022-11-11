@@ -276,7 +276,8 @@ codeunit 50026 "PO Automation"
                             ItemUnitofMeasure.RESET;
                             IF ItemUnitofMeasure.GET(PurchaseLine."No.", IndentVendorEnquiry."Unit Of Measure") THEN
                                 BaseUOMQtyMeasure := ItemUnitofMeasure."Qty. per Unit of Measure";
-                            IndentVendorEnquiry.Quantity := IndentVendorEnquiry.Quantity / PurchUOMQtyMeasure;
+                            if PurchUOMQtyMeasure <> 0 then
+                                IndentVendorEnquiry.Quantity := IndentVendorEnquiry.Quantity / PurchUOMQtyMeasure;
                         END;
                         PurchaseLine.VALIDATE(Quantity, IndentVendorEnquiry.Quantity);
                         //PurchaseLine.VALIDATE("Order Quantity",IndentVendorEnquiry.Quantity);
@@ -1559,7 +1560,7 @@ codeunit 50026 "PO Automation"
     begin
         if (ItemLRec.Get(TempPurchLine."No.")) and (ItemLRec."QC Enabled B2B") then begin
             TempPurchLine."Quantity Accepted B2B" += TempPurchLine."Qty. to Accept B2B";
-            TempPurchLine."Quantity Rejected B2B" += TempPurchLine."Quantity Rejected B2B";
+            TempPurchLine."Quantity Rejected B2B" += TempPurchLine."Qty. to Reject B2B";
         end;
     end;
 

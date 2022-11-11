@@ -175,7 +175,8 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             begin
                 if ("Qty. to Accept B2B") > "Qty. to Receive" then
                     Error(Err0001);
-
+                if "Qty. to Accept B2B" <> 0 then
+                    Validate("Qty. to Receive", "Qty. to Accept B2B");
             end;
         }
         field(60013; "Qty. to Reject B2B"; Decimal)

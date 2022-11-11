@@ -7,7 +7,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         {
             field("Ref. Posted Gate Entry"; Rec."Ref. Posted Gate Entry")
             {
-                Editable = false;
+                //Editable = false;
                 ApplicationArea = All;
             }
         }

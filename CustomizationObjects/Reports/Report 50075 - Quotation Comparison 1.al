@@ -3,8 +3,9 @@ report 50075 "Quotation Comparison 1"
     // version B2B 1.0,PO
 
     DefaultLayout = RDLC;
-    RDLCLayout = './Quotation Comparison 1.rdlc';
-    Caption = 'Quotation Comparison';
+    RDLCLayout = './Quotation Comparison 1.rdl';
+    Caption = 'Quotation Comparison_50075';
+    UsageCategory = ReportsAndAnalysis;
 
     dataset
     {
@@ -15,7 +16,7 @@ report 50075 "Quotation Comparison 1"
             column(Number_Integer; Number)
             {
             }
-            dataitem(DataItem1102152028; "Quotation Comparison")
+            dataitem(DataItem1102152028; "Quotation Comparison Test")
             {
                 DataItemTableView = SORTING("RFQ No.", "Item No.", "Variant Code")
                                     ORDER(Ascending);

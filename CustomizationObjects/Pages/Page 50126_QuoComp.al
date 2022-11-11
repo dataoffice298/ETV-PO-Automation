@@ -231,6 +231,24 @@ page 50126 "Quotation Comparision Doc"
 
                 end;
             }
+            //B2BMSOn10Nov2022>>
+            action(Print)
+            {
+                Image = Print;
+                Promoted = true;
+                PromotedCategory = Report;
+                ApplicationArea = all;
+
+                trigger OnAction()
+                var
+                    QuoComp: Report "Quotation Comparison 1";
+                begin
+                    Clear(QuoComp);
+                    QuoComp.SETRFQ(Rec.RFQNumber);
+                    QuoComp.Run();
+                end;
+            }
+            //B2BMSOn10Nov2022<<
 
             separator("-")
             {

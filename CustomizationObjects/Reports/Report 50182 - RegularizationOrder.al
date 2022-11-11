@@ -48,15 +48,27 @@ report 50182 "Regularization Order"
             { }
             column(AmountText; AmountText[1])
             { }
+            column(TotalOrderAmount; TotalOrderAmount)
+            { }
+            column(AckLbl; AckLbl)
+            { }
+            column(ThankYouLbl; ThankYouLbl)
+            { }
+            column(ETVLbl; ETVLbl)
+            { }
 
             dataitem("Purchase Line"; "Purchase Line")
             {
                 DataItemLink = "Document No." = field("No.");
+                DataItemTableView = sorting("Document Type", "Document No.", "Line No.");
+
                 column(Document_No_; "Document No.")
                 { }
                 column(Line_No_; "Line No.")
                 { }
                 column(SNo; SNo)
+                { }
+                column(No_PurchLine; "No.")
                 { }
                 column(Description; Description)
                 { }
@@ -81,6 +93,10 @@ report 50182 "Regularization Order"
                 column(TotalLineAmount; TotalLineAmount)
                 { }
 
+                trigger OnPreDataItem()
+                begin
+                    SetFilter("No.", '<>%1', '');
+                end;
 
                 trigger OnAfterGetRecord()
                 begin
@@ -107,19 +123,26 @@ report 50182 "Regularization Order"
             dataitem(GSTLoop; Integer)
             {
                 DataItemTableView = sorting(Number);
+                DataItemLinkReference = "Purchase Header";
 
+                column(Number_GSTLoop; Number)
+                { }
                 column(GSTGroupCode_PurchLineGST; PurchLineGST."GST Group Code")
                 { }
                 column(GSTPerText; GSTPerText)
+                { }
+                column(GSTAmountLine; GSTAmountLine[I])
                 { }
 
                 trigger OnPreDataItem()
                 begin
                     Clear(GSTGroupCode);
+                    I := 1;
                     PurchLineGST.Reset();
-                    PurchLineGST.SetCurrentKey("GST Group Code");
+                    PurchLineGST.SetCurrentKey("Line No.", "GST Group Code");
                     PurchLineGST.SetRange("Document No.", "Purchase Header"."No.");
                     PurchLineGST.SetFilter("GST Group Code", '<>%1', '');
+                    PurchLineGST.SetFilter("No.", '<>%1', '');
                     if PurchLineGST.FindSet() then;
 
                     SetRange(Number, 1, PurchLineGST.Count);
@@ -128,7 +151,7 @@ report 50182 "Regularization Order"
                 trigger OnAfterGetRecord()
                 begin
                     Clear(GSTPerText);
-
+                    Clear(GSTPercent);
                     if GSTGroupCode <> PurchLineGST."GST Group Code" then begin
                         GSTGroupCode := PurchLineGST."GST Group Code";
                         PurchLine.Reset();
@@ -138,10 +161,13 @@ report 50182 "Regularization Order"
                         if PurchLine.FindSet() then begin
                             GetGSTPercents(PurchLine);
                             if GSTPercent <> 0 then begin
+                                I += 1;
                                 GSTPerText := StrSubstNo(GSTText, GSTPercent);
                                 repeat
+                                    GetGSTAmounts(PurchLine);
+                                    GSTAmountLine[I] += SGSTAmt + IGSSTAmt + CGSTAmt;
                                     LineSNo := DelChr(Format(PurchLine."Line No."), '>', '0');
-                                    GSTPerText += LineSNo + ' &';
+                                    GSTPerText += LineSNo + ' & ';
                                 until PurchLine.Next() = 0;
                                 GSTPerText := DelChr(GSTPerText, '>', ' &');
                             end;
@@ -218,7 +244,7 @@ report 50182 "Regularization Order"
         GSTPercent: Decimal;
         GSTGroupCode: Code[10];
         NextLoop: Boolean;
-        GSTText: Label 'GST @%1 on S.No. ';
+        GSTText: Label 'GST @%1% on S.No. ';
         GSTPerText: Text;
         LineSNo: Text;
         AmountText: array[2] of Text;
@@ -226,6 +252,8 @@ report 50182 "Regularization Order"
         AckLbl: Label 'Please acknowledge the receipt of the order and arrange the material at the earliest.';
         ThankYouLbl: Label 'Thanking you,';
         ETVLbl: Label 'For EENADU TELEVISION PVT. LIMITED';
+        GSTAmountLine: array[10] of Decimal;
+        I: Integer;
 
     //GST Starts>>
     local procedure GetGSTAmounts(PurchaseLine: Record "Purchase Line")

@@ -265,7 +265,7 @@ page 50126 "Quotation Comparision Doc"
                 PromotedOnly = true;
                 trigger OnAction()
                 begin
-                    approvalmngmt.ApproveRecordApprovalRequest(RecordId());
+                    approvalmngmt.ApproveRecordApprovalRequest(Rec.RecordId());
                 end;
             }
             action("Send Approval Request")
@@ -380,10 +380,10 @@ page 50126 "Quotation Comparision Doc"
     }
     trigger OnAfterGetRecord();
     begin
-        OpenAppEntrExistsForCurrUser := approvalmngmt.HasOpenApprovalEntriesForCurrentUser(RecordId());
-        OpenApprEntrEsists := approvalmngmt.HasOpenApprovalEntries(RecordId());
-        CanCancelapprovalforrecord := approvalmngmt.CanCancelApprovalForRecord(RecordId());
-        workflowwebhookmangt.GetCanRequestAndCanCancel(RecordId(), CanrequestApprovForFlow, CanCancelapprovalforflow);
+        OpenAppEntrExistsForCurrUser := approvalmngmt.HasOpenApprovalEntriesForCurrentUser(Rec.RecordId());
+        OpenApprEntrEsists := approvalmngmt.HasOpenApprovalEntries(Rec.RecordId());
+        CanCancelapprovalforrecord := approvalmngmt.CanCancelApprovalForRecord(Rec.RecordId());
+        workflowwebhookmangt.GetCanRequestAndCanCancel(Rec.RecordId(), CanrequestApprovForFlow, CanCancelapprovalforflow);
 
         //B2BMSOn04Nov2022>>
         Clear(IndentHdr);

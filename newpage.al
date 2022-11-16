@@ -14,72 +14,72 @@ page 75466 "Objects Used"
         {
             repeater(contol1)
             {
-                field("User AL Code"; "User AL Code")
+                field("User AL Code"; Rec."User AL Code")
                 {
 
                     ApplicationArea = All;
                 }
-                field(SystemCreatedAt; SystemCreatedAt)
+                field(SystemCreatedAt; Rec.SystemCreatedAt)
                 {
                     ApplicationArea = All;
                 }
-                field(SystemModifiedAt; SystemModifiedAt)
+                field(SystemModifiedAt; Rec.SystemModifiedAt)
                 {
                     ApplicationArea = All;
                 }
-                field("User Code"; "User Code")
+                field("User Code"; Rec."User Code")
                 {
                     ApplicationArea = All;
                 }
-                field("User Code Hash"; "User Code Hash")
+                field("User Code Hash"; Rec."User Code Hash")
                 {
                     ApplicationArea = All;
                 }
-                field("Object Flags"; "Object Flags")
+                field("Object Flags"; Rec."Object Flags")
                 {
                     ApplicationArea = All;
                 }
-                field("Metadata Format"; "Metadata Format")
+                field("Metadata Format"; Rec."Metadata Format")
                 {
                     ApplicationArea = all;
                 }
-                field("Metadata Hash"; "Metadata Hash")
+                field("Metadata Hash"; Rec."Metadata Hash")
                 {
                     ApplicationArea = All;
                 }
-                field(SystemId; SystemId)
+                field(SystemId; Rec.SystemId)
                 {
                     ApplicationArea = All;
                 }
-                field("Object ID"; "Object ID")
+                field("Object ID"; Rec."Object ID")
                 {
                     ApplicationArea = All;
                 }
-                field("Package ID"; "Package ID")
+                field("Package ID"; Rec."Package ID")
                 {
                     ApplicationArea = All;
                 }
-                Field("Runtime Package ID"; "Runtime Package ID")
+                Field("Runtime Package ID"; Rec."Runtime Package ID")
                 {
                     ApplicationArea = all;
                 }
-                field(Metadata; Metadata)
+                field(Metadata; Rec.Metadata)
                 {
 
                 }
-                field("Metadata Version"; "Metadata Version")
+                field("Metadata Version"; Rec."Metadata Version")
                 {
                     ApplicationArea = All;
                 }
-                field("Object Name"; "Object Name")
+                field("Object Name"; Rec."Object Name")
                 {
                     ApplicationArea = All;
                 }
-                field("Object Subtype"; "Object Subtype")
+                field("Object Subtype"; Rec."Object Subtype")
                 {
                     ApplicationArea = All;
                 }
-                field("Object Type"; "Object Type")
+                field("Object Type"; Rec."Object Type")
                 {
                     ApplicationArea = all;
                 }

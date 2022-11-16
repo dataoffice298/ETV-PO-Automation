@@ -133,11 +133,87 @@ report 50181 "Non Returnable Gatepass"
                 { }
                 column(SerialNo; SerialNo)
                 { }
+                column(DescriptionLVar; DescriptionLVar)
+                { }
+                column(QtyDispatchLRec; QtyDispatchLRec)
+                { }
+                column(ItemName; ItemName)
+                { }
                 trigger OnAfterGetRecord()
                 begin
+                    Clear(DescriptionLVar);
+                    Clear(QtyDispatchLRec);
+                    Clear(ItemName);
                     Users.Reset();
                     Users.SetRange("User Name", "Gate Entry Header_B2B"."User ID");
                     if Users.FindFirst() then;
+                    case "Source Type" of
+                        "Source Type"::"Sales Shipment":
+                            BEGIN
+                                SalesShipmentHeaderLRec.reset;
+                                SalesShipmentHeaderLRec.SetRange("No.", "Source No.");
+                                IF SalesShipmentHeaderLRec.findfirst then begin
+                                    SalesShipmentLinLRec.Reset();
+                                    SalesShipmentLinLRec.SetRange("Document No.", SalesShipmentHeaderLRec."No.");
+                                    SalesShipmentLinLRec.SetRange("Line No.", "Line No.");
+                                    if SalesShipmentLinLRec.FindSet() then
+                                        repeat
+                                            ItemName := SalesShipmentLinLRec."No.";
+                                            DescriptionLVar := SalesShipmentLinLRec.Description;
+                                            QtyDispatchLRec := SalesShipmentLinLRec.Quantity;
+                                        until SalesShipmentLinLRec.Next() = 0;
+                                end
+                            End;
+                        "Source Type"::"Purchase Return Shipment":
+                            BEGIN
+                                PurchaseRetnLRec.reset;
+                                PurchaseRetnLRec.SetRange("No.", "Source No.");
+                                IF PurchaseRetnLRec.findfirst then begin
+                                    PurchaseRetLinLRec.Reset();
+                                    PurchaseRetLinLRec.SetRange("Document No.", PurchaseRetnLRec."No.");
+                                    if PurchaseRetLinLRec.FindSet() then
+                                        repeat
+                                            DescriptionLVar := PurchaseRetLinLRec.Description;
+                                            QtyDispatchLRec := PurchaseRetLinLRec.Quantity;
+                                            ItemName := PurchaseRetLinLRec."No.";
+                                        until PurchaseRetLinLRec.Next() = 0;
+                                end
+
+                            END;
+                        "Source Type"::"Transfer Shipment":
+                            BEGIN
+                                TransferShpntHdr.reset;
+                                TransferShpntHdr.SetRange("No.", "Source No.");
+                                IF TransferShpntHdr.findfirst then begin
+                                    TransferShpntLine.Reset();
+                                    TransferShpntLine.SetRange("Document No.", TransferShpntHdr."No.");
+                                    if TransferShpntLine.FindSet() then
+                                        repeat
+                                            DescriptionLVar := TransferShpntLine.Description;
+                                            QtyDispatchLRec := TransferShpntLine.Quantity;
+                                            ItemName := TransferShpntLine."Item No.";
+                                        until PurchaseRetLinLRec.Next() = 0;
+                                end
+
+                            END;
+                        "Source Type"::"Transfer Receipt":
+                            BEGIN
+                                TransferHdr.reset;
+                                TransferHdr.SetRange("No.", "Source No.");
+                                IF TransferHdr.findfirst then begin
+                                    TransferLine.Reset();
+                                    TransferLine.SetRange("Document No.", TransferHdr."No.");
+                                    if TransferLine.FindSet() then
+                                        repeat
+                                            DescriptionLVar := TransferLine.Description;
+                                            QtyDispatchLRec := TransferLine.Quantity;
+                                            ItemName := TransferLine."Item No.";
+                                        until PurchaseRetLinLRec.Next() = 0;
+                                end
+
+                            END;
+
+                    end;
                 end;
 
             }
@@ -192,6 +268,18 @@ report 50181 "Non Returnable Gatepass"
 
 
     var
+
+        PurchaseRetnLRec: record "Return Shipment Header";
+        PurchaseRetLinLRec: Record "Return Shipment Line";
+        ItemName: Code[20];
+        DescriptionLVar: Text[100];
+        QtyDispatchLRec: Decimal;
+        SalesShipmentHeaderLRec: record "Sales Shipment Header";
+        SalesShipmentLinLRec: record "Sales Shipment Line";
+        TransferShpntHdr: record "Transfer Shipment Header";
+        TransferShpntLine: Record "Transfer Shipment Line";
+        TransferHdr: Record "Transfer Header";
+        TransferLine: Record "Transfer Line";
         Users: Record User;
         CompanyInfo: Record "Company Information";
         NonReturnCapLbl: Label 'NON RETURNABLE GATEPASS';

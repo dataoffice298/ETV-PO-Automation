@@ -1,28 +1,17 @@
 report 50001 "Indent Requestion Lines"
 {
-    // version PO
-
-    // PROJECT : WindlassHealthCare
-    // *********************************************************************************************************************************************************
-    // SIGN
-    // *********************************************************************************************************************************************************
-    // B2B : B2B Software Technologies
-    // *********************************************************************************************************************************************************
-    // VER       SIGN       USERID          DATE         DESCRIPTION
-    // *********************************************************************************************************************************************************
-    // 1.1       B2B        Srikar        12-May-15 -->  Added Code In Indent Line OnAfterGetRecord.
 
     ProcessingOnly = true;
 
     dataset
     {
-        dataitem(DataItem1102152001; "Indent Header")
+        dataitem("Indent Header"; "Indent Header")
         {
             DataItemTableView = SORTING("No.")
                                 ORDER(Ascending)
                                 WHERE("Released Status" = FILTER(Released));
             RequestFilterFields = "No.", "Delivery Location";
-            dataitem(DataItem1102152000; "Indent Line")
+            dataitem("Indent Line"; "Indent Line")
             {
                 DataItemLink = "Document No." = FIELD("No.");
                 DataItemTableView = SORTING("Document No.", "Line No.")
@@ -40,48 +29,50 @@ report 50001 "Indent Requestion Lines"
                     IndentRequisitions.SETRANGE("Vendor No.", "Vendor No.");
                     IndentRequisitions.SETRANGE("Document No.", IndentReqHeader."No.");
                     IF IndentRequisitions.FIND('-') THEN BEGIN
-                        IndentRequisitions.Quantity += "Quantity (Base)";
-                        IndentRequisitions."Qty. To Order" += "Quantity (Base)";
-                        IndentRequisitions."Remaining Quantity" += "Quantity (Base)";
-                        //B2B.1.3 S
+                        //B2BMSOn14Nov2022>>
+                        //IndentRequisitions.Quantity += "Quantity (Base)";
+                        //IndentRequisitions."Qty. To Order" += "Quantity (Base)";
+                        //IndentRequisitions."Remaining Quantity" += "Quantity (Base)";
+                        CalcFields("Qty Issued");
+                        IndentRequisitions.Quantity += "Req.Quantity" - "Qty Issued";
+                        IndentRequisitions."Qty. To Order" += "Req.Quantity" - "Qty Issued";
+                        IndentRequisitions."Remaining Quantity" += "Req.Quantity" - "Qty Issued";
+                        //B2BMSOn14Nov2022<<
+
                         ItemVendorGvar.RESET;
                         ItemVendorGvar.SETRANGE("Item No.", IndentRequisitions."Item No.");
                         ItemVendorGvar.SETRANGE("Vendor No.", IndentRequisitions."Manufacturer Code");
                         IF ItemVendorGvar.FINDFIRST THEN;
-                        //IndentRequisitions."Vendor Min.Ord.Qty" := ItemVendorGvar."Vendor Min.Ord.Qty"; B2B1.1
                         IndentRequisitions.MODIFY;
-                        //B2B.1.3 E
+
                     END ELSE BEGIN
+                        CalcFields("Qty Issued");
                         IndentRequisitions.INIT;
                         IndentRequisitions."Document No." := IndentReqHeader."No.";
                         IndentRequisitions."Line No." := TempLineNo;
-                        IndentRequisitions."Line Type" := Type; //ETVPO1.1
+                        IndentRequisitions."Line Type" := Type;
                         IndentRequisitions."Item No." := "No.";
-                        //Message('%1..%2...%3', "No.", "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code");
                         IndentRequisitions.Description := Description;
                         IF RecItem.GET(IndentRequisitions."Item No.") THEN
                             IndentRequisitions."Unit of Measure" := RecItem."Base Unit of Measure";
-                        //  IndentRequisitions."Manufacturer Code" := "Manufacturer Code";//Divya
-                        //      IndentRequisitions."Vendor Name" :=  "Indent Line"."Manufacture Name";//Divya
                         IndentRequisitions."Vendor No." := "Vendor No.";
-                        //B2B.1.3 s
                         ItemVendorGvar.RESET;
                         ItemVendorGvar.SETRANGE("Item No.", IndentRequisitions."Item No.");
                         ItemVendorGvar.SETRANGE("Vendor No.", IndentRequisitions."Manufacturer Code");
                         IF ItemVendorGvar.FINDFIRST THEN
-                            //IndentRequisitions."Vendor Min.Ord.Qty" := ItemVendorGvar."Vendor Min.Ord.Qty" ;B2B1.1
-                            //B2B.1.3 E
                             IndentRequisitions.Department := Department;
                         IndentRequisitions."Variant Code" := "Variant Code";
                         IndentRequisitions."Indent No." := "Document No.";
                         IndentRequisitions."Indent Line No." := "Line No.";
                         IndentRequisitions."Indent Status" := "Indent Status";
-                        IndentRequisitions.Quantity += "Quantity (Base)";
-                        IndentRequisitions."Remaining Quantity" := "Quantity (Base)";
-                        IndentRequisitions.VALIDATE(IndentRequisitions.Quantity);//test001
+                        //B2BMSOn14Nov2022>>
+                        //IndentRequisitions.Quantity += "Quantity (Base)";
+                        //IndentRequisitions."Remaining Quantity" := "Quantity (Base)";
+                        IndentRequisitions.Quantity += "Req.Quantity" - "Qty Issued";
+                        IndentRequisitions."Remaining Quantity" := "Req.Quantity" - "Qty Issued";
+                        //B2BMSOn14Nov2022<<
                         IndentRequisitions.VALIDATE(IndentRequisitions.Quantity);
                         IndentRequisitions."Unit Cost" := "Unit Cost";  //Divya
-                        //IndentRequisitions.Amount := "Indent Line".Amount;//Divya
                         IndentRequisitions."Location Code" := "Delivery Location";
                         IndentRequisitions."Indent Quantity" := "Req.Quantity";//B2B1.1
                                                                                //    IndentRequisitions."Manufacturer Ref. No." := "Manufacturer Ref. No.";
@@ -105,7 +96,6 @@ report 50001 "Indent Requestion Lines"
                             IndentReqHeaderGRec.Modify();  //B2BPAV
                         end;
                     end;
-
                 end;
 
                 trigger OnPreDataItem();

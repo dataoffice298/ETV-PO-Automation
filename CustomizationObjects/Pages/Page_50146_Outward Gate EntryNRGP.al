@@ -14,65 +14,65 @@ page 50146 "Outward Gate Entry - NRGP"
         {
             group(General)
             {
-                field("Location Code"; "Location Code")
+                field("Location Code"; Rec."Location Code")
                 {
                     ApplicationArea = ALL;
                 }
-                field(Type; Type)
+                field(Type; Rec.Type)
                 {
                     ApplicationArea = all;
                     Editable = false;
                     Visible = false;
                 }
 
-                field("No."; "No.")
+                field("No."; Rec."No.")
                 {
                     ApplicationArea = ALL;
 
                     trigger OnAssistEdit();
                     begin
-                        if AssistEdit(xRec) then
+                        if Rec.AssistEdit(xRec) then
                             CurrPage.UPDATE;
                     end;
                 }
 
-                field("Station From/To"; "Station From/To")
+                field("Station From/To"; Rec."Station From/To")
                 {
                     ApplicationArea = ALL;
                 }
-                field(Description; Description)
+                field(Description; Rec.Description)
                 {
                     ApplicationArea = ALL;
                 }
-                field("Item Description"; "Item Description")
+                field("Item Description"; Rec."Item Description")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Document Date"; "Document Date")
+                field("Document Date"; Rec."Document Date")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Document Time"; "Document Time")
+                field("Document Time"; Rec."Document Time")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Posting Date"; "Posting Date")
+                field("Posting Date"; Rec."Posting Date")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Posting Time"; "Posting Time")
+                field("Posting Time"; Rec."Posting Time")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Vehicle No."; "Vehicle No.")
+                field("Vehicle No."; Rec."Vehicle No.")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Gate No."; "Gate No.")
+                field("Gate No."; Rec."Gate No.")
                 {
                     ApplicationArea = all;
                 }
-                field("Approval Status"; "Approval Status")
+                field("Approval Status"; Rec."Approval Status")
                 {
                     ApplicationArea = ALL;
                 }
@@ -155,12 +155,12 @@ page 50146 "Outward Gate Entry - NRGP"
                     Image = ReleaseDoc;
                     trigger OnAction()
                     begin
-                        CHECKMAND();
+                        Rec.CHECKMAND();
                         //IF WorkflowManagement.CanExecuteWorkflow(Rec, allinoneCU.RunworkflowOnSendGATEforApprovalCode()) then
                         //  error('Workflow is enabled. You can not release manually.');
-                        IF "Approval Status" <> "Approval Status"::Released then BEGIN
-                            "Approval Status" := "Approval Status"::Released;
-                            Modify();
+                        IF Rec."Approval Status" <> Rec."Approval Status"::Released then BEGIN
+                            Rec."Approval Status" := Rec."Approval Status"::Released;
+                            Rec.Modify();
                             Message('Document has been Released.');
                         end;
                     end;
@@ -177,9 +177,9 @@ page 50146 "Outward Gate Entry - NRGP"
                         RecordRest.SetRange("Record ID", Rec.RecordId());
                         IF RecordRest.FindFirst() THEN
                             error('This record is under in workflow process. Please cancel approval request if not required.');
-                        IF "Approval Status" <> "Approval Status"::Open then BEGIN
-                            "Approval Status" := "Approval Status"::Open;
-                            Modify();
+                        IF Rec."Approval Status" <> Rec."Approval Status"::Open then BEGIN
+                            Rec."Approval Status" := Rec."Approval Status"::Open;
+                            Rec.Modify();
                             Message('Document has been Reopened.');
                         end;
                     end;
@@ -195,7 +195,7 @@ page 50146 "Outward Gate Entry - NRGP"
                     PromotedOnly = true;
                     trigger OnAction()
                     begin
-                        approvalmngmt.ApproveRecordApprovalRequest(RecordId());
+                        approvalmngmt.ApproveRecordApprovalRequest(Rec.RecordId());
                     end;
                 }
                 /* action("Print")
@@ -232,7 +232,7 @@ page 50146 "Outward Gate Entry - NRGP"
                     PromotedOnly = true;
                     trigger OnAction()
                     begin
-                        CHECKMAND();
+                        Rec.CHECKMAND();
                         //CheckMandValues();
                         //IF allinoneCU.CheckGATEApprovalsWorkflowEnabled(Rec) then
                         //   allinoneCU.OnSendGATEForApproval(Rec);
@@ -259,15 +259,15 @@ page 50146 "Outward Gate Entry - NRGP"
 
     trigger OnAfterGetRecord()
     BEGIN
-        OpenAppEntrExistsForCurrUser := approvalmngmt.HasOpenApprovalEntriesForCurrentUser(RecordId());
-        OpenApprEntrEsists := approvalmngmt.HasOpenApprovalEntries(RecordId());
-        CanCancelapprovalforrecord := approvalmngmt.CanCancelApprovalForRecord(RecordId());
-        workflowwebhookmangt.GetCanRequestAndCanCancel(RecordId(), CanrequestApprovForFlow, CanCancelapprovalforflow);
+        OpenAppEntrExistsForCurrUser := approvalmngmt.HasOpenApprovalEntriesForCurrentUser(Rec.RecordId());
+        OpenApprEntrEsists := approvalmngmt.HasOpenApprovalEntries(Rec.RecordId());
+        CanCancelapprovalforrecord := approvalmngmt.CanCancelApprovalForRecord(Rec.RecordId());
+        workflowwebhookmangt.GetCanRequestAndCanCancel(Rec.RecordId(), CanrequestApprovForFlow, CanCancelapprovalforflow);
     END;
 
     trigger OnModifyRecord(): Boolean
     BEGIN
-        TestField("Approval Status", "Approval Status"::Open);
+        Rec.TestField("Approval Status", Rec."Approval Status"::Open);
     END;
     /* Procedure CheckMandValues()
     Var

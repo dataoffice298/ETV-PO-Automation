@@ -107,9 +107,9 @@ page 50113 "Indent SubForm List"
                     BEGIN
                         ItemJournalLine.reset;
                         ItemJournalLine.SetRange("Journal Template Name", 'ISSUE');
-                        ItemJournalLine.SetRange("Journal Batch Name", "Document No.");
+                        ItemJournalLine.SetRange("Journal Batch Name", Rec."Document No.");
                         ItemJournalLine.SetRange("Entry Type", ItemJournalLine."Entry Type"::"Negative Adjmt.");
-                        ItemJournalLine.SetRange("Item No.", "No.");
+                        ItemJournalLine.SetRange("Item No.", Rec."No.");
                         IF ItemJournalLine.findset then;
                         Page.RunModal(40, ItemJournalLine);
                     END;
@@ -127,9 +127,9 @@ page 50113 "Indent SubForm List"
                     BEGIN
                         ItemJournalLine.reset;
                         ItemJournalLine.SetRange("Journal Template Name", 'RETURN');
-                        ItemJournalLine.SetRange("Journal Batch Name", "Document No.");
+                        ItemJournalLine.SetRange("Journal Batch Name", Rec."Document No.");
                         ItemJournalLine.SetRange("Entry Type", ItemJournalLine."Entry Type"::"Positive Adjmt.");
-                        ItemJournalLine.SetRange("Item No.", "No.");
+                        ItemJournalLine.SetRange("Item No.", Rec."No.");
                         IF ItemJournalLine.findset then;
                         Page.RunModal(40, ItemJournalLine);
                     END;

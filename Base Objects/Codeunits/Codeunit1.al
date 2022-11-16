@@ -219,35 +219,33 @@ codeunit 50016 "MyBaseSubscr"
         Text13701: label 'The LC that you have attached is expired.';
         Text13702: Label 'The order value %1 cannot be greater than the LC remaining value %2.';
     begin
-        with PurchaseHeader do begin
-            IF ("LC No." <> '') AND Receive THEN BEGIN
-                IF "Currency Factor" <> 0 THEN
-                    CFactor := "Currency Factor"
-                ELSE
-                    CFactor := 1;
-                LCDetail.GET("LC No.");
-                IF "Expected Receipt Date" > LCDetail."Expiry Date" THEN
-                    ERROR(Text13701);
-                CALCFIELDS("Amount");
-                LCDetail.CALCFIELDS("Value Utilised");
-                LCOrder.SETRANGE("LC No.", "LC No.");
-                LCOrder.SETRANGE("Order No.", "No.");
-                IF NOT LCOrder.FINDFIRST THEN BEGIN
-                    IF ("Amount" / CFactor) > (LCDetail."Latest Amended Value" - LCDetail."Value Utilised") THEN
-                        ERROR(Text13702, "Amount" / CFactor, (LCDetail."Latest Amended Value" - LCDetail."Value Utilised"));
-                    LCOrder.INIT;
-                    LCOrder."LC No." := LCDetail."No.";
-                    LCOrder."Transaction Type" := LCDetail."Transaction Type";
-                    LCOrder."Issued To/Received From" := LCDetail."Issued To/Received From";
-                    LCOrder."Order No." := "No.";
-                    LCOrder."Shipment Date" := "Expected Receipt Date";
-                    LCOrder."Order Value" := "Amount" / CFactor;
-                    LCOrder.INSERT;
-                    LCDetail.Validate("LC Value"); //B2BMSOn06Oct2022
-                    LCDetail.Modify(); //B2BMSOn06Oct2022
-                END;
+        IF (PurchaseHeader."LC No." <> '') AND PurchaseHeader.Receive THEN BEGIN
+            IF PurchaseHeader."Currency Factor" <> 0 THEN
+                CFactor := PurchaseHeader."Currency Factor"
+            ELSE
+                CFactor := 1;
+            LCDetail.GET(PurchaseHeader."LC No.");
+            IF PurchaseHeader."Expected Receipt Date" > LCDetail."Expiry Date" THEN
+                ERROR(Text13701);
+            PurchaseHeader.CALCFIELDS("Amount");
+            LCDetail.CALCFIELDS("Value Utilised");
+            LCOrder.SETRANGE("LC No.", PurchaseHeader."LC No.");
+            LCOrder.SETRANGE("Order No.", PurchaseHeader."No.");
+            IF NOT LCOrder.FINDFIRST THEN BEGIN
+                IF (PurchaseHeader."Amount" / CFactor) > (LCDetail."Latest Amended Value" - LCDetail."Value Utilised") THEN
+                    ERROR(Text13702, PurchaseHeader."Amount" / CFactor, (LCDetail."Latest Amended Value" - LCDetail."Value Utilised"));
+                LCOrder.INIT;
+                LCOrder."LC No." := LCDetail."No.";
+                LCOrder."Transaction Type" := LCDetail."Transaction Type";
+                LCOrder."Issued To/Received From" := LCDetail."Issued To/Received From";
+                LCOrder."Order No." := PurchaseHeader."No.";
+                LCOrder."Shipment Date" := PurchaseHeader."Expected Receipt Date";
+                LCOrder."Order Value" := PurchaseHeader."Amount" / CFactor;
+                LCOrder.INSERT;
+                LCDetail.Validate("LC Value"); //B2BMSOn06Oct2022
+                LCDetail.Modify(); //B2BMSOn06Oct2022
             END;
-        end;
+        END;
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", 'OnBeforePostDropOrderShipment', '', false, false)]
@@ -259,33 +257,31 @@ codeunit 50016 "MyBaseSubscr"
         Text13700: label 'The LC that you have attached is expired.';
         Text13701: Label 'The order value %1 cannot be greater than the LC remaining value %2.';
     begin
-        with SalesHeader do begin
-            IF ("LC No." <> '') AND Ship THEN BEGIN
-                IF "Currency Factor" <> 0 THEN
-                    CFactor := "Currency Factor"
-                ELSE
-                    CFactor := 1;
-                LCDetail.GET("LC No.");
-                IF "Shipment Date" > LCDetail."Expiry Date" THEN
-                    ERROR(Text13700);
-                CALCFIELDS("Amount");
-                LCDetail.CALCFIELDS("Value Utilised");
-                LCOrder.SETRANGE("LC No.", "LC No.");
-                LCOrder.SETRANGE("Order No.", "No.");
-                IF NOT LCOrder.FINDFIRST THEN BEGIN
-                    IF ("Amount" / CFactor) > LCDetail."Latest Amended Value" - LCDetail."Value Utilised" THEN
-                        ERROR(Text13701, "Amount" / CFactor, (LCDetail."Latest Amended Value" - LCDetail."Value Utilised"));
-                    LCOrder.INIT;
-                    LCOrder."LC No." := LCDetail."No.";
-                    LCOrder."Transaction Type" := LCDetail."Transaction Type";
-                    LCOrder."Issued To/Received From" := LCDetail."Issued To/Received From";
-                    LCOrder."Order No." := "No.";
-                    LCOrder."Shipment Date" := "Shipment Date";
-                    LCOrder."Order Value" := "Amount" / CFactor;
-                    LCOrder.INSERT;
-                END;
+        IF (SalesHeader."LC No." <> '') AND SalesHeader.Ship THEN BEGIN
+            IF SalesHeader."Currency Factor" <> 0 THEN
+                CFactor := SalesHeader."Currency Factor"
+            ELSE
+                CFactor := 1;
+            LCDetail.GET(SalesHeader."LC No.");
+            IF SalesHeader."Shipment Date" > LCDetail."Expiry Date" THEN
+                ERROR(Text13700);
+            SalesHeader.CALCFIELDS("Amount");
+            LCDetail.CALCFIELDS("Value Utilised");
+            LCOrder.SETRANGE("LC No.", SalesHeader."LC No.");
+            LCOrder.SETRANGE("Order No.", SalesHeader."No.");
+            IF NOT LCOrder.FINDFIRST THEN BEGIN
+                IF (SalesHeader."Amount" / CFactor) > LCDetail."Latest Amended Value" - LCDetail."Value Utilised" THEN
+                    ERROR(Text13701, SalesHeader."Amount" / CFactor, (LCDetail."Latest Amended Value" - LCDetail."Value Utilised"));
+                LCOrder.INIT;
+                LCOrder."LC No." := LCDetail."No.";
+                LCOrder."Transaction Type" := LCDetail."Transaction Type";
+                LCOrder."Issued To/Received From" := LCDetail."Issued To/Received From";
+                LCOrder."Order No." := SalesHeader."No.";
+                LCOrder."Shipment Date" := SalesHeader."Shipment Date";
+                LCOrder."Order Value" := SalesHeader."Amount" / CFactor;
+                LCOrder.INSERT;
             END;
-        end;
+        END;
     end;
 
     procedure LCRelease(LCDetail: Record "LC Details")
@@ -294,25 +290,23 @@ codeunit 50016 "MyBaseSubscr"
         Text13701: Label 'The LC has been Released.';
         Text13702: Label 'The LC is already Released.';
     begin
-        WITH LCDetail DO BEGIN
-            IF CONFIRM(Text13700) THEN
-                IF NOT Released THEN BEGIN
-                    TESTFIELD("LC Value");
-                    TESTFIELD("LC No.");
-                    TESTFIELD("Expiry Date");
-                    VALIDATE("LC Value");
-                    IF "Type of LC" = "Type of LC"::Foreign THEN
-                        TESTFIELD("Currency Code");
-                    IF "Type of Credit Limit" = "Type of Credit Limit"::Revolving THEN
-                        TESTFIELD("Revolving Cr. Limit Types");
-                    Released := TRUE;
-                    MODIFY;
-                    MESSAGE(Text13701);
-                END ELSE
-                    MESSAGE(Text13702)
-            ELSE
-                EXIT;
-        END;
+        IF CONFIRM(Text13700) THEN
+            IF NOT LCDetail.Released THEN BEGIN
+                LCDetail.TESTFIELD("LC Value");
+                LCDetail.TESTFIELD("LC No.");
+                LCDetail.TESTFIELD("Expiry Date");
+                LCDetail.VALIDATE("LC Value");
+                IF LCDetail."Type of LC" = LCDetail."Type of LC"::Foreign THEN
+                    LCDetail.TESTFIELD("Currency Code");
+                IF LCDetail."Type of Credit Limit" = LCDetail."Type of Credit Limit"::Revolving THEN
+                    LCDetail.TESTFIELD("Revolving Cr. Limit Types");
+                LCDetail.Released := TRUE;
+                LCDetail.MODIFY;
+                MESSAGE(Text13701);
+            END ELSE
+                MESSAGE(Text13702)
+        ELSE
+            EXIT;
     end;
 
 
@@ -322,18 +316,16 @@ codeunit 50016 "MyBaseSubscr"
         Text13707: Label 'The LC has been closed.';
         Text13708: Label 'The LC is already closed.';
     begin
-        WITH LCDetail DO BEGIN
-            IF CONFIRM(Text13709) THEN
-                IF NOT Closed THEN BEGIN
-                    TESTFIELD(Released);
-                    Closed := TRUE;
-                    MODIFY;
-                    MESSAGE(Text13707);
-                END ELSE
-                    MESSAGE(Text13708)
-            ELSE
-                EXIT;
-        END;
+        IF CONFIRM(Text13709) THEN
+            IF NOT LCDetail.Closed THEN BEGIN
+                LCDetail.TESTFIELD(Released);
+                LCDetail.Closed := TRUE;
+                LCDetail.MODIFY;
+                MESSAGE(Text13707);
+            END ELSE
+                MESSAGE(Text13708)
+        ELSE
+            EXIT;
     end;
 
     [EventSubscriber(ObjectType::Codeunit, 22, 'OnAfterInitItemLedgEntry', '', false, false)]

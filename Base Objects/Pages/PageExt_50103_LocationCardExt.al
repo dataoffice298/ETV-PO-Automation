@@ -1,4 +1,4 @@
-pageextension 50103 LocationExt extends "Location Card"
+pageextension 50103 LocationExt_B2B extends "Location Card"
 {
     layout
     {

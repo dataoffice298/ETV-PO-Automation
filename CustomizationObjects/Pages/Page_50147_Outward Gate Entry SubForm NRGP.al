@@ -11,15 +11,15 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
         {
             repeater(Control1500000)
             {
-                field("Challan No."; "Challan No.")
+                field("Challan No."; Rec."Challan No.")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Challan Date"; "Challan Date")
+                field("Challan Date"; Rec."Challan Date")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Source Type"; "Source Type")
+                field("Source Type"; Rec."Source Type")
                 {
                     ApplicationArea = ALL;
                     OptionCaption = ' ,Sales Shipment,Sales Return Order,Purchase Order,Purchase Return Shipment,Transfer Receipt,Transfer Shipment,Item,Fixed Asset,Others';
@@ -28,7 +28,7 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
                     begin
                     end;
                 }
-                field("Source No."; "Source No.")
+                field("Source No."; Rec."Source No.")
                 {
                     ApplicationArea = ALL;
 
@@ -48,17 +48,17 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
                         //TraVeh: record "Transporter Vehicle";
                         SourName: text[100];
                     begin
-                        GateEntryHeader.GET("Entry Type", "Type", "Gate Entry No.");
-                        case "Source Type" of
-                            "Source Type"::"Sales Shipment":
+                        GateEntryHeader.GET(Rec."Entry Type", Rec."Type", Rec."Gate Entry No.");
+                        case Rec."Source Type" of
+                            Rec."Source Type"::"Sales Shipment":
                                 begin
                                     SalesShipHeader.RESET;
                                     SalesShipHeader.FILTERGROUP(2);
                                     SalesShipHeader.SETRANGE("Location Code", GateEntryHeader."Location Code");
                                     SalesShipHeader.FILTERGROUP(0);
                                     if PAGE.RUNMODAL(0, SalesShipHeader) = ACTION::LookupOK then begin
-                                        "Source No." := SalesShipHeader."No.";
-                                        "Source Name" := SalesShipHeader."Bill-to Name";
+                                        Rec."Source No." := SalesShipHeader."No.";
+                                        Rec."Source Name" := SalesShipHeader."Bill-to Name";
                                     end;
                                 end;
                             /*
@@ -83,15 +83,15 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
                                 if PAGE.RUNMODAL(0, PurchHeader) = ACTION::LookupOK then
                                     VALIDATE("Source No.", PurchHeader."No.");
                             end;*/
-                            "Source Type"::"Purchase Return Shipment":
+                            Rec."Source Type"::"Purchase Return Shipment":
                                 begin
                                     ReturnShipHeader.RESET;
                                     ReturnShipHeader.FILTERGROUP(2);
                                     ReturnShipHeader.SETRANGE("Location Code", GateEntryHeader."Location Code");
                                     ReturnShipHeader.FILTERGROUP(0);
                                     if PAGE.RUNMODAL(0, ReturnShipHeader) = ACTION::LookupOK then begin
-                                        "Source No." := ReturnShipHeader."No.";
-                                        "Source Name" := ReturnShipHeader."Pay-to Name";
+                                        Rec."Source No." := ReturnShipHeader."No.";
+                                        Rec."Source Name" := ReturnShipHeader."Pay-to Name";
                                     end;
                                 end;
                             /*   
@@ -105,15 +105,15 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
                                        VALIDATE("Source No.", TransHeader."No.");
                                end;
                                */
-                            "Source Type"::"Transfer Shipment":
+                            Rec."Source Type"::"Transfer Shipment":
                                 begin
                                     TransShptHeader.RESET;
                                     TransShptHeader.FILTERGROUP(2);
                                     TransShptHeader.SETRANGE("Transfer-from Code", GateEntryHeader."Location Code");
                                     TransShptHeader.FILTERGROUP(0);
                                     if PAGE.RUNMODAL(0, TransShptHeader) = ACTION::LookupOK then begin
-                                        "Source No." := TransShptHeader."No.";
-                                        "Source Name" := TransShptHeader."Transfer-to Name";
+                                        Rec."Source No." := TransShptHeader."No.";
+                                        Rec."Source Name" := TransShptHeader."Transfer-to Name";
                                     end;
                                 end;
                         end;
@@ -131,44 +131,44 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
 
                     begin
 
-                        if "Source Type" = 0 then
-                            ERROR(Text16500, FIELDCAPTION("Line No."), "Line No.");
+                        if Rec."Source Type" = 0 then
+                            ERROR(Text16500, Rec.FIELDCAPTION("Line No."), Rec."Line No.");
 
-                        if "Source No." <> xRec."Source No." then
-                            "Source Name" := '';
-                        if "Source No." = '' then begin
-                            "Source Name" := '';
+                        if Rec."Source No." <> xRec."Source No." then
+                            Rec."Source Name" := '';
+                        if Rec."Source No." = '' then begin
+                            Rec."Source Name" := '';
                             exit;
                         end;
-                        case "Source Type" of
-                            "Source Type"::"Purchase Order":
+                        case Rec."Source Type" of
+                            Rec."Source Type"::"Purchase Order":
                                 begin
-                                    PurchHeader.GET(PurchHeader."Document Type"::Order, "Source No.");
-                                    "Source Name" := PurchHeader."Pay-to Name";
+                                    PurchHeader.GET(PurchHeader."Document Type"::Order, Rec."Source No.");
+                                    Rec."Source Name" := PurchHeader."Pay-to Name";
                                 end;
-                            "Source Type"::"Purchase Return Shipment":
+                            Rec."Source Type"::"Purchase Return Shipment":
                                 begin
-                                    ReturnShipHeader.GET("Source No.");
-                                    "Source Name" := ReturnShipHeader."Pay-to Name";
+                                    ReturnShipHeader.GET(Rec."Source No.");
+                                    Rec."Source Name" := ReturnShipHeader."Pay-to Name";
                                 end;
-                            "Source Type"::"Transfer Shipment":
+                            Rec."Source Type"::"Transfer Shipment":
                                 begin
-                                    TransShptHeader.GET("Source No.");
-                                    "Source Name" := TransShptHeader."Transfer-to Name";
+                                    TransShptHeader.GET(Rec."Source No.");
+                                    Rec."Source Name" := TransShptHeader."Transfer-to Name";
                                 end;
                         end;
 
                     end;
                 }
-                field("Source Name"; "Source Name")
+                field("Source Name"; Rec."Source Name")
                 {
                     ApplicationArea = ALL;
                 }
-                field(Description; Description)
+                field(Description; Rec.Description)
                 {
                     ApplicationArea = ALL;
                 }
-                field("Source Line No."; "Source Line No.")
+                field("Source Line No."; Rec."Source Line No.")
                 {
                     Visible = false;
                 }

@@ -248,7 +248,7 @@ table 50059 "Gate Entry Header_B2B"
         Field(35; "No. Printed"; Integer)
         {
             DataClassification = CustomerContent;
-            Editable = false;//b2bpksalecorr12
+            Editable = false;
         }
         //BaluonNov82022>>
         field(37; Purpose; Text[100])
@@ -308,6 +308,14 @@ table 50059 "Gate Entry Header_B2B"
             DataClassification = CustomerContent;
         }
         //BaluonNov82022<<
+
+        //B2BMSOn14Nov2022>>
+        field(48; "Purchase Order No."; Code[20])
+        {
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+        //B2BMSOn14Nov2022<<
     }
 
     keys

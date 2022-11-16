@@ -37,7 +37,7 @@ page 50173 "Transfer Indent List"
                 {
                     ApplicationArea = all;
                 }
-                field("Indent Transfer"; "Indent Transfer")
+                field("Indent Transfer"; Rec."Indent Transfer")
                 {
                     ApplicationArea = all;
                 }

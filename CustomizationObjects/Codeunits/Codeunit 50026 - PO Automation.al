@@ -1378,41 +1378,43 @@ codeunit 50026 "PO Automation"
         ItemUnitofMeasure: Record 5404;
         BaseUOMQtyMeasure: Decimal;
         PurchUOMQtyMeasure: Decimal;
+        VendorNo: Code[20];
     begin
-        //B2B.1.3 S
         CreateIndents4.COPYFILTERS(CreateIndentsQuotes);
         InsertIndentItemvendor2(CreateIndents4, Vendor);
         IndentVendorItems.RESET;
         IndentVendorItems.SETRANGE(Check, FALSE);
         IF IndentVendorItems.FIND('-') THEN
             REPEAT
-                MESSAGE('1st FIND');
-                // IndentVendorEnquiry.SETRANGE("Vendor No.", IndentVendorItems."Vendor No.");
-                //PurchaseLine.SetRange("Document Type", PurchaseHeader."Document Type"::Order);
+                IndentVendorEnquiry.Reset(); //B2BMSOn16Nov2022
+                IndentVendorEnquiry.SetCurrentKey("Vendor No."); //B2BMSOn16Nov2022
                 IndentVendorEnquiry.SETRANGE("Location Code", IndentVendorItems."Location Code");
-                IF IndentVendorEnquiry.FIND('-') THEN BEGIN
-                    PurchaseHeader.INIT;
-                    PurchaseHeader."Document Type" := PurchaseHeader."Document Type"::Order;
-                    PPSetup.GET;
-                    PurchaseHeader."No." := NoSeriesMgt.GetNextNo(Noseries, WORKDATE, TRUE);
-                    PurchaseHeader.Insert(true);
-                    // MESSAGE('Purchaser Order No %1 ', PurchaseHeader."No.");
-                    PurchaseHeader."Buy-from Vendor No." := IndentVendorEnquiry."Vendor No.";
-                    PurchaseHeader.VALIDATE(PurchaseHeader."Buy-from Vendor No.");
-                    PurchaseHeader."Order Date" := WORKDATE;
-                    PurchaseHeader."Document Date" := WORKDATE;
-                    PurchaseHeader.VALIDATE("Location Code");
-                    PurchaseHeader."Due Date" := IndentVendorEnquiry."Due Date";
-                    PurchaseHeader."Expected Receipt Date" := IndentVendorEnquiry."Due Date";
-                    PurchaseHeader.VALIDATE("Expected Receipt Date");
-                    PurchaseHeader.VALIDATE("Due Date");
-                    PurchaseHeader."Indent Requisition No" := IndentVendorEnquiry."Indent Req No";
-                    PurchaseHeader.VALIDATE("Location Code", IndentVendorItems."Location Code");
-                    PurchaseHeader.validate("Shortcut Dimension 1 Code", IndentVendorEnquiry."Shortcut Dimension 1 Code");//B2BPAV
-                    PurchaseHeader.validate("Shortcut Dimension 2 Code", IndentVendorEnquiry."Shortcut Dimension 2 Code");//B2BPAV
-                    PurchaseHeader.Modify(true);
-                    //PurchaseHeader.INSERT;
+                IF IndentVendorEnquiry.FIND('-') THEN
                     REPEAT
+                        //B2BMSOn16Nov2022>>
+                        if VendorNo <> IndentVendorEnquiry."Vendor No." then begin
+                            VendorNo := IndentVendorEnquiry."Vendor No.";
+                            //B2BMSOn16Nov2022<<
+                            PurchaseHeader.INIT;
+                            PurchaseHeader."Document Type" := PurchaseHeader."Document Type"::Order;
+                            PPSetup.GET;
+                            PurchaseHeader."No." := NoSeriesMgt.GetNextNo(Noseries, WORKDATE, TRUE);
+                            PurchaseHeader.Insert(true);
+                            PurchaseHeader."Buy-from Vendor No." := IndentVendorEnquiry."Vendor No.";
+                            PurchaseHeader.VALIDATE(PurchaseHeader."Buy-from Vendor No.");
+                            PurchaseHeader."Order Date" := WORKDATE;
+                            PurchaseHeader."Document Date" := WORKDATE;
+                            PurchaseHeader.VALIDATE("Location Code");
+                            PurchaseHeader."Due Date" := IndentVendorEnquiry."Due Date";
+                            PurchaseHeader."Expected Receipt Date" := IndentVendorEnquiry."Due Date";
+                            PurchaseHeader.VALIDATE("Expected Receipt Date");
+                            PurchaseHeader.VALIDATE("Due Date");
+                            PurchaseHeader."Indent Requisition No" := IndentVendorEnquiry."Indent Req No";
+                            PurchaseHeader.VALIDATE("Location Code", IndentVendorItems."Location Code");
+                            PurchaseHeader.validate("Shortcut Dimension 1 Code", IndentVendorEnquiry."Shortcut Dimension 1 Code");//B2BPAV
+                            PurchaseHeader.validate("Shortcut Dimension 2 Code", IndentVendorEnquiry."Shortcut Dimension 2 Code");//B2BPAV
+                            PurchaseHeader.Modify(true);
+                        end;
                         PurchaseLine.INIT;
                         PurchaseLine."Document Type" := PurchaseLine."Document Type"::Order;
                         PurchaseLine."Document No." := PurchaseHeader."No.";
@@ -1423,23 +1425,7 @@ codeunit 50026 "PO Automation"
                         PurchaseLine.Type := PurchaseLine.Type::Item;
                         PurchaseLine."No." := IndentVendorEnquiry."Item No.";
                         PurchaseLine.VALIDATE(PurchaseLine."No.");
-                        // PurchaseLine."Description 2":=IndentVendorEnquiry.Description2;//iclean  B2B1.1
                         PurchaseLine.VALIDATE("Variant Code", IndentVendorEnquiry."Variant Code");
-                        // *** BST 1.0 *** >>
-                        /*
-                        IF Item2.GET(PurchaseLine."No.") THEN;
-                        IF Item2."Purch. Unit of Measure"<>IndentVendorEnquiry."Unit of Measure" THEN BEGIN
-                          ItemUnitofMeasure.RESET;
-                          IF ItemUnitofMeasure.GET(PurchaseLine."No.",Item2."Purch. Unit of Measure") THEN
-                            PurchUOMQtyMeasure:=ItemUnitofMeasure."Qty. per Unit of Measure";
-                          ItemUnitofMeasure.RESET;
-                          IF ItemUnitofMeasure.GET(PurchaseLine."No.",IndentVendorEnquiry."Unit of Measure") THEN
-                            BaseUOMQtyMeasure:=ItemUnitofMeasure."Qty. per Unit of Measure";
-                            IndentVendorEnquiry.Quantity:=IndentVendorEnquiry.Quantity/PurchUOMQtyMeasure;
-                        END;
-                        */
-                        // *** BST 1.0 *** <<
-                        // PurchaseLine.VALIDATE("Order Quantity",IndentVendorEnquiry.Quantity);
                         PurchaseLine.VALIDATE(Quantity, IndentVendorEnquiry.Quantity);
                         PurchaseLine."Outstanding Quantity" := PurchaseLine.Quantity;
                         PurchaseLine."Outstanding Qty. (Base)" := PurchaseLine.Quantity;
@@ -1448,8 +1434,6 @@ codeunit 50026 "PO Automation"
                         PurchaseLine."Indent Req No" := IndentVendorEnquiry."Indent Req No";
                         PurchaseLine."Indent Req Line No" := IndentVendorEnquiry."Indent Req Line No";
                         PurchaseLine."Location Code" := IndentVendorEnquiry."Location Code";
-                        //PurchaseLine."Shortcut Dimension 1 Code" := IndentVendorEnquiry."Project No.";
-                        //PurchaseLine."Shortcut Dimension 2 Code" := IndentVendorEnquiry.Department;
                         PurchaseLine.Validate("Shortcut Dimension 1 Code", IndentVendorEnquiry."Shortcut Dimension 1 Code");//B2BPAV
                         PurchaseLine.Validate("Shortcut Dimension 2 Code", IndentVendorEnquiry."Shortcut Dimension 2 Code");//B2BPAV
                         PurchaseLine."Location Code" := IndentVendorEnquiry."Location Code";
@@ -1460,18 +1444,14 @@ codeunit 50026 "PO Automation"
                         IF CreateIndents5.FINDFIRST THEN BEGIN
                             CreateIndents5."Document Type" := PurchaseLine."Document Type"::Order.AsInteger();
                             CreateIndents5."Order No" := PurchaseLine."Document No.";
-                            PurchaseLine.VALIDATE("Direct Unit Cost", CreateIndents5."Unit Cost");//B2B.1.4
+                            PurchaseLine.VALIDATE("Direct Unit Cost", CreateIndents5."Unit Cost");
                             CreateIndents5.MODIFY;
                         END;
                         PurchaseLine.Modify(true);
-                        //PurchaseLine.INSERT;
                         IndentVendorEnquiry.Check := TRUE;
                         IndentVendorEnquiry.MODIFY;
                     UNTIL IndentVendorEnquiry.NEXT = 0;
-                END;
             UNTIL IndentVendorItems.NEXT = 0;
-        //B2B.1.3 E
-
     end;
 
     procedure InsertIndentItemvendor2(var CreateIndentsLocal: Record 50038; var Vendor: Record 23);
@@ -1561,6 +1541,8 @@ codeunit 50026 "PO Automation"
         if (ItemLRec.Get(TempPurchLine."No.")) and (ItemLRec."QC Enabled B2B") then begin
             TempPurchLine."Quantity Accepted B2B" += TempPurchLine."Qty. to Accept B2B";
             TempPurchLine."Quantity Rejected B2B" += TempPurchLine."Qty. to Reject B2B";
+            TempPurchLine."Qty. to Accept B2B" := 0;
+            TempPurchLine."Qty. to Reject B2B" := 0;
         end;
     end;
 

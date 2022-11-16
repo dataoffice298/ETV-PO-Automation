@@ -11,7 +11,7 @@ tableextension 50055 tableextension70000016 extends "Purchase Line Archive"
 
         //Unsupported feature: Deletion on ""KK Cess Amount"(Field 16543)". Please convert manually.
 
-        
+
         field(50100; "Applies-to Cons. Entry No."; Integer)
         {
         }
@@ -72,7 +72,7 @@ tableextension 50055 tableextension70000016 extends "Purchase Line Archive"
         {
             Description = 'B2B1.0 06 Dec2016';
         }
-        
+
         field(60003; "Indent Due Date"; Date)
         {
             Description = 'B2B1.0';
@@ -127,7 +127,7 @@ tableextension 50055 tableextension70000016 extends "Purchase Line Archive"
         {
             Description = 'B2B1.0';
         }
-    
+
         field(33002902; "Quotation No."; Code[20])
         {
             Description = 'PO1.0';

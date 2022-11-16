@@ -50,7 +50,7 @@ page 50023 "Indent Line"
                     ApplicationArea = All;
                     Editable = FieldEditable;
                 }
-                field("Avail.Qty"; "Avail.Qty")
+                field("Avail.Qty"; Rec."Avail.Qty")
                 {
                     ApplicationArea = all;
                     Editable = FieldEditable;
@@ -93,17 +93,19 @@ page 50023 "Indent Line"
                 field("Qty To Issue"; Rec."Qty To Issue")
                 {
                     ApplicationArea = all;
+                    Caption = 'Qty. to Issue/Return';
                 }
-                field("Qty Issued"; "Qty Issued")
+                field("Qty Issued"; Rec."Qty Issued")
                 {
                     ApplicationArea = all;
                     Editable = false;
                 }
-                field("Qty To Return"; "Qty To Return")
+                field("Qty To Return"; Rec."Qty To Return")
                 {
                     ApplicationArea = all;
+                    Visible = false;
                 }
-                field("Qty Returned"; "Qty Returned")
+                field("Qty Returned"; Rec."Qty Returned")
                 {
                     ApplicationArea = all;
                     Editable = false;
@@ -143,7 +145,7 @@ page 50023 "Indent Line"
                         ItemJournalLine.SetRange("Journal Template Name", PurchaseSetup."Indent Issue Jnl. Template");
                         ItemJournalLine.SetRange("Journal Batch Name", PurchaseSetup."Indent Issue Jnl. Batch");
                         ItemJournalLine.SetRange("Entry Type", ItemJournalLine."Entry Type"::"Negative Adjmt.");
-                        ItemJournalLine.SetRange("Item No.", "No.");
+                        ItemJournalLine.SetRange("Item No.", Rec."No.");
                         IF ItemJournalLine.findset then;
                         Page.RunModal(40, ItemJournalLine);
                     END;
@@ -165,7 +167,7 @@ page 50023 "Indent Line"
                         ItemJournalLine.SetRange("Journal Template Name", PurchaseSetup."Indent Return Jnl. Template");
                         ItemJournalLine.SetRange("Journal Batch Name", PurchaseSetup."Indent Return Jnl. Batch");
                         ItemJournalLine.SetRange("Entry Type", ItemJournalLine."Entry Type"::"Positive Adjmt.");
-                        ItemJournalLine.SetRange("Item No.", "No.");
+                        ItemJournalLine.SetRange("Item No.", Rec."No.");
                         IF ItemJournalLine.findset then;
                         Page.RunModal(40, ItemJournalLine);
                     END;

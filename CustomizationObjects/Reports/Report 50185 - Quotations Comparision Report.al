@@ -183,15 +183,13 @@ report 50185 "Comparitive Statement"
                 column(TermsConditionsCapLbl; TermsConditionsCapLbl)
                 { }
 
-
-
                 column(RsCapLbl; RsCapLbl)
                 { }
                 column(IndentNo; IndentNo)
                 { }
                 column(Document_Date; "Document Date")
                 { }
-                column(Indentor; IndentHdr.Indentor)
+                column(Indentor; Indentor)
                 { }
                 column(HSNCode; HSNCode)
                 { }
@@ -201,9 +199,23 @@ report 50185 "Comparitive Statement"
                 { }
                 column(GST; GST)
                 { }
-
                 column(CollectedCapLbl; CollectedCapLbl)
                 { }
+                column(Payment; Payment)
+                { }
+                column(warranty; warranty)
+                { }
+                column(Delivery; Delivery)
+                { }
+                column(Rate; Rate)
+                { }
+                column(Parent_Quote_No_; "Parent Quote No.")
+                { }
+                column(ContactPerson; ContactPerson)
+                { }
+                Column(PhoneNo; PhoneNo)
+                { }
+
 
 
                 trigger OnAfterGetRecord();
@@ -220,6 +232,8 @@ report 50185 "Comparitive Statement"
                     Insurance1[Integer.Number] += Insurance;
                     "Total Amount1"[Integer.Number] += "Amt. including Tax";
 
+
+
                     /* PurchLine.Reset();
                      PurchLine.setrange("Document No.", PurchHdr."No.");
                      If PurchLine.FindSet() then
@@ -232,30 +246,44 @@ report 50185 "Comparitive Statement"
                     Clear(UOM);
                     PurchHdr.Reset();
                     PurchHdr.SetRange("Document Type", PurchHdr."Document Type"::Quote);
-                    PurchHdr.SetRange("No.", "Quote No.");
+                    PurchHdr.SetRange("No.", "Parent Quote No.");
                     if PurchHdr.FindFirst() then begin
-                        Payment := PurchHdr.Payme
+                        Payment := PurchHdr."Payment Terms Code";
+                        warranty := PurchHdr.Warranty;
+
                         PurchLine.Reset();
                         PurchLine.SetRange("Document Type", PurchHdr."Document Type");
                         PurchLine.SetRange("Document No.", PurchHdr."No.");
                         if PurchLine.FindFirst() then begin
                             HSNCode := PurchLine."HSN/SAC Code";
                             UOM := PurchLine."Unit of Measure Code";
-                            
+                            GST := PurchLine."GST Group Code";
+                            if PurchHdr."Expected Receipt Date" <> 0D then
+                                DeliveryDays := PurchHdr."Expected Receipt Date" - WorkDate();
+
                             GSTSetup.get();
-                            
                             GetGSTAmounts(TaxTransactionValue, PurchLine, GSTSetup);
+                            Gstamt := CGSTAmt + SGSTAmt + IGSTAmt;
+                            GSTPerc := CGSTPer + SGSTPer + IGSTPer;
+
+                            IF Vend.get(PurchHdr."Buy-from Vendor No.") then begin
+                                ContactPerson := Vend.Contact;
+                                PhoneNo := Vend."Phone No.";
+                            end;
+
+                            //   IF Indentor1.get() then
+                            //       Indentor := IndentHdr.Indentor;
                         end;
                     end;
 
+                    IndentHdr.Reset();
+                    IndentHdr.SetRange("No.", "Parent Quote No.");
+                    Indentor := IndentHdr.Indentor;
 
                     QuoComp.Reset();
                     QuoComp.SetRange("Quot Comp No.", "Quot Comp No.");
                     If QuoComp.Findset() then
                         UnitPrice := QuoComp.Rate;
-
-
-
                 end;
 
                 trigger OnPreDataItem();
@@ -471,7 +499,7 @@ report 50185 "Comparitive Statement"
         UnitRateCapLbl: Label 'Unit Rate';
         RsCapLbl: Label '(Rs.)';
         RsCapLbl1: Label '(Rs.)';
-        Indentor: Code[20];
+        Indentor: Text[50];
         Units: Integer;
         GST: Code[20];
         CollectedCapLbl: Label 'Collected by RFC';
@@ -491,7 +519,15 @@ report 50185 "Comparitive Statement"
         CGSTPer: Decimal;
         GSTSetup: Record "GST Setup";
         TaxTransactionValue: Record "Tax Transaction Value";
-        Payment : code[20];
+        Payment: code[20];
+        warranty: Code[20];
+        DeliveryDays: Integer;
+        Vend: Record Vendor;
+        GSTPerc: Decimal;
+        Gstamt: Decimal;
+        ContactPerson: Text[100];
+        PhoneNo: Text[30];
+        Indentor1: Record "Indent Header";
 
 
     procedure SETRFQ(RFQNoL: Code[20]);

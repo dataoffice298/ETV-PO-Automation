@@ -333,7 +333,7 @@
                 <rd:DefaultName>Textbox3</rd:DefaultName>
                 <Top>2.1175cm</Top>
                 <Left>3.86384cm</Left>
-                <Height>0.6cm</Height>
+                <Height>0.57211cm</Height>
                 <Width>4.21979cm</Width>
                 <ZIndex>9</ZIndex>
                 <Style>
@@ -364,9 +364,9 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>2.78806cm</Top>
+                <Top>2.76017cm</Top>
                 <Left>3.86384cm</Left>
-                <Height>0.49417cm</Height>
+                <Height>0.48678cm</Height>
                 <Width>4.2198cm</Width>
                 <ZIndex>10</ZIndex>
                 <Style>
@@ -659,7 +659,9 @@
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Left</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
@@ -693,7 +695,9 @@
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Left</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
@@ -723,17 +727,20 @@
                         <Style>
                           <FontSize>8pt</FontSize>
                           <FontWeight>Normal</FontWeight>
+                          <Format>MM/dd/yyyy</Format>
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Left</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>2.16017cm</Top>
+                <Top>2.23074cm</Top>
                 <Left>12.92006cm</Left>
-                <Height>0.6cm</Height>
-                <Width>6.91578cm</Width>
+                <Height>0.49416cm</Height>
+                <Width>6.5189cm</Width>
                 <ZIndex>21</ZIndex>
                 <Style>
                   <Border>
@@ -826,7 +833,9 @@
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Left</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
@@ -920,12 +929,14 @@
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Left</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
                 <Top>1.48961cm</Top>
-                <Left>16.53426cm</Left>
+                <Left>16.56954cm</Left>
                 <Height>0.6cm</Height>
                 <Width>3.30158cm</Width>
                 <ZIndex>27</ZIndex>
@@ -1510,7 +1521,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
+                                  <Value>=RowNumber(NOTHING)</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -1559,7 +1570,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=First(Fields!Source_No_.Value, "DataSet_Result")</Value>
+                                  <Value>=First(Fields!ItemName.Value, "DataSet_Result")</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                   </Style>
@@ -1610,7 +1621,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=First(Fields!Source_Name.Value, "DataSet_Result")</Value>
+                                  <Value>=First(Fields!DescriptionLVar.Value, "DataSet_Result")</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                   </Style>
@@ -1654,14 +1665,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox41">
+                        <Textbox Name="Textbox56">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=First(Fields!Quantity.Value, "DataSet_Result")</Value>
+                                  <Value>=First(Fields!QtyDispatchLRec.Value, "DataSet_Result")</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                   </Style>
@@ -1670,7 +1681,7 @@
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox41</rd:DefaultName>
+                          <rd:DefaultName>Textbox56</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
@@ -1701,6 +1712,7 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -1884,7 +1896,7 @@
             <Top>7.41354cm</Top>
             <Left>0.22437cm</Left>
             <Height>1.2cm</Height>
-            <Width>19.61147cm</Width>
+            <Width>19.61148cm</Width>
             <ZIndex>5</ZIndex>
             <Style>
               <Border>
@@ -1930,7 +1942,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>9.27792cm</Top>
+            <Top>9.50017cm</Top>
             <Left>2.21932cm</Left>
             <Height>0.6cm</Height>
             <Width>3.34667cm</Width>
@@ -1963,7 +1975,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>9.27792cm</Top>
+            <Top>9.50017cm</Top>
             <Left>7.6581cm</Left>
             <Height>0.6cm</Height>
             <Width>3.34667cm</Width>
@@ -1996,7 +2008,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>9.27792cm</Top>
+            <Top>9.50017cm</Top>
             <Left>14.40497cm</Left>
             <Height>0.6cm</Height>
             <Width>3.34667cm</Width>
@@ -2482,6 +2494,18 @@ End Function
         </Field>
         <Field Name="SerialNo">
           <DataField>SerialNo</DataField>
+        </Field>
+        <Field Name="DescriptionLVar">
+          <DataField>DescriptionLVar</DataField>
+        </Field>
+        <Field Name="QtyDispatchLRec">
+          <DataField>QtyDispatchLRec</DataField>
+        </Field>
+        <Field Name="QtyDispatchLRecFormat">
+          <DataField>QtyDispatchLRecFormat</DataField>
+        </Field>
+        <Field Name="ItemName">
+          <DataField>ItemName</DataField>
         </Field>
       </Fields>
       <Query>

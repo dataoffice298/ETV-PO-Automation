@@ -13,22 +13,22 @@ page 50145 "Inward Gate Entry SubFrm-NRGP"
         {
             repeater(Control1500000)
             {
-                field("Challan No."; "Challan No.")
+                field("Challan No."; Rec."Challan No.")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Challan Date"; "Challan Date")
+                field("Challan Date"; Rec."Challan Date")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Source Type"; "Source Type")
+                field("Source Type"; Rec."Source Type")
                 {
                     ApplicationArea = ALL;
                     OptionCaption = ' ,Sales Shipment,Sales Return Order,Purchase Order,Purchase Return Shipment,Transfer Receipt,Transfer Shipment,Item,Fixed Asset,Others';
 
 
                 }
-                field("Source No."; "Source No.")
+                field("Source No."; Rec."Source No.")
                 {
                     ApplicationArea = ALL;
                     trigger OnValidate()
@@ -41,30 +41,30 @@ page 50145 "Inward Gate Entry SubFrm-NRGP"
                         TransShptHeader: Record "Transfer Shipment Header";
                         Text16500: Label 'Source Type must not be blank in %1 %2.';
                     BEGIN
-                        if "Source Type" = 0 then
-                            ERROR(Text16500, FIELDCAPTION("Line No."), "Line No.");
-                        if "Source No." <> xRec."Source No." then
-                            "Source Name" := '';
-                        if "Source No." = '' then begin
-                            "Source Name" := '';
+                        if Rec."Source Type" = 0 then
+                            ERROR(Text16500, Rec.FIELDCAPTION("Line No."), Rec."Line No.");
+                        if Rec."Source No." <> xRec."Source No." then
+                            Rec."Source Name" := '';
+                        if Rec."Source No." = '' then begin
+                            Rec."Source Name" := '';
                             exit;
                         end;
 
-                        case "Source Type" of
-                            "Source Type"::"Sales Return Order":
+                        case Rec."Source Type" of
+                            Rec."Source Type"::"Sales Return Order":
                                 begin
-                                    SalesHeader.GET(SalesHeader."Document Type"::"Return Order", "Source No.");
-                                    "Source Name" := SalesHeader."Bill-to Name";
+                                    SalesHeader.GET(SalesHeader."Document Type"::"Return Order", Rec."Source No.");
+                                    Rec."Source Name" := SalesHeader."Bill-to Name";
                                 end;
-                            "Source Type"::"Purchase Order":
+                            Rec."Source Type"::"Purchase Order":
                                 begin
-                                    PurchHeader.GET(PurchHeader."Document Type"::Order, "Source No.");
-                                    "Source Name" := PurchHeader."Pay-to Name";
+                                    PurchHeader.GET(PurchHeader."Document Type"::Order, Rec."Source No.");
+                                    Rec."Source Name" := PurchHeader."Pay-to Name";
                                 end;
-                            "Source Type"::"Transfer Receipt":
+                            Rec."Source Type"::"Transfer Receipt":
                                 begin
-                                    TransHeader.GET("Source No.");
-                                    "Source Name" := TransHeader."Transfer-from Name";
+                                    TransHeader.GET(Rec."Source No.");
+                                    Rec."Source Name" := TransHeader."Transfer-from Name";
                                 end;
                         end;
 
@@ -84,9 +84,9 @@ page 50145 "Inward Gate Entry SubFrm-NRGP"
                         LineNoLVar: Integer;
                         Text16500: Label 'Source Type must not be blank in %1 %2.';
                     begin
-                        GateEntryHeader.GET("Entry Type", "Type", "Gate Entry No.");
-                        case "Source Type" of
-                            "Source Type"::"Sales Return Order":
+                        GateEntryHeader.GET(Rec."Entry Type", Rec."Type", Rec."Gate Entry No.");
+                        case Rec."Source Type" of
+                            Rec."Source Type"::"Sales Return Order":
                                 begin
                                     SalesHeader.RESET;
                                     SalesHeader.FILTERGROUP(2);
@@ -94,11 +94,11 @@ page 50145 "Inward Gate Entry SubFrm-NRGP"
                                     SalesHeader.SETRANGE("Location Code", GateEntryHeader."Location Code");
                                     SalesHeader.FILTERGROUP(0);
                                     if PAGE.RUNMODAL(0, SalesHeader) = ACTION::LookupOK then begin
-                                        "Source No." := SalesHeader."No.";
-                                        "Source Name" := SalesHeader."Bill-to Name";
+                                        Rec."Source No." := SalesHeader."No.";
+                                        Rec."Source Name" := SalesHeader."Bill-to Name";
                                     end;
                                 end;
-                            "Source Type"::"Purchase Order":
+                            Rec."Source Type"::"Purchase Order":
                                 begin
                                     PurchHeader.RESET;
                                     PurchHeader.FILTERGROUP(2);
@@ -106,8 +106,8 @@ page 50145 "Inward Gate Entry SubFrm-NRGP"
                                     PurchHeader.SETRANGE("Location Code", GateEntryHeader."Location Code");
                                     PurchHeader.FILTERGROUP(0);
                                     if PAGE.RUNMODAL(0, PurchHeader) = ACTION::LookupOK then begin
-                                        "Source No." := PurchHeader."No.";
-                                        "Source Name" := PurchHeader."Pay-to Name";
+                                        Rec."Source No." := PurchHeader."No.";
+                                        Rec."Source Name" := PurchHeader."Pay-to Name";
                                     end;
                                 end;
                             /*
@@ -120,15 +120,15 @@ page 50145 "Inward Gate Entry SubFrm-NRGP"
                                 if PAGE.RUNMODAL(0, ReturnShipHeader) = ACTION::LookupOK then
                                     VALIDATE("Source No.", ReturnShipHeader."No.");
                             end;*/
-                            "Source Type"::"Transfer Receipt":
+                            Rec."Source Type"::"Transfer Receipt":
                                 begin
                                     TransHeader.RESET;
                                     TransHeader.FILTERGROUP(2);
                                     TransHeader.SETRANGE("Transfer-to Code", GateEntryHeader."Location Code");
                                     TransHeader.FILTERGROUP(0);
                                     if PAGE.RUNMODAL(0, TransHeader) = ACTION::LookupOK then begin
-                                        "Source No." := TransHeader."No.";
-                                        "Source Name" := TransHeader."Transfer-from Name";
+                                        Rec."Source No." := TransHeader."No.";
+                                        Rec."Source Name" := TransHeader."Transfer-from Name";
                                     end;
                                 end;
                         /*
@@ -146,15 +146,15 @@ page 50145 "Inward Gate Entry SubFrm-NRGP"
 
 
                 }
-                field("Source Name"; "Source Name")
+                field("Source Name"; Rec."Source Name")
                 {
                     ApplicationArea = ALL;
                 }
-                field(Description; Description)
+                field(Description; Rec.Description)
                 {
                     ApplicationArea = ALL;
                 }
-                field("Source Line No."; "Source Line No.")
+                field("Source Line No."; Rec."Source Line No.")
                 {
                     ApplicationArea = ALL;
                     Visible = false;
@@ -182,7 +182,7 @@ page 50145 "Inward Gate Entry SubFrm-NRGP"
     var
         GatEntHdrLRec: Record "Gate Entry Header_B2B";
     BEGIN
-        IF GatEntHdrLRec.get("Entry Type", "Type", "Gate Entry No.") then
+        IF GatEntHdrLRec.get(Rec."Entry Type", Rec."Type", Rec."Gate Entry No.") then
             GatEntHdrLRec.TestField("Approval Status", GatEntHdrLRec."Approval Status"::Open);
     END;
 

@@ -202,18 +202,16 @@ table 50047 QuotCompHdr
 
     procedure AssistEdit(OldQC: Record QuotCompHdr): Boolean;
     begin
-        with OldQCGv do begin
-            COPY(Rec);
-            PurchaseSetUp.GET;
-            PurchaseSetUp.TestField("Quotation Comparision Nos.");
-            //TestNoSeries();
-            if NoSeriesMgt.SelectSeries(PurchaseSetUp."Quotation Comparision Nos.", OldQC."No. Series", "No. Series") then begin
-                NoSeriesMgt.SetSeries("No.");
-                if OldQCGv.GET("No.") then
-                    ERROR(Text004Lbl, LOWERCASE(FORMAT("No.")));
-                Rec := OldQCGv;
-                exit(true);
-            end;
+        OldQCGv.COPY(Rec);
+        PurchaseSetUp.GET;
+        PurchaseSetUp.TestField("Quotation Comparision Nos.");
+        //TestNoSeries();
+        if NoSeriesMgt.SelectSeries(PurchaseSetUp."Quotation Comparision Nos.", OldQC."No. Series", OldQCGv."No. Series") then begin
+            NoSeriesMgt.SetSeries(OldQCGv."No.");
+            if OldQCGv.GET(OldQCGv."No.") then
+                ERROR(Text004Lbl, LOWERCASE(FORMAT(OldQCGv."No.")));
+            Rec := OldQCGv;
+            exit(true);
         end;
     end;
 }

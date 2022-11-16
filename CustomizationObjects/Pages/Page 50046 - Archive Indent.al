@@ -86,7 +86,7 @@ page 50046 "Archive Indent"
                     Importance = Promoted;
                     ToolTip = 'Specifies the code of the location that the items are transferred to.';
                 }
-                field("In-Transit Code"; "In-Transit Code")
+                field("In-Transit Code"; Rec."In-Transit Code")
                 {
                     ApplicationArea = Location;
                     ToolTip = 'Specifies the in-transit code for the transfer order, such as a shipping agent.';

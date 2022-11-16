@@ -89,18 +89,18 @@ pageextension 50070 MyExtension1 extends "Purchases & Payables Setup"
                 {
                     ApplicationArea = All;
                 }
-                field("Indent Issue Jnl. Batch"; "Indent Issue Jnl. Batch")
+                field("Indent Issue Jnl. Batch"; Rec."Indent Issue Jnl. Batch")
                 {
                     ApplicationArea = All;
                 }
             }
             group("Indent Return")
             {
-                field("Indent Return Jnl. Template"; "Indent Return Jnl. Template")
+                field("Indent Return Jnl. Template"; Rec."Indent Return Jnl. Template")
                 {
                     ApplicationArea = All;
                 }
-                field("Indent Return Jnl. Batch"; "Indent Return Jnl. Batch")
+                field("Indent Return Jnl. Batch"; Rec."Indent Return Jnl. Batch")
                 {
                     ApplicationArea = All;
                 }

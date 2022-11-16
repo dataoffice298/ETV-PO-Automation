@@ -29,7 +29,7 @@ page 50127 QuotationComparSubForm
                     ApplicationArea = all;
 
                 }
-                field(Type; Type)
+                field(Type; Rec.Type)
                 {
                     ApplicationArea = all;
 
@@ -593,19 +593,19 @@ page 50127 QuotationComparSubForm
     var
     begin
         IF ActualExpansionStatus = 0 THEN BEGIN // Has children, but not expanded
-            ReqLine.SETRANGE(Level, Level, Level + 1);
+            ReqLine.SETRANGE(Level, Rec.Level, Rec.Level + 1);
             ReqLine := Rec;
             IF ReqLine.NEXT() <> 0 THEN
                 REPEAT
-                    IF ReqLine.Level > Level THEN BEGIN
+                    IF ReqLine.Level > Rec.Level THEN BEGIN
                         TempReqLine := ReqLine;
                         IF TempReqLine.INSERT() THEN;
                     END;
-                UNTIL (ReqLine.NEXT() = 0) OR (ReqLine.Level = Level);
+                UNTIL (ReqLine.NEXT() = 0) OR (ReqLine.Level = Rec.Level);
         END ELSE
             IF ActualExpansionStatus = 1 THEN BEGIN // Has children and is already expanded
                 TempReqLine := Rec;
-                WHILE (TempReqLine.NEXT() <> 0) AND (TempReqLine.Level > Level) DO
+                WHILE (TempReqLine.NEXT() <> 0) AND (TempReqLine.Level > Rec.Level) DO
                     TempReqLine.DELETE();
 
             END;
@@ -617,7 +617,7 @@ page 50127 QuotationComparSubForm
         CASE TRUE OF
             IsExpanded(Rec):
                 ActualExpansionStatus := 1;
-            Level = 0:
+            Rec.Level = 0:
                 ActualExpansionStatus := 0
             ELSE
                 ActualExpansionStatus := 2;

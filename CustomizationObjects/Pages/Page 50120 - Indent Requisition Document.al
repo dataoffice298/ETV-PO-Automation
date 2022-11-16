@@ -1,7 +1,5 @@
 page 50120 "Indent Requisition Document"
 {
-    // version PO1.0
-
     PageType = Document;
     SourceTable = "Indent Req Header";
     PromotedActionCategories = 'New,Process,Reports,Functions,Navigate';
@@ -12,7 +10,7 @@ page 50120 "Indent Requisition Document"
         {
             group(General)
             {
-                Editable = FieldEditable;//B2BVCOn28Sep22
+                Editable = FieldEditable;
                 field("No."; Rec."No.")
                 {
                     ApplicationArea = All;
@@ -47,15 +45,11 @@ page 50120 "Indent Requisition Document"
                 {
                     ApplicationArea = All;
                     Caption = 'Shortcut Dimension 1 Code';
-                    //Editable = False; //B2BPGON11OCT2022
-
                 }
                 field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = All;
                     Caption = 'Shortcut Dimension 2 Code';
-                    //Editable = False; //B2BPGON11OCT2022
-
                 }
 
             }
@@ -63,7 +57,7 @@ page 50120 "Indent Requisition Document"
             {
                 SubPageLink = "Document No." = FIELD("No.");
                 ApplicationArea = All;
-                Editable = FieldEditable;//B2BVCOn28Sep22
+                Editable = FieldEditable;
             }
         }
     }
@@ -98,6 +92,7 @@ page 50120 "Indent Requisition Document"
                 Image = Create;
                 PromotedCategory = Category4;
                 PromotedIsBig = true;
+                Visible = ShowAct;
 
                 trigger OnAction();
                 begin
@@ -140,6 +135,7 @@ page 50120 "Indent Requisition Document"
                 Image = NewSalesQuote;
                 PromotedCategory = Category4;
                 PromotedIsBig = true;
+                Visible = ShowAct;
 
                 trigger OnAction();
                 begin
@@ -185,15 +181,14 @@ page 50120 "Indent Requisition Document"
                 Image = MakeOrder;
                 PromotedCategory = Category4;
                 PromotedIsBig = true;
+                Visible = ShowAct;
 
                 trigger OnAction();
                 begin
                     Rec.TESTFIELD(Status, Rec.Status::Release);
                     Rec.TESTFIELD(Type, Rec.Type::Order);
                     Carry := 0;
-                    //raju
                     CheckRemainingQuantity;
-                    //raju
                     Indentreqline.RESET;
                     Indentreqline.SETRANGE("Document No.", Rec."No.");
                     IF Indentreqline.FIND('-') THEN
@@ -209,25 +204,9 @@ page 50120 "Indent Requisition Document"
                         CreateIndents.RESET;
                         CreateIndents.SETRANGE("Document No.", Rec."No.");
                         CreateIndents.SETRANGE("Carry out Action", TRUE);
-                        //B2B.1.3 S
-                        /*
-                         CLEAR(VendorList);
-                         VendorList.LOOKUPMODE(TRUE);
-                         VendorList.RUNMODAL;
-                         VendorList.SetSelection(Vendor);
-
-                         IF Vendor.COUNT>=1 THEN BEGIN
-                         */
-
                         UpdateReqQty;
                         POAutomation.CreateOrder2(CreateIndents, Vendor, Rec."No.Series");
                         MESSAGE(Text001);
-                        /*
-                        MESSAGE(Text001);
-                       END ELSE
-                       EXIT;
-                       */
-                        //B2B.1.3 E
                     END;
 
                 end;
@@ -247,15 +226,14 @@ page 50120 "Indent Requisition Document"
                     RelText1: Label 'Document released and Moved to Local Indent Requisition List.';
                     RelText2: Label 'Document released and Moved to Central Indent Requisition List.';
                 begin
+                    Rec.TestField("No.Series");
                     Rec.TestField(Status, Rec.Status::Open);
-                    //B2BESGOn19May2022++
                     IndentReqLine.Reset();
                     IndentReqLine.SetRange("Document No.", Rec."No.");
                     if not IndentReqLine.FindFirst() then begin
                         Error('No Lines Found');
                     end;
-                    //B2BESGOn19May2022--
-                    Rec.TestField("Resposibility Center"); //B2BMS
+                    Rec.TestField("Resposibility Center");
                     Rec.TESTFIELD("Document Date");
 
                     Rec.Status := Rec.Status::Release;
@@ -275,6 +253,7 @@ page 50120 "Indent Requisition Document"
                 ApplicationArea = All;
                 PromotedCategory = Process;
                 PromotedIsBig = true;
+                Visible = ShowAct;
 
                 trigger OnAction();
                 var
@@ -299,6 +278,7 @@ page 50120 "Indent Requisition Document"
                     Image = Open;
                     PromotedCategory = Category5;
                     PromotedIsBig = true;
+                    Visible = ShowAct;
 
                     trigger OnAction();
                     begin
@@ -314,6 +294,7 @@ page 50120 "Indent Requisition Document"
                     Image = ShowList;
                     PromotedCategory = Category5;
                     PromotedIsBig = true;
+                    Visible = ShowAct;
 
                     trigger OnAction()
                     var
@@ -335,6 +316,7 @@ page 50120 "Indent Requisition Document"
                     Image = EntriesList;
                     PromotedCategory = Category5;
                     PromotedIsBig = true;
+                    Visible = ShowAct;
 
                     trigger OnAction()
                     var
@@ -376,7 +358,8 @@ page 50120 "Indent Requisition Document"
         Text005: Label 'Do you want to create Orders?';
         Text0010: Label 'Enquiries Created Successfully';
         Text0011: Label 'Quotes Created Successfully';
-        FieldEditable: Boolean; //B2BVCOn28Sep22
+        FieldEditable: Boolean;
+        ShowAct: Boolean;
 
     procedure CheckRemainingQuantity();
     var
@@ -393,7 +376,7 @@ page 50120 "Indent Requisition Document"
         IndentRequisitionsCheck.SETRANGE("Document No.", IndentReqHeaderCheck."No.");
         IF IndentRequisitionsCheck.FINDSET THEN
             REPEAT
-                //  IF IndentRequisitionsCheck."Remaining Quantity" <> 0 THEN
+                //IF IndentRequisitionsCheck."Remaining Quantity" <> 0 THEN
                 CountVar += 1;
             UNTIL IndentRequisitionsCheck.NEXT = 0;
         IF CountVar = 0 THEN
@@ -419,7 +402,6 @@ page 50120 "Indent Requisition Document"
         QuantyLvar: Decimal;
         IndentLineRec2: Record 50037;
     begin
-        //B2B.1.4 START
         IndenReqRec.RESET;
         IndenReqRec.SETRANGE("Document No.", Rec."No.");
         IF IndenReqRec.FINDSET THEN BEGIN
@@ -429,8 +411,8 @@ page 50120 "Indent Requisition Document"
                 IF IndenReqRec."Qty. To Order" > IndenReqRec."Vendor Min.Ord.Qty" THEN
                     QuantyLvar := IndenReqRec."Qty. To Order"
                 ELSE
-                    // QuantyLvar := IndenReqRec."Vendor Min.Ord.Qty" ;
-                    IndentLineRec.RESET;
+                    QuantyLvar := IndenReqRec."Vendor Min.Ord.Qty";
+                IndentLineRec.RESET;
                 IndentLineRec.SETRANGE("Indent Req No", IndenReqRec."Document No.");
                 IndentLineRec.SETRANGE("Indent Req Line No", IndenReqRec."Line No.");
                 IndentLineRec.SETFILTER(IndentLineRec."Req.Quantity", '<>%1', 0);
@@ -465,28 +447,6 @@ page 50120 "Indent Requisition Document"
 
             UNTIL IndenReqRec.NEXT = 0;
         END;
-
-        //Commented //B2B.1.4
-        /*
-        IndenReqRec.RESET;
-        IndenReqRec.SETRANGE("Document No.","No.");
-        IF IndenReqRec.FINDSET THEN BEGIN
-            IF IndentLineRec.GET(IndenReqRec."Indent No.",IndenReqRec."Indent Line No.") THEN BEGIN
-                IF IndenReqRec."Qty. To Order" > IndenReqRec."Vendor Min.Ord.Qty" THEN
-                  IndentLineRec."Req.Quantity" := IndentLineRec."Req.Quantity" - IndenReqRec."Qty. To Order"
-                ELSE IF IndenReqRec."Qty. To Order" < IndenReqRec."Vendor Min.Ord.Qty" THEN BEGIN
-                  IndentLineRec."Req.Quantity" := IndentLineRec."Req.Quantity" - IndenReqRec."Vendor Min.Ord.Qty";
-                  IF IndentLineRec."Req.Quantity" < 0 THEN
-                    IndentLineRec."Req.Quantity" := 0;
-                END;
-                IndentLineRec.MODIFY;
-            END;
-          UNTIL IndenReqRec.NEXT = 0;
-        END;
-        
-         */
-        //B2B.1.4 END
-
     end;
 
     trigger OnInit()
@@ -494,32 +454,22 @@ page 50120 "Indent Requisition Document"
         Rec.Status := Rec.Status::Open;
     end;
 
-    //B2BPGON11OCT2022
     trigger OnAfterGetRecord();
     begin
 
-        if (Rec.Status = Rec.Status::Release) then
-            FieldEditable := false
-        else
+        if (Rec.Status = Rec.Status::Release) then begin
+            FieldEditable := false;
+            ShowAct := true;
+        end else begin
             FieldEditable := true;
+            ShowAct := false;
+        end;
 
-        //Rec.Status := Rec.Status::Open;
     end;
 
-    trigger OnOpenPage()
-    begin
-        /*   //B2BVCOn28Sep22>>>>
-           if (Rec.Status = Rec.Status::Release) then
-               FieldEditable := false
-           else
-               FieldEditable := true;
-           //B2BVCOn28Sep22<<<<
-           Rec.Status := Rec.Status::Open;*/  //B2BPGON11OCT2022
-    end;
 
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
         Rec.Status := Rec.Status::Open;
     end;
 }
-

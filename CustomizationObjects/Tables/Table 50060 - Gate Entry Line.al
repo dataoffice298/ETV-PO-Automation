@@ -110,7 +110,7 @@ table 50060 "Gate Entry Line_B2B"
             DataClassification = CustomerContent;
             Caption = 'Serial No';
         }
-        
+
         //BaluonNov82022<<
 
     }

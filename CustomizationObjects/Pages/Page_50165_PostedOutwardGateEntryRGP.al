@@ -14,106 +14,106 @@ page 50165 "Posted Outward Gate Entry-RGP"
         {
             group(General)
             {
-                field(Type; Type)
+                field(Type; Rec.Type)
                 {
                     ApplicationArea = all;
                     Editable = false;
                 }
-                field("No."; "No.")
+                field("No."; Rec."No.")
                 {
                     Editable = false;
                     ApplicationArea = ALL;
                 }
-                field("Location Code"; "Location Code")
+                field("Location Code"; Rec."Location Code")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Station From/To"; "Station From/To")
+                field("Station From/To"; Rec."Station From/To")
                 {
                     ApplicationArea = ALL;
                     Visible = false;
 
                 }
-                field(Description; Description)
+                field(Description; Rec.Description)
                 {
                     ApplicationArea = ALL;
                     Visible = false;
                 }
-                field("Item Description"; "Item Description")
+                field("Item Description"; Rec."Item Description")
                 {
                     ApplicationArea = ALL;
                     Visible = false;
                 }
-                field("Posting Date"; "Posting Date")
+                field("Posting Date"; Rec."Posting Date")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Posting Time"; "Posting Time")
+                field("Posting Time"; Rec."Posting Time")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Document Date"; "Document Date")
+                field("Document Date"; Rec."Document Date")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Document Time"; "Document Time")
+                field("Document Time"; Rec."Document Time")
                 {
                     ApplicationArea = ALL;
                 }
-                field("LR/RR No."; "LR/RR No.")
+                field("LR/RR No."; Rec."LR/RR No.")
                 {
                     ApplicationArea = ALL;
                 }
-                field("LR/RR Date"; "LR/RR Date")
+                field("LR/RR Date"; Rec."LR/RR Date")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Vehicle No."; "Vehicle No.")
+                field("Vehicle No."; Rec."Vehicle No.")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Gate Entry No."; "Gate Entry No.")
+                field("Gate Entry No."; Rec."Gate Entry No.")
                 {
                     ApplicationArea = ALL;
                 }
-                field(StaffNo; StaffNo)
+                field(StaffNo; Rec.StaffNo)
                 {
                     ApplicationArea = all;
                     Editable = false;
                 }
-                field("Staff Name"; "Staff Name")
+                field("Staff Name"; Rec."Staff Name")
                 {
                     ApplicationArea = all;
                     Editable = false;
                 }
-                field("Global Dimension 1 Code"; "Global Dimension 1 Code")
+                field("Global Dimension 1 Code"; Rec."Global Dimension 1 Code")
                 {
                     Caption = 'Accounting Location';
                     ApplicationArea = all;
                     Editable = false;
                 }
-                field("Global Dimension 2 Code"; "Global Dimension 2 Code")
+                field("Global Dimension 2 Code"; Rec."Global Dimension 2 Code")
                 {
                     Caption = 'CC Code';
                     ApplicationArea = all;
                     Editable = false;
                 }
-                field(Comments; Comments)
+                field(Comments; Rec.Comments)
                 {
                     ApplicationArea = all;
                     Editable = false;
                 }
-                field("Vendor No"; "Vendor No")
+                field("Vendor No"; Rec."Vendor No")
                 {
                     ApplicationArea = all;
                     Editable = false;
                 }
-                field("Vendor Name"; "Vendor Name")
+                field("Vendor Name"; Rec."Vendor Name")
                 {
                     ApplicationArea = all;
                     Editable = false;
                 }
-                field("Vend Type"; "Vend Type")
+                field("Vend Type"; Rec."Vend Type")
                 {
                     ApplicationArea = all;
                     Editable = false;

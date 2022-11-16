@@ -296,7 +296,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox10</rd:DefaultName>
@@ -328,7 +330,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox24</rd:DefaultName>
@@ -360,7 +364,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox85</rd:DefaultName>
@@ -392,7 +398,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox22</rd:DefaultName>
@@ -424,7 +432,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox88</rd:DefaultName>
@@ -456,7 +466,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox14</rd:DefaultName>
@@ -488,7 +500,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox15</rd:DefaultName>
@@ -520,7 +534,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox16</rd:DefaultName>
@@ -557,7 +573,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox11</rd:DefaultName>
@@ -588,7 +606,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox42</rd:DefaultName>
@@ -651,7 +671,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox23</rd:DefaultName>
@@ -682,7 +704,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox89</rd:DefaultName>
@@ -714,7 +738,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox31</rd:DefaultName>
@@ -746,7 +772,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox32</rd:DefaultName>
@@ -778,7 +806,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox40</rd:DefaultName>
@@ -845,7 +875,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>ModelCapLbl</rd:DefaultName>
@@ -1140,7 +1172,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>QtnNoCapLbl</rd:DefaultName>
@@ -1165,7 +1199,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Quot_Comp_No_.Value</Value>
+                                  <Value>=Fields!Parent_Quote_No_.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -1187,7 +1221,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Quot_Comp_No_</rd:DefaultName>
@@ -1253,7 +1289,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>RatesCapLbl</rd:DefaultName>
@@ -1271,24 +1309,26 @@
                     <TablixCell />
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox111">
+                        <Textbox Name="Rate">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
+                                  <Value>=Fields!Rate.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox111</rd:DefaultName>
+                          <rd:DefaultName>Rate</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
@@ -1351,7 +1391,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>GSTCapLbl</rd:DefaultName>
@@ -1383,7 +1425,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>GST</rd:DefaultName>
@@ -1449,7 +1493,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>TransportationCapLbl</rd:DefaultName>
@@ -1481,7 +1527,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>CollectedCapLbl</rd:DefaultName>
@@ -1492,7 +1540,6 @@
                           </Style>
                         </Textbox>
                         <ColSpan>3</ColSpan>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell />
@@ -1548,7 +1595,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>DeliveryCapLbl</rd:DefaultName>
@@ -1566,24 +1615,26 @@
                     <TablixCell />
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox129">
+                        <Textbox Name="Delivery">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
+                                  <Value>=Fields!Delivery.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox129</rd:DefaultName>
+                          <rd:DefaultName>Delivery</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
@@ -1646,7 +1697,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>PaymentCapLbl</rd:DefaultName>
@@ -1664,24 +1717,26 @@
                     <TablixCell />
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox26">
+                        <Textbox Name="Payment">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
+                                  <Value>=Fields!Payment.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox26</rd:DefaultName>
+                          <rd:DefaultName>Payment</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
@@ -1744,7 +1799,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>WarrantyCapLbl</rd:DefaultName>
@@ -1755,6 +1812,7 @@
                           </Style>
                         </Textbox>
                         <ColSpan>4</ColSpan>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell />
@@ -1762,24 +1820,26 @@
                     <TablixCell />
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox40">
+                        <Textbox Name="warranty">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
+                                  <Value>=Fields!warranty.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox40</rd:DefaultName>
+                          <rd:DefaultName>warranty</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
@@ -1860,14 +1920,14 @@
                     <TablixCell />
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox50">
+                        <Textbox Name="ContactPerson">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
+                                  <Value>=Fields!ContactPerson.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -1877,7 +1937,7 @@
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox50</rd:DefaultName>
+                          <rd:DefaultName>ContactPerson</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
@@ -1958,14 +2018,14 @@
                     <TablixCell />
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox58">
+                        <Textbox Name="PhoneNo">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
+                                  <Value>=Fields!PhoneNo.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -1975,7 +2035,7 @@
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox58</rd:DefaultName>
+                          <rd:DefaultName>PhoneNo</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
@@ -2182,6 +2242,7 @@
                       <Style>
                         <FontSize>9pt</FontSize>
                         <FontWeight>Normal</FontWeight>
+                        <Format>d</Format>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -2572,6 +2633,33 @@ End Function
         </Field>
         <Field Name="CollectedCapLbl">
           <DataField>CollectedCapLbl</DataField>
+        </Field>
+        <Field Name="Payment">
+          <DataField>Payment</DataField>
+        </Field>
+        <Field Name="warranty">
+          <DataField>warranty</DataField>
+        </Field>
+        <Field Name="Delivery">
+          <DataField>Delivery</DataField>
+        </Field>
+        <Field Name="DeliveryFormat">
+          <DataField>DeliveryFormat</DataField>
+        </Field>
+        <Field Name="Rate">
+          <DataField>Rate</DataField>
+        </Field>
+        <Field Name="RateFormat">
+          <DataField>RateFormat</DataField>
+        </Field>
+        <Field Name="Parent_Quote_No_">
+          <DataField>Parent_Quote_No_</DataField>
+        </Field>
+        <Field Name="ContactPerson">
+          <DataField>ContactPerson</DataField>
+        </Field>
+        <Field Name="PhoneNo">
+          <DataField>PhoneNo</DataField>
         </Field>
       </Fields>
       <Query>

@@ -35,11 +35,11 @@ page 50048 "Archive Indent List"
                 {
                     ApplicationArea = all;
                 }
-                field("Archived Version"; "Archived Version")
+                field("Archived Version"; Rec."Archived Version")
                 {
                     ApplicationArea = All;
                 }
-                field("Archived By"; "Archived By")
+                field("Archived By"; Rec."Archived By")
                 {
                     ApplicationArea = All;
                 }

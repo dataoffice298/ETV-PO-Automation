@@ -10,23 +10,23 @@ page 50149 "Gate Entry Location Setup"
         {
             repeater(Control1500000)
             {
-                field("Entry Type"; "Entry Type")
+                field("Entry Type"; Rec."Entry Type")
                 {
                     ApplicationArea = ALL;
                 }
-                field(Type; Type)
+                field(Type; Rec.Type)
                 {
                     ApplicationArea = all;
                 }
-                field("Location Code"; "Location Code")
+                field("Location Code"; Rec."Location Code")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Posting No. Series"; "Posting No. Series")
+                field("Posting No. Series"; Rec."Posting No. Series")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Allow GateEntry Lines Delete"; "Allow GateEntry Lines Delete")
+                field("Allow GateEntry Lines Delete"; Rec."Allow GateEntry Lines Delete")
                 {
                     ApplicationArea = ALL;
                 }

@@ -62,95 +62,95 @@ page 50028 "Quotation Comparison New" //PKON22J1
                         ActualExpansionStatusOnPush;
                     end;
                 }
-                field("Quote No."; "Quote No.")
+                field("Quote No."; Rec."Quote No.")
                 {
                     Editable = false;
                     ApplicationArea = All;
                 }
-                field("Vendor No."; "Vendor No.")
+                field("Vendor No."; Rec."Vendor No.")
                 {
                     Editable = false;
                     ApplicationArea = All;
                 }
-                field(Description; Description)
+                field(Description; Rec.Description)
                 {
                     Editable = false;
                     ApplicationArea = All;
                 }
-                field("Total Amount"; "Total Amount")
+                field("Total Amount"; Rec."Total Amount")
                 {
                     Editable = false;
                     ApplicationArea = All;
                 }
-                field("Item No."; "Item No.")
+                field("Item No."; Rec."Item No.")
                 {
                     Editable = false;
                     ApplicationArea = All;
                 }
-                field(Quality; Quality)
+                field(Quality; Rec.Quality)
                 {
                     ApplicationArea = All;
                 }
-                field("Payment Terms"; "Payment Terms")
+                field("Payment Terms"; Rec."Payment Terms")
                 {
                     ApplicationArea = All;
                 }
-                field(Quantity; Quantity)
-                {
-                    Editable = false;
-                    ApplicationArea = All;
-                }
-                field(Rate; Rate)
+                field(Quantity; Rec.Quantity)
                 {
                     Editable = false;
                     ApplicationArea = All;
                 }
-                field("Last Direct Cost"; "Last Direct Cost")
+                field(Rate; Rec.Rate)
+                {
+                    Editable = false;
+                    ApplicationArea = All;
+                }
+                field("Last Direct Cost"; Rec."Last Direct Cost")
                 {
                     BlankZero = true;
                     ApplicationArea = All;
                 }
-                field("Location Code"; "Location Code")
+                field("Location Code"; Rec."Location Code")
                 {
                     Editable = false;
                     ApplicationArea = All;
                 }
-                field(Amount; Amount)
+                field(Amount; Rec.Amount)
                 {
                     Editable = false;
                     ApplicationArea = All;
                 }
-                field("Variant Code"; "Variant Code")
+                field("Variant Code"; Rec."Variant Code")
                 {
                     Editable = false;
                     Visible = false;
                     ApplicationArea = All;
                 }
-                field("Carry Out Action"; "Carry Out Action")
+                field("Carry Out Action"; Rec."Carry Out Action")
                 {
                     ApplicationArea = All;
                 }
-                field(Price; Price)
+                field(Price; Rec.Price)
                 {
                     BlankZero = true;
                     Caption = 'Price Weightage';
                     Editable = false;
                     ApplicationArea = All;
                 }
-                field(Delivery; Delivery)
+                field(Delivery; Rec.Delivery)
                 {
                     BlankZero = true;
                     Caption = 'Delivery Weightage';
                     Editable = false;
                     ApplicationArea = All;
                 }
-                field("Total Weightage"; "Total Weightage")
+                field("Total Weightage"; Rec."Total Weightage")
                 {
                     BlankZero = true;
                     Editable = false;
                     ApplicationArea = All;
                 }
-                field("Delivery Date"; "Delivery Date")
+                field("Delivery Date"; Rec."Delivery Date")
                 {
                     Editable = false;
                     ApplicationArea = All;
@@ -268,7 +268,7 @@ page 50028 "Quotation Comparison New" //PKON22J1
 
                         CheckQtyBeforePO;
 
-                        QuoteCompareArchive.SETRANGE("RFQ No.", "RFQ No.");
+                        QuoteCompareArchive.SETRANGE("RFQ No.", Rec."RFQ No.");
                         IF QuoteCompareArchive.FIND('-') THEN
                             REPEAT
                                 QuoteCompareArchive.DELETE;
@@ -336,7 +336,7 @@ page 50028 "Quotation Comparison New" //PKON22J1
     begin
         TempReqLine := Rec;
 
-        WHILE (TempReqLine.NEXT <> 0) AND (TempReqLine.Level > Level) DO
+        WHILE (TempReqLine.NEXT <> 0) AND (TempReqLine.Level > Rec.Level) DO
             TempReqLine.DELETE(TRUE);
         TempReqLine := Rec;
         EXIT(TempReqLine.DELETE);
@@ -354,9 +354,9 @@ page 50028 "Quotation Comparison New" //PKON22J1
 
     trigger OnModifyRecord(): Boolean;
     begin
-        MODIFY(TRUE);
+        Rec.MODIFY(TRUE);
         TempReqLine := Rec;
-        IF "Line No." <> 0 THEN
+        IF Rec."Line No." <> 0 THEN
             TempReqLine.MODIFY;
         EXIT(FALSE);
     end;
@@ -384,7 +384,7 @@ page 50028 "Quotation Comparison New" //PKON22J1
         RFQNumbers.SETRANGE(RFQNumbers."RFQ No.", '');
 
         //END
-        RFQNumber := "RFQ No.";
+        RFQNumber := Rec."RFQ No.";
         IF RFQNumber <> '' THEN
             IF NOT RFQNumbers.GET(RFQNumber) THEN
                 RFQNumber := '';
@@ -451,19 +451,19 @@ page 50028 "Quotation Comparison New" //PKON22J1
         ReqLine: Record 50041;
     begin
         IF ActualExpansionStatus = 0 THEN BEGIN // Has children, but not expanded
-            ReqLine.SETRANGE(Level, Level, Level + 1);
+            ReqLine.SETRANGE(Level, Rec.Level, Rec.Level + 1);
             ReqLine := Rec;
             IF ReqLine.NEXT <> 0 THEN
                 REPEAT
-                    IF ReqLine.Level > Level THEN BEGIN
+                    IF ReqLine.Level > Rec.Level THEN BEGIN
                         TempReqLine := ReqLine;
                         IF TempReqLine.INSERT THEN;
                     END;
-                UNTIL (ReqLine.NEXT = 0) OR (ReqLine.Level = Level);
+                UNTIL (ReqLine.NEXT = 0) OR (ReqLine.Level = Rec.Level);
         END ELSE
             IF ActualExpansionStatus = 1 THEN BEGIN // Has children and is already expanded
                 TempReqLine := Rec;
-                WHILE (TempReqLine.NEXT <> 0) AND (TempReqLine.Level > Level) DO
+                WHILE (TempReqLine.NEXT <> 0) AND (TempReqLine.Level > Rec.Level) DO
                     TempReqLine.DELETE;
             END;
         CurrPage.UPDATE;
@@ -474,7 +474,7 @@ page 50028 "Quotation Comparison New" //PKON22J1
         CASE TRUE OF
             IsExpanded(Rec):
                 ActualExpansionStatus := 1;
-            Level = 0:
+            Rec.Level = 0:
                 ActualExpansionStatus := 0
             ELSE
                 ActualExpansionStatus := 2;
@@ -514,9 +514,9 @@ page 50028 "Quotation Comparison New" //PKON22J1
 
     procedure SetRecFilters();
     begin
-        RESET;
-        FILTERGROUP(2);
-        FILTERGROUP(0);
+        Rec.RESET;
+        Rec.FILTERGROUP(2);
+        Rec.FILTERGROUP(0);
         CurrPage.UPDATE(FALSE);
     end;
 
@@ -528,8 +528,8 @@ page 50028 "Quotation Comparison New" //PKON22J1
 
         //B2B1.1 START
 
-        RESET;
-        SETRANGE("RFQ No.", RFQNumber);
+        Rec.RESET;
+        Rec.SETRANGE("RFQ No.", RFQNumber);
         //InitTempTable;
         //END
 
@@ -552,12 +552,12 @@ page 50028 "Quotation Comparison New" //PKON22J1
     local procedure OnAfterGetCurrRecord();
     begin
         xRec := Rec;
-        IF GET("Line No.") THEN BEGIN
+        IF Rec.GET(Rec."Line No.") THEN BEGIN
             TempReqLine := Rec;
-            IF "Line No." <> 0 THEN
+            IF Rec."Line No." <> 0 THEN
                 TempReqLine.MODIFY
         END ELSE
-            IF TempReqLine.GET("Line No.") THEN
+            IF TempReqLine.GET(Rec."Line No.") THEN
                 TempReqLine.DELETE;
     end;
 
@@ -568,7 +568,7 @@ page 50028 "Quotation Comparison New" //PKON22J1
 
     local procedure QuoteNoOnFormat();
     begin
-        IF Level = 0 THEN
+        IF Rec.Level = 0 THEN
             "Quote No.Emphasize" := TRUE
         ELSE
             "Quote No.Emphasize" := FALSE;
@@ -576,7 +576,7 @@ page 50028 "Quotation Comparison New" //PKON22J1
 
     local procedure VendorNoOnFormat();
     begin
-        IF Level = 0 THEN
+        IF Rec.Level = 0 THEN
             "Vendor No.Emphasize" := TRUE
         ELSE
             "Vendor No.Emphasize" := FALSE;
@@ -584,7 +584,7 @@ page 50028 "Quotation Comparison New" //PKON22J1
 
     local procedure DescriptionOnFormat();
     begin
-        IF Level = 0 THEN
+        IF Rec.Level = 0 THEN
             DescriptionEmphasize := TRUE
         ELSE
             DescriptionEmphasize := FALSE;
@@ -592,7 +592,7 @@ page 50028 "Quotation Comparison New" //PKON22J1
 
     local procedure TotalAmountOnFormat();
     begin
-        IF Level = 0 THEN
+        IF Rec.Level = 0 THEN
             "Total AmountEmphasize" := TRUE
         ELSE
             "Total AmountEmphasize" := FALSE;
@@ -600,7 +600,7 @@ page 50028 "Quotation Comparison New" //PKON22J1
 
     local procedure LocationCodeOnFormat();
     begin
-        IF Level = 0 THEN
+        IF Rec.Level = 0 THEN
             "Location CodeEmphasize" := TRUE
         ELSE
             "Location CodeEmphasize" := FALSE;
@@ -625,7 +625,7 @@ page 50028 "Quotation Comparison New" //PKON22J1
         IF PurchHeader.FINDSET THEN BEGIN
             PurchLine.RESET;
             PurchLine.SETRANGE("Document No.", PurchHeader."No.");
-            PurchLine.SETRANGE("No.", "Item No.");
+            PurchLine.SETRANGE("No.", Rec."Item No.");
             IF PurchLine.FINDSET THEN
                 REPEAT
                     PQQty += PurchLine.Quantity;
@@ -639,7 +639,7 @@ page 50028 "Quotation Comparison New" //PKON22J1
             REPEAT
                 PurchLine.RESET;
                 PurchLine.SETRANGE("Document No.", PurchHeader."No.");
-                PurchLine.SETRANGE("No.", "Item No.");
+                PurchLine.SETRANGE("No.", Rec."Item No.");
                 IF PurchLine.FINDSET THEN
                     REPEAT
                         POQty += PurchLine.Quantity;
@@ -649,7 +649,7 @@ page 50028 "Quotation Comparison New" //PKON22J1
         QuoteCompare.RESET;
         QuoteCompare.SETRANGE("RFQ No.", RFQNumber);
         QuoteCompare.SETRANGE("Carry Out Action", TRUE);
-        QuoteCompare.SETRANGE("Item No.", "Item No.");
+        QuoteCompare.SETRANGE("Item No.", Rec."Item No.");
         IF QuoteCompare.FINDSET THEN
             REPEAT
                 PORaiseQty += QuoteCompare.Quantity;

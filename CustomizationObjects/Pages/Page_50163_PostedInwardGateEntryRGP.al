@@ -14,66 +14,66 @@ page 50163 "Posted Inward Gate Entry-RGP"
         {
             group(General)
             {
-                field(Type; Type)
+                field(Type; Rec.Type)
                 {
                     ApplicationArea = all;
                 }
 
-                field("No."; "No.")
+                field("No."; Rec."No.")
                 {
                     Editable = false;
                     ApplicationArea = ALL;
                 }
-                field("Location Code"; "Location Code")
+                field("Location Code"; Rec."Location Code")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Station From/To"; "Station From/To")
+                field("Station From/To"; Rec."Station From/To")
                 {
                     ApplicationArea = ALL;
                     Visible = false;
                 }
-                field(Description; Description)
+                field(Description; Rec.Description)
                 {
                     ApplicationArea = ALL;
                     Visible = false;
 
                 }
-                field("Item Description"; "Item Description")
+                field("Item Description"; Rec."Item Description")
                 {
                     ApplicationArea = ALL;
                     Visible = false;
                 }
-                field("Posting Date"; "Posting Date")
+                field("Posting Date"; Rec."Posting Date")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Posting Time"; "Posting Time")
+                field("Posting Time"; Rec."Posting Time")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Document Date"; "Document Date")
+                field("Document Date"; Rec."Document Date")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Document Time"; "Document Time")
+                field("Document Time"; Rec."Document Time")
                 {
                     ApplicationArea = ALL;
                 }
-                field("LR/RR No."; "LR/RR No.")
+                field("LR/RR No."; Rec."LR/RR No.")
                 {
                     ApplicationArea = ALL;
                 }
-                field("LR/RR Date"; "LR/RR Date")
+                field("LR/RR Date"; Rec."LR/RR Date")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Vehicle No."; "Vehicle No.")
+                field("Vehicle No."; Rec."Vehicle No.")
                 {
                     ApplicationArea = ALL;
                 }
 
-                field("Gate Entry No."; "Gate Entry No.")
+                field("Gate Entry No."; Rec."Gate Entry No.")
                 {
                     ApplicationArea = ALL;
                 }

@@ -43,15 +43,15 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             {
                 ApplicationArea = All;
             }
-            field("Qty. to Reject B2B"; "Qty. to Reject B2B")
+            field("Qty. to Reject B2B"; Rec."Qty. to Reject B2B")
             {
                 ApplicationArea = All;
             }
-            field("Quantity Accepted B2B"; "Quantity Accepted B2B")
+            field("Quantity Accepted B2B"; Rec."Quantity Accepted B2B")
             {
                 ApplicationArea = All;
             }
-            field("Quantity Rejected B2B"; "Quantity Rejected B2B")
+            field("Quantity Rejected B2B"; Rec."Quantity Rejected B2B")
             {
                 ApplicationArea = All;
             }

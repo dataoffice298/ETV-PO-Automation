@@ -145,7 +145,7 @@ report 50063 "Material Issue Slip"
     }
 
     var
-    pa:Page "Purchase Invoice Statistics";
+        pa: Page "Purchase Invoice Statistics";
         ItemCategoryCode: Code[20];
         ISSNo1: Code[20];
         ISSDate1: Date;

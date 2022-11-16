@@ -11,7 +11,7 @@ tableextension 50122 PurchCrMemoLineExt extends "Purch. Cr. Memo Line"
 
         //Unsupported feature: Deletion on ""KK Cess Amount"(Field 16543)". Please convert manually.
 
-        
+
         field(50100; "Applies-to Cons. Entry No."; Integer)
         {
         }
@@ -72,7 +72,7 @@ tableextension 50122 PurchCrMemoLineExt extends "Purch. Cr. Memo Line"
         {
             Description = 'B2B1.0 06 Dec2016';
         }
-        
+
         field(60003; "Indent Due Date"; Date)
         {
             Description = 'B2B1.0';
@@ -108,7 +108,7 @@ tableextension 50122 PurchCrMemoLineExt extends "Purch. Cr. Memo Line"
             Description = 'B2B1.0';
             Editable = false;
             Enabled = false;
-            
+
         }
         field(60010; "Sub Routing No."; Code[20])
         {
@@ -125,7 +125,7 @@ tableextension 50122 PurchCrMemoLineExt extends "Purch. Cr. Memo Line"
         {
             Description = 'B2B1.0';
         }
-    
+
         field(33002902; "Quotation No."; Code[20])
         {
             Description = 'PO1.0';
@@ -146,7 +146,7 @@ tableextension 50122 PurchCrMemoLineExt extends "Purch. Cr. Memo Line"
         }
     }
 
-    
+
 
 }
 

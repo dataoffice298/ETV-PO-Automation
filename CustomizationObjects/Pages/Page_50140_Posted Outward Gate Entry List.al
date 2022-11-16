@@ -19,47 +19,47 @@ page 50140 "Posted Outward Gate Entry List"
             repeater(Control1500000)
             {
                 Editable = false;
-                field(Type; Type)
+                field(Type; Rec.Type)
                 {
                     ApplicationArea = all;
                 }
-                field("Entry Type"; "Entry Type")
+                field("Entry Type"; Rec."Entry Type")
                 {
                     ApplicationArea = ALL;
                 }
-                field("No."; "No.")
+                field("No."; Rec."No.")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Gate Entry No."; "Gate Entry No.")
+                field("Gate Entry No."; Rec."Gate Entry No.")
                 {
                     ApplicationArea = ALL;//Balu 05092021
                 }
-                field("Document Date"; "Document Date")
+                field("Document Date"; Rec."Document Date")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Document Time"; "Document Time")
+                field("Document Time"; Rec."Document Time")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Location Code"; "Location Code")
+                field("Location Code"; Rec."Location Code")
                 {
                     ApplicationArea = ALL;
                 }
-                field(Description; Description)
+                field(Description; Rec.Description)
                 {
                     ApplicationArea = ALL;
                 }
-                field("Item Description"; "Item Description")
+                field("Item Description"; Rec."Item Description")
                 {
                     ApplicationArea = ALL;
                 }
-                field("LR/RR No."; "LR/RR No.")
+                field("LR/RR No."; Rec."LR/RR No.")
                 {
                     ApplicationArea = ALL;
                 }
-                field("LR/RR Date"; "LR/RR Date")
+                field("LR/RR Date"; Rec."LR/RR Date")
                 {
                     ApplicationArea = ALL;
                 }

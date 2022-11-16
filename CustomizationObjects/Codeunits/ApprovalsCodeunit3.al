@@ -248,7 +248,7 @@ codeunit 50014 "Approvals MGt 3"
     begin
         Case RecordRef.Number() of
             database::"Indent Req Header":
-                exit(page::"Indent Req Header");
+                exit(page::"Indent Requisition Document");
         end;
     end;
 

@@ -6,7 +6,7 @@ page 50133 "Archive Quotation List"
     SourceTable = "Archive Quotation Header";
     UsageCategory = Lists;
     CardPageId = "Archived Quotation Document";
-    
+
     layout
     {
         area(content)

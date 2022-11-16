@@ -125,7 +125,7 @@ table 50010 "Indent Header"
             Caption = 'Declined';
         }
         //B2BPAVOn09Sep2022>>
-        field(50001; "Shortcut Dimension 1 Code"; Code[20]) 
+        field(50001; "Shortcut Dimension 1 Code"; Code[20])
         {
             CaptionClass = '1,2,1';
             Caption = 'Shortcut Dimension 1 Code';
@@ -287,7 +287,7 @@ table 50010 "Indent Header"
         IndentLineRec.SETCURRENTKEY("Delivery Location");
         IndentLineRec.SETRANGE(IndentLineRec."Document No.", "No.");
         IndentLineRec.SETRANGE("Delivery Location", Rec."Delivery Location");
-        IndentLineRec.SetFilter("Qty To Return", '<>%1', 0);
+        IndentLineRec.SetFilter("Qty To Issue", '<>%1', 0);
         if IndentLineRec.FindSet() then begin
             repeat
                 LastItemJnlLine.Reset();
@@ -312,13 +312,13 @@ table 50010 "Indent Header"
                 ItemJnlLine.VALIDATE(ItemJnlLine."Unit of Measure Code", IndentLineRec."Unit of Measure");
                 ItemJnlLine.VALIDATE(ItemJnlLine."Shortcut Dimension 1 Code", IndentLineRec."Shortcut Dimension 1 Code");
                 ItemJnlLine.VALIDATE(ItemJnlLine."Shortcut Dimension 2 Code", IndentLineRec."Shortcut Dimension 2 Code");
-                ItemJnlLine.VALIDATE(ItemJnlLine.Quantity, IndentLineRec."Qty To Return");
+                ItemJnlLine.VALIDATE(ItemJnlLine.Quantity, IndentLineRec."Qty To Issue");
                 ItemJnlLine.VALIDATE("Location Code", IndentLineRec."Delivery Location");
                 ItemJnlLine."Indent No." := IndentLineRec."Document No.";
                 ItemJnlLine."Indent Line No." := IndentLineRec."Line No.";
                 ItemJnlLine.MODIFY();
                 IndentLineRec.NoHeadStatusCheck(true);
-                IndentLineRec."Qty To Return" := 0;
+                IndentLineRec."Qty To Issue" := 0;
                 IndentLineRec.Modify();
             until IndentLineRec.NEXT() = 0;
             Message('Return Journals are created successfully.');

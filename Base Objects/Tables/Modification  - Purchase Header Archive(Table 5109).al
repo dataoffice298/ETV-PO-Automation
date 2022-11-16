@@ -11,7 +11,7 @@ tableextension 50053 tableextension70000014 extends "Purchase Header Archive"
             //Unsupported feature: Change OptionString on ""Document Type"(Field 1)". Please convert manually.
 
         }
-        
+
         field(51000; Subject; Text[200])
         {
             Caption = 'Subject';

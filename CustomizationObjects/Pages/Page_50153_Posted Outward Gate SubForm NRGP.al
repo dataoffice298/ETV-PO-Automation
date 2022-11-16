@@ -11,27 +11,27 @@ page 50153 "Posted Outward Gate SubFm-NRGP"
         {
             repeater(Control1500000)
             {
-                field("Challan No."; "Challan No.")
+                field("Challan No."; Rec."Challan No.")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Challan Date"; "Challan Date")
+                field("Challan Date"; Rec."Challan Date")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Source Type"; "Source Type")
+                field("Source Type"; Rec."Source Type")
                 {
                     ApplicationArea = all;
                 }
-                field("Source No."; "Source No.")
+                field("Source No."; Rec."Source No.")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Source Name"; "Source Name")
+                field("Source Name"; Rec."Source Name")
                 {
                     ApplicationArea = ALL;
                 }
-                field(Description; Description)
+                field(Description; Rec.Description)
                 {
                     ApplicationArea = ALL;
                 }

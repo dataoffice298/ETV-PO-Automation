@@ -191,7 +191,7 @@ page 50116 "Indent Header"
                 var
                     ApprovalsMgmt: Codeunit "Approvals Mgmt.";
                 begin
-                    ApprovalsMgmt.RejectRecordApprovalRequest(RecordId);
+                    ApprovalsMgmt.RejectRecordApprovalRequest(Rec.RecordId);
                 end;
             }
             action(Delegate)
@@ -209,7 +209,7 @@ page 50116 "Indent Header"
                 var
                     ApprovalsMgmt: Codeunit "Approvals Mgmt.";
                 begin
-                    ApprovalsMgmt.DelegateRecordApprovalRequest(RecordId);
+                    ApprovalsMgmt.DelegateRecordApprovalRequest(Rec.RecordId);
                 end;
             }
             action("Send Approval Request")
@@ -334,7 +334,7 @@ page 50116 "Indent Header"
                             Rec.TestField("Released Status", Rec."Released Status"::Released);
                             IndentLineRec.SETCURRENTKEY("Document No.", "Line No.");
                             IndentLineRec.RESET();
-                            IndentLineRec.SETRANGE("Document No.", "No.");
+                            IndentLineRec.SETRANGE("Document No.", Rec."No.");
                             if not IndentLineRec.FINDFIRST() then
                                 ERROR('No Line with Qty. to Issue > 0');
 
@@ -354,7 +354,7 @@ page 50116 "Indent Header"
                         begin
                             Rec.TestField("Released Status", Rec."Released Status"::Released);
                             IndentLineRec.Reset();
-                            IndentLineRec.SETRANGE("Document No.", "No.");
+                            IndentLineRec.SETRANGE("Document No.", Rec."No.");
                             IndentLineRec.SETFILTER("Req.Quantity", '<>%1', 0);
                             if IndentLineRec.FIND('-') then
                                 Rec.CreateReturnItemJnlLine()
@@ -614,10 +614,10 @@ page 50116 "Indent Header"
     trigger OnAfterGetRecord();
     begin
         //Approval visible conditions - B2BMSOn09Sep2022>>
-        OpenAppEntrExistsForCurrUser := approvalmngmt.HasOpenApprovalEntriesForCurrentUser(RecordId());
-        OpenApprEntrEsists := approvalmngmt.HasOpenApprovalEntries(RecordId());
-        CanCancelapprovalforrecord := approvalmngmt.CanCancelApprovalForRecord(RecordId());
-        workflowwebhookmangt.GetCanRequestAndCanCancel(RecordId(), CanrequestApprovForFlow, CanCancelapprovalforflow);
+        OpenAppEntrExistsForCurrUser := approvalmngmt.HasOpenApprovalEntriesForCurrentUser(Rec.RecordId());
+        OpenApprEntrEsists := approvalmngmt.HasOpenApprovalEntries(Rec.RecordId());
+        CanCancelapprovalforrecord := approvalmngmt.CanCancelApprovalForRecord(Rec.RecordId());
+        workflowwebhookmangt.GetCanRequestAndCanCancel(Rec.RecordId(), CanrequestApprovForFlow, CanCancelapprovalforflow);
         //Approval visible conditions - B2BMSOn09Sep2022<<
 
         //B2BPGON10OCT2022

@@ -289,6 +289,9 @@ table 50037 "Indent Line"
 
                 if "Qty To Issue" > (Rec."Req.Quantity" - abs(Rec."Qty Issued")) then
                     Error('Qty to return should not be greater than %1', (Rec."Req.Quantity" - abs(Rec."Qty Issued")));
+
+                if "Qty To Return" > (Rec."Req.Quantity" - Abs(Rec."Qty Returned")) then
+                    Error('Qty to return should not be greater than %1', (Rec."Req.Quantity" - Abs(Rec."Qty Returned")));
             end;
         }
         field(50006; "Qty To Return"; Decimal)

@@ -11,21 +11,21 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
         {
             repeater(Control1500000)
             {
-                field("Challan No."; "Challan No.")
+                field("Challan No."; Rec."Challan No.")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Challan Date"; "Challan Date")
+                field("Challan Date"; Rec."Challan Date")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Source Type"; "Source Type")
+                field("Source Type"; Rec."Source Type")
                 {
                     ApplicationArea = ALL;
                     OptionCaption = ' ,Sales Shipment,Sales Return Order,Purchase Order,Purchase Return Shipment,Transfer Receipt,Transfer Shipment,Item,Fixed Asset,Others';//Baluonoct112022
 
                 }
-                field("Source No."; "Source No.")
+                field("Source No."; Rec."Source No.")
                 {
                     ApplicationArea = ALL;
                     trigger OnLookup(var Text: Text): Boolean
@@ -44,21 +44,21 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
                         //TraVeh: record "Transporter Vehicle";
                         SourName: text[100];
                     begin
-                        GateEntryHeader.GET("Entry Type", "Type", "Gate Entry No.");
-                        case "Source Type" of
-                            "Source Type"::"Sales Shipment":
+                        GateEntryHeader.GET(Rec."Entry Type", Rec."Type", Rec."Gate Entry No.");
+                        case Rec."Source Type" of
+                            Rec."Source Type"::"Sales Shipment":
                                 begin
                                     SalesShipHeader.RESET;
                                     SalesShipHeader.FILTERGROUP(2);
                                     SalesShipHeader.SETRANGE("Location Code", GateEntryHeader."Location Code");
                                     SalesShipHeader.FILTERGROUP(0);
                                     if PAGE.RUNMODAL(0, SalesShipHeader) = ACTION::LookupOK then begin
-                                        "Source No." := SalesShipHeader."No.";
-                                        "Source Name" := SalesShipHeader."Bill-to Name";
+                                        Rec."Source No." := SalesShipHeader."No.";
+                                        Rec."Source Name" := SalesShipHeader."Bill-to Name";
                                     end;
                                 end;
 
-                            "Source Type"::"Sales Return Order":
+                            Rec."Source Type"::"Sales Return Order":
                                 begin
                                     SalesHeader.RESET;
                                     SalesHeader.FILTERGROUP(2);
@@ -66,10 +66,10 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
                                     SalesHeader.SETRANGE("Location Code", GateEntryHeader."Location Code");
                                     SalesHeader.FILTERGROUP(0);
                                     if PAGE.RUNMODAL(0, SalesHeader) = ACTION::LookupOK then
-                                        VALIDATE("Source No.", SalesHeader."No.");
+                                        Rec.VALIDATE("Source No.", SalesHeader."No.");
                                 end;
 
-                            "Source Type"::"Purchase Order":
+                            Rec."Source Type"::"Purchase Order":
                                 begin
                                     PurchHeader.RESET;
                                     PurchHeader.FILTERGROUP(2);
@@ -77,38 +77,38 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
                                     PurchHeader.SETRANGE("Location Code", GateEntryHeader."Location Code");
                                     PurchHeader.FILTERGROUP(0);
                                     if PAGE.RUNMODAL(0, PurchHeader) = ACTION::LookupOK then
-                                        VALIDATE("Source No.", PurchHeader."No.");
+                                        Rec.VALIDATE("Source No.", PurchHeader."No.");
                                 end;
-                            "Source Type"::"Purchase Return Shipment":
+                            Rec."Source Type"::"Purchase Return Shipment":
                                 begin
                                     ReturnShipHeader.RESET;
                                     ReturnShipHeader.FILTERGROUP(2);
                                     ReturnShipHeader.SETRANGE("Location Code", GateEntryHeader."Location Code");
                                     ReturnShipHeader.FILTERGROUP(0);
                                     if PAGE.RUNMODAL(0, ReturnShipHeader) = ACTION::LookupOK then begin
-                                        "Source No." := ReturnShipHeader."No.";
-                                        "Source Name" := ReturnShipHeader."Pay-to Name";
+                                        Rec."Source No." := ReturnShipHeader."No.";
+                                        Rec."Source Name" := ReturnShipHeader."Pay-to Name";
                                     end;
                                 end;
 
-                            "Source Type"::"Transfer Receipt":
+                            Rec."Source Type"::"Transfer Receipt":
                                 begin
                                     TransHeader.RESET;
                                     TransHeader.FILTERGROUP(2);
                                     TransHeader.SETRANGE("Transfer-to Code", GateEntryHeader."Location Code");
                                     TransHeader.FILTERGROUP(0);
                                     if PAGE.RUNMODAL(0, TransHeader) = ACTION::LookupOK then
-                                        VALIDATE("Source No.", TransHeader."No.");
+                                        Rec.VALIDATE("Source No.", TransHeader."No.");
                                 end;
-                            "Source Type"::"Transfer Shipment":
+                            Rec."Source Type"::"Transfer Shipment":
                                 begin
                                     TransShptHeader.RESET;
                                     TransShptHeader.FILTERGROUP(2);
                                     TransShptHeader.SETRANGE("Transfer-from Code", GateEntryHeader."Location Code");
                                     TransShptHeader.FILTERGROUP(0);
                                     if PAGE.RUNMODAL(0, TransShptHeader) = ACTION::LookupOK then begin
-                                        "Source No." := TransShptHeader."No.";
-                                        "Source Name" := TransShptHeader."Transfer-to Name";
+                                        Rec."Source No." := TransShptHeader."No.";
+                                        Rec."Source Name" := TransShptHeader."Transfer-to Name";
                                     end;
                                 end;
                         end;
@@ -126,41 +126,41 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
 
                     begin
 
-                        if "Source Type" = 0 then
-                            ERROR(Text16500, FIELDCAPTION("Line No."), "Line No.");
+                        if Rec."Source Type" = 0 then
+                            ERROR(Text16500, Rec.FIELDCAPTION("Line No."), Rec."Line No.");
 
-                        if "Source No." <> xRec."Source No." then
-                            "Source Name" := '';
-                        if "Source No." = '' then begin
-                            "Source Name" := '';
+                        if Rec."Source No." <> xRec."Source No." then
+                            Rec."Source Name" := '';
+                        if Rec."Source No." = '' then begin
+                            Rec."Source Name" := '';
                             exit;
                         end;
-                        case "Source Type" of
-                            "Source Type"::"Purchase Order":
+                        case Rec."Source Type" of
+                            Rec."Source Type"::"Purchase Order":
                                 begin
-                                    PurchHeader.GET(PurchHeader."Document Type"::Order, "Source No.");
-                                    "Source Name" := PurchHeader."Pay-to Name";
+                                    PurchHeader.GET(PurchHeader."Document Type"::Order, Rec."Source No.");
+                                    Rec."Source Name" := PurchHeader."Pay-to Name";
                                 end;
-                            "Source Type"::"Purchase Return Shipment":
+                            Rec."Source Type"::"Purchase Return Shipment":
                                 begin
-                                    ReturnShipHeader.GET("Source No.");
-                                    "Source Name" := ReturnShipHeader."Pay-to Name";
+                                    ReturnShipHeader.GET(Rec."Source No.");
+                                    Rec."Source Name" := ReturnShipHeader."Pay-to Name";
                                 end;
-                            "Source Type"::"Transfer Shipment":
+                            Rec."Source Type"::"Transfer Shipment":
                                 begin
-                                    TransShptHeader.GET("Source No.");
-                                    "Source Name" := TransShptHeader."Transfer-to Name";
+                                    TransShptHeader.GET(Rec."Source No.");
+                                    Rec."Source Name" := TransShptHeader."Transfer-to Name";
                                 end;
                         end;
 
                     end;
                 }
-                field("Source Name"; "Source Name")
+                field("Source Name"; Rec."Source Name")
                 {
                     ApplicationArea = ALL;
                     Editable = false;
                 }
-                field("Posted RGP OUT NO."; "Posted RGP OUT NO.")
+                field("Posted RGP OUT NO."; Rec."Posted RGP OUT NO.")
                 {
                     ApplicationArea = all;
                     trigger OnLookup(var Text: Text): Boolean
@@ -170,17 +170,17 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
                         PRGPLineRec.Reset();
                         PRGPLineRec.SetRange("Entry Type", PRGPLineRec."Entry Type"::Outward);
                         PRGPLineRec.SetRange(Type, PRGPLineRec.Type::RGP);
-                        PRGPLineRec.SetRange("Source Type", "Source Type");
-                        PRGPLineRec.SetRange("Source No.", "Source No.");
+                        PRGPLineRec.SetRange("Source Type", Rec."Source Type");
+                        PRGPLineRec.SetRange("Source No.", Rec."Source No.");
                         IF PRGPLineRec.FINDFIRST THEN
                             if PAGE.RUNMODAL(0, PRGPLineRec) = ACTION::LookupOK then begin
-                                "Posted RGP OUT NO." := PRGPLineRec."Gate Entry No.";
-                                "Posted RGP OUT NO. Line" := PRGPLineRec."Line No.";
+                                Rec."Posted RGP OUT NO." := PRGPLineRec."Gate Entry No.";
+                                Rec."Posted RGP OUT NO. Line" := PRGPLineRec."Line No.";
                             end;
 
                     end;
                 }
-                field(Quantity; Quantity)
+                field(Quantity; Rec.Quantity)
                 {
                     ApplicationArea = all;
                     trigger OnValidate()
@@ -191,28 +191,28 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
                         PRGPLineRec.Reset();
                         PRGPLineRec.SetRange("Entry Type", PRGPLineRec."Entry Type"::Outward);
                         PRGPLineRec.SetRange(Type, PRGPLineRec.Type::RGP);
-                        PRGPLineRec.SetRange("Gate Entry No.", "Posted RGP OUT NO.");
-                        PRGPLineRec.SetRange("Line No.", "Posted RGP OUT NO. Line");
-                        PRGPLineRec.SetRange("Source Type", "Source Type");
-                        PRGPLineRec.SetRange("Source No.", "Source No.");
+                        PRGPLineRec.SetRange("Gate Entry No.", Rec."Posted RGP OUT NO.");
+                        PRGPLineRec.SetRange("Line No.", Rec."Posted RGP OUT NO. Line");
+                        PRGPLineRec.SetRange("Source Type", Rec."Source Type");
+                        PRGPLineRec.SetRange("Source No.", Rec."Source No.");
                         IF PRGPLineRec.FINDFIRST THEN bEGIN
                             PRGPLineRec.CALCFIELDS("Quantity Received");
-                            IF (Quantity + PRGPLineRec."Quantity Received") > PRGPLineRec.Quantity THEN
+                            IF (Rec.Quantity + PRGPLineRec."Quantity Received") > PRGPLineRec.Quantity THEN
                                 Error('Total Quantity should be less than sent quantity.');
                         end;
                     end;
                 }
-                field("Unit of Measure"; "Unit of Measure")
+                field("Unit of Measure"; Rec."Unit of Measure")
                 {
                     ApplicationArea = all;
 
                 }
-                field(Description; Description)
+                field(Description; Rec.Description)
                 {
                     ApplicationArea = ALL;
 
                 }
-                field("Source Line No."; "Source Line No.")
+                field("Source Line No."; Rec."Source Line No.")
                 {
                     ApplicationArea = ALL;
                     Visible = false;
@@ -257,7 +257,7 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
     var
         GatEntHdrLRec: Record "Gate Entry Header_B2B";
     BEGIN
-        IF GatEntHdrLRec.get("Entry Type", "Type", "Gate Entry No.") then
+        IF GatEntHdrLRec.get(Rec."Entry Type", Rec."Type", Rec."Gate Entry No.") then
             GatEntHdrLRec.TestField("Approval Status", GatEntHdrLRec."Approval Status"::Open);
     END;
 
@@ -357,8 +357,8 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
                     clear(EntriesExist);
 
                     GateLine.Reset();
-                    GateLine.SetRange("Entry Type", "Entry Type");
-                    GateLine.SetRange("Gate Entry No.", "Gate Entry No.");
+                    GateLine.SetRange("Entry Type", Rec."Entry Type");
+                    GateLine.SetRange("Gate Entry No.", Rec."Gate Entry No.");
                     GateLine.SetFilter("Challan No.", '<>%1', '');
                     GateLine.SetFilter("Challan Date", '<>%1', 0D);
                     GateLine.SetFilter("Posted RGP OUT NO.", '%1', '');
@@ -372,9 +372,9 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
                     end;
                     IF EntriesExist = FALSE THEN BEGIN
                         GateLine.INIT();
-                        GateLine."Entry Type" := "Entry Type";
-                        GateLine.Type := Type;
-                        GateLine."Gate Entry No." := "Gate Entry No.";
+                        GateLine."Entry Type" := Rec."Entry Type";
+                        GateLine.Type := Rec.Type;
+                        GateLine."Gate Entry No." := Rec."Gate Entry No.";
                         //LineNo := LineNo + 10000;
                         GateLine."Line No." := LineNo;
                         GateLine.Insert();
@@ -389,9 +389,9 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
                         GateLine.Modify();
                     END ELSE BEGIN
                         GateLne.reset;
-                        GateLne.SetRange("Entry Type", "Entry Type");
-                        GateLne.SetRange(Type, Type);
-                        GateLne.SetRange("Gate Entry No.", "Gate Entry No.");
+                        GateLne.SetRange("Entry Type", Rec."Entry Type");
+                        GateLne.SetRange(Type, Rec.Type);
+                        GateLne.SetRange("Gate Entry No.", Rec."Gate Entry No.");
                         GateLne.SetRange("Line No.", LineNo);
                         IF GateLne.findfirst then begin
                             GateLine."Source Type" := RGPLineRec2."Source Type";

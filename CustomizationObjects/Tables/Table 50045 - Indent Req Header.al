@@ -2,7 +2,7 @@ table 50045 "Indent Req Header"
 {
     // version PH1.0,PO1.0
 
-    LookupPageID = "Indent Req List";
+    LookupPageID = "Indent Requisition List";
 
     fields
     {

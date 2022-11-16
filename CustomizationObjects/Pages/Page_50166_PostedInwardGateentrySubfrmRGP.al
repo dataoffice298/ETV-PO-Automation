@@ -12,49 +12,49 @@ page 50166 "Posted Inward Gate SubFm-RGP"
         {
             repeater(Control1500000)
             {
-                field("Challan No."; "Challan No.")
+                field("Challan No."; Rec."Challan No.")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Challan Date"; "Challan Date")
+                field("Challan Date"; Rec."Challan Date")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Source Type"; "Source Type")
+                field("Source Type"; Rec."Source Type")
                 {
                     ApplicationArea = ALL;
 
                 }
-                field("Source No."; "Source No.")
+                field("Source No."; Rec."Source No.")
                 {
                     ApplicationArea = ALL;
                 }
-                field("Source Name"; "Source Name")
+                field("Source Name"; Rec."Source Name")
                 {
                     ApplicationArea = ALL;
                 }
-                field(Description; Description)
+                field(Description; Rec.Description)
                 {
                     ApplicationArea = ALL;
                     Visible = false;
                 }
-                field(Status; Status)
+                field(Status; Rec.Status)
                 {
                     ApplicationArea = ALL;
                 }
-                field(Quantity; Quantity)
+                field(Quantity; Rec.Quantity)
                 {
                     ApplicationArea = all;
                 }
-                field("Unit of Measure"; "Unit of Measure")
+                field("Unit of Measure"; Rec."Unit of Measure")
                 {
                     ApplicationArea = all;
                 }
-                field("Posted RGP OUT NO."; "Posted RGP OUT NO.")
+                field("Posted RGP OUT NO."; Rec."Posted RGP OUT NO.")
                 {
                     ApplicationArea = all;
                 }
-                field("Posted RGP OUT NO. Line"; "Posted RGP OUT NO. Line")
+                field("Posted RGP OUT NO. Line"; Rec."Posted RGP OUT NO. Line")
                 {
                     ApplicationArea = all;
                 }

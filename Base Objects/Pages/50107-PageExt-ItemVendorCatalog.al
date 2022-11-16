@@ -4,19 +4,19 @@ pageextension 50107 ItemVendorCatalogExt extends "Item Vendor Catalog"
     {
         addlast(Control1)
         {
-            field("Delivery Rating"; "Delivery Rating")
+            field("Delivery Rating"; Rec."Delivery Rating")
             {
                 ApplicationArea = all;
             }
-            field("Avg. Delivery Rating"; "Avg. Delivery Rating")
+            field("Avg. Delivery Rating"; Rec."Avg. Delivery Rating")
             {
                 ApplicationArea = all;
             }
-            field("Avg. Quality Rating"; "Avg. Quality Rating")
+            field("Avg. Quality Rating"; Rec."Avg. Quality Rating")
             {
                 ApplicationArea = all;
             }
-            Field("Qty. Supplied With in DueDate"; "Qty. Supplied With in DueDate")
+            Field("Qty. Supplied With in DueDate"; Rec."Qty. Supplied With in DueDate")
             {
                 ApplicationArea = all;
             }

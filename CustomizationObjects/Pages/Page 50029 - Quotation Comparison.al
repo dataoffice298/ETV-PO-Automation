@@ -314,7 +314,7 @@ page 50029 "Quotation Comparison"
                 action("Quotation Comparision")
                 {
                     Caption = 'Quotation Comparision';
-                    Image = print;
+                    Image = Print;
                     ShortCutKey = 'F9';
                     ApplicationArea = All;
 
@@ -333,7 +333,7 @@ page 50029 "Quotation Comparison"
     trigger OnAfterGetRecord();
     begin
         SetExpansionStatus;
-        OnAfterGetCurrRecord;
+        AfterGetCurrRecord;
         QuoteNoOnFormat;
         VendorNoOnFormat;
         DescriptionOnFormat;
@@ -372,7 +372,7 @@ page 50029 "Quotation Comparison"
 
     trigger OnNewRecord(BelowxRec: Boolean);
     begin
-        OnAfterGetCurrRecord;
+        AfterGetCurrRecord;
     end;
 
     trigger OnNextRecord(Steps: Integer): Integer;
@@ -558,7 +558,7 @@ page 50029 "Quotation Comparison"
         SelectCurrentRFQNo;
     end;
 
-    local procedure OnAfterGetCurrRecord();
+    local procedure AfterGetCurrRecord();
     begin
         xRec := Rec;
         IF Rec.GET(Rec."Line No.") THEN BEGIN

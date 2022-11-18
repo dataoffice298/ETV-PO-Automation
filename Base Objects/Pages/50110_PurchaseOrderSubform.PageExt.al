@@ -5,10 +5,14 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
     {
         addafter(Description)
         {
+            field(Select; Rec.Select)
+            {
+                ApplicationArea = all;
+            }
             field("Ref. Posted Gate Entry"; Rec."Ref. Posted Gate Entry")
             {
-                //Editable = false;
                 ApplicationArea = All;
+                Visible = false;
             }
         }
         addbefore("Shortcut Dimension 1 Code")
@@ -90,117 +94,176 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         {
             group(RGP)
             {
-                action(CreateRGPOutward)
+                group(RGPInward)
                 {
-                    Caption = 'Create RGP Outward';
-                    ApplicationArea = All;
-                    Image = CreateDocument;
+                    action(CreateRGPInward)
+                    {
+                        Caption = 'Create RGP Inward';
+                        ApplicationArea = All;
+                        Image = CreateDocument;
 
-                    trigger OnAction()
-                    var
-                        GateEntryHeader: Record "Gate Entry Header_B2B";
-                        GateEntryLine: Record "Gate Entry Line_B2B";
-                        OpenText: Label 'An RGP Outward document - %1 is created. \Do you want to open the document?';
-                        Err0001: Label 'Gate Entry is already created.';
-                    begin
-                        if Rec."Ref. Posted Gate Entry" <> '' then
-                            Error(Err0001);
-                        GateEntryHeader.Init();
-                        GateEntryHeader."Entry Type" := GateEntryHeader."Entry Type"::Outward;
-                        GateEntryHeader.Type := GateEntryHeader.Type::RGP;
-                        GateEntryHeader.Validate("Location Code", Rec."Location Code");
-                        GateEntryHeader.Insert(true);
+                        trigger OnAction()
+                        begin
+                            CreateGateEntries(GateEntryType::Inward, GateEntryDocType::RGP)
+                        end;
+                    }
 
-                        GateEntryLine.Init();
-                        GateEntryLine."Entry Type" := GateEntryLine."Entry Type"::Outward;
-                        GateEntryLine.Type := GateEntryLine.Type::RGP;
-                        GateEntryLine."Gate Entry No." := GateEntryHeader."No.";
-                        GateEntryLine."Line No." := 10000;
-                        GateEntryLine."Source Type" := GateEntryLine."Source Type"::Item;
-                        GateEntryLine.Validate("Source No.", Rec."No.");
-                        GateEntryLine."Unit of Measure" := Rec."Unit of Measure";
-                        GateEntryLine.Insert(true);
+                    action(CreateNRGPInward)
+                    {
+                        Caption = 'Create NRGP Inward';
+                        ApplicationArea = All;
+                        Image = Create;
 
-                        Rec."Ref. Posted Gate Entry" := GateEntryHeader."No.";
-                        Rec.Modify();
-
-                        if Confirm(OpenText, false, GateEntryHeader."No.") then
-                            Page.Run(Page::"Outward Gate Entry - RGP", GateEntryHeader);
-                    end;
+                        trigger OnAction()
+                        begin
+                            CreateGateEntries(GateEntryType::Inward, GateEntryDocType::NRGP)
+                        end;
+                    }
                 }
-
-                action(CreateNRGPOutward)
+                group(RGPOutward)
                 {
-                    Caption = 'Create NRGP Outward';
-                    ApplicationArea = All;
-                    Image = Create;
+                    action(CreateRGPOutward)
+                    {
+                        Caption = 'Create RGP Outward';
+                        ApplicationArea = All;
+                        Image = CreateDocument;
 
-                    trigger OnAction()
-                    var
-                        GateEntryHeader: Record "Gate Entry Header_B2B";
-                        GateEntryLine: Record "Gate Entry Line_B2B";
-                        OpenText: Label 'An NRGP Outward document - %1 is created. \Do you want to open the document?';
-                        Err0001: Label 'Gate Entry is already created.';
-                    begin
-                        if Rec."Ref. Posted Gate Entry" <> '' then
-                            Error(Err0001);
-                        GateEntryHeader.Init();
-                        GateEntryHeader."Entry Type" := GateEntryHeader."Entry Type"::Outward;
-                        GateEntryHeader.Type := GateEntryHeader.Type::NRGP;
-                        GateEntryHeader.Validate("Location Code", Rec."Location Code");
-                        GateEntryHeader.Insert(true);
+                        trigger OnAction()
+                        begin
+                            CreateGateEntries(GateEntryType::Outward, GateEntryDocType::RGP)
+                        end;
+                    }
 
-                        GateEntryLine.Init();
-                        GateEntryLine."Entry Type" := GateEntryLine."Entry Type"::Outward;
-                        GateEntryLine.Type := GateEntryLine.Type::NRGP;
-                        GateEntryLine."Gate Entry No." := GateEntryHeader."No.";
-                        GateEntryLine."Line No." := 10000;
-                        GateEntryLine."Source Type" := GateEntryLine."Source Type"::Item;
-                        GateEntryLine.Validate("Source No.", Rec."No.");
-                        GateEntryLine."Unit of Measure" := Rec."Unit of Measure";
-                        GateEntryLine.Insert(true);
+                    action(CreateNRGPOutward)
+                    {
+                        Caption = 'Create NRGP Outward';
+                        ApplicationArea = All;
+                        Image = Create;
 
-                        Rec."Ref. Posted Gate Entry" := GateEntryHeader."No.";
-                        Rec.Modify();
-
-                        if Confirm(OpenText, false, GateEntryHeader."No.") then
-                            Page.Run(Page::"Outward Gate Entry - NRGP", GateEntryHeader);
-                    end;
+                        trigger OnAction()
+                        begin
+                            CreateGateEntries(GateEntryType::Outward, GateEntryDocType::NRGP)
+                        end;
+                    }
                 }
-
-                action(ShowOutwardDoc)
+                group(Navigate)
                 {
-                    Caption = 'Show Outward Document';
-                    ApplicationArea = All;
-                    Image = Open;
+                    action(OpenGateEntries)
+                    {
+                        ApplicationArea = All;
+                        Image = Open;
+                        Caption = 'Inward/Outward Entries';
 
-                    trigger OnAction()
-                    var
-                        GateEntryHeader: Record "Gate Entry Header_B2B";
-                        PostGateEntryHeader: Record "Posted Gate Entry Header_B2B";
-                        Err0001: Label 'Gate Entry is not created.';
-                    begin
-                        if Rec."Ref. Posted Gate Entry" = '' then
-                            Error(Err0001);
-                        if GateEntryHeader.Get(GateEntryHeader."Entry Type"::Outward, GateEntryHeader.Type::RGP, Rec."Ref. Posted Gate Entry") then
-                            Page.Run(Page::"Outward Gate Entry - RGP", GateEntryHeader)
-                        else
-                            if PostGateEntryHeader.Get(PostGateEntryHeader."Entry Type"::Outward, PostGateEntryHeader.Type::RGP, Rec."Ref. Posted Gate Entry") then
-                                Page.Run(Page::"Posted Outward Gate Entry-RGP", PostGateEntryHeader)
-                            else
-                                if GateEntryHeader.Get(GateEntryHeader."Entry Type"::Outward, GateEntryHeader.Type::NRGP, Rec."Ref. Posted Gate Entry") then
-                                    Page.Run(Page::"Outward Gate Entry - NRGP", GateEntryHeader)
-                                else
-                                    if PostGateEntryHeader.Get(PostGateEntryHeader."Entry Type"::Outward, PostGateEntryHeader.Type::NRGP, Rec."Ref. Posted Gate Entry") then
-                                        Page.Run(Page::"Posted Outward Gate Entry-NRGP", PostGateEntryHeader);
-                    end;
+                        trigger OnAction()
+                        var
+                            GateEntryHdr: Record "Gate Entry Header_B2B";
+                        begin
+                            GateEntryHdr.Reset();
+                            GateEntryHdr.FilterGroup(2);
+                            GateEntryHdr.SetRange("Purchase Order No.", Rec."No.");
+                            GateEntryHdr.SetRange("Purchase Order Line No.", Rec."Line No.");
+                            GateEntryHdr.FilterGroup(0);
+                            Page.RunModal(Page::"Gate Entry List", GateEntryHdr);
+                        end;
+                    }
+                    action(OpenPostedGateEntries)
+                    {
+                        ApplicationArea = All;
+                        Image = History;
+                        Caption = 'Posted Inward/Outward Entries';
+
+                        trigger OnAction()
+                        var
+                            PostedGateEntryHdr: Record "Posted Gate Entry Header_B2B";
+                        begin
+                            PostedGateEntryHdr.Reset();
+                            PostedGateEntryHdr.FilterGroup(2);
+                            PostedGateEntryHdr.SetRange("Purchase Order No.", Rec."No.");
+                            PostedGateEntryHdr.SetRange("Purchase Order Line No.", Rec."Line No.");
+                            PostedGateEntryHdr.FilterGroup(0);
+                            Page.RunModal(Page::"Posted Gate Entries List", PostedGateEntryHdr);
+                        end;
+                    }
                 }
             }
             //B2BMSOn03Nov2022<<
         }
     }
 
+    procedure CreateGateEntries(EntryType: Option Inward,Outward; DocType: Option RGP,NRGP)
     var
-        myInt: Integer;
-    //B2BVCOn03Oct22<<<
+        GateEntryHeader: Record "Gate Entry Header_B2B";
+        GateEntryLine: Record "Gate Entry Line_B2B";
+        OpenText: Label 'An Gate Entry document - %1 is created. \Do you want to open the document?';
+        PurchLine: Record "Purchase Line";
+        SelErr: Label 'No line selected.';
+    begin
+        PurchLine.Reset();
+        PurchLine.SetRange("Document No.", Rec."Document No.");
+        PurchLine.SetRange(Select, true);
+        if PurchLine.FindSet() then begin
+            if EntryType = EntryType::Inward then
+                Rec.TestField("Qty. to Receive")
+            else
+                if EntryType = EntryType::Outward then
+                    Rec.TestField("Qty. to Reject B2B");
+
+            GateEntryHeader.Init();
+            if EntryType = EntryType::Inward then
+                GateEntryHeader."Entry Type" := GateEntryHeader."Entry Type"::Inward
+            else
+                if EntryType = EntryType::Outward then
+                    GateEntryHeader."Entry Type" := GateEntryHeader."Entry Type"::Outward;
+
+            if DocType = DocType::RGP then
+                GateEntryHeader.Type := GateEntryHeader.Type::RGP
+            else
+                if DocType = DocType::NRGP then
+                    GateEntryHeader.Type := GateEntryHeader.Type::NRGP;
+
+            GateEntryHeader.Validate("Location Code", Rec."Location Code");
+            GateEntryHeader."Purchase Order No." := Rec."Document No.";
+            GateEntryHeader."Purchase Order Line No." := Rec."Line No.";
+            GateEntryHeader.Insert(true);
+
+            repeat
+                GateEntryLine.Init();
+                GateEntryLine."Entry Type" := GateEntryHeader."Entry Type";
+                GateEntryLine.Type := GateEntryHeader.Type;
+                GateEntryLine."Gate Entry No." := GateEntryHeader."No.";
+                GateEntryLine."Line No." := 10000;
+                GateEntryLine."Source Type" := GateEntryLine."Source Type"::Item;
+                GateEntryLine.Validate("Source No.", Rec."No.");
+                GateEntryLine."Unit of Measure" := Rec."Unit of Measure";
+                if EntryType = EntryType::Inward then
+                    GateEntryLine.Validate(Quantity, Rec."Qty. to Receive")
+                else
+                    if EntryType = EntryType::Outward then
+                        GateEntryLine.Validate(Quantity, Rec."Qty. to Reject B2B");
+                GateEntryLine.Insert(true);
+
+                PurchLine.Select := false;
+                //PurchLine."Qty. to Reject B2B" := 0;
+                PurchLine.Modify();
+            until PurchLine.Next() = 0;
+
+            if Confirm(OpenText, false, GateEntryHeader."No.") then
+                if (EntryType = EntryType::Inward) and (DocType = DocType::RGP) then
+                    Page.Run(Page::"Inward Gate Entry-RGP", GateEntryHeader)
+                else
+                    if (EntryType = EntryType::Inward) and (DocType = DocType::NRGP) then
+                        Page.Run(Page::"Inward Gate Entry-NRGP", GateEntryHeader)
+                    else
+                        if (EntryType = EntryType::Outward) and (DocType = DocType::RGP) then
+                            Page.Run(Page::"Outward Gate Entry - RGP", GateEntryHeader)
+                        else
+                            if (EntryType = EntryType::Outward) and (DocType = DocType::NRGP) then
+                                Page.Run(Page::"Outward Gate Entry - NRGP", GateEntryHeader);
+        end else
+            Error(SelErr);
+    end;
+
+    var
+        GateEntryType: Option Inward,Outward;
+        GateEntryDocType: Option RGP,NRGP;
 }

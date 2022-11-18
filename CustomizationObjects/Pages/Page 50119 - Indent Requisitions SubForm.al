@@ -35,19 +35,23 @@ page 50119 "Indent Requisitions SubForm"
                 field("Line Type"; Rec."Line Type")
                 {
                     ApplicationArea = all;
+                    Editable = FieldEditable;
                 }
                 field("Item No."; Rec."Item No.")
                 {
                     ApplicationArea = All;
+                    Editable = FieldEditable;
                 }
                 field(Description; Rec.Description)
                 {
                     ApplicationArea = All;
+                    Editable = FieldEditable;
                 }
                 //B2BMSOn01Nov2022>>
                 field("Variant Code"; Rec."Variant Code")
                 {
                     ApplicationArea = all;
+                    Editable = FieldEditable;
                 }
                 //B2BMSOn01Nov2022<<
                 field("Carry out Action"; Rec."Carry out Action")
@@ -91,18 +95,22 @@ page 50119 "Indent Requisitions SubForm"
                 field("Received Quantity"; Rec."Received Quantity")
                 {
                     ApplicationArea = All;
+                    Editable = FieldEditable;
                 }
                 field("Due Date"; Rec."Due Date")
                 {
                     ApplicationArea = All;
+                    Editable = FieldEditable;
                 }
                 field("Qty. Ordered"; Rec."Qty. Ordered")
                 {
                     ApplicationArea = All;
+                    Editable = FieldEditable;
                 }
                 field("Remaining Quantity"; Rec."Remaining Quantity")
                 {
                     ApplicationArea = All;
+                    Editable = FieldEditable;
                 }
                 field("Qty. To Order"; Rec."Qty. To Order")
                 {
@@ -173,9 +181,16 @@ page 50119 "Indent Requisitions SubForm"
         }
     }
 
-    actions
-    {
-    }
+    trigger OnAfterGetRecord();
+    var
+        IndentReqHdr: Record "Indent Req Header";
+    begin
+        if IndentReqHdr.Get(Rec."Document No.") then
+            if (IndentReqHdr.Status = IndentReqHdr.Status::Release) then
+                FieldEditable := false
+            else
+                FieldEditable := true;
+    end;
 
     var
         CreateIndents: Record 50038;
@@ -184,5 +199,6 @@ page 50119 "Indent Requisitions SubForm"
         IndentLine: Record 50037;
         PurchaseOrder: Record 38;
         Vendor: Record 99;
+        FieldEditable: Boolean;
 }
 

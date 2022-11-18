@@ -129,7 +129,6 @@ table 50038 "Indent Requisitions"
             var
                 VendorItemrec: Record 99;
             begin
-                TestStatusOpen;
                 Vendor.RESET;
                 IF Vendor.GET("Manufacturer Code") THEN BEGIN
                     "Vendor Name" := Vendor.Name;
@@ -183,7 +182,7 @@ table 50038 "Indent Requisitions"
             //B2BESGOn23May2022++
             trigger OnValidate();
             begin
-                Amount := "Unit Cost" * Quantity
+                Amount := "Unit Cost" * Quantity;
             end;
             //B2BESGOn23May2022--
 

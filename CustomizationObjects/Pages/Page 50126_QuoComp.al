@@ -241,7 +241,7 @@ page 50126 "Quotation Comparision Doc"
 
                 trigger OnAction()
                 var
-                    QuoComp: Report "Quotation Comparison 1";
+                    QuoComp: Report "Quotation Comparision";
                 begin
                     Clear(QuoComp);
                     QuoComp.SETRFQ(Rec.RFQNumber);

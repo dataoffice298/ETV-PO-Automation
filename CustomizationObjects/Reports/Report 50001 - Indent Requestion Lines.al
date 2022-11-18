@@ -34,9 +34,9 @@ report 50001 "Indent Requestion Lines"
                         //IndentRequisitions."Qty. To Order" += "Quantity (Base)";
                         //IndentRequisitions."Remaining Quantity" += "Quantity (Base)";
                         CalcFields("Qty Issued");
-                        IndentRequisitions.Quantity += "Req.Quantity" - "Qty Issued";
-                        IndentRequisitions."Qty. To Order" += "Req.Quantity" - "Qty Issued";
-                        IndentRequisitions."Remaining Quantity" += "Req.Quantity" - "Qty Issued";
+                        IndentRequisitions.Quantity += "Req.Quantity" - Abs("Qty Issued");
+                        IndentRequisitions."Qty. To Order" += "Req.Quantity" - Abs("Qty Issued");
+                        IndentRequisitions."Remaining Quantity" += "Req.Quantity" - Abs("Qty Issued");
                         //B2BMSOn14Nov2022<<
 
                         ItemVendorGvar.RESET;
@@ -68,8 +68,8 @@ report 50001 "Indent Requestion Lines"
                         //B2BMSOn14Nov2022>>
                         //IndentRequisitions.Quantity += "Quantity (Base)";
                         //IndentRequisitions."Remaining Quantity" := "Quantity (Base)";
-                        IndentRequisitions.Quantity += "Req.Quantity" - "Qty Issued";
-                        IndentRequisitions."Remaining Quantity" := "Req.Quantity" - "Qty Issued";
+                        IndentRequisitions.Quantity += "Req.Quantity" - Abs("Qty Issued");
+                        IndentRequisitions."Remaining Quantity" := "Req.Quantity" - Abs("Qty Issued");
                         //B2BMSOn14Nov2022<<
                         IndentRequisitions.VALIDATE(IndentRequisitions.Quantity);
                         IndentRequisitions."Unit Cost" := "Unit Cost";  //Divya

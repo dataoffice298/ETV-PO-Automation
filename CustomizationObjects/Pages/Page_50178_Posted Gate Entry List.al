@@ -1,26 +1,32 @@
-page 50148 "Gate Entry List"
+page 50178 "Posted Gate Entries List"
 {
-    Caption = 'Inward/Outward List';
-    PageType = List;
-    SourceTable = "Gate Entry Header_B2B";
+    Caption = 'Posted Inward/Outward Entries';
     UsageCategory = Lists;
     ApplicationArea = ALL;
+    DeleteAllowed = false;
+    PageType = List;
+    SourceTable = "Posted Gate Entry Header_B2B";
+
     layout
     {
         area(content)
         {
-            repeater(General)
+            repeater(general)
             {
                 Editable = false;
-                field("Entry Type"; Rec."Entry Type")
-                {
-                    ApplicationArea = ALL;
-                }
                 field(Type; Rec.Type)
                 {
                     ApplicationArea = all;
                 }
+                field("Entry Type"; Rec."Entry Type")
+                {
+                    ApplicationArea = ALL;
+                }
                 field("No."; Rec."No.")
+                {
+                    ApplicationArea = ALL;
+                }
+                field("Gate Entry No."; Rec."Gate Entry No.")
                 {
                     ApplicationArea = ALL;
                 }
@@ -44,9 +50,18 @@ page 50148 "Gate Entry List"
                 {
                     ApplicationArea = ALL;
                 }
+                field("LR/RR No."; Rec."LR/RR No.")
+                {
+                    ApplicationArea = ALL;
+                }
+                field("LR/RR Date"; Rec."LR/RR Date")
+                {
+                    ApplicationArea = ALL;
+                }
             }
         }
     }
+
     actions
     {
         area(Processing)
@@ -62,16 +77,16 @@ page 50148 "Gate Entry List"
                 trigger OnAction()
                 begin
                     if (Rec."Entry Type" = Rec."Entry Type"::Inward) and (Rec.Type = Rec.Type::RGP) then
-                        Page.Run(Page::"Inward Gate Entry-RGP", Rec)
+                        Page.Run(Page::"Posted Inward Gate Entry-RGP", Rec)
                     else
                         if (Rec."Entry Type" = Rec."Entry Type"::Inward) and (Rec.Type = Rec.Type::NRGP) then
-                            Page.Run(Page::"Inward Gate Entry-NRGP", Rec)
+                            Page.Run(Page::"Posted Inward Gate Entry-NRGP", Rec)
                         else
                             if (Rec."Entry Type" = Rec."Entry Type"::Outward) and (Rec.Type = Rec.Type::RGP) then
-                                Page.Run(Page::"Outward Gate Entry - RGP", Rec)
+                                Page.Run(Page::"Posted Outward Gate Entry-RGP", Rec)
                             else
                                 if (Rec."Entry Type" = Rec."Entry Type"::Outward) and (Rec.Type = Rec.Type::NRGP) then
-                                    Page.Run(Page::"Outward Gate Entry - NRGP", Rec);
+                                    Page.Run(Page::"Posted Outward Gate Entry-NRGP", Rec);
                 end;
             }
         }

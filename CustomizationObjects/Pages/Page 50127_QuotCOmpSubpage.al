@@ -470,8 +470,6 @@ page 50127 QuotationComparSubForm
                 {
                     Caption = 'E&xpand All';
                     Image = ExplodeBOM;
-                    Promoted = true;
-                    PromotedCategory = Process;
                     ApplicationArea = All;
 
                     trigger OnAction();
@@ -483,8 +481,6 @@ page 50127 QuotationComparSubForm
                 {
                     Caption = 'C&ollapse All';
                     Image = CollapseDepositLines;
-                    Promoted = true;
-                    PromotedCategory = Process;
                     ApplicationArea = All;
 
                     trigger OnAction();
@@ -497,8 +493,6 @@ page 50127 QuotationComparSubForm
                     CaptionML = ENU = 'Co&mments',
                                 ENN = 'Co&mments';
                     Image = ViewComments;
-                    Promoted = true;
-                    PromotedCategory = Process;
                     RunObject = Page 66;
                     ApplicationArea = All;
                     RunPageLink = "RFQ No." = FIELD("RFQ No."),
@@ -507,22 +501,6 @@ page 50127 QuotationComparSubForm
             }
         }
     }
-
-
-
-
-    trigger OnDeleteRecord(): Boolean;
-    begin
-        //IF Rec.Status <> Rec.Status::Open then
-        // error('You can only delete the lines when approval status is in open.');
-        /*TempReqLine := Rec;
-
-        WHILE (TempReqLine.NEXT() <> 0) AND (TempReqLine.Level > Level) DO
-            TempReqLine.DELETE(TRUE);
-        TempReqLine := Rec;
-        EXIT(TempReqLine.DELETE());*/
-    end;
-
 
     trigger OnModifyRecord(): Boolean;
     begin

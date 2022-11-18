@@ -216,6 +216,11 @@ table 50057 "Posted Gate Entry Header_B2B"
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(49; "Purchase Order Line No."; Integer)
+        {
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
         //B2BMSOn14Nov2022<<
 
     }

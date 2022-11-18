@@ -201,6 +201,7 @@ report 50179 "Purchase Line Tracking Import"
                     ReservEntry.Validate("Location Code", PurchaseLine."Location Code");
                     ReservEntry.Validate("Source ID", PurchaseLine."Document No.");
                     ReservEntry.Validate("Source Ref. No.", PurchaseLine."Line No.");
+                    ReservEntry.Validate("Variant Code", PurchaseLine."Variant Code");
                     ReservEntry.Validate("Item Tracking", ReservEntry."Item Tracking"::"Serial No.");
                     ReservEntry.Validate(Positive, true);
                     ReservEntry.Insert(true);

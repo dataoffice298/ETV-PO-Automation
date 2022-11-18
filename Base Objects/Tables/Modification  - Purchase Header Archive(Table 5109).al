@@ -1,15 +1,10 @@
 tableextension 50053 tableextension70000014 extends "Purchase Header Archive"
 {
-    // version NAVW19.00.00.45778,NAVIN9.00.00.45778,PO
-
     fields
     {
         modify("Document Type")
         {
             OptionCaptionML = ENU = 'Quote,Order,Invoice,Credit Memo,Blanket Order,Return Order,Enquiry', ENN = 'Quote,Order,Invoice,Credit Memo,Blanket Order,Return Order,Enquiry';
-
-            //Unsupported feature: Change OptionString on ""Document Type"(Field 1)". Please convert manually.
-
         }
 
         field(51000; Subject; Text[200])
@@ -59,8 +54,5 @@ tableextension 50053 tableextension70000014 extends "Purchase Header Archive"
             OptionCaption = ' ,Open,Pending Approval,Released';
         }
     }
-
-    //Unsupported feature: PropertyChange. Please convert manually.
-
 }
 

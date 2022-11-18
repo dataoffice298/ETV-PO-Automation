@@ -1,9 +1,5 @@
 page 50026 "Purchase Enquiry Subform"
 {
-    // version PH1.0,PO1.0
-
-    // //Dm 27Jan09   Commented code because its not presenet in
-
     AutoSplitKey = true;
     Caption = 'Purchase Enquiry Subform';
     DelayedInsert = true;
@@ -132,12 +128,7 @@ page 50026 "Purchase Enquiry Subform"
             UpdateForm(TRUE);
     end;
 
-    procedure ItemAvailability(AvailabilityType: Option Date,Variant,Location,Bin);
-    begin
-        //Rec.ItemAvailability(AvailabilityType);
-    end;
-
-    procedure ShowDimensions();
+    procedure RecShowDimensions();
     begin
         Rec.ShowDimensions;
     end;
@@ -147,7 +138,7 @@ page 50026 "Purchase Enquiry Subform"
         Rec.ShowItemChargeAssgnt;
     end;
 
-    procedure OpenItemTrackingLines();
+    procedure RecOpenItemTrackingLines();
     begin
         Rec.OpenItemTrackingLines;
     end;

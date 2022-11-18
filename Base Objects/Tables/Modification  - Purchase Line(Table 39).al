@@ -184,8 +184,11 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             Caption = 'Qty. to Reject';
             DataClassification = CustomerContent;
             trigger OnValidate()
+            var
+                RejErr: Label 'You cannot reject the quantity as total quantity is received.';
             begin
-
+                if Quantity = "Quantity Received" then
+                    Error(RejErr);
             end;
         }
         field(60014; "Quantity Accepted B2B"; Decimal)
@@ -205,6 +208,11 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             Editable = false;
             Caption = 'QC Enabled';
             DataClassification = CustomerContent;
+        }
+        field(60017; Select; Boolean)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Select';
         }
         modify("No.")
         {

@@ -341,7 +341,7 @@ codeunit 50016 "MyBaseSubscr"
             IndentLine.NoHeadStatusCheck(true);
             IndentLine.Validate("Delivery Location");
             IndentLine."Avail.Qty" := IndentLine."Avail.Qty" - ItemJournalLine.Quantity; //B2BMSOn07Nov2022
-            IndentLine."Qty To Issue" := IndentLine."Req.Quantity" - ItemJournalLine.Quantity; //B2BMSOn07Nov2022
+            IndentLine."Qty To Issue" := 0; //B2BMSOn07Nov2022
             IndentLine.Modify();
         end;
     end;

@@ -1,8 +1,5 @@
 codeunit 50026 "PO Automation"
 {
-    // version PO1.0
-
-
     trigger OnRun();
     begin
     end;

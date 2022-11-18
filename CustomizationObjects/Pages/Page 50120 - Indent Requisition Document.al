@@ -10,10 +10,10 @@ page 50120 "Indent Requisition Document"
         {
             group(General)
             {
-                Editable = FieldEditable;
                 field("No."; Rec."No.")
                 {
                     ApplicationArea = All;
+                    Editable = FieldEditable;
 
                     trigger OnAssistEdit();
                     begin
@@ -24,14 +24,17 @@ page 50120 "Indent Requisition Document"
                 field("Document Date"; Rec."Document Date")
                 {
                     ApplicationArea = All;
+                    Editable = FieldEditable;
                 }
                 field("Resposibility Center"; Rec."Resposibility Center")
                 {
                     ApplicationArea = All;
+                    Editable = FieldEditable;
                 }
                 field(Status; Rec.Status)
                 {
                     ApplicationArea = All;
+                    Editable = FieldEditable;
                 }
                 field(Type; Rec.Type)
                 {
@@ -45,11 +48,13 @@ page 50120 "Indent Requisition Document"
                 {
                     ApplicationArea = All;
                     Caption = 'Shortcut Dimension 1 Code';
+                    Editable = FieldEditable;
                 }
                 field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = All;
                     Caption = 'Shortcut Dimension 2 Code';
+                    Editable = FieldEditable;
                 }
 
             }
@@ -57,7 +62,6 @@ page 50120 "Indent Requisition Document"
             {
                 SubPageLink = "Document No." = FIELD("No.");
                 ApplicationArea = All;
-                Editable = FieldEditable;
             }
         }
     }
@@ -456,7 +460,6 @@ page 50120 "Indent Requisition Document"
 
     trigger OnAfterGetRecord();
     begin
-
         if (Rec.Status = Rec.Status::Release) then begin
             FieldEditable := false;
             ShowAct := true;
@@ -464,7 +467,6 @@ page 50120 "Indent Requisition Document"
             FieldEditable := true;
             ShowAct := false;
         end;
-
     end;
 
 

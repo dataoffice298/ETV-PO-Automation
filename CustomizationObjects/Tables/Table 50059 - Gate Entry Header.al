@@ -321,6 +321,7 @@ table 50059 "Gate Entry Header_B2B"
             Editable = false;
         }
         //B2BMSOn14Nov2022<<
+        
     }
 
     keys

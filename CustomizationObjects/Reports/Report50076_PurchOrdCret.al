@@ -118,6 +118,7 @@ report 50076 "Purchase Order Creation New"
                                 PurchaseLineOrder.VALIDATE("Direct Unit Cost");
                                 PurchaseLineOrder.VALIDATE("Variant Code", "Quotation Comparison1"."Variant Code");
                                 PurchaseLineOrder."Location Code" := "Quotation Comparison1"."Location Code";
+                                PurchaseLineOrder."Sub Location Code" := "Quotation Comparison1"."Sub Location Code";
                                 PurchaseLineOrder."Shortcut Dimension 1 Code" := "Quotation Comparison1"."Shortcut Dimension 1 Code";//B2BPAV
                                 PurchaseLineOrder."Shortcut Dimension 2 Code" := "Quotation Comparison1"."Shortcut Dimension 2 Code";//B2BPAV
                                 PurchaseLineOrder."Dimension Set ID" := "Quotation Comparison1"."Dimension Set ID";
@@ -129,6 +130,7 @@ report 50076 "Purchase Order Creation New"
                                 PurchaseLineOrder.Validate("Shortcut Dimension 1 Code");
                                 PurchaseLineOrder.validate("Shortcut Dimension 2 Code");
                                 PurchaseLineOrder.Validate("Dimension Set ID");
+                                PurchaseLineOrder."Spec Id" := "Quotation Comparison1"."Spec Id";
                                 //B2BMSOn21Sep2022>>
                                 PurchaseLineOrder."Indent No." := "Quotation Comparison1"."Indent No.";
                                 PurchaseLineOrder."Indent Line No." := "Quotation Comparison1"."Indent Line No.";

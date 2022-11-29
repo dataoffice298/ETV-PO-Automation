@@ -11,6 +11,14 @@ pageextension 50111 PostedPurchRcptSubform extends "Posted Purchase Rcpt. Subfor
                 ApplicationArea = all;
             }
             //B2BVCOn03Oct22<<<
+            field("Rejection Comments B2B"; "Rejection Comments B2B")
+            {
+                ApplicationArea = all;
+            }
+            field("Spec Id"; rec."Spec Id")
+            {
+                ApplicationArea = all;
+            }
         }
     }
 

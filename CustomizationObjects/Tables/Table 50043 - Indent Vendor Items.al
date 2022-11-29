@@ -84,6 +84,15 @@ table 50043 "Indent Vendor Items"
             DataClassification = CustomerContent;
             OptionMembers = Item,"Fixed Assets",Description,"G/L Account";
         }
+        field(50015; "Sub Location Code"; Code[20])
+        {
+            DataClassification = CustomerContent;
+            TableRelation = Location.Code;
+        }
+        field(50017; "Spec Id"; Code[20])
+        {
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

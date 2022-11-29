@@ -22,7 +22,7 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
                 field("Source Type"; Rec."Source Type")
                 {
                     ApplicationArea = ALL;
-                    OptionCaption = ' ,Sales Shipment,Sales Return Order,Purchase Order,Purchase Return Shipment,Transfer Receipt,Transfer Shipment,Item,Fixed Asset,Others';//Baluonoct112022
+                    OptionCaption = ' ,Sales Shipment,Sales Return Order,Purchase Order,Purchase Return Shipment,Transfer Receipt,Transfer Shipment,Item,Fixed Asset,Others,Indent';//Baluonoct112022
 
                 }
                 field("Source No."; Rec."Source No.")
@@ -30,6 +30,9 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
                     ApplicationArea = ALL;
                     trigger OnLookup(var Text: Text): Boolean
                     var
+                        FA: record "Fixed Asset";
+                        ItemLRec: record Item;
+                        IndentHdt: Record "Indent Header";
                         GateEntryHeader: Record "Gate Entry Header_B2B";
                         SalesShipHeader: record "Sales Shipment Header";
                         SalesHeader: Record "Sales Header";
@@ -109,6 +112,39 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
                                     if PAGE.RUNMODAL(0, TransShptHeader) = ACTION::LookupOK then begin
                                         Rec."Source No." := TransShptHeader."No.";
                                         Rec."Source Name" := TransShptHeader."Transfer-to Name";
+                                    end;
+                                end;
+                            Rec."Source Type"::"Fixed Asset":
+                                begin
+                                    FA.Reset();
+                                    FA.SetRange(Blocked, false);
+                                    FA.FilterGroup(0);
+                                    if PAGE.RUNMODAL(0, FA) = ACTION::LookupOK then begin
+                                        Rec."Source No." := FA."No.";
+                                        Rec."Source Name" := FA.Description;
+                                        Rec.Description := FA.Description;
+                                    end;
+                                end;
+                            Rec."Source Type"::Item:
+                                begin
+                                    ItemLRec.Reset();
+                                    ItemLRec.SetRange(Blocked, false);
+                                    ItemLRec.FilterGroup(0);
+                                    if PAGE.RUNMODAL(0, ItemLRec) = ACTION::LookupOK then begin
+                                        Rec."Source No." := ItemLRec."No.";
+                                        Rec."Source Name" := ItemLRec.Description;
+                                        Rec.Description := ItemLRec.Description;
+                                        Rec."Unit of Measure" := ItemLRec."Base Unit of Measure";
+                                    end;
+                                end;
+                            Rec."Source Type"::Indent:
+                                begin
+                                    IndentHdt.Reset();
+                                    IndentHdt.SetRange("Released Status", IndentHdt."Released Status"::"Pending Approval");
+                                    IndentHdt.FilterGroup(0);
+                                    if PAGE.RUNMODAL(0, ItemLRec) = ACTION::LookupOK then begin
+                                        Rec."Source No." := IndentHdt."No.";
+                                        Rec."Source Name" := IndentHdt.Description;
                                     end;
                                 end;
                         end;

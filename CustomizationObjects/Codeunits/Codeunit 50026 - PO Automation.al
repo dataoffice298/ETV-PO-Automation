@@ -160,7 +160,9 @@ codeunit 50026 "PO Automation"
                 IndentVendorItems."Indent Req Line No" := CreateIndents."Line No.";
                 IndentVendorItems."Shortcut Dimension 1 Code" := CreateIndents."Shortcut Dimension 1 Code"; //B2BPAV
                 IndentVendorItems."Shortcut Dimension 2 Code" := CreateIndents."Shortcut Dimension 2 Code"; //B2BPAV
+                IndentVendorItems."Sub Location Code" := CreateIndents."Sub Location Code";
                 //Message('Here is the code ? %1', CreateIndents."Shortcut Dimension 1 Code");
+                IndentVendorItems."Spec Id" := CreateIndents."Spec Id";
                 IF NOT (Vendor.FIND('-')) THEN
                     ERROR(Text001, IndentVendorItems."Item No.")
                 ELSE
@@ -240,7 +242,6 @@ codeunit 50026 "PO Automation"
                     PurchaseHeader."Order Date" := WORKDATE;
                     PurchaseHeader."Document Date" := WORKDATE;
                     PurchaseHeader."Indent Requisition No" := IndentVendorEnquiry."Indent Req No";
-                    ;
                     //PurchaseHeader.VALIDATE("Location Code", IndentVendorEnquiry."Location Code");//B2BESGOn19May2022
                     PurchaseHeader."Location Code" := IndentVendorEnquiry."Location Code";
                     PurchaseHeader.Validate("Shortcut Dimension 1 Code", IndentVendorEnquiry."Shortcut Dimension 1 Code");//B2BPAV
@@ -285,6 +286,8 @@ codeunit 50026 "PO Automation"
                         PurchaseLine."Indent Req No" := IndentVendorEnquiry."Indent Req No"; //B2BMSOn21Sep2022
                         PurchaseLine."Indent Req Line No" := IndentVendorEnquiry."Indent Req Line No"; //B2BMSOn21Sep2022
                         PurchaseLine."Location Code" := IndentVendorEnquiry."Location Code";
+                        PurchaseLine."Sub Location Code" := IndentVendorEnquiry."Sub Location Code";
+                        PurchaseLine."Spec Id" := IndentVendorEnquiry."Spec Id";
                         //PurchaseLine.VALIDATE("Location Code");//B2BESGOn19May2022
                         // PurchaseLine."Shortcut Dimension 1 Code" := IndentVendorEnquiry."Project No.";
                         // PurchaseLine."Shortcut Dimension 2 Code" := IndentVendorEnquiry.Department;
@@ -390,6 +393,7 @@ codeunit 50026 "PO Automation"
                         //PurchaseLine."Shortcut Dimension 1 Code" := IndentVendorEnquiry."Project No.";
                         //PurchaseLine."Shortcut Dimension 2 Code" := IndentVendorEnquiry.Department;
                         PurchaseLine."Location Code" := IndentVendorEnquiry."Location Code";
+                        PurchaseLine."Sub Location Code" := IndentVendorEnquiry."Sub Location Code";
                         PurchaseLine.VALIDATE("Location Code");
                         CreateIndents4.RESET;
                         CreateIndents4.COPYFILTERS(CreateIndentsQuotes);
@@ -403,6 +407,7 @@ codeunit 50026 "PO Automation"
                         // Message('Indent Line %1', IndentVendorEnquiry."Shortcut Dimension 1 Code");
                         PurchaseLine.Validate("Shortcut Dimension 1 Code", IndentVendorEnquiry."Shortcut Dimension 1 Code");//B2BPAV
                         PurchaseLine.Validate("Shortcut Dimension 2 Code", IndentVendorEnquiry."Shortcut Dimension 2 Code");//B2BPAV
+                        PurchaseLine."Spec Id" := IndentVendorEnquiry."Spec Id";
                         PurchaseLine.Modify();
                         IndentVendorEnquiry.Check := TRUE;
                         IndentVendorEnquiry.MODIFY;
@@ -851,6 +856,8 @@ codeunit 50026 "PO Automation"
                             //QuoteCompare."Purc. Req No" := PurchaseLine."Sub Document No.";
                             //QuoteCompare."Purch. Req Line No" := PurchaseLine."Sub Document Line No.";
                             QuoteCompare."Location Code" := PurchaseHeader."Location Code";
+                            QuoteCompare."Sub Location Code" := PurchaseLine."Sub Location Code";
+                            QuoteCompare."Spec Id" := PurchaseLine."Spec Id";
                             //QuoteCompare."Material req No.s" := PurchaseLine."Material req No.s";//PK on 24.10.2020
                             QuoteCompare."Shortcut Dimension 1 Code" := PurchaseLine."Shortcut Dimension 1 Code";
                             QuoteCompare."Shortcut Dimension 2 Code" := PurchaseLine."Shortcut Dimension 2 Code";
@@ -1253,6 +1260,8 @@ codeunit 50026 "PO Automation"
                 PurchaseLineQuote.validate("Shortcut Dimension 1 Code", PurchaseLine."Shortcut Dimension 1 Code");
                 PurchaseLineQuote.validate("Shortcut Dimension 2 Code", PurchaseLine."Shortcut Dimension 2 Code");
                 //B2BMSOn14Sep2022<<
+                PurchaseLineQuote."Sub Location Code" := PurchaseLine."Sub Location Code";
+                PurchaseLineQuote."Spec Id" := PurchaseLine."Spec Id";
                 PurchaseLineQuote.VALIDATE("Variant Code", PurchaseLine."Variant Code");
                 PurchaseLineQuote.VALIDATE("Unit of Measure Code", PurchaseLine."Unit of Measure Code");
                 // END ELSE BEGIN
@@ -1433,8 +1442,8 @@ codeunit 50026 "PO Automation"
                         PurchaseLine."Location Code" := IndentVendorEnquiry."Location Code";
                         PurchaseLine.Validate("Shortcut Dimension 1 Code", IndentVendorEnquiry."Shortcut Dimension 1 Code");//B2BPAV
                         PurchaseLine.Validate("Shortcut Dimension 2 Code", IndentVendorEnquiry."Shortcut Dimension 2 Code");//B2BPAV
-                        PurchaseLine."Location Code" := IndentVendorEnquiry."Location Code";
-
+                        PurchaseLine."Sub Location Code" := IndentVendorEnquiry."Sub Location Code";
+                        PurchaseLine."Spec Id" := IndentVendorEnquiry."Spec Id";
                         CreateIndents5.RESET;
                         CreateIndents5.SETRANGE(CreateIndents5."Document No.", IndentVendorEnquiry."Indent Req No");
                         CreateIndents5.SETRANGE(CreateIndents5."Line No.", IndentVendorEnquiry."Indent Req Line No");
@@ -1497,7 +1506,7 @@ codeunit 50026 "PO Automation"
                     VendorGrec.RESET;
                     IF VendorGrec.GET(CreateIndents."Manufacturer Code") THEN
                         IndentVendorItems."Location Code" := VendorGrec."Location Code";
-
+                    IndentVendorItems."Sub Location Code" := CreateIndents."Sub Location Code";
                     //IndentVendorItems."Location Code" := CreateIndents."Location Code";
                     IndentVendorItems."Unit Of Measure" := CreateIndents."Unit of Measure";
                     IndentVendorItems.Department := CreateIndents.Department;
@@ -1534,12 +1543,18 @@ codeunit 50026 "PO Automation"
     local procedure OnPostUpdateOrderLineOnPurchHeaderReceive(var TempPurchLine: Record "Purchase Line"; PurchRcptHeader: Record "Purch. Rcpt. Header")
     var
         ItemLRec: Record Item;
+        IndentLRec: Record "Indent Line";
     begin
         if (ItemLRec.Get(TempPurchLine."No.")) and (ItemLRec."QC Enabled B2B") then begin
             TempPurchLine."Quantity Accepted B2B" += TempPurchLine."Qty. to Accept B2B";
             TempPurchLine."Quantity Rejected B2B" += TempPurchLine."Qty. to Reject B2B";
             TempPurchLine."Qty. to Accept B2B" := 0;
             TempPurchLine."Qty. to Reject B2B" := 0;
+        end;
+
+        if IndentLRec.Get(TempPurchLine."Indent No.", TempPurchLine."Indent Line No.") then begin
+            IndentLRec.Validate("Avail.Qty");
+            IndentLRec.Modify();
         end;
     end;
 
@@ -1548,11 +1563,20 @@ codeunit 50026 "PO Automation"
     var
         ItemLRec: Record Item;
         Err0001: Label 'Either Qty. to Accept or Qty. to Reject must have a value as QC was enabled.';
+        PurchHdr: Record "Purchase Header";
     begin
-        if (ItemLRec.Get(PurchLine."No.")) and (ItemLRec."QC Enabled B2B") then
+        if (ItemLRec.Get(PurchLine."No.")) and (ItemLRec."QC Enabled B2B") then begin
             if (PurchLine."Qty. to Receive" <> 0)
                 and ((PurchLine."Qty. to Accept B2B" = 0) and (PurchLine."Qty. to Reject B2B" = 0)) then
                 Error(Err0001);
+            if PurchLine."Qty. to Reject B2B" <> 0 then
+                PurchLine.TestField("Rejection Comments B2B");
+        end;
+        if PurchLine.Type = PurchLine.Type::"Fixed Asset" then begin
+            PurchLine.TestField(Make_B2B);
+            PurchLine.TestField("Model No.");
+            PurchLine.TestField("Serial No.");
+        end;
     end;
     //B2BMSOn03Nov2022<<
 }

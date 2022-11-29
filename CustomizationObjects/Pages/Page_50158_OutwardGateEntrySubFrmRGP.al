@@ -23,7 +23,7 @@ page 50158 "Outward Gate Entry SubFrm-RGP"
                 field("Source Type"; Rec."Source Type")
                 {
                     ApplicationArea = ALL;
-                    OptionCaption = ' ,Sales Shipment,Sales Return Order,Purchase Order,Purchase Return Shipment,Transfer Receipt,Transfer Shipment,Item,Fixed Asset,Others';
+                    OptionCaption = ' ,Sales Shipment,Sales Return Order,Purchase Order,Purchase Return Shipment,Transfer Receipt,Transfer Shipment,Item,Fixed Asset,Others,Indent';
 
                 }
                 field("Source No."; Rec."Source No.")
@@ -31,6 +31,7 @@ page 50158 "Outward Gate Entry SubFrm-RGP"
                     ApplicationArea = ALL;
                     trigger OnLookup(var Text: Text): Boolean
                     var
+                        IndentHdt: Record "Indent Header";
                         FA: record "Fixed Asset";
                         ItemLRec: record Item;
                         Text16500: Label 'Source Type must not be blank in %1 %2.';
@@ -71,6 +72,16 @@ page 50158 "Outward Gate Entry SubFrm-RGP"
                                     if PAGE.RUNMODAL(0, TransShptHeader) = ACTION::LookupOK then begin
                                         Rec."Source No." := TransShptHeader."No.";
                                         Rec."Source Name" := TransShptHeader."Transfer-to Name";
+                                    end;
+                                end;
+                            Rec."Source Type"::Indent:
+                                begin
+                                    IndentHdt.Reset();
+                                    IndentHdt.SetRange("Released Status", IndentHdt."Released Status"::"Pending Approval");
+                                    IndentHdt.FilterGroup(0);
+                                    if PAGE.RUNMODAL(0, ItemLRec) = ACTION::LookupOK then begin
+                                        Rec."Source No." := IndentHdt."No.";
+                                        Rec."Source Name" := IndentHdt.Description;
                                     end;
                                 end;
                         end;

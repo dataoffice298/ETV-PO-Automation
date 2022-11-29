@@ -202,7 +202,7 @@ report 50183 "Returnable Gatepass"
                                             QtyDispatchLRec := PurchLine.Quantity;
                                             ItemName := PurchLine."No.";
                                         until PurchLine.Next() = 0;
-                                end
+                                end;
 
                             END;
                         "Source Type"::"Purchase Return Shipment":

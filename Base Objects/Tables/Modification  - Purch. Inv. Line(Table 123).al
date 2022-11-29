@@ -139,6 +139,32 @@ tableextension 50050 tableextension70000007 extends "Purch. Inv. Line"
             Description = 'PO1.0';
             Editable = false;
         }
+        field(60018; "Sub Location Code"; Code[20])
+        {
+            DataClassification = CustomerContent;
+            TableRelation = Location.Code;
+        }
+        field(60019; "Rejection Comments B2B"; Text[250])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(60020; Make_B2B; Text[250])
+        {
+            Caption = 'Make';
+            DataClassification = CustomerContent;
+        }
+        field(60021; "Model No."; Text[100])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(60022; "Serial No."; Text[50])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(60024; "Spec Id"; Code[20])
+        {
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {

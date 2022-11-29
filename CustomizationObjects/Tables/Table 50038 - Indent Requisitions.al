@@ -231,6 +231,20 @@ table 50038 "Indent Requisitions"
             DataClassification = CustomerContent;
             OptionMembers = Item,"Fixed Assets",Description,"G/L Account";
         }
+        field(50015; "Sub Location Code"; Code[20])
+        {
+            DataClassification = CustomerContent;
+            TableRelation = Location.Code;
+        }
+        field(50016; Make_B2B; Text[250])
+        {
+            Caption = 'Make';
+            DataClassification = CustomerContent;
+        }
+        field(50017; "Spec Id"; Code[20])
+        {
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

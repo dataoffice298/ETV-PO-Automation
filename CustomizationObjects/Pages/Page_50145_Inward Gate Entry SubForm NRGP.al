@@ -24,7 +24,7 @@ page 50145 "Inward Gate Entry SubFrm-NRGP"
                 field("Source Type"; Rec."Source Type")
                 {
                     ApplicationArea = ALL;
-                    OptionCaption = ' ,Sales Shipment,Sales Return Order,Purchase Order,Purchase Return Shipment,Transfer Receipt,Transfer Shipment,Item,Fixed Asset,Others';
+                    OptionCaption = ' ,Sales Shipment,Sales Return Order,Purchase Order,Purchase Return Shipment,Transfer Receipt,Transfer Shipment,Item,Fixed Asset,Others,Indent';
 
 
                 }

@@ -37,6 +37,10 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 ApplicationArea = all;
                 Editable = false;
             }
+            field("Spec Id"; rec."Spec Id")
+            {
+                ApplicationArea = all;
+            }
 
             //B2BMSOn03Nov2022>>
             field("QC Enabled B2B"; Rec."QC Enabled B2B")
@@ -50,6 +54,10 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             field("Qty. to Reject B2B"; Rec."Qty. to Reject B2B")
             {
                 ApplicationArea = All;
+            }
+            field("Rejection Comments B2B"; rec."Rejection Comments B2B")
+            {
+                ApplicationArea = all;
             }
             field("Quantity Accepted B2B"; Rec."Quantity Accepted B2B")
             {
@@ -96,12 +104,12 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             {
                 group(RGPInward)
                 {
+                    Caption = 'RGP Inward';
                     action(CreateRGPInward)
                     {
                         Caption = 'Create RGP Inward';
                         ApplicationArea = All;
                         Image = CreateDocument;
-
                         trigger OnAction()
                         begin
                             CreateGateEntries(GateEntryType::Inward, GateEntryDocType::RGP)
@@ -122,6 +130,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 }
                 group(RGPOutward)
                 {
+                    Caption = 'RGP Outward';
                     action(CreateRGPOutward)
                     {
                         Caption = 'Create RGP Outward';
@@ -160,7 +169,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         begin
                             GateEntryHdr.Reset();
                             GateEntryHdr.FilterGroup(2);
-                            GateEntryHdr.SetRange("Purchase Order No.", Rec."No.");
+                            GateEntryHdr.SetRange("Purchase Order No.", Rec."Document No.");
                             GateEntryHdr.SetRange("Purchase Order Line No.", Rec."Line No.");
                             GateEntryHdr.FilterGroup(0);
                             Page.RunModal(Page::"Gate Entry List", GateEntryHdr);
@@ -178,7 +187,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         begin
                             PostedGateEntryHdr.Reset();
                             PostedGateEntryHdr.FilterGroup(2);
-                            PostedGateEntryHdr.SetRange("Purchase Order No.", Rec."No.");
+                            PostedGateEntryHdr.SetRange("Purchase Order No.", Rec."Document No.");
                             PostedGateEntryHdr.SetRange("Purchase Order Line No.", Rec."Line No.");
                             PostedGateEntryHdr.FilterGroup(0);
                             Page.RunModal(Page::"Posted Gate Entries List", PostedGateEntryHdr);

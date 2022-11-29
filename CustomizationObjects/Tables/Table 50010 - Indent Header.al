@@ -2,7 +2,8 @@ table 50010 "Indent Header"
 {
     // version PH1.0,PO1.0
 
-    LookupPageID = 50024;
+    LookupPageID = "Indent List";
+    DrillDownPageId = "Indent List";
 
     fields
     {

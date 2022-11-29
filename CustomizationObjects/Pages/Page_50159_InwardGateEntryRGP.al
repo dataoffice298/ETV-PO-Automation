@@ -41,11 +41,13 @@ page 50159 "Inward Gate Entry-RGP"
                 field("Station From/To"; Rec."Station From/To")
                 {
                     ApplicationArea = ALL;
+                    Visible = false;
 
                 }
                 field("Gate No."; Rec."Gate No.")
                 {
                     ApplicationArea = all;
+                    Visible = false;
                     trigger OnValidate()
                     begin
                         Rec.TestField("Approval Status", Rec."Approval Status"::Open);
@@ -66,19 +68,23 @@ page 50159 "Inward Gate Entry-RGP"
                 field("Document Time"; Rec."Document Time")
                 {
                     ApplicationArea = ALL;
+                    Visible = false;
                 }
                 field("Posting Date"; Rec."Posting Date")
                 {
                     ApplicationArea = ALL;
+                    Visible = false;
                 }
                 field("Posting Time"; Rec."Posting Time")
                 {
                     ApplicationArea = ALL;
+                    Visible = false;
                 }
 
                 field("Vehicle No."; Rec."Vehicle No.")
                 {
                     ApplicationArea = ALL;
+                    Visible = false;
                 }
                 field("Approval Status"; Rec."Approval Status")
                 {
@@ -90,22 +96,27 @@ page 50159 "Inward Gate Entry-RGP"
                 field(InstallationFromDate; rec.InstallationFromDate)
                 {
                     ApplicationArea = all;
+                    Visible = false;
                 }
                 field(InstallationToDate; rec.InstallationToDate)
                 {
                     ApplicationArea = all;
+                    Visible = false;
                 }
                 field(ShootingStartDate; rec.ShootingStartDate)
                 {
                     ApplicationArea = all;
+                    Visible = false;
                 }
                 field(ShootingEndDate; rec.ShootingEndDate)
                 {
                     ApplicationArea = all;
+                    Visible = false;
                 }
                 field(ExpectedDateofReturn; rec.ExpectedDateofReturn)
                 {
                     ApplicationArea = all;
+
                 }
                 field(SubLocation; rec.SubLocation)
                 {

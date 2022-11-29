@@ -40,6 +40,10 @@ page 50127 QuotationComparSubForm
                     ApplicationArea = all;
                     Caption = 'No.';
                 }
+                field("Spec Id"; rec."Spec Id")
+                {
+                    ApplicationArea = all;
+                }
                 field(Description; Rec.Description)
                 {
                     Editable = false;

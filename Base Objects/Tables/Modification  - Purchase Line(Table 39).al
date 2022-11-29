@@ -219,12 +219,43 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             trigger OnAfterValidate()
             var
                 ItemLRec: Record Item;
+                FALRec: Record "Fixed Asset";
             begin
                 if ItemLRec.Get("No.") then
                     Rec."QC Enabled B2B" := ItemLRec."QC Enabled B2B";
+                if Rec.Type = Rec.Type::"Fixed Asset" then
+                    if FALRec.Get(Rec."No.") then
+                        Rec.Make_B2B := FALRec.Make_B2B;
             end;
         }
+
+        field(60018; "Sub Location Code"; Code[20])
+        {
+            DataClassification = CustomerContent;
+            TableRelation = Location.Code;
+        }
         //B2BMSOn03Nov2022<<
+        field(60019; "Rejection Comments B2B"; Text[250])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(60020; Make_B2B; Text[250])
+        {
+            Caption = 'Make';
+            DataClassification = CustomerContent;
+        }
+        field(60021; "Model No."; Text[100])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(60022; "Serial No."; Text[50])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(60024; "Spec Id"; Code[20])
+        {
+            DataClassification = CustomerContent;
+        }
 
     }
 
@@ -241,5 +272,22 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         PurchaseLnGRec: Record 39;
         Err0001: Label 'The Sum of Qty. to Accept and Qty. to Reject must not be greater than Qty. to Receive.';
 
+
+    procedure CheckTracking()
+    var
+        ReservEntry: Record "Reservation Entry";
+        TrackErr: Label 'You must assign a serial number for item %1.';
+    begin
+        ReservEntry.Reset();
+        ReservEntry.SetRange("Item No.", Rec."No.");
+        ReservEntry.SetRange("Source Type", 39);
+        ReservEntry.SetRange("Source Subtype", 1);
+        ReservEntry.SetRange("Location Code", Rec."Location Code");
+        ReservEntry.SetRange("Source ID", Rec."Document No.");
+        ReservEntry.SetRange("Source Ref. No.", Rec."Line No.");
+        ReservEntry.SetRange(Positive, true);
+        if not ReservEntry.FindFirst() then
+            Error(TrackErr, Rec."No.");
+    end;
 }
 

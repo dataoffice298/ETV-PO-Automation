@@ -151,6 +151,19 @@ table 50037 "Indent Line"
         {
             Editable = false;
 
+            trigger OnValidate();
+            begin
+                "Avail.Qty" := 0;
+                ItemLedgerEntry.RESET;
+                ItemLedgerEntry.SETRANGE("Item No.", "No.");
+                ItemLedgerEntry.SETRANGE("Variant Code", "Variant Code");
+                ItemLedgerEntry.SETRANGE("Location Code", "Delivery Location");
+                IF ItemLedgerEntry.FINDFIRST THEN
+                    REPEAT
+                        "Avail.Qty" += ItemLedgerEntry."Remaining Quantity";
+                    UNTIL ItemLedgerEntry.NEXT = 0;
+            end;
+
         }
         field(20; Department; Code[20])
         {
@@ -340,6 +353,16 @@ table 50037 "Indent Line"
             TableRelation = Location.Code;
         }
         //BaluOn19Oct2022>>
+
+        field(50015; Make_B2B; Text[250])
+        {
+            Caption = 'Make';
+            DataClassification = CustomerContent;
+        }
+        field(50016; "Spec Id"; Code[20])
+        {
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

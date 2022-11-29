@@ -42,6 +42,10 @@ page 50119 "Indent Requisitions SubForm"
                     ApplicationArea = All;
                     Editable = FieldEditable;
                 }
+                field("Spec Id"; rec."Spec Id")
+                {
+                    ApplicationArea = all;
+                }
                 field(Description; Rec.Description)
                 {
                     ApplicationArea = All;

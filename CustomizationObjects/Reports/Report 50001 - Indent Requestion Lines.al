@@ -81,6 +81,8 @@ report 50001 "Indent Requestion Lines"
                         IndentRequisitions."Carry out Action" := TRUE;
                         IndentRequisitions.Validate("Shortcut Dimension 1 Code", "Shortcut Dimension 1 Code");//B2BPAV
                         IndentRequisitions.Validate("Shortcut Dimension 2 Code", "Shortcut Dimension 2 Code");//B2BPAV
+                        IndentRequisitions."Sub Location Code" := "Issue Sub Location";
+                        IndentRequisitions."Spec Id" := "Spec Id";
                         IndentRequisitions.INSERT;
                         TempLineNo += 10000;
                     END;

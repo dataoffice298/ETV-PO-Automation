@@ -80,12 +80,17 @@ page 50120 "Indent Requisition Document"
                 PromotedIsBig = true;
 
                 trigger OnAction();
+                var
+                    IndentReqLine: Record "Indent Requisitions";
                 begin
                     Rec.TestField(Status, Rec.Status::Open);
                     Clear(IndentReqLines);
                     IndentReqLines.GetValue(Rec."No.", Rec."Resposibility Center");
                     IndentReqLines.RUN;
-                    Message('Lines Inserted Successfully.'); //B2BPAV
+                    IndentReqLine.Reset();
+                    IndentReqLine.SetRange("Document No.", Rec."No.");
+                    if IndentReqLine.FindFirst() then
+                        Message('Lines Inserted Successfully.');
                 end;
             }
             action("Create &Enquiry")
@@ -355,7 +360,7 @@ page 50120 "Indent Requisition Document"
         "---": Integer;
         UserSetupApproval: Page 119;
         UserSetup2: Record 91;
-        IndentReqLines: Report 50001;
+        IndentReqLines: Report "Indent Requestion Lines";
         Text001: Label 'Orders are created successfully.';
         Text003: Label 'Do you want to create Enquiries?';
         Text004: Label 'Do you want to create Quotations?';

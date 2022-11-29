@@ -25,6 +25,22 @@ tableextension 50049 tableextension70000004 extends "Purch. Inv. Header"
         {
             Caption = 'EPCG No';
         }
+
+        field(50113; "EPCG Scheme"; Option)
+        {
+            OptionMembers = "Under EPCG","Non EPCG";
+            OptionCaption = 'Under EPCG,Non EPCG';
+        }
+        field(50114; "Import Type"; Option)
+        {
+            OptionMembers = Import,Indigenous;
+            OptionCaption = 'Import,Indigenous';
+        }
+        //B2BMSOn18Oct2022>>
+        Field(50115; "Regularization"; Boolean)
+        {
+            Caption = 'Regularization';
+        }
         field(33002900; "RFQ No."; Code[20])
         {
             Description = 'PO1.0';

@@ -6,7 +6,12 @@ pageextension 50102 FixedAssetCard extends "Fixed Asset Card"
         {
             field("Model No."; Rec."Model No.")
             {
-
+                ApplicationArea = all;
+            }
+            field(Make_B2B; Rec.Make_B2B)
+            {
+                Caption = 'Make';
+                ApplicationArea = all;
             }
         }
         addafter(FixedAssetPicture)
@@ -43,8 +48,9 @@ pageextension 50102 FixedAssetCard extends "Fixed Asset Card"
                         RecRef.GetTable(FixedAsset);
                         CF := 15;
                         LF := 20;
-                        QRText := 'Description : ' + FixedAsset.Description + ' ' + FixedAsset."Description 2" + 'Model No. : ' + FixedAsset."Model No."
-                                     + 'Serial No. : ' + FixedAsset."Serial No.";
+                        //QRText := 'Description : ' + FixedAsset.Description + ' ' + FixedAsset."Description 2" + ' ' + 'Model No. : ' + FixedAsset."Model No."
+                        //             + 'Serial No. : ' + FixedAsset."Serial No.";
+                        QRText := FixedAsset."No.";
                         QRGenerator.GenerateQRCodeImage(QRText, TempBlob);
                         FieldRef := RecRef.Field(FixedAsset.FieldNo("QR Code"));
                         TempBlob.ToRecordRef(RecRef, FixedAsset.FieldNo("QR Code"));

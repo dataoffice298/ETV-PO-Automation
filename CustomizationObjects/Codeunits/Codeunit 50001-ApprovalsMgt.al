@@ -53,6 +53,29 @@ codeunit 50001 ApprovalMgt
     end;
     //B2BMSOn13Sep2022<<
 
+    //CustomNotify>>
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Notification Management", 'OnGetDocumentTypeAndNumber', '', false, false)]
+    local procedure OnGetDocumentTypeAndNumber(var RecRef: RecordRef; var DocumentType: Text; var DocumentNo: Text; var IsHandled: Boolean)
+    var
+        FieldRef: FieldRef;
+    begin
+        case RecRef.Number of
+            Database::"Indent Header":
+                begin
+                    FieldRef := RecRef.Field(1);
+                    DocumentNo := Format(FieldRef.Value);
+                    IsHandled := true;
+                end;
+            Database::QuotCompHdr:
+                begin
+                    FieldRef := RecRef.Field(1);
+                    DocumentNo := Format(FieldRef.Value);
+                    IsHandled := true;
+                end;
+        end;
+    end;
+    //CustomNotify<<
+
     /*
         [IntegrationEvent(false, false)]
         Procedure OnSendQCMForApproval(var QCM: Record "Quotation Comparison")

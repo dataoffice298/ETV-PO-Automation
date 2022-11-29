@@ -1,33 +1,35 @@
-pageextension 50114 PurchQuoteSubformExtB2B extends "Purchase Quote Subform"
+pageextension 50079 postedPurchInvExt extends "Posted Purchase Invoice"
 {
     layout
     {
-        addbefore("Shortcut Dimension 1 Code")
+        addafter("Tax Area Code")
         {
-            field("Indent No."; Rec."Indent No.")
+            field("LC No."; Rec."LC No.")
+            {
+                ApplicationArea = All;
+                Editable = false;
+            }
+            field("Bill of Entry No"; Rec."Bill of Entry No")
+            {
+                ApplicationArea = All;
+                Editable = false;
+            }
+            field("EPCG No."; Rec."EPCG No.")
             {
                 ApplicationArea = all;
                 Editable = false;
             }
-            field("Indent Line No."; Rec."Indent Line No.")
+            field("EPCG Scheme"; rec."EPCG Scheme")
             {
                 ApplicationArea = all;
                 Editable = false;
             }
-            field("Indent Req No"; Rec."Indent Req No")
+            field("Import Type"; rec."Import Type")
             {
                 ApplicationArea = all;
                 Editable = false;
             }
-            field("Indent Req Line No"; Rec."Indent Req Line No")
-            {
-                ApplicationArea = all;
-                Editable = false;
-            }
-            field("Spec Id"; rec."Spec Id")
-            {
-                ApplicationArea = all;
-            }
+
         }
     }
 

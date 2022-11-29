@@ -24,7 +24,7 @@ table 50060 "Gate Entry Line_B2B"
         field(4; "Source Type"; Option)
         {
             DataClassification = CustomerContent;
-            OptionMembers = " ","Sales Shipment","Sales Return Order","Purchase Order","Purchase Return Shipment","Transfer Receipt","Transfer Shipment","Item","Fixed Asset",Others;
+            OptionMembers = " ","Sales Shipment","Sales Return Order","Purchase Order","Purchase Return Shipment","Transfer Receipt","Transfer Shipment","Item","Fixed Asset",Others,Indent;
 
 
             trigger OnValidate();
@@ -38,6 +38,18 @@ table 50060 "Gate Entry Line_B2B"
         field(5; "Source No."; Code[20])
         {
             DataClassification = CustomerContent;
+
+            trigger OnValidate()
+            var
+                FALRec: Record "Fixed Asset";
+            begin
+                if (Rec."Entry Type" = Rec."Entry Type"::Outward) and (FALRec.Get("Source No.")) then begin
+                    Rec.Make := FALRec.Make_B2B;
+                    Rec.ModelNo := FALRec."Model No.";
+                    Rec.SerialNo := FALRec."Serial No.";
+                end;
+            end;
+
         }
         field(6; "Source Name"; Text[200])
         {
@@ -100,15 +112,20 @@ table 50060 "Gate Entry Line_B2B"
         {
             DataClassification = CustomerContent;
         }
-        field(32; ModelNo; Code[20])
+        field(32; ModelNo; Code[100])
         {
             DataClassification = CustomerContent;
-            Caption = 'Model No';
+            Caption = 'Model No.';
         }
         field(33; SerialNo; Code[20])
         {
             DataClassification = CustomerContent;
-            Caption = 'Serial No';
+            Caption = 'Serial No.';
+        }
+        field(34; Make; Code[250])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Make';
         }
 
         //BaluonNov82022<<

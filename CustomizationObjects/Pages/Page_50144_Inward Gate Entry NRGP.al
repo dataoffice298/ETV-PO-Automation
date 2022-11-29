@@ -45,6 +45,7 @@ page 50144 "Inward Gate Entry-NRGP"
                 field("Station From/To"; Rec."Station From/To")
                 {
                     ApplicationArea = ALL;
+                    Visible = false;
 
                 }
                 field("Gate No."; Rec."Gate No.")
@@ -66,22 +67,27 @@ page 50144 "Inward Gate Entry-NRGP"
                 field("Document Date"; Rec."Document Date")
                 {
                     ApplicationArea = ALL;
+                    Visible = false;
                 }
                 field("Document Time"; Rec."Document Time")
                 {
                     ApplicationArea = ALL;
+                    Visible = false;
                 }
                 field("Posting Date"; Rec."Posting Date")
                 {
                     ApplicationArea = ALL;
+                    Visible = false;
                 }
                 field("Posting Time"; Rec."Posting Time")
                 {
                     ApplicationArea = ALL;
+                    Visible = false;
                 }
                 field("Vehicle No."; Rec."Vehicle No.")
                 {
                     ApplicationArea = ALL;
+                    Visible = false;
                 }
                 field("Approval Status"; Rec."Approval Status")
                 {

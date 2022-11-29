@@ -29,6 +29,10 @@ page 50026 "Purchase Enquiry Subform"
                         NoOnAfterValidate;
                     end;
                 }
+                field("Spec Id"; rec."Spec Id")
+                {
+                    ApplicationArea = all;
+                }
                 field("Variant Code"; Rec."Variant Code")
                 {
                     Visible = false;

@@ -425,6 +425,15 @@ table 50046 "Quotation Comparison Test"
             DataClassification = CustomerContent;
         }
         //B2BMSOn08Nov2022<<
+        field(122; "Sub Location Code"; Code[20])
+        {
+            DataClassification = CustomerContent;
+            TableRelation = Location.Code;
+        }
+        field(60024; "Spec Id"; Code[20])
+        {
+            DataClassification = CustomerContent;
+        }
 
     }
 

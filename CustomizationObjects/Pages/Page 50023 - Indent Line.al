@@ -27,6 +27,10 @@ page 50023 "Indent Line"
                     ApplicationArea = All;
                     Editable = FieldEditable;
                 }
+                field("Spec Id"; rec."Spec Id")
+                {
+                    ApplicationArea = all;
+                }
                 field(Description; rec.Description)
                 {
                     ApplicationArea = All;

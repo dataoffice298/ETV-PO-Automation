@@ -39,6 +39,8 @@ report 50106 "Current Stock Report"
                     ItemLedgerEntry.CalcSums(Quantity);
                     Openingstock += ItemLedgerEntry.Quantity;
                 end;
+                if Openingstock = 0 then
+                    CurrReport.Skip();
 
                 ItemLedgerEntry.RESET;
                 ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
@@ -100,7 +102,9 @@ report 50106 "Current Stock Report"
                 TempExcelBuffer.AddColumn('', FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                 TempExcelBuffer.AddColumn(Item."Base Unit of Measure", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                 TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+
                 TempExcelBuffer.AddColumn(Openingstock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+
                 TempExcelBuffer.AddColumn(Item."Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                 TempExcelBuffer.AddColumn(Round(Openingstock * Item."Unit Cost", 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                 TempExcelBuffer.AddColumn(InwardStock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);

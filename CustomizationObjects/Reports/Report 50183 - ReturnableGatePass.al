@@ -139,7 +139,7 @@ report 50183 "Returnable Gatepass"
                 }
                 column(Users; Users."Full Name")
                 { }
-                column(Make; Variant)
+                column(Make; variantcode)
                 { }
                 column(ModelNo; ModelNo)
                 { }
@@ -153,6 +153,7 @@ report 50183 "Returnable Gatepass"
                     Clear(DescriptionLVar);
                     Clear(QtyDispatchLRec);
                     Clear(ItemName);
+                    Clear(VariantCode);
                     Users.Reset();
                     Users.SetRange("User Name", "Gate Entry Header_B2B"."User ID");
                     if Users.FindFirst() then;
@@ -201,6 +202,7 @@ report 50183 "Returnable Gatepass"
                                             DescriptionLVar := PurchLine.Description;
                                             QtyDispatchLRec := PurchLine.Quantity;
                                             ItemName := PurchLine."No.";
+                                            VariantCode := PurchLine."Variant Code";
                                         until PurchLine.Next() = 0;
                                 end;
 
@@ -310,6 +312,7 @@ report 50183 "Returnable Gatepass"
 
 
     var
+        VariantCode: Code[10];
         TransferHdr: Record "Transfer Header";
         TransferLine: Record "Transfer Line";
         PurchaseRetnLRec: record "Return Shipment Header";

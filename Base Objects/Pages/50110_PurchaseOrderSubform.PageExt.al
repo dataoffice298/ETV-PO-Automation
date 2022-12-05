@@ -15,6 +15,13 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 Visible = false;
             }
         }
+        addafter("Location Code")
+        {
+            field("Sub Location Code"; Rec."Sub Location Code")
+            {
+                ApplicationArea = All;
+            }
+        }
         addbefore("Shortcut Dimension 1 Code")
         {
             field("Indent No."; Rec."Indent No.")
@@ -206,6 +213,8 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         OpenText: Label 'An Gate Entry document - %1 is created. \Do you want to open the document?';
         PurchLine: Record "Purchase Line";
         SelErr: Label 'No line selected.';
+        ItemLRec: Record Item;
+        FALRec: Record "Fixed Asset";
     begin
         PurchLine.Reset();
         PurchLine.SetRange("Document No.", Rec."Document No.");
@@ -241,8 +250,20 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 GateEntryLine.Type := GateEntryHeader.Type;
                 GateEntryLine."Gate Entry No." := GateEntryHeader."No.";
                 GateEntryLine."Line No." := 10000;
-                GateEntryLine."Source Type" := GateEntryLine."Source Type"::Item;
-                GateEntryLine.Validate("Source No.", Rec."No.");
+                if PurchLine.Type = PurchLine.Type::Item then begin
+                    GateEntryLine."Source Type" := GateEntryLine."Source Type"::Item;
+                    GateEntryLine.Validate("Source No.", Rec."No.");
+                    ItemLRec.Get(PurchLine."No.");
+                    GateEntryLine."Source Name" := ItemLRec.Description;
+                    GateEntryLine.Description := ItemLRec.Description;
+                end else
+                    if PurchLine.Type = PurchLine.Type::"Fixed Asset" then begin
+                        GateEntryLine."Source Type" := GateEntryLine."Source Type"::"Fixed Asset";
+                        GateEntryLine.Validate("Source No.", Rec."No.");
+                        FALRec.Get(PurchLine."No.");
+                        GateEntryLine."Source Name" := FALRec.Description;
+                        GateEntryLine.Description := FALRec.Description;
+                    end;
                 GateEntryLine."Unit of Measure" := Rec."Unit of Measure";
                 if EntryType = EntryType::Inward then
                     GateEntryLine.Validate(Quantity, Rec."Qty. to Receive")
@@ -252,7 +273,14 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 GateEntryLine.Insert(true);
 
                 PurchLine.Select := false;
-                //PurchLine."Qty. to Reject B2B" := 0;
+                if EntryType = EntryType::Outward then begin
+                    PurchLine."Quantity Rejected B2B" += PurchLine."Qty. to Reject B2B";
+                    PurchLine."Qty. to Reject B2B" := 0;
+                end else
+                    if EntryType = EntryType::Outward then begin
+                        PurchLine."Quantity Accepted B2B" += PurchLine."Qty. to Reject B2B";
+                        PurchLine."Qty. to Accept B2B" := 0;
+                    end;
                 PurchLine.Modify();
             until PurchLine.Next() = 0;
 

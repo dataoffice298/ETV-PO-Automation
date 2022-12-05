@@ -723,6 +723,7 @@
                         <Style>
                           <FontSize>8pt</FontSize>
                           <FontWeight>Normal</FontWeight>
+                          <Format>MM/dd/yyyy</Format>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -1054,6 +1055,7 @@
                         <Style>
                           <FontSize>8pt</FontSize>
                           <FontWeight>Normal</FontWeight>
+                          <Format>MM/dd/yyyy</Format>
                         </Style>
                       </TextRun>
                     </TextRuns>

@@ -359,7 +359,7 @@ table 50037 "Indent Line"
             Caption = 'Make';
             DataClassification = CustomerContent;
         }
-        field(50016; "Spec Id"; Code[20])
+        field(50016; "Spec Id"; Text[250])
         {
             DataClassification = CustomerContent;
         }

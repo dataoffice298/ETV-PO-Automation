@@ -89,7 +89,7 @@ table 50043 "Indent Vendor Items"
             DataClassification = CustomerContent;
             TableRelation = Location.Code;
         }
-        field(50017; "Spec Id"; Code[20])
+        field(50017; "Spec Id"; Text[250])
         {
             DataClassification = CustomerContent;
         }

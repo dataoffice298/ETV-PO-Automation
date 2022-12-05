@@ -16,6 +16,14 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             {
                 ApplicationArea = all;
             }
+            field("EPCG Scheme"; Rec."EPCG Scheme")
+            {
+                ApplicationArea = all;
+            }
+            field("Import Type"; Rec."Import Type")
+            {
+                ApplicationArea = all;
+            }
             //B2BMSOn18Oct2022>>
             field(Regularization; Rec.Regularization)
             {
@@ -31,7 +39,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         {
             trigger OnBeforeAction()
             begin
-
+                
                 GateEntry.Reset();
                 GateEntry.SetRange("Source No.", Rec."No.");
                 if GateEntry.FindFirst() then begin

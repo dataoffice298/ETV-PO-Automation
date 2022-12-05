@@ -207,6 +207,7 @@ page 50025 "Purchase Enquiry"
         }
         area(processing)
         {
+            
             group("F&unctions")
             {
                 Caption = 'F&unctions';

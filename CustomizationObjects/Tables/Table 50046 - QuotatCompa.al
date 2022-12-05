@@ -430,7 +430,7 @@ table 50046 "Quotation Comparison Test"
             DataClassification = CustomerContent;
             TableRelation = Location.Code;
         }
-        field(60024; "Spec Id"; Code[20])
+        field(60024; "Spec Id"; Text[250])
         {
             DataClassification = CustomerContent;
         }

@@ -241,7 +241,7 @@ table 50038 "Indent Requisitions"
             Caption = 'Make';
             DataClassification = CustomerContent;
         }
-        field(50017; "Spec Id"; Code[20])
+        field(50017; "Spec Id"; Text[250])
         {
             DataClassification = CustomerContent;
         }

@@ -9,6 +9,8 @@ report 50166 "Inward Receipt Details"
     {
         dataitem("Posted Gate Entry Header_B2B"; "Posted Gate Entry Header_B2B")
         {
+            DataItemTableView = WHERE("Entry Type" = const(Inward),
+                                      Type = FILTER('RGP'));//Baluon30Nov2022
             dataitem("Posted Gate Entry Line_B2B"; "Posted Gate Entry Line_B2B")
             {
                 DataItemLink = "Entry Type" = field("Entry Type"), "Gate Entry No." = field("No.");
@@ -34,6 +36,7 @@ report 50166 "Inward Receipt Details"
                     LineAmount: Decimal;
                     TotAmt: Decimal;
                 begin
+                    SNo += 1;
                     Clear(CGST);
                     Clear(IGST);
                     Clear(SGST);
@@ -52,6 +55,7 @@ report 50166 "Inward Receipt Details"
                     PurchRcptLine.SetRange("Ref. Posted Gate Entry", "Gate Entry No.");
                     if PurchRcptLine.FindFirst() then begin
                         if PurchRcptHdr.Get(PurchRcptLine."Document No.") then;
+                        
                         PurchInvLine.Reset();
                         PurchInvLine.SetRange("Receipt No.", PurchRcptLine."Document No.");
                         PurchInvLine.SetRange("Receipt Line No.", PurchRcptLine."Line No.");

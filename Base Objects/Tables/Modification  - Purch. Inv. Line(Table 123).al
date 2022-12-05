@@ -161,7 +161,7 @@ tableextension 50050 tableextension70000007 extends "Purch. Inv. Line"
         {
             DataClassification = CustomerContent;
         }
-        field(60024; "Spec Id"; Code[20])
+        field(60024; "Spec Id"; Text[250])
         {
             DataClassification = CustomerContent;
         }

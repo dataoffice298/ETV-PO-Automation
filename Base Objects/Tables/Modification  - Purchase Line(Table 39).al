@@ -173,7 +173,9 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
-                if ("Qty. to Accept B2B") > "Qty. to Receive" then
+                if "Qty. to Accept B2B" <> 0 then
+                    CheckTracking;
+                if ("Qty. to Accept B2B") > Quantity then
                     Error(Err0001);
                 if "Qty. to Accept B2B" <> 0 then
                     Validate("Qty. to Receive", "Qty. to Accept B2B");
@@ -187,6 +189,8 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             var
                 RejErr: Label 'You cannot reject the quantity as total quantity is received.';
             begin
+                if "Qty. to Reject B2B" <> 0 then
+                    CheckTracking;
                 if Quantity = "Quantity Received" then
                     Error(RejErr);
             end;
@@ -252,7 +256,7 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         {
             DataClassification = CustomerContent;
         }
-        field(60024; "Spec Id"; Code[20])
+        field(60024; "Spec Id"; Text[250])
         {
             DataClassification = CustomerContent;
         }
@@ -270,24 +274,27 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         Text33000251: Label 'You can not create Inspection Data Sheets when Warehouse Receipt line exists.';
         PurchaseLineLRec: Record 39;
         PurchaseLnGRec: Record 39;
-        Err0001: Label 'The Sum of Qty. to Accept and Qty. to Reject must not be greater than Qty. to Receive.';
+        Err0001: Label 'The Qty. to Accept must not be greater than Quantity.';
 
 
     procedure CheckTracking()
     var
         ReservEntry: Record "Reservation Entry";
         TrackErr: Label 'You must assign a serial number for item %1.';
+        ItemLRec: Record Item;
     begin
-        ReservEntry.Reset();
-        ReservEntry.SetRange("Item No.", Rec."No.");
-        ReservEntry.SetRange("Source Type", 39);
-        ReservEntry.SetRange("Source Subtype", 1);
-        ReservEntry.SetRange("Location Code", Rec."Location Code");
-        ReservEntry.SetRange("Source ID", Rec."Document No.");
-        ReservEntry.SetRange("Source Ref. No.", Rec."Line No.");
-        ReservEntry.SetRange(Positive, true);
-        if not ReservEntry.FindFirst() then
-            Error(TrackErr, Rec."No.");
+        if (ItemLRec.Get(Rec."No.")) and (ItemLRec."Item Tracking Code" <> '') then begin
+            ReservEntry.Reset();
+            ReservEntry.SetRange("Item No.", Rec."No.");
+            ReservEntry.SetRange("Source Type", 39);
+            ReservEntry.SetRange("Source Subtype", 1);
+            ReservEntry.SetRange("Location Code", Rec."Location Code");
+            ReservEntry.SetRange("Source ID", Rec."Document No.");
+            ReservEntry.SetRange("Source Ref. No.", Rec."Line No.");
+            ReservEntry.SetRange(Positive, true);
+            if not ReservEntry.FindFirst() then
+                Error(TrackErr, Rec."No.");
+        end;
     end;
 }
 

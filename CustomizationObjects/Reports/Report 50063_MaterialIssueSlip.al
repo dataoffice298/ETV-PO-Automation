@@ -55,8 +55,11 @@ report 50063 "Material Issue Slip"
             { }
             column(MakeCapLbl; MakeCapLbl)
             { }
-            column(PackCapLbl; PackCapLbl)
-            { }
+
+            /* column(PackCapLbl; PackCapLbl)
+             {
+
+              }*/
             column(UOMCapLbl; UOMCapLbl)
             { }
             column(ReqQtyCapLbl; ReqQtyCapLbl)
@@ -85,6 +88,8 @@ report 50063 "Material Issue Slip"
             dataitem("Indent Line"; "Indent Line")
             {
                 DataItemLink = "Document No." = field("No.");
+                column(Variant_Code; "Variant Code")
+                { }
 
                 column(Req_Quantity; "Req.Quantity")
                 { }
@@ -165,7 +170,7 @@ report 50063 "Material Issue Slip"
         DescofMatCapLbl: Label 'DESCRIPTION OF MATERIAL';
         CatNameCapLbl: Label 'CATERGORY NAME';
         MakeCapLbl: Label 'MAKE';
-        PackCapLbl: Label 'PACK';
+        //PackCapLbl: Label 'PACK';
         UOMCapLbl: Label 'UOM';
         ReqQtyCapLbl: Label 'REQ QTY';
         IssQtyCapLbl: Label 'ISS QTY';

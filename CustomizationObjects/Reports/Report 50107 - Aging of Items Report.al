@@ -10,6 +10,7 @@ report 50107 "Aging of Items Report"
     {
         dataitem(Item; Item)
         {
+
             DataItemTableView = sorting("Item Category Code") ORDER(Ascending);
             RequestFilterFields = "Item Category Code", "No.";
 
@@ -37,7 +38,7 @@ report 50107 "Aging of Items Report"
                         TempExcelBuffer.AddColumn("Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                         TempExcelBuffer.AddColumn(Round(ItemLedgerEntry.Quantity * "Unit Cost", 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                         TempExcelBuffer.AddColumn(ItemLedgerEntry."Posting Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                        TempExcelBuffer.AddColumn(ItemLedgerEntry."Lot No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(Item."Lot Nos.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                         TempExcelBuffer.AddColumn(AgingDays, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     until ItemLedgerEntry.Next() = 0;
 

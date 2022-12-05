@@ -12,6 +12,7 @@ report 50162 "Issuance Report"
             dataitem("Indent Line"; "Indent Line")
             {
                 DataItemLink = "Document No." = field("No.");
+                DataItemTableView = where("Quantity (Base)" = filter(<> 0), "Qty Issued" = FILTER(<> 0));
                 trigger OnAfterGetRecord()
                 var
                     Item: Record Item;
@@ -19,13 +20,13 @@ report 50162 "Issuance Report"
                     Users: Record User;
                     PurchLine: Record "Purchase Line";
                     PostGateEntryLine: Record "Posted Gate Entry Line_B2B";
+                    PostedGateEntryHed: Record "Posted Gate Entry Header_B2B";
                 begin
                     SNo += 1;
 
                     Users.Reset();
                     Users.SetRange("User Name", "Indent Header".Indentor);
                     if Users.FindFirst() then;
-                    ;
                     if Item.Get("No.") then;
                     CalcFields("Qty Issued");
 
@@ -33,15 +34,27 @@ report 50162 "Issuance Report"
                     ILE.SetRange("Indent No.", "Document No.");
                     ILE.SetRange("Indent Line No.", "Line No.");
                     if ILE.FindFirst() then;
-
                     PurchLine.Reset();
                     PurchLine.SetRange("Indent No.", "Document No.");
                     PurchLine.SetRange("Indent Line No.", "Line No.");
                     if PurchLine.FindFirst() then begin
                         PostGateEntryLine.Reset();
                         PostGateEntryLine.SetRange("Source No.", PurchLine."Document No.");
-                        if PostGateEntryLine.FindFirst() then;
+                        if PostGateEntryLine.FindFirst() then begin
+
+
+                            PostedGateEntryHed.Reset();
+                            PostedGateEntryHed.SetRange("No.", PostGateEntryLine."Gate Entry No.");
+                            if PostedGateEntryHed.FindFirst() then begin
+
+                                PostGateEntryLine.Reset();
+                                PostGateEntryLine.SetRange("Gate Entry No.", PostedGateEntryHed."No.");
+                                if PostGateEntryLine.FindFirst() then;
+                            end;
+                        end;
                     end;
+
+
 
                     WindPa.Update(1, "Document No.");
                     TempExcelBuffer.NewRow();
@@ -68,6 +81,7 @@ report 50162 "Issuance Report"
             }
             trigger OnPreDataItem()
             begin
+                SetFilter("Document Date", '%1..%2', StartDate, EndDate);
                 Clear(SNo);
                 MakeExcelHeaders();
             end;
@@ -114,6 +128,8 @@ report 50162 "Issuance Report"
         EndDate: Date;
         WindPa: Dialog;
         SNo: Integer;
+
+
 
     procedure MakeExcelHeaders()
     begin

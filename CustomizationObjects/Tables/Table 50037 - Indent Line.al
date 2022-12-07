@@ -363,6 +363,10 @@ table 50037 "Indent Line"
         {
             DataClassification = CustomerContent;
         }
+        field(50017; "Indentor Description"; Text[100])
+        {
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

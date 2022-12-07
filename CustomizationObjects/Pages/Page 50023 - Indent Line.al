@@ -22,6 +22,11 @@ page 50023 "Indent Line"
                     ApplicationArea = All;
                     Editable = FieldEditable;
                 }
+                field("Indentor Description"; Rec."Indentor Description")
+                {
+                    ApplicationArea = All;
+                    Editable = FieldEditable;
+                }
                 field("No."; rec."No.")
                 {
                     ApplicationArea = All;

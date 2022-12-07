@@ -71,8 +71,20 @@ page 50119 "Indent Requisitions SubForm"
                 field("Manufacturer Code"; Rec."Manufacturer Code")
                 {
                     Caption = 'Vendor';
-                    TableRelation = "Item Vendor"."Vendor No." WHERE("Item No." = FIELD("Item No."));
+                    //TableRelation = "Item Vendor"."Vendor No." WHERE("Item No." = FIELD("Item No."));
                     ApplicationArea = All;
+
+                    trigger OnLookup(var Text: Text): Boolean
+                    var
+                        ItemVendor: Record "Item Vendor";
+                        Vendor: Record Vendor;
+                    begin
+                        ItemVendor.Reset();
+                        ItemVendor.SetRange("Item No.", Rec."Item No.");
+                        if ItemVendor.FindSet() then begin
+                            if Page.RunModal(Page::"Item Vendor Catalog", ItemVendor) = Action::LookupOK then;
+                        end;
+                    end;
 
                     trigger OnValidate();
                     begin

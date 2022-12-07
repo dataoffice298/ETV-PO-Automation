@@ -64,6 +64,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             }
             field("Rejection Comments B2B"; rec."Rejection Comments B2B")
             {
+                Caption = 'Rejection Comments';
                 ApplicationArea = all;
             }
             field("Quantity Accepted B2B"; Rec."Quantity Accepted B2B")
@@ -216,6 +217,14 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         ItemLRec: Record Item;
         FALRec: Record "Fixed Asset";
     begin
+        PurchLine.Reset();
+        PurchLine.SetRange("Document No.", Rec."Document No.");
+        PurchLine.SetRange(Select, true);
+        if PurchLine.FindSet() then
+            repeat
+                Rec.CheckTracking(PurchLine);
+            until PurchLine.Next() = 0;
+
         PurchLine.Reset();
         PurchLine.SetRange("Document No.", Rec."Document No.");
         PurchLine.SetRange(Select, true);

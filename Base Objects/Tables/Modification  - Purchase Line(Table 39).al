@@ -174,7 +174,7 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             trigger OnValidate()
             begin
                 if "Qty. to Accept B2B" <> 0 then
-                    CheckTracking;
+                    CheckTracking(Rec);
                 if ("Qty. to Accept B2B") > Quantity then
                     Error(Err0001);
                 if "Qty. to Accept B2B" <> 0 then
@@ -190,7 +190,7 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
                 RejErr: Label 'You cannot reject the quantity as total quantity is received.';
             begin
                 if "Qty. to Reject B2B" <> 0 then
-                    CheckTracking;
+                    CheckTracking(Rec);
                 if Quantity = "Quantity Received" then
                     Error(RejErr);
             end;
@@ -277,23 +277,23 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         Err0001: Label 'The Qty. to Accept must not be greater than Quantity.';
 
 
-    procedure CheckTracking()
+    procedure CheckTracking(PurchLine: Record "Purchase Line")
     var
         ReservEntry: Record "Reservation Entry";
         TrackErr: Label 'You must assign a serial number for item %1.';
         ItemLRec: Record Item;
     begin
-        if (ItemLRec.Get(Rec."No.")) and (ItemLRec."Item Tracking Code" <> '') then begin
+        if (ItemLRec.Get(PurchLine."No.")) and (ItemLRec."Item Tracking Code" <> '') then begin
             ReservEntry.Reset();
-            ReservEntry.SetRange("Item No.", Rec."No.");
+            ReservEntry.SetRange("Item No.", PurchLine."No.");
             ReservEntry.SetRange("Source Type", 39);
             ReservEntry.SetRange("Source Subtype", 1);
-            ReservEntry.SetRange("Location Code", Rec."Location Code");
-            ReservEntry.SetRange("Source ID", Rec."Document No.");
-            ReservEntry.SetRange("Source Ref. No.", Rec."Line No.");
+            ReservEntry.SetRange("Location Code", PurchLine."Location Code");
+            ReservEntry.SetRange("Source ID", PurchLine."Document No.");
+            ReservEntry.SetRange("Source Ref. No.", PurchLine."Line No.");
             ReservEntry.SetRange(Positive, true);
             if not ReservEntry.FindFirst() then
-                Error(TrackErr, Rec."No.");
+                Error(TrackErr, PurchLine."No.");
         end;
     end;
 }

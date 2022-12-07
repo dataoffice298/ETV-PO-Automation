@@ -121,6 +121,9 @@ table 50010 "Indent Header"
         {
             Caption = 'Authorized';
         }
+
+        
+
         field(33; Declined; Boolean)
         {
             Caption = 'Declined';
@@ -192,7 +195,13 @@ table 50010 "Indent Header"
             DataClassification = CustomerContent;
         }
         //BaluOn19Oct2022>>
-
+        
+        //SSD06122022<<
+        field(50013; "Approver Name"; Code[50])
+        {
+            DataClassification = CustomerContent;
+        }
+        //SSD06122022>>
     }
 
     keys

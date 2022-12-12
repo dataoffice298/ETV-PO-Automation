@@ -51,7 +51,7 @@ report 50166 "Inward Receipt Details"
 
                     WindPa.Update(1, "Gate Entry No.");
 
-                  
+
                     PurchRcptLine.Reset();
                     PurchRcptLine.SetRange("Ref. Posted Gate Entry", "Gate Entry No.");
                     if PurchRcptLine.FindFirst() then begin
@@ -123,7 +123,7 @@ report 50166 "Inward Receipt Details"
             }
             trigger OnPreDataItem()
             begin
-                SetFilter("Document Date", '%1..%2', StartDate, EndDate); //B2BSSOn07Dec2022
+                SetFilter("Document Date", '%1..%2', StartDate, EndDate); //B2BSSDOn07Dec2022
                 Clear(SNo);
                 MakeExcelHeaders();
             end;

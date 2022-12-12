@@ -238,6 +238,7 @@ report 50183 "Returnable Gatepass"
                                         until PurchaseRetLinLRec.Next() = 0;
                                 end
 
+
                             END;
                         "Source Type"::"Transfer Shipment":
                             BEGIN
@@ -253,6 +254,7 @@ report 50183 "Returnable Gatepass"
                                             ItemName := TransferShpntLine."Item No.";
                                         until PurchaseRetLinLRec.Next() = 0;
                                 end
+
 
                             END;
 

@@ -216,13 +216,17 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         SelErr: Label 'No line selected.';
         ItemLRec: Record Item;
         FALRec: Record "Fixed Asset";
+        ReservationEntry: Record "Reservation Entry";
+        LineNo: Integer;
     begin
+        Clear(ReservationEntry);
+        LineNo := 10000;
         PurchLine.Reset();
         PurchLine.SetRange("Document No.", Rec."Document No.");
         PurchLine.SetRange(Select, true);
         if PurchLine.FindSet() then
             repeat
-                Rec.CheckTracking(PurchLine);
+                Rec.CheckTracking(PurchLine, ReservationEntry);
             until PurchLine.Next() = 0;
 
         PurchLine.Reset();
@@ -254,33 +258,39 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             GateEntryHeader.Insert(true);
 
             repeat
-                GateEntryLine.Init();
-                GateEntryLine."Entry Type" := GateEntryHeader."Entry Type";
-                GateEntryLine.Type := GateEntryHeader.Type;
-                GateEntryLine."Gate Entry No." := GateEntryHeader."No.";
-                GateEntryLine."Line No." := 10000;
-                if PurchLine.Type = PurchLine.Type::Item then begin
-                    GateEntryLine."Source Type" := GateEntryLine."Source Type"::Item;
-                    GateEntryLine.Validate("Source No.", Rec."No.");
-                    ItemLRec.Get(PurchLine."No.");
-                    GateEntryLine."Source Name" := ItemLRec.Description;
-                    GateEntryLine.Description := ItemLRec.Description;
-                end else
-                    if PurchLine.Type = PurchLine.Type::"Fixed Asset" then begin
-                        GateEntryLine."Source Type" := GateEntryLine."Source Type"::"Fixed Asset";
+                repeat
+                    GateEntryLine.Init();
+                    GateEntryLine."Entry Type" := GateEntryHeader."Entry Type";
+                    GateEntryLine.Type := GateEntryHeader.Type;
+                    GateEntryLine."Gate Entry No." := GateEntryHeader."No.";
+                    GateEntryLine."Line No." := LineNo;
+                    if PurchLine.Type = PurchLine.Type::Item then begin
+                        GateEntryLine."Source Type" := GateEntryLine."Source Type"::Item;
                         GateEntryLine.Validate("Source No.", Rec."No.");
-                        FALRec.Get(PurchLine."No.");
-                        GateEntryLine."Source Name" := FALRec.Description;
-                        GateEntryLine.Description := FALRec.Description;
-                    end;
-                GateEntryLine."Unit of Measure" := Rec."Unit of Measure";
-                if EntryType = EntryType::Inward then
-                    GateEntryLine.Validate(Quantity, Rec."Qty. to Receive")
-                else
-                    if EntryType = EntryType::Outward then
-                        GateEntryLine.Validate(Quantity, Rec."Qty. to Reject B2B");
-                GateEntryLine.Insert(true);
+                        ItemLRec.Get(PurchLine."No.");
+                        GateEntryLine."Source Name" := ItemLRec.Description;
+                        GateEntryLine.Description := ItemLRec.Description;
+                    end else
+                        if PurchLine.Type = PurchLine.Type::"Fixed Asset" then begin
+                            GateEntryLine."Source Type" := GateEntryLine."Source Type"::"Fixed Asset";
+                            GateEntryLine.Validate("Source No.", Rec."No.");
+                            FALRec.Get(PurchLine."No.");
+                            GateEntryLine."Source Name" := FALRec.Description;
+                            GateEntryLine.Description := FALRec.Description;
+                        end;
+                    GateEntryLine."Unit of Measure" := Rec."Unit of Measure";
+                    if EntryType = EntryType::Inward then
+                        GateEntryLine.Validate(Quantity, ReservationEntry.Quantity)
+                    else
+                        if EntryType = EntryType::Outward then
+                            GateEntryLine.Validate(Quantity, Rec."Qty. to Reject B2B");
 
+                    GateEntryLine.ModelNo := ReservationEntry."Lot No.";
+                    GateEntryLine.SerialNo := ReservationEntry."Serial No.";
+                    GateEntryLine.Make := ReservationEntry."Variant Code";
+                    GateEntryLine.Insert(true);
+                    LineNo += 10000;
+                until ReservationEntry.Next() = 0;
                 PurchLine.Select := false;
                 if EntryType = EntryType::Outward then begin
                     PurchLine."Quantity Rejected B2B" += PurchLine."Qty. to Reject B2B";

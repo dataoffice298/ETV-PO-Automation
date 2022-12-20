@@ -270,6 +270,8 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         ItemLRec.Get(PurchLine."No.");
                         GateEntryLine."Source Name" := ItemLRec.Description;
                         GateEntryLine.Description := ItemLRec.Description;
+                        GateEntryLine.Variant := PurchLine."Variant Code";//B2BSSDOn13Dec2022
+
                     end else
                         if PurchLine.Type = PurchLine.Type::"Fixed Asset" then begin
                             GateEntryLine."Source Type" := GateEntryLine."Source Type"::"Fixed Asset";

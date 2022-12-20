@@ -125,144 +125,33 @@ report 50183 "Returnable Gatepass"
             dataitem("Gate Entry Line_B2B"; "Gate Entry Line_B2B")
             {
                 DataItemLink = "Entry Type" = FIELD("Entry Type"),
-                "type" = field("Type"),
-                              "Gate Entry No." = FIELD("No.");
+                               "type" = field("Type"),
+                               "Gate Entry No." = FIELD("No.");
 
-                column(Source_No_; ItemName)
+                column(Source_No_; "Source No.")
                 { }
-
-                column(Source_Name; DescriptionLVar)
+                column(Source_Type; "Source Type")
                 { }
-                column(Quantity; QtyDispatchLRec)
-                {
-
-                }
+                column(Source_Name; "Source Name")
+                { }
+                column(QuantityGEL; Quantity)
+                { }
                 column(Users; Users."Full Name")
                 { }
-                column(Make; variantcode)
+                column(Make; Variant)
                 { }
-                column(ModelNo; ModelNo)
+                column(ModelNoGEL; ModelNo)
                 { }
-                column(SerialNo; SerialNo)
+                column(SerialNoGEL; SerialNo)
                 { }
                 trigger OnAfterGetRecord()
+
                 begin
                     Users.Reset();
                     Users.SetRange("User Name", "Gate Entry Header_B2B"."User ID");
                     if Users.FindFirst() then;
-                    Clear(DescriptionLVar);
-                    Clear(QtyDispatchLRec);
-                    Clear(ItemName);
-                    Clear(VariantCode);
-                    Users.Reset();
-                    Users.SetRange("User Name", "Gate Entry Header_B2B"."User ID");
-                    if Users.FindFirst() then;
-                    case "Source Type" of
-                        "Source Type"::"Sales Shipment":
-                            BEGIN
-                                SalesShipmentHeaderLRec.reset;
-                                SalesShipmentHeaderLRec.SetRange("No.", "Source No.");
-                                IF SalesShipmentHeaderLRec.findfirst then begin
-                                    SalesShipmentLinLRec.Reset();
-                                    SalesShipmentLinLRec.SetRange("Document No.", SalesShipmentHeaderLRec."No.");
-                                    SalesShipmentLinLRec.SetRange("Line No.", "Line No.");
-                                    if SalesShipmentLinLRec.FindSet() then
-                                        repeat
-                                            ItemName := SalesShipmentLinLRec."No.";
-                                            DescriptionLVar := SalesShipmentLinLRec.Description;
-                                            QtyDispatchLRec := SalesShipmentLinLRec.Quantity;
-                                        until SalesShipmentLinLRec.Next() = 0;
-                                end
-                            End;
-                        "Source Type"::"Sales Return Order":
-                            BEGIN
-                                SalesHdrLRec.reset;
-                                SalesHdrLRec.SetRange("No.", "Source No.");
-                                IF SalesHdrLRec.findfirst then begin
-                                    SalesLineLRec.Reset();
-                                    SalesLineLRec.SetRange("Document No.", SalesHdrLRec."No.");
-                                    if SalesLineLRec.FindSet() then
-                                        repeat
-                                            DescriptionLVar := SalesLineLRec.Description;
-                                            QtyDispatchLRec := SalesLineLRec.Quantity;
-                                            ItemName := SalesLineLRec."No.";
-                                        until SalesLineLRec.Next() = 0;
-                                end
-
-                            END;
-                        "Source Type"::"Purchase Order":
-                            BEGIN
-                                PurchHdr.reset;
-                                PurchHdr.SetRange("No.", "Source No.");
-                                IF PurchHdr.findfirst then begin
-                                    PurchLine.Reset();
-                                    PurchLine.SetRange("Document No.", PurchHdr."No.");
-                                    if PurchLine.FindSet() then
-                                        repeat
-                                            DescriptionLVar := PurchLine.Description;
-                                            QtyDispatchLRec := PurchLine.Quantity;
-                                            ItemName := PurchLine."No.";
-                                            VariantCode := PurchLine."Variant Code";
-                                        until PurchLine.Next() = 0;
-                                end;
-
-                            END;
-                        "Source Type"::"Purchase Return Shipment":
-                            BEGIN
-                                PurchaseRetnLRec.reset;
-                                PurchaseRetnLRec.SetRange("No.", "Source No.");
-                                IF PurchaseRetnLRec.findfirst then begin
-                                    PurchaseRetLinLRec.Reset();
-                                    PurchaseRetLinLRec.SetRange("Document No.", PurchaseRetnLRec."No.");
-                                    if PurchaseRetLinLRec.FindSet() then
-                                        repeat
-                                            DescriptionLVar := PurchaseRetLinLRec.Description;
-                                            QtyDispatchLRec := PurchaseRetLinLRec.Quantity;
-                                            ItemName := PurchaseRetLinLRec."No.";
-                                        until PurchaseRetLinLRec.Next() = 0;
-                                end
-
-                            END;
-                        "Source Type"::"Transfer Receipt":
-                            BEGIN
-                                TransferHdr.reset;
-                                TransferHdr.SetRange("No.", "Source No.");
-                                IF TransferHdr.findfirst then begin
-                                    TransferLine.Reset();
-                                    TransferLine.SetRange("Document No.", TransferHdr."No.");
-                                    if TransferLine.FindSet() then
-                                        repeat
-                                            DescriptionLVar := TransferLine.Description;
-                                            QtyDispatchLRec := TransferLine.Quantity;
-                                            ItemName := TransferLine."Item No.";
-                                        until PurchaseRetLinLRec.Next() = 0;
-                                end
-
-
-                            END;
-                        "Source Type"::"Transfer Shipment":
-                            BEGIN
-                                TransferShpntHdr.reset;
-                                TransferShpntHdr.SetRange("No.", "Source No.");
-                                IF TransferShpntHdr.findfirst then begin
-                                    TransferShpntLine.Reset();
-                                    TransferShpntLine.SetRange("Document No.", TransferShpntHdr."No.");
-                                    if TransferShpntLine.FindSet() then
-                                        repeat
-                                            DescriptionLVar := TransferShpntLine.Description;
-                                            QtyDispatchLRec := TransferShpntLine.Quantity;
-                                            ItemName := TransferShpntLine."Item No.";
-                                        until PurchaseRetLinLRec.Next() = 0;
-                                end
-
-
-                            END;
-
-
-                    end;
                 end;
             }
-
             trigger OnAfterGetRecord()
             begin
 
@@ -319,12 +208,12 @@ report 50183 "Returnable Gatepass"
         TransferLine: Record "Transfer Line";
         PurchaseRetnLRec: record "Return Shipment Header";
         PurchaseRetLinLRec: Record "Return Shipment Line";
-        PurchHdr: Record "Purchase Header";
-        PurchLine: Record "Purchase Line";
+
         SalesHdrLRec: Record "Sales Header";
         SalesLineLRec: Record "Sales Line";
         TransferShpntHdr: record "Transfer Shipment Header";
         TransferShpntLine: Record "Transfer Shipment Line";
+        item: Record Item;
         ItemName: Code[20];
         DescriptionLVar: Text[100];
         QtyDispatchLRec: Decimal;

@@ -83,11 +83,12 @@ table 50060 "Gate Entry Line_B2B"
         {
             DataClassification = CustomerContent;
         }
+        
         field(24; "Posted RGP OUT NO."; Code[20])
         {
             DataClassification = CustomerContent;
         }
-
+        
         field(26; Quantity; Decimal)
         {
             DataClassification = CustomerContent;

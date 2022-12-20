@@ -84,7 +84,7 @@ page 50159 "Inward Gate Entry-RGP"
                 field("Vehicle No."; Rec."Vehicle No.")
                 {
                     ApplicationArea = ALL;
-                    Visible = false;
+                    //Visible = false;
                 }
                 field("Approval Status"; Rec."Approval Status")
                 {
@@ -139,6 +139,26 @@ page 50159 "Inward Gate Entry-RGP"
 
                 }
                 //BaluonNov82022<<
+
+                //B2BSSD16Dec2022<<
+                field("Posted RGP Outward NO."; Rec."Posted RGP Outward NO.")
+                {
+                    ApplicationArea = All;
+                }
+                field("Posted RGP Outward Date"; Rec."Posted RGP Outward Date")
+                {
+                    ApplicationArea = All;
+                }
+                field("LR/RR No."; Rec."LR/RR No.")
+                {
+                    ApplicationArea = All;
+                }
+                field("LR/RR Date"; Rec."LR/RR Date")
+                {
+                    ApplicationArea = All;
+                }
+
+                //B2BSSD16Dec2022>>
             }
             part(Control1500028; "Inward Gate Entry SubFrm-RGP")
             {

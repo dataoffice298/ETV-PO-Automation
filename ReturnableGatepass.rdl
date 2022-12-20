@@ -1081,7 +1081,6 @@
             </ReportItems>
             <KeepTogether>true</KeepTogether>
             <Top>0.01764cm</Top>
-            <Left>0cm</Left>
             <Height>5.12819cm</Height>
             <Width>19.2273cm</Width>
             <Style>
@@ -1701,7 +1700,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=First(Fields!Source_No_.Value, "DataSet_Result")</Value>
+                                  <Value>=Fields!Source_No_.Value</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                   </Style>
@@ -1752,7 +1751,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=First(Fields!Source_Name.Value, "DataSet_Result")</Value>
+                                  <Value>=Fields!Source_Name.Value</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
@@ -1804,7 +1803,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=First(Fields!Quantity.Value, "DataSet_Result")</Value>
+                                  <Value>=Fields!QuantityGEL.Value</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
@@ -1856,7 +1855,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=First(Fields!Make.Value, "DataSet_Result")</Value>
+                                  <Value>=Fields!Make.Value</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
@@ -1908,7 +1907,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=First(Fields!ModelNo.Value, "DataSet_Result")</Value>
+                                  <Value>=Fields!ModelNoGEL.Value</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
@@ -1960,7 +1959,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=First(Fields!SerialNo.Value, "DataSet_Result")</Value>
+                                  <Value>=Fields!SerialNoGEL.Value</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
@@ -2484,8 +2483,6 @@
         <PageWidth>21cm</PageWidth>
         <LeftMargin>0.5cm</LeftMargin>
         <RightMargin>0.5cm</RightMargin>
-        <TopMargin>0cm</TopMargin>
-        <BottomMargin>0cm</BottomMargin>
         <ColumnSpacing>1.27cm</ColumnSpacing>
         <Style />
       </Page>
@@ -2692,14 +2689,17 @@ End Function
         <Field Name="Source_No_">
           <DataField>Source_No_</DataField>
         </Field>
+        <Field Name="Source_Type">
+          <DataField>Source_Type</DataField>
+        </Field>
         <Field Name="Source_Name">
           <DataField>Source_Name</DataField>
         </Field>
-        <Field Name="Quantity">
-          <DataField>Quantity</DataField>
+        <Field Name="QuantityGEL">
+          <DataField>QuantityGEL</DataField>
         </Field>
-        <Field Name="QuantityFormat">
-          <DataField>QuantityFormat</DataField>
+        <Field Name="QuantityGELFormat">
+          <DataField>QuantityGELFormat</DataField>
         </Field>
         <Field Name="Users">
           <DataField>Users</DataField>
@@ -2707,11 +2707,11 @@ End Function
         <Field Name="Make">
           <DataField>Make</DataField>
         </Field>
-        <Field Name="ModelNo">
-          <DataField>ModelNo</DataField>
+        <Field Name="ModelNoGEL">
+          <DataField>ModelNoGEL</DataField>
         </Field>
-        <Field Name="SerialNo">
-          <DataField>SerialNo</DataField>
+        <Field Name="SerialNoGEL">
+          <DataField>SerialNoGEL</DataField>
         </Field>
       </Fields>
       <Query>

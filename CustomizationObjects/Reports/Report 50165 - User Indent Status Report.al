@@ -57,6 +57,7 @@ report 50165 "User Indent Status Report"
             }
             trigger OnPreDataItem()
             begin
+                SetFilter("Document Date", '%1..%2', StartDate, EndDate);//B2BSSD20Dec2022
                 Clear(SNo);
                 MakeExcelHeaders();
             end;
@@ -92,6 +93,7 @@ report 50165 "User Indent Status Report"
 
     trigger OnPostReport()
     begin
+
         WindPa.CLOSE();
         TempExcelBuffer.CreateBookAndOpenExcel('', 'Indent', '', COMPANYNAME, USERID);
     end;

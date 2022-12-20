@@ -68,6 +68,7 @@ report 50165 "User Indent Status Report"
                     {
                         ApplicationArea = all;
                     }
+                       
                 }
             }
         }
@@ -119,7 +120,7 @@ report 50165 "User Indent Status Report"
         TempExcelBuffer.AddColumn('', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         IF (StartDate <> 0D) or (EndDate <> 0D) THEN
-            TempExcelBuffer.AddColumn('Indent Status: ' + Format(StartDate) + ' to ' + Format(EndDate), FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+            TempExcelBuffer.AddColumn('INDENT DATE: ' + Format(StartDate) + ' to ' + Format(EndDate), FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.NewRow();
         TempExcelBuffer.AddColumn('SNo.', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('INDENT NO.', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);

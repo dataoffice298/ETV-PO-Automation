@@ -54,8 +54,6 @@ report 50162 "Issuance Report"
                         end;
                     end;
 
-
-
                     WindPa.Update(1, "Document No.");
                     TempExcelBuffer.NewRow();
                     TempExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);

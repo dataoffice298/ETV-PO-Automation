@@ -17,6 +17,13 @@ tableextension 50061 FixedAssetExtPOAuto extends "Fixed Asset"
             Caption = 'Make';
             DataClassification = CustomerContent;
         }
+        //B2BVCOn19Dec22>>>
+        field(50053; "QC Enabled B2B"; Boolean)
+        {
+            Caption = 'QC Enabled';
+            DataClassification = CustomerContent;
+        }
+        //B2BVCOn19Dec22<<<
     }
 
 }

@@ -76,18 +76,18 @@ report 50163 "Open Po Report"
         IF (StartDate <> 0D) or (EndDate <> 0D) THEN
             ExcelBuffer1.AddColumn('Open PO: ' + Format(StartDate) + ' to ' + Format(EndDate), FALSE, '', TRUE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
         ExcelBuffer1.NewRow;
-        ExcelBuffer1.AddColumn('S. NO.', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
+        ExcelBuffer1.AddColumn('S. NO.', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Number);
         ExcelBuffer1.AddColumn('INDENT NUMBER', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
-        ExcelBuffer1.AddColumn('INDENT DATE', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
+        ExcelBuffer1.AddColumn('INDENT DATE', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Date);
         ExcelBuffer1.AddColumn('PO NUMBER', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
-        ExcelBuffer1.AddColumn('PO DATE', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
+        ExcelBuffer1.AddColumn('PO DATE', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Date);
         ExcelBuffer1.AddColumn('SUPPLIER NAME', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
         ExcelBuffer1.AddColumn('ITEM CODE', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
         ExcelBuffer1.AddColumn('ITEM NAME', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
         ExcelBuffer1.AddColumn('UOM', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
-        ExcelBuffer1.AddColumn('QTY', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
+        ExcelBuffer1.AddColumn('QTY', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Number);
         ExcelBuffer1.AddColumn('UNIT RATE', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
-        ExcelBuffer1.AddColumn('AMOUNT', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
+        ExcelBuffer1.AddColumn('AMOUNT', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Number);
     END;
 
     PROCEDURE MakeOrderExcelDataBody()
@@ -112,17 +112,17 @@ report 50163 "Open Po Report"
                 if (PurchaseHeader.Status = PurchaseHeader.Status::Open) then begin
                     SNo += 1;
                     ExcelBuffer1.NewRow;
-                    ExcelBuffer1.AddColumn(SNo, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
+                    ExcelBuffer1.AddColumn(SNo, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Number);
                     ExcelBuffer1.AddColumn(PurchaseHeader."Indent Requisition No", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn(IndentRequsition."Document Date", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
+                    ExcelBuffer1.AddColumn(IndentRequsition."Document Date", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Date);
                     ExcelBuffer1.AddColumn(PurchaseOrderLine."Document No.", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn(PurchaseHeader."Posting Date", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
+                    ExcelBuffer1.AddColumn(PurchaseHeader."Posting Date", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Date);
                     ExcelBuffer1.AddColumn(PurchaseHeader."Buy-from Vendor Name", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
                     ExcelBuffer1.AddColumn(PurchaseOrderLine."No.", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
                     ExcelBuffer1.AddColumn(PurchaseOrderLine.Description, FALSE, '', false, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
                     ExcelBuffer1.AddColumn(PurchaseOrderLine."Unit of Measure", FALSE, '', false, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn(PurchaseOrderLine.Quantity, FALSE, '', false, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn(PurchaseOrderLine."Unit Cost", FALSE, '', false, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
+                    ExcelBuffer1.AddColumn(PurchaseOrderLine.Quantity, FALSE, '', false, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Number);
+                    ExcelBuffer1.AddColumn(PurchaseOrderLine."Unit Cost", FALSE, '', false, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Number);
                     ExcelBuffer1.AddColumn(Round(PurchaseOrderLine."Unit Cost" * PurchaseOrderLine.Quantity, 0.01), FALSE, '', false, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
                 end
             until PurchaseOrderLine.Next() = 0;

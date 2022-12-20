@@ -23,6 +23,19 @@ pageextension 50102 FixedAssetCard extends "Fixed Asset Card"
                 SubPageLink = "No." = FIELD("No.");
             }
         }
+        //B2BVCOn19Dec22>>>
+        addafter("Responsible Employee")
+        {
+            group(QC)
+            {
+                Caption = 'QC';
+                field("QC Enabled B2B"; Rec."QC Enabled B2B")
+                {
+                    ApplicationArea = all;
+                }
+            }
+        }
+        //B2BVCOn19Dec22<<<
     }
 
     actions

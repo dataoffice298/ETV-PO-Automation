@@ -12,7 +12,6 @@ report 50167 "QC Pending GRN Pending Report"
         {
             dataitem("Indent Line"; "Indent Line")
             {
-
                 DataItemLink = "Document No." = field("No.");
                 DataItemTableView = where("Quantity (Base)" = filter(<> 0), "Unit Cost" = filter(<> 0));
                 trigger OnAfterGetRecord()
@@ -52,11 +51,7 @@ report 50167 "QC Pending GRN Pending Report"
                         PostGateEntryHdr.SetRange("No.", PostGateEntryLine."Gate Entry No.");
                         if PostGateEntryHdr.FindFirst() then;
 
-
                     end;
-
-
-
 
                     WindPa.Update(1, "Document No.");
                     TempExcelBuffer.NewRow();

@@ -172,6 +172,24 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
                 {
                     Visible = false;
                 }
+                //B2BSSD20Dec2022<<
+                field(Quantity; Rec.Quantity)
+                {
+                    ApplicationArea = All;
+                }
+                field(Variant; Variant)
+                {
+                    ApplicationArea = All;
+                }
+                field(ModelNo; Rec.ModelNo)
+                {
+                    ApplicationArea = All;
+                }
+                field(SerialNo; Rec.SerialNo)
+                {
+                    ApplicationArea = All;
+                }
+                //B2BSSD20Dec2022>>
             }
         }
     }

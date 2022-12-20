@@ -76,6 +76,21 @@ page 50146 "Outward Gate Entry - NRGP"
                 {
                     ApplicationArea = ALL;
                 }
+                //B2BSSD20Dec2022<<
+                field("Department Code"; Rec."Department Code")
+                {
+                    ApplicationArea = All;
+                }
+                field("Channel  Code"; Rec."Channel  Code")
+                {
+                    ApplicationArea = All;
+                }
+                field(SubLocation; Rec.SubLocation)
+                {
+                    ApplicationArea = All;
+                    TableRelation = Location;
+                }
+                //B2BSSD20Dec2022>>
 
             }
             part(Control1500028; "Outward Gate Entry SubFrm-NRGP")

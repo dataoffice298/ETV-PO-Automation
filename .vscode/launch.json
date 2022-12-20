@@ -6,7 +6,7 @@
             "request": "launch",
             "type": "al",
             "environmentType": "OnPrem",
-            "server": "http://localhost",
+            "server": "http://b2bsrv-325:8080/",
             "serverInstance": "ETVLIVEUPG",
             "authentication": "Windows",
             "breakOnError": true,

@@ -38,20 +38,10 @@ report 50162 "Issuance Report"
                     PurchLine.SetRange("Indent No.", "Document No.");
                     PurchLine.SetRange("Indent Line No.", "Line No.");
                     if PurchLine.FindFirst() then begin
-                        PostGateEntryLine.Reset();
-                        PostGateEntryLine.SetRange("Source No.", PurchLine."Document No.");
-                        if PostGateEntryLine.FindFirst() then begin
-
-
-                            PostedGateEntryHed.Reset();
-                            PostedGateEntryHed.SetRange("No.", PostGateEntryLine."Gate Entry No.");
-                            if PostedGateEntryHed.FindFirst() then begin
-
-                                PostGateEntryLine.Reset();
-                                PostGateEntryLine.SetRange("Gate Entry No.", PostedGateEntryHed."No.");
-                                if PostGateEntryLine.FindFirst() then;
-                            end;
-                        end;
+                        PostedGateEntryHed.Reset();
+                        PostedGateEntryHed.SetRange("Purchase Order No.", PurchLine."Document No.");
+                        PostedGateEntryHed.SetRange("Purchase Order Line No.", PurchLine."Line No.");
+                        if PostedGateEntryHed.FindFirst() then;
                     end;
 
                     WindPa.Update(1, "Document No.");
@@ -73,8 +63,9 @@ report 50162 "Issuance Report"
                     TempExcelBuffer.AddColumn("Unit of Measure", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("Qty Issued", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn(Amount, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn(PostGateEntryLine."Gate Entry No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn(PurchLine."Line Amount", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    TempExcelBuffer.AddColumn(PostedGateEntryHed."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    //TempExcelBuffer.AddColumn(PurchLine."Document No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                 end;
             }
             trigger OnPreDataItem()

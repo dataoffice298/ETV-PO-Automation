@@ -257,14 +257,17 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
                 field(Variant; rec.Variant)
                 {
                     ApplicationArea = all;
+                    Editable = false; //B2B@SSDon12Dec2022
                 }
                 field(ModelNo; rec.ModelNo)
                 {
                     ApplicationArea = all;
+                    Editable = false; //B2B@SSDon12Dec2022
                 }
                 field(SerialNo; rec.SerialNo)
                 {
                     ApplicationArea = all;
+                    Editable = false; //B2B@SSDon12Dec2022
                 }
                 //BaluonNov82022<<
             }

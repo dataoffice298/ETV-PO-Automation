@@ -145,6 +145,8 @@ report 50184 "Return Gatepass Return Rcpt"
                 column(SerialNo; SerialNo)
                 { }
                 trigger OnAfterGetRecord()
+                 var
+                  
                 begin
                     Users.Reset();
                     Users.SetRange("User Name", "Gate Entry Header_B2B"."User ID");
@@ -198,10 +200,6 @@ report 50184 "Return Gatepass Return Rcpt"
         }
 
     }
-
-
-
-
     var
         Users: Record User;
         CompanyInfo: Record "Company Information";

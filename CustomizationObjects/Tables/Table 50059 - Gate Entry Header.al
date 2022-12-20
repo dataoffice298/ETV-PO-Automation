@@ -150,6 +150,13 @@ table 50059 "Gate Entry Header_B2B"
             begin
                 //UserMgt.LookupUserID("User ID");TEST
             end;
+
+        }
+        field(54; "User Name"; Text[50])
+        {
+            DataClassification = CustomerContent;
+            TableRelation = User."Full Name";
+
         }
         field(21; "Approval Status"; enum ApprovalStatus)
         {
@@ -284,6 +291,7 @@ table 50059 "Gate Entry Header_B2B"
         {
             DataClassification = CustomerContent;
             Caption = 'Sub Location';
+            TableRelation = Location;
         }
         field(44; "Shortcut Dimension 1 Code"; Code[20])
         {
@@ -320,8 +328,33 @@ table 50059 "Gate Entry Header_B2B"
             DataClassification = CustomerContent;
             Editable = false;
         }
-        //B2BMSOn14Nov2022<<
-        
+
+        //B2BSSD16Dec2022<<
+        field(50; "Posted RGP Outward NO."; Code[20])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(51; "Posted RGP Outward Date"; Blob)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(52; "LR/RR No."; Text[20])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(53; "LR/RR Date"; Date)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(55; "Department Code"; Code[20])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(56; "Channel  Code"; Code[20])
+        {
+            DataClassification = CustomerContent;
+        }
+        //B2BSSD16Dec2022>>
     }
 
     keys

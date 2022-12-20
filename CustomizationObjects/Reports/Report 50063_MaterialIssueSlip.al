@@ -137,19 +137,42 @@ report 50063 "Material Issue Slip"
                         ItemCategoryCode := ItemLedgerEntry."Item Category Code";
                     end;
                 end;
-
             }
 
             trigger OnPreDataItem();
             begin
+                SetFilter("Document Date", '%1..%2', StartDate, EndDate);//B2bSSD20Dec2022
                 Clear(SNo);
                 CompanyInfo.get;
                 CompanyInfo.CALCFIELDS(Picture);
             end;
         }
     }
-
+    //B2BSSD20Dec2022<<
+    requestpage
+    {
+        layout
+        {
+            area(Content)
+            {
+                group("Date Filters")
+                {
+                    field(StartDate; StartDate)
+                    {
+                        ApplicationArea = all;
+                    }
+                    field(EndDate; EndDate)
+                    {
+                        ApplicationArea = all;
+                    }
+                }
+            }
+        }
+    }
+    //B2BSSD20Dec2022>>
     var
+        StartDate: Date;
+        EndDate: Date;
         pa: Page "Purchase Invoice Statistics";
         ItemCategoryCode: Code[20];
         ISSNo1: Code[20];

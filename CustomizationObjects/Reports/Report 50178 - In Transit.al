@@ -19,10 +19,24 @@ report 50178 "In Transit"
                 var
                     Item: Record Item;
                     FA: Record "Fixed Asset";
+                    ItemTracking: Record "Tracking Specification";
+                    TransHeader: Record "Transfer Header";
+                    TransLine: Record "Transfer Line";
+                    Reservationentry: Record 337;
                 begin
                     clear(Item);
                     if Item.Get("Item No.") then;
                     if FA.Get("Item No.") then;
+
+                    //B2BSSD_08Dec2022<<
+                    Reservationentry.Reset();
+                    Reservationentry.SetRange("Item No.", "Item No.");
+                    Reservationentry.SetRange("Source ID", "Document No.");
+                    Reservationentry.SetRange("Source Type", 5741);
+                    Reservationentry.SetRange("Source Prod. Order Line", "Line No.");
+                    if Reservationentry.FindFirst() then;
+                    //B2BSSD_08Dec2022>>
+
                     SNo += 1;
                     ExcelBuffer1.NewRow();
                     ExcelBuffer1.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Number);
@@ -38,8 +52,8 @@ report 50178 "In Transit"
                     ExcelBuffer1.AddColumn("Transfer Line".Description, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
                     ExcelBuffer1.AddColumn("Transfer Line"."Unit of Measure Code", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
                     ExcelBuffer1.AddColumn('', FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn(Item."Lot Nos.", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn(Item."Serial Nos.", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
+                    ExcelBuffer1.AddColumn(Reservationentry."Lot No.", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
+                    ExcelBuffer1.AddColumn(Reservationentry."Serial No.", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
                     ExcelBuffer1.AddColumn("Transfer Line".Quantity, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
                     ExcelBuffer1.AddColumn("Transfer Line"."Transfer Price", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
                     ExcelBuffer1.AddColumn("Transfer Line".Amount, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);

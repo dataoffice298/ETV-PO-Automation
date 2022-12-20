@@ -121,6 +121,9 @@ table 50010 "Indent Header"
         {
             Caption = 'Authorized';
         }
+
+
+
         field(33; Declined; Boolean)
         {
             Caption = 'Declined';
@@ -193,6 +196,12 @@ table 50010 "Indent Header"
         }
         //BaluOn19Oct2022>>
 
+        //SSD06122022<<
+        field(50013; "Approver Name"; Code[50])
+        {
+            DataClassification = CustomerContent;
+        }
+        //SSD06122022>>
     }
 
     keys
@@ -619,6 +628,7 @@ table 50010 "Indent Header"
                 TransLine.Validate(Quantity, IndentLine."Req.Quantity");
                 TransLine.Validate("Indent No.", IndentLine."No."); //B2BPGOn12Oct2022
                 TransLine.Validate("Indent Date", IndentLine."Due Date"); //B2BPGOn12Oct2022
+                TransLine.Validate("Variant Code", IndentLine."Variant Code");//B2BSSD06Dec2022
                 TransLine.Insert(true);
                 LastTransferLine += 10000;
                 IndentLine."Transfer Order No." := TransferOrderNo;

@@ -24,6 +24,7 @@ report 50107 "Aging of Items Report"
                 ItemLedgerEntry.Reset();
                 ItemLedgerEntry.SetFilter("Posting Date", '%1..', StartDate);
                 ItemLedgerEntry.SetRange("Item No.", "No.");
+                ItemLedgerEntry.SetFilter(Quantity, '>0'); //SSD06122022
                 if ItemLedgerEntry.FindSet() then
                     repeat
                         AgingDays := WorkDate - ItemLedgerEntry."Posting Date";

@@ -22,6 +22,13 @@ page 50157 "Outward Gate Entry - RGP"
                 {
                     ApplicationArea = ALL;
                 }
+                //B2BSSD20Dec2022<<
+                field(SubLocation; Rec.SubLocation)
+                {
+                    ApplicationArea = All;
+                    TableRelation = Location;
+                }
+                //B2BSSD20Dec2022>>
                 field("No."; Rec."No.")
                 {
                     ApplicationArea = ALL;
@@ -88,6 +95,14 @@ page 50157 "Outward Gate Entry - RGP"
                 field("Approval Status"; Rec."Approval Status")
                 {
                     ApplicationArea = ALL;
+                }
+                field("Channel  Code"; Rec."Channel  Code")
+                {
+                    ApplicationArea = All;
+                }
+                field("Department Code"; Rec."Department Code")
+                {
+                    ApplicationArea = All;
                 }
 
             }

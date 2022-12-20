@@ -9,7 +9,7 @@ report 50163 "Open Po Report"
 
     dataset
     {
-
+         
     }
 
     requestpage
@@ -89,7 +89,7 @@ report 50163 "Open Po Report"
         ExcelBuffer1.AddColumn('UNIT RATE', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
         ExcelBuffer1.AddColumn('AMOUNT', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Number);
     END;
-
+        
     PROCEDURE MakeOrderExcelDataBody()
     var
         PurchaseHeader: Record "Purchase Header";

@@ -18,6 +18,7 @@ report 50165 "User Indent Status Report"
                     //IndentHeader: Record "Indent Header";
                     Users: Record User;
                     FixedAsset: Record "Fixed Asset";
+                    ApprovalEntry: Record "Approval Entry";
                 begin
                     SNo += 1;
 
@@ -28,6 +29,15 @@ report 50165 "User Indent Status Report"
                     if Item.Get("No.") then;
                     if FixedAsset.Get("No.") then;
                     WindPa.Update(1, "Document No.");
+                    //SSD06122022<<
+                    ApprovalEntry.Reset();
+                    ApprovalEntry.SetCurrentKey("Sequence No.");
+                    ApprovalEntry.SetRange("Document No.", "Indent Header"."No.");
+                    ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
+                    if ApprovalEntry.FindFirst() then begin
+                        "Indent Header"."Approver Name" := ApprovalEntry."Approver ID";
+                    end;
+                    //SSD06122022>>
                     TempExcelBuffer.NewRow();
                     TempExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn("Document No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
@@ -38,7 +48,8 @@ report 50165 "User Indent Status Report"
                     TempExcelBuffer.AddColumn("Unit of Measure", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn("Indent Header"."Shortcut Dimension 2 Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("Release Status", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn("Indent Header".Authorized, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    //TempExcelBuffer.AddColumn("Indent Header".Authorized, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn("Indent Header"."Approver Name", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text); //SSD
                     TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("Variant Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn(FixedAsset."Serial No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
@@ -46,6 +57,7 @@ report 50165 "User Indent Status Report"
             }
             trigger OnPreDataItem()
             begin
+                SetFilter("Document Date", '%1..%2', StartDate, EndDate);//B2BSSD20Dec2022
                 Clear(SNo);
                 MakeExcelHeaders();
             end;
@@ -82,6 +94,7 @@ report 50165 "User Indent Status Report"
 
     trigger OnPostReport()
     begin
+
         WindPa.CLOSE();
         TempExcelBuffer.CreateBookAndOpenExcel('', 'Indent', '', COMPANYNAME, USERID);
     end;
@@ -131,7 +144,8 @@ report 50165 "User Indent Status Report"
         TempExcelBuffer.AddColumn('UOM', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('DEPARTMENT', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('STATUS', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-        TempExcelBuffer.AddColumn('AUTHORIZED', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        //TempExcelBuffer.AddColumn('AUTHORIZED', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        TempExcelBuffer.AddColumn('Approval Name', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//SSD
         TempExcelBuffer.AddColumn('CATEGORY', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('MAKE', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('SPECIFICATIONS', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);

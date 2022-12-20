@@ -51,17 +51,20 @@ report 50166 "Inward Receipt Details"
 
                     WindPa.Update(1, "Gate Entry No.");
 
+
                     PurchRcptLine.Reset();
                     PurchRcptLine.SetRange("Ref. Posted Gate Entry", "Gate Entry No.");
                     if PurchRcptLine.FindFirst() then begin
                         if PurchRcptHdr.Get(PurchRcptLine."Document No.") then;
-                        
+
                         PurchInvLine.Reset();
                         PurchInvLine.SetRange("Receipt No.", PurchRcptLine."Document No.");
                         PurchInvLine.SetRange("Receipt Line No.", PurchRcptLine."Line No.");
-                        if PurchInvLine.FindSet() then begin
+                        if PurchInvLine.FindFirst() then begin
                             LineAmount := PurchInvLine."Line Amount";
                             if PurchInvHdr.Get(PurchInvLine."Document No.") then;
+
+
                             DocumentTotals.CalculatePostedPurchInvoiceTotals(PurchInvHdr, VATAmount, PurchInvLine);
                             DtldGSTLdgEntry.Reset();
                             DtldGSTLdgEntry.SetRange("Document No.", PurchInvLine."Document No.");
@@ -98,8 +101,8 @@ report 50166 "Inward Receipt Details"
                     TempExcelBuffer.AddColumn(PurchInvLine."Unit of Measure Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn(PurchInvLine.Quantity, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn(PurchInvLine."Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn(PurchInvLine."VAT %", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn(VATAmount, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    //TempExcelBuffer.AddColumn(PurchInvLine."VAT %", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    //TempExcelBuffer.AddColumn(VATAmount, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn('', FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn('', FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn('', FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
@@ -120,6 +123,7 @@ report 50166 "Inward Receipt Details"
             }
             trigger OnPreDataItem()
             begin
+                SetFilter("Document Date", '%1..%2', StartDate, EndDate); //B2BSSDOn07Dec2022
                 Clear(SNo);
                 MakeExcelHeaders();
             end;
@@ -197,8 +201,8 @@ report 50166 "Inward Receipt Details"
         TempExcelBuffer.AddColumn('UOM', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('QTY', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('RATE', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-        TempExcelBuffer.AddColumn('VAT%', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-        TempExcelBuffer.AddColumn('VAT AMOUNT', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        //TempExcelBuffer.AddColumn('VAT%', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        //TempExcelBuffer.AddColumn('VAT AMOUNT', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('CST%', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('CST AMOUNT', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('EXCISE%', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);

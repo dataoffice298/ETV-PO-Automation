@@ -36,21 +36,19 @@ report 50167 "QC Pending GRN Pending Report"
 
                     if Item.Get("No.") then;
                     Clear(PurchHdr);
-                    clear(PostGateEntryHdr);
                     PurchLine.Reset;
                     PurchLine.SetRange("Indent No.", "Indent Line"."Document No.");
                     PurchLine.SetRange("Indent Line No.", "Indent Line"."Line No.");
-                    if PurchLine.FindFirst() then begin
+                    if PurchLine.FindFirst() then
                         if PurchHdr.get(PurchHdr."Document Type"::Order, PurchLine."Document No.") then;
-
-                        PostGateEntryLine.Reset(); //B2BSSD
-                        PostGateEntryLine.SetRange("Source No.", PurchLine."Document No.");
-                        if PostGateEntryLine.FindFirst() then;
-
-                        PostGateEntryHdr.Reset();
-                        PostGateEntryHdr.SetRange("No.", PostGateEntryLine."Gate Entry No.");
-                        if PostGateEntryHdr.FindFirst() then;
-
+                    //B2BSSD21Dec2022<<
+                    PostGateEntryHdr.Reset();
+                    PostGateEntryHdr.SetRange("Purchase Order No.", PurchLine."Document No.");
+                    if PostGateEntryHdr.FindFirst() then begin
+                        PostGateEntryLine.Reset();
+                        PostGateEntryLine.SetRange("Gate Entry No.", PostGateEntryHdr."No.");
+                        if PostGateEntryLine.FindSet() then;
+                        //B2BSSD21Dec2022>>
                     end;
 
                     WindPa.Update(1, "Document No.");
@@ -58,7 +56,7 @@ report 50167 "QC Pending GRN Pending Report"
                     TempExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn("Document No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn(IndentHeader."Document Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
-                    TempExcelBuffer.AddColumn(PostGateEntryHdr."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn(PostGateEntryHdr."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD21Dec2022
                     TempExcelBuffer.AddColumn(PostGateEntryHdr."Document Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
                     TempExcelBuffer.AddColumn(PurchHdr."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn(PurchHdr."Document Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
@@ -127,12 +125,10 @@ report 50167 "QC Pending GRN Pending Report"
         EndDate: Date;
         WindPa: Dialog;
         SNo: Integer;
-        PostGateGvar: code[20];
-
-        PostedGateLineGREC: Record 50058;
-
-
-
+        //B2BSSD21DEC2022<<
+        GateEntryHeader: Record "Gate Entry Header_B2B";
+        GateEntryLine: Record "Gate Entry Line_B2B";
+    //B2BSSD21DEC2022>>
     procedure MakeExcelHeaders()
     begin
 

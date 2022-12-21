@@ -38,10 +38,12 @@ report 50162 "Issuance Report"
                     PurchLine.SetRange("Indent No.", "Document No.");
                     PurchLine.SetRange("Indent Line No.", "Line No.");
                     if PurchLine.FindFirst() then begin
+                        //B2BSSD21Dec2022<<
                         PostedGateEntryHed.Reset();
                         PostedGateEntryHed.SetRange("Purchase Order No.", PurchLine."Document No.");
                         PostedGateEntryHed.SetRange("Purchase Order Line No.", PurchLine."Line No.");
                         if PostedGateEntryHed.FindFirst() then;
+                        //B2BSSD21Dec2022>>
                     end;
 
                     WindPa.Update(1, "Document No.");

@@ -67,8 +67,10 @@ report 50166 "Inward Receipt Details"
 
                             DocumentTotals.CalculatePostedPurchInvoiceTotals(PurchInvHdr, VATAmount, PurchInvLine);
                             DtldGSTLdgEntry.Reset();
+                            DtldGSTLdgEntry.SetCurrentKey("GST Component Code");
                             DtldGSTLdgEntry.SetRange("Document No.", PurchInvLine."Document No.");
                             DtldGSTLdgEntry.SetRange("Document Line No.", PurchInvLine."Line No.");
+                            DtldGSTLdgEntry.SetRange("Entry Type", DtldGSTLdgEntry."Entry Type"::"Initial Entry");
                             if DtldGSTLdgEntry.FindSet() then
                                 repeat
                                     if DtldGSTLdgEntry."GST Component Code" = 'CGST' then

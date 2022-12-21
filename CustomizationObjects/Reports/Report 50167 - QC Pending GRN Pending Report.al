@@ -49,9 +49,6 @@ report 50167 "QC Pending GRN Pending Report"
                         PostGateEntryLine.SetRange("Gate Entry No.", PostGateEntryHdr."No.");
                         if PostGateEntryLine.FindSet() then;
                         //B2BSSD21Dec2022>>
-
-
-
                     end;
                     //B2BSSD21Dec2022<<
                     if (PostGateEntryHdr."No." = '') or (PurchHdr."No." = '') then
@@ -86,8 +83,6 @@ report 50167 "QC Pending GRN Pending Report"
             var
                 PostGateEntryHdr: Record "Posted Gate Entry Header_B2B";
             begin
-                //if PostGateEntryHdr."Purchase Order No." = '' then
-                //CurrReport.Break();
                 SetFilter("Document Date", '%1..%2', StartDate, EndDate);
                 Clear(SNo);
                 MakeExcelHeaders();

@@ -50,6 +50,7 @@ table 50037 "Indent Line"
                             Fixedasset.TESTFIELD(Blocked, FALSE);
                             Description := Fixedasset.Description;
                             "Description 2" := Fixedasset."Description 2";
+                            "Variant Code" := Fixedasset.Make_B2B;//B2BVOn20Dec22
                         END;
                     Type::"G/L Account":
                         IF GLAccount.GET("No.") THEN BEGIN

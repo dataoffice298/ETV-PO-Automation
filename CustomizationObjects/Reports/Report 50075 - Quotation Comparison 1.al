@@ -275,7 +275,7 @@ report 50075 "Quotation Comparision"
                             GST := PurchLine."GST Group Code";
 
                             //if PurchHdr."Expected Receipt Date" <> 0D then
-                                //DeliveryDays := PurchHdr."Expected Receipt Date" - WorkDate();
+                            //DeliveryDays := PurchHdr."Expected Receipt Date" - WorkDate();
 
                             GSTSetup.get();
                             GetGSTAmounts(TaxTransactionValue, PurchLine, GSTSetup);
@@ -287,8 +287,8 @@ report 50075 "Quotation Comparision"
                                 PhoneNo := Vend."Phone No.";
                             end;
 
-                            IF Indentor1.get() then
-                                Indentor := IndentHdr.Indentor;
+                            //IF Indentor1.get() then
+                            //Indentor := IndentHdr.Indentor;
                         end;
                     end;
                     //B2BSSD26Dec2022<<
@@ -299,15 +299,16 @@ report 50075 "Quotation Comparision"
                         TransMethod := TransportMethod.Description;
                     //B2BSSD26Dec2022>>
 
-                    IndentHdr.Reset();
-                    IndentHdr.SetRange("No.", "Parent Quote No.");
-                    Indentor := IndentHdr.Indentor;
+                    //IndentHdr.Reset();
+                    //IndentHdr.SetRange("No.", "Parent Quote No.");
+                    //Indentor := IndentHdr.Indentor;
 
                     QuoComp.Reset();
                     QuoComp.SetRange("Quot Comp No.", "Quot Comp No.");
                     If QuoComp.Findset() then
                         UnitPrice := QuoComp.Rate;
                     DeliveryDays := QuoComp."Delivery Date";
+                    Indentor := QuoCompHdr."Created By";
 
 
                 end;

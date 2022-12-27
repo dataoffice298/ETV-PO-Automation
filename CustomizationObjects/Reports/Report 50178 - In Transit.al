@@ -63,29 +63,33 @@ report 50178 "In Transit"
             }
             trigger OnPreDataItem()
             begin
+                SetFilter("Posting Date", '%1..%2', StartDate, EndDate);//B2BSSD27Dec2022
                 clear(SNo);
                 MakeInTransitHeader();
             end;
         }
     }
-
+    //B2BSSD27Dec2022<<
     requestpage
     {
         layout
         {
             area(Content)
             {
-                /*group(GroupName)
+                group(GroupName)
                 {
-                    field(Name; SourceExpression)
+                    field(StartDate; StartDate)
                     {
                         ApplicationArea = All;
-                        
                     }
-                }*/
+                    field(EndDate; EndDate)
+                    {
+                        ApplicationArea = All;
+                    }
+                }
             }
         }
-
+        //B2BSSD27Dec2022>>
         actions
         {
             area(processing)
@@ -117,7 +121,8 @@ report 50178 "In Transit"
         myInt: Integer;
         ExcelBuffer1: Record "Excel Buffer" temporary;
         SNo: Integer;
-
+        StartDate: Date;
+        EndDate: Date;
 
     PROCEDURE MakeInTransitHeader()
     begin
@@ -147,8 +152,6 @@ report 50178 "In Transit"
     PROCEDURE CreateExcelbook()
     BEGIN
         ExcelBuffer1.CreateBookAndOpenExcel('', 'In Transit', '', COMPANYNAME, USERID);
-
-
     END;
 
 }

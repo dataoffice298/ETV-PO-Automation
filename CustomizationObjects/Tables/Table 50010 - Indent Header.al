@@ -626,7 +626,8 @@ table 50010 "Indent Header"
                 TransLine.Validate("Item No.", IndentLine."No.");
                 //TransLine.Validate("Transfer-from Bin Code", IndentLine."Transfer From BinCode");
                 TransLine.Validate(Quantity, IndentLine."Req.Quantity");
-                TransLine.Validate("Indent No.", IndentLine."No."); //B2BPGOn12Oct2022
+                //TransLine.Validate("Indent No.", IndentLine."No."); //B2BPGOn12Oct2022
+                TransLine.Validate("Indent No.", IndentLine."Document No.");//B2BSSD27-12-2022
                 TransLine.Validate("Indent Date", IndentLine."Due Date"); //B2BPGOn12Oct2022
                 TransLine.Validate("Variant Code", IndentLine."Variant Code");//B2BSSD06Dec2022
                 TransLine.Insert(true);

@@ -50,6 +50,21 @@ page 50164 "Posted Outward Gate SubFm-RGP"
                     ApplicationArea = all;
                 }
                 //Balu 05212021<<
+
+                //B2BSSD27Dec2022<<
+                field(Variant; Rec.Variant)
+                {
+                    ApplicationArea = All;
+                }
+                field(ModelNo; Rec.ModelNo)
+                {
+                    ApplicationArea = All;
+                }
+                field(SerialNo; Rec.SerialNo)
+                {
+                    ApplicationArea = All;
+                }
+                //B2BSSD27Dec2022>>
             }
         }
     }

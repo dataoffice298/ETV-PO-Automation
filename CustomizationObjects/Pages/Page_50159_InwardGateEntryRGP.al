@@ -159,6 +159,13 @@ page 50159 "Inward Gate Entry-RGP"
                 }
 
                 //B2BSSD16Dec2022>>
+
+                //B2BSSD22Dec2022<<
+                field("Receipt Date"; Rec."Receipt Date")
+                {
+                    ApplicationArea = All;
+                }
+                //B2BSSD22Dec2022>>
             }
             part(Control1500028; "Inward Gate Entry SubFrm-RGP")
             {

@@ -17,7 +17,10 @@ report 50188 "Returnable Gatepass Reg"
 
                 trigger OnAfterGetRecord()
                 var
+                    PostedRgpOutWard: Record "Posted Gate Entry Header_B2B";
                 begin
+                    if "Posted Gate Entry Header_B2B"."No." = 'NRGP-I' then
+                        CurrReport.Skip();
 
 
                     SNo += 1;
@@ -38,6 +41,7 @@ report 50188 "Returnable Gatepass Reg"
 
 
                 end;
+
             }
             trigger OnPreDataItem()
             begin

@@ -3,7 +3,8 @@ table 50057 "Posted Gate Entry Header_B2B"
     // version NAVIN9.00.00.45778
 
     DataClassification = CustomerContent;
-    LookupPageID = "PostedInwardGateEntryList-NRGP";
+    LookupPageID = "Posted Gate Entries List";
+    //LookupPageId = "Gate Entry List";
 
     fields
     {

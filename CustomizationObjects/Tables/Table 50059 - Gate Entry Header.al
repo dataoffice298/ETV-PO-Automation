@@ -333,8 +333,19 @@ table 50059 "Gate Entry Header_B2B"
         field(50; "Posted RGP Outward NO."; Code[20])
         {
             DataClassification = CustomerContent;
+            TableRelation = "Posted Gate Entry Header_B2B"."No.";
+            trigger OnValidate()
+
+            var
+                GateEntryHed: Record "Gate Entry Header_B2B";
+                PostedRgpOutward: Record "Posted Gate Entry Header_B2B";
+            begin
+                if PostedRgpOutward.Get("Entry Type", Type, "No.") then
+                    GateEntryHed."Posted RGP Outward Date" := PostedRgpOutward."Posting Date"
+
+            end;
         }
-        field(51; "Posted RGP Outward Date"; Blob)
+        field(51; "Posted RGP Outward Date"; Date)
         {
             DataClassification = CustomerContent;
         }
@@ -355,6 +366,13 @@ table 50059 "Gate Entry Header_B2B"
             DataClassification = CustomerContent;
         }
         //B2BSSD16Dec2022>>
+
+        //B2BSSD22Dec2022<<
+        field(57; "Receipt Date"; Date)
+        {
+            DataClassification = CustomerContent;
+        }
+        //B2BSSD22Dec2022>>
     }
 
     keys

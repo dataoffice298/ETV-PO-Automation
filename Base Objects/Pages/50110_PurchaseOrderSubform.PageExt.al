@@ -280,7 +280,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                             GateEntryLine."Source Name" := FALRec.Description;
                             GateEntryLine.Description := FALRec.Description;
                         end;
-                    GateEntryLine."Unit of Measure" := Rec."Unit of Measure";
+                    GateEntryLine."Unit of Measure" := Rec."Unit of Measure Code";
                     if EntryType = EntryType::Inward then
                         GateEntryLine.Validate(Quantity, ReservationEntry.Quantity)
                     else

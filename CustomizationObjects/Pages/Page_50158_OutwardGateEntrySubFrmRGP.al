@@ -132,6 +132,20 @@ page 50158 "Outward Gate Entry SubFrm-RGP"
                     ApplicationArea = all;
                     Visible = false;
                 }
+                //B2bSSD22Dec2022<<
+                field(Variant; Rec.Variant)
+                {
+                    ApplicationArea = All;
+                }
+                field(ModelNo; Rec.ModelNo)
+                {
+                    ApplicationArea = All;
+                }
+                field(SerialNo; Rec.SerialNo)
+                {
+                    ApplicationArea = All;
+                }
+                //B2bSSD22Dec2022>>
             }
         }
     }

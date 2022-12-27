@@ -46,7 +46,12 @@ report 50075 "Quotation Comparision"
             { }
             column(QtnNoCapLbl; QtnNoCapLbl)
             { }
-
+            column(RateCaption; RateCaption)
+            { }
+            column(TransMethod; TransMethod)
+            { }
+            column(SerialNo; SerialNo)
+            { }
 
 
             dataitem(DataItem1102152028; "Quotation Comparison Test")
@@ -231,7 +236,13 @@ report 50075 "Quotation Comparision"
                     Insurance1[Integer.Number] += Insurance;
                     "Total Amount1"[Integer.Number] += "Amt. including Tax";
 
-
+                    //B2BSSD26Dec2022<<
+                    QuoCompHdr.Reset();
+                    IF QuoCompHdr.FINDLAST THEN
+                        SerialNo := SerialNo + 1
+                    ELSE
+                        SerialNo := 1;
+                    //B2BSSD26Dec2022>>
 
                     /* PurchLine.Reset();
                      PurchLine.setrange("Document No.", PurchHdr."No.");
@@ -250,6 +261,11 @@ report 50075 "Quotation Comparision"
                         Payment := PurchHdr."Payment Terms Code";
                         warranty := PurchHdr.Warranty;
 
+                        //RateCaption := PurchHdr."Transaction Specification";
+                        //TransMethod := PurchHdr."Transport Method";
+
+
+
                         PurchLine.Reset();
                         PurchLine.SetRange("Document Type", PurchHdr."Document Type");
                         PurchLine.SetRange("Document No.", PurchHdr."No.");
@@ -257,8 +273,9 @@ report 50075 "Quotation Comparision"
                             HSNCode := PurchLine."HSN/SAC Code";
                             UOM := PurchLine."Unit of Measure Code";
                             GST := PurchLine."GST Group Code";
-                            if PurchHdr."Expected Receipt Date" <> 0D then
-                                DeliveryDays := PurchHdr."Expected Receipt Date" - WorkDate();
+
+                            //if PurchHdr."Expected Receipt Date" <> 0D then
+                                //DeliveryDays := PurchHdr."Expected Receipt Date" - WorkDate();
 
                             GSTSetup.get();
                             GetGSTAmounts(TaxTransactionValue, PurchLine, GSTSetup);
@@ -270,10 +287,17 @@ report 50075 "Quotation Comparision"
                                 PhoneNo := Vend."Phone No.";
                             end;
 
-                            //   IF Indentor1.get() then
-                            //       Indentor := IndentHdr.Indentor;
+                            IF Indentor1.get() then
+                                Indentor := IndentHdr.Indentor;
                         end;
                     end;
+                    //B2BSSD26Dec2022<<
+                    if TransactionSpecification.Get(PurchHdr."Transaction Specification") then
+                        RateCaption := TransactionSpecification.Text;
+
+                    if TransportMethod.Get(PurchHdr."Transport Method") then
+                        TransMethod := TransportMethod.Description;
+                    //B2BSSD26Dec2022>>
 
                     IndentHdr.Reset();
                     IndentHdr.SetRange("No.", "Parent Quote No.");
@@ -283,6 +307,9 @@ report 50075 "Quotation Comparision"
                     QuoComp.SetRange("Quot Comp No.", "Quot Comp No.");
                     If QuoComp.Findset() then
                         UnitPrice := QuoComp.Rate;
+                    DeliveryDays := QuoComp."Delivery Date";
+
+
                 end;
 
                 trigger OnPreDataItem();
@@ -418,6 +445,9 @@ report 50075 "Quotation Comparision"
     end;
 
     var
+        TransportMethod: Record "Transport Method";
+        TransactionSpecification: Record "Transaction Specification";
+        PurchaseQuote: Record "Purchase Header";
         ComparitiveCapLbl: Label 'Comparitive Statement';
         PurchLine: Record "Purchase Line";
         PurchHdr: Record "Purchase Header";
@@ -425,6 +455,7 @@ report 50075 "Quotation Comparision"
         QuoComp: Record "Quotation Comparison Test";
         QuoCompHdr: Record QuotCompHdr;
         UnitPrice: Decimal;
+
         IndentHdr: Record "Indent Header";
         Qty: array[10] of Decimal;
         QRate: array[10] of Decimal;
@@ -462,6 +493,7 @@ report 50075 "Quotation Comparision"
         UOMCaptionLbl: Label 'UOM';
         QuantityCaptionLbl: Label 'Quantity';
         RateCaptionLbl: Label 'Rate';
+
         AmountCaptionLbl: Label 'Amount';
         TotalBasicValueCaptionLbl: Label 'Total Basic Value';
         ExiseDutyCaptionLbl: Label 'Exise Duty';
@@ -520,13 +552,18 @@ report 50075 "Quotation Comparision"
         TaxTransactionValue: Record "Tax Transaction Value";
         Payment: code[20];
         warranty: Code[20];
-        DeliveryDays: Integer;
+        DeliveryDays: Date;
         Vend: Record Vendor;
         GSTPerc: Decimal;
         Gstamt: Decimal;
         ContactPerson: Text[100];
         PhoneNo: Text[30];
         Indentor1: Record "Indent Header";
+        RateCaption: Code[10];
+
+        TransMethod: Code[10];
+
+        SerialNo: Integer;
 
 
     procedure SETRFQ(RFQNoL: Code[20]);

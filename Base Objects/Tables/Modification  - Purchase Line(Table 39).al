@@ -174,7 +174,7 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             trigger OnValidate()
             begin
                 if "Qty. to Accept B2B" <> 0 then
-                    CheckTracking(Rec, ReservationEntry);
+                    CheckTracking(Rec);
                 if ("Qty. to Accept B2B") > Quantity then
                     Error(Err0001);
                 if "Qty. to Accept B2B" <> 0 then
@@ -190,7 +190,7 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
                 RejErr: Label 'You cannot reject the quantity as total quantity is received.';
             begin
                 if "Qty. to Reject B2B" <> 0 then
-                    CheckTracking(Rec, ReservationEntry);
+                    CheckTracking(Rec);
                 if Quantity = "Quantity Received" then
                     Error(RejErr);
             end;
@@ -277,10 +277,11 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         Err0001: Label 'The Qty. to Accept must not be greater than Quantity.';
         ReservationEntry: Record "Reservation Entry";
 
-    procedure CheckTracking(PurchLine: Record "Purchase Line"; var ReservEntry: Record "Reservation Entry")
+    procedure CheckTracking(PurchLine: Record "Purchase Line")
     var
         TrackErr: Label 'You must assign a serial number for item %1.';
         ItemLRec: Record Item;
+        ReservEntry: Record "Reservation Entry";
         ReservEntry1: Record "Reservation Entry";
         TrackErr1: Label 'Item tracking lines are defined more than the Qty. to Receive.';
     begin

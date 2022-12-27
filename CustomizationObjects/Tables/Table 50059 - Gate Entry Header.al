@@ -337,12 +337,14 @@ table 50059 "Gate Entry Header_B2B"
             trigger OnValidate()
 
             var
-                GateEntryHed: Record "Gate Entry Header_B2B";
                 PostedRgpOutward: Record "Posted Gate Entry Header_B2B";
             begin
-                if PostedRgpOutward.Get("Entry Type", Type, "No.") then
-                    GateEntryHed."Posted RGP Outward Date" := PostedRgpOutward."Posting Date"
-
+                //B2BSSD27Dec2022<<
+                PostedRgpOutward.reset();
+                PostedRgpOutward.SetRange("No.", "Posted RGP Outward NO.");
+                if PostedRgpOutward.FindFirst() then
+                    "Posted RGP Outward Date" := PostedRgpOutward."Posting Date";
+                //B2BSSD27Dec2022>>
             end;
         }
         field(51; "Posted RGP Outward Date"; Date)

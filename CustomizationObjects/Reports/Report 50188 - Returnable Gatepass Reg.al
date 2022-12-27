@@ -9,6 +9,7 @@ report 50188 "Returnable Gatepass Reg"
     {
         dataitem("Posted Gate Entry Header_B2B"; "Posted Gate Entry Header_B2B")
         {
+            RequestFilterFields = "Entry Type";//B2BSSD26Dec2022
             DataItemTableView = where(Type = const(RGP));
             dataitem("Posted Gate Entry Line_B2B"; "Posted Gate Entry Line_B2B")
             {

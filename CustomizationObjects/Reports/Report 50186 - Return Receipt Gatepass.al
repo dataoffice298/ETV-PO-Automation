@@ -5,10 +5,12 @@ report 50186 "Return Receipt Gatepass"
     ProcessingOnly = true;
     Caption = 'Return Receipt Gatepass-F6';
 
+
     dataset
     {
         dataitem("Posted Gate Entry Header_B2B"; "Posted Gate Entry Header_B2B")
         {
+            RequestFilterFields = "Entry Type";//B2BSSD26Dec2022
             DataItemTableView = where(Type = const(RGP));
             dataitem("Posted Gate Entry Line_B2B"; "Posted Gate Entry Line_B2B")
             {

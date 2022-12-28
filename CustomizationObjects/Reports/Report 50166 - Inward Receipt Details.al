@@ -24,9 +24,13 @@ report 50166 "Inward Receipt Details"
                     PurchInvNo: Code[20];
                     PurchRcptLine: Record "Purch. Rcpt. Line";
                     PurchRcptHdr: Record "Purch. Rcpt. Header";
+                    PurchLine: Record "Purchase Line";
+                    PurchaseHdr: Record "Purchase Header";
                     VATAmount: Decimal;
                     DocumentTotals: Codeunit "Document Totals";
                     DtldGSTLdgEntry: Record "Detailed GST Ledger Entry";
+                    //  PostedGateEntryHeader: Record "Posted Gate Entry Header_B2B";
+                    // postedGateEntryLine: Record "Posted Gate Entry Line_B2B";
                     CGST: Decimal;
                     IGST: Decimal;
                     SGST: Decimal;
@@ -48,78 +52,52 @@ report 50166 "Inward Receipt Details"
                     Clear(TDSEntry);
                     Clear(TotalGST);
                     Clear(LineAmount);
-
                     WindPa.Update(1, "Gate Entry No.");
 
-
-                    PurchRcptLine.Reset();
-                    PurchRcptLine.SetRange("Ref. Posted Gate Entry", "Gate Entry No.");
-                    if PurchRcptLine.FindFirst() then begin
-                        if PurchRcptHdr.Get(PurchRcptLine."Document No.") then;
-
-                        PurchInvLine.Reset();
-                        PurchInvLine.SetRange("Receipt No.", PurchRcptLine."Document No.");
-                        PurchInvLine.SetRange("Receipt Line No.", PurchRcptLine."Line No.");
-                        if PurchInvLine.FindFirst() then begin
-                            LineAmount := PurchInvLine."Line Amount";
-                            if PurchInvHdr.Get(PurchInvLine."Document No.") then;
-
-
-                            DocumentTotals.CalculatePostedPurchInvoiceTotals(PurchInvHdr, VATAmount, PurchInvLine);
-                            DtldGSTLdgEntry.Reset();
-                            DtldGSTLdgEntry.SetCurrentKey("GST Component Code");
-                            DtldGSTLdgEntry.SetRange("Document No.", PurchInvLine."Document No.");
-                            DtldGSTLdgEntry.SetRange("Document Line No.", PurchInvLine."Line No.");
-                            DtldGSTLdgEntry.SetRange("Entry Type", DtldGSTLdgEntry."Entry Type"::"Initial Entry");
-                            if DtldGSTLdgEntry.FindSet() then
-                                repeat
-                                    if DtldGSTLdgEntry."GST Component Code" = 'CGST' then
-                                        CGST += DtldGSTLdgEntry."GST Amount";
-                                    if DtldGSTLdgEntry."GST Component Code" = 'SGST' then
-                                        SGST += DtldGSTLdgEntry."GST Amount";
-                                    if DtldGSTLdgEntry."GST Component Code" = 'IGST' then
-                                        IGST += DtldGSTLdgEntry."GST Amount";
-                                until DtldGSTLdgEntry.Next() = 0;
-                            TotalGST := CGST + IGST + SGST;
-                            TDSEntry.Reset();
-                            TDSEntry.SetRange("Document No.", PurchInvLine."Document No.");
-                            if TDSEntry.FindSet() then
-                                TDSAmt := TDSEntry."TDS Amount";
-                        end;
+                    //B2BSSD28Dec2022<<
+                    PurchaseHdr.Reset();
+                    PurchaseHdr.SetRange("No.", "Source No.");
+                    if PurchaseHdr.FindSet() then begin
+                        PurchLine.Reset();
+                        PurchLine.SetRange("Document No.", PurchaseHdr."No.");
+                        PurchLine.SetRange("Document Type", PurchaseHdr."Document Type");
+                        if PurchLine.FindSet() then;
                     end;
-                    TotAmt := LineAmount + CGST + SGST + IGST - TDSAmt;
+                    //B2BSSD28Dec2022<<
 
+                    //TotAmt := LineAmount + CGST + SGST + IGST - TDSAmt;
                     TempExcelBuffer.NewRow();
                     TempExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn("Gate Entry No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("Posted Gate Entry Header_B2B"."Document Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
-                    TempExcelBuffer.AddColumn(PurchRcptHdr."Posting Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
-                    TempExcelBuffer.AddColumn(PurchRcptHdr."Buy-from Vendor Name", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn(PurchInvLine."Document No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn(PurchaseHdr."Posting Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
+                    TempExcelBuffer.AddColumn(PurchaseHdr."Buy-from Vendor Name", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn(PurchaseHdr."Vendor Invoice No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn(PurchInvHdr."Posting Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
-                    TempExcelBuffer.AddColumn(PurchInvLine."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn(PurchInvLine."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn(PurchInvLine.Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn(PurchInvLine."Unit of Measure Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn(PurchInvLine.Quantity, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn(PurchInvLine."Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    TempExcelBuffer.AddColumn(PurchLine."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn(PurchLine."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn(PurchLine.Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn("Posted Gate Entry Line_B2B"."Unit of Measure", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn("Posted Gate Entry Line_B2B".Quantity, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    TempExcelBuffer.AddColumn(PurchLine."Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     //TempExcelBuffer.AddColumn(PurchInvLine."VAT %", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     //TempExcelBuffer.AddColumn(VATAmount, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn('', FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn('', FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn('', FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn('', FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn(PurchInvLine."Line Discount Amount", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn(CGST, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn(SGST, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn(IGST, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn(TDSAmt, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn(PurchInvLine."Line Amount", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn(TotAmt, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn('', FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn(PurchInvHdr."Import Type", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn(PurchInvHdr."EPCG Scheme", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn(PurchRcptHdr."Order No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    //  TempExcelBuffer.AddColumn('', FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    //TempExcelBuffer.AddColumn('', FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    //TempExcelBuffer.AddColumn('', FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    // TempExcelBuffer.AddColumn('', FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    TempExcelBuffer.AddColumn(PurchLine."Line Discount %", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    //TempExcelBuffer.AddColumn(CGST, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    //TempExcelBuffer.AddColumn(SGST, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    //TempExcelBuffer.AddColumn(IGST, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    //TempExcelBuffer.AddColumn(TDSAmt, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    TempExcelBuffer.AddColumn(PurchLine."Line Amount", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    //TempExcelBuffer.AddColumn(TotAmt, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    TempExcelBuffer.AddColumn(PurchLine."Line Amount", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    TempExcelBuffer.AddColumn(PurchLine.Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn(PurchaseHdr."Import Type", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn(PurchaseHdr."EPCG Scheme", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn(PurchaseHdr."EPCG No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
 
                 end;
             }
@@ -205,15 +183,15 @@ report 50166 "Inward Receipt Details"
         TempExcelBuffer.AddColumn('RATE', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         //TempExcelBuffer.AddColumn('VAT%', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         //TempExcelBuffer.AddColumn('VAT AMOUNT', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-        TempExcelBuffer.AddColumn('CST%', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-        TempExcelBuffer.AddColumn('CST AMOUNT', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-        TempExcelBuffer.AddColumn('EXCISE%', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-        TempExcelBuffer.AddColumn('EXCISE AMOUNT', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        //TempExcelBuffer.AddColumn('CST%', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        //TempExcelBuffer.AddColumn('CST AMOUNT', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        //TempExcelBuffer.AddColumn('EXCISE%', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        //TempExcelBuffer.AddColumn('EXCISE AMOUNT', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('DISCOUNT', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-        TempExcelBuffer.AddColumn('CGST', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-        TempExcelBuffer.AddColumn('SGST', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-        TempExcelBuffer.AddColumn('IGST', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-        TempExcelBuffer.AddColumn('TDS', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        //TempExcelBuffer.AddColumn('CGST', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        //TempExcelBuffer.AddColumn('SGST', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        //TempExcelBuffer.AddColumn('IGST', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        //TempExcelBuffer.AddColumn('TDS', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('BASIC AMOUNT', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('TOTAL AMOUNT', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('NARRATION', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);

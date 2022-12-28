@@ -47,6 +47,13 @@ report 50163 "Open Po Report"
         PurchaseOrderExport();
     end;
 
+    trigger OnPreReport()
+    var
+        myInt: Integer;
+    begin
+
+    end;
+
 
 
     procedure PurchaseOrderExport()
@@ -88,17 +95,14 @@ report 50163 "Open Po Report"
         ExcelBuffer1.AddColumn('ITEM CODE', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
         ExcelBuffer1.AddColumn('ITEM NAME', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
         ExcelBuffer1.AddColumn('UOM', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
-        ExcelBuffer1.AddColumn('QTY', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
+        ExcelBuffer1.AddColumn('Qty', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
         ExcelBuffer1.AddColumn('UNIT RATE', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
         ExcelBuffer1.AddColumn('AMOUNT', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
     END;
 
     PROCEDURE MakeOrderExcelDataBody()
     var
-        PurchaseHeader: Record "Purchase Header";
-        IndentRequsition: Record "Indent Req Header";
-        PurchaseOrderLine: Record "Purchase Line";
-        Reqdatelvar: Date;
+
     BEGIN
         clear(SNo);
 
@@ -110,12 +114,12 @@ report 50163 "Open Po Report"
             repeat
 
                 PurchaseHeader.get(PurchaseOrderLine."Document Type", PurchaseOrderLine."Document No.");
-                PurchaseHeader.SetFilter("Document Date", '%1..%2', StartDate, EndDate);
                 IndentRequsition.Reset();
                 IndentRequsition.SetRange("No.", PurchaseHeader."Indent Requisition No");
+                IndentRequsition.SetFilter("Document Date", '%1..%2', StartDate, EndDate);//B2BSSD28Dec2022
                 if IndentRequsition.FindFirst() then;
 
-                if (PurchaseHeader.Status = PurchaseHeader.Status::Open) then begin
+                if (PurchaseHeader.Status = PurchaseHeader.Status::Open) AND (PurchaseHeader."Indent Requisition No" <> '') then begin
                     SNo += 1;
                     ExcelBuffer1.NewRow;
                     ExcelBuffer1.AddColumn(SNo, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Number);
@@ -127,11 +131,13 @@ report 50163 "Open Po Report"
                     ExcelBuffer1.AddColumn(PurchaseOrderLine."No.", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
                     ExcelBuffer1.AddColumn(PurchaseOrderLine.Description, FALSE, '', false, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
                     ExcelBuffer1.AddColumn(PurchaseOrderLine."Unit of Measure", FALSE, '', false, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn(PurchaseOrderLine.Quantity, FALSE, '', false, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Number);
+                    //ExcelBuffer1.AddColumn(PurchaseOrderLine.Quantity, FALSE, '', false, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Number);
+                    ExcelBuffer1.AddColumn(PurchaseOrderLine."Qty. to Receive", FALSE, '', false, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Number);//B2BSSD28Dec2022
                     ExcelBuffer1.AddColumn(PurchaseOrderLine."Unit Cost", FALSE, '', false, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Number);
                     ExcelBuffer1.AddColumn(Round(PurchaseOrderLine."Unit Cost" * PurchaseOrderLine.Quantity, 0.01), FALSE, '', false, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
                 end
             until PurchaseOrderLine.Next() = 0;
+
 
     END;
 
@@ -141,4 +147,9 @@ report 50163 "Open Po Report"
 
     END;
 
+    var
+        PurchaseHeader: Record "Purchase Header";
+        IndentRequsition: Record "Indent Req Header";
+        PurchaseOrderLine: Record "Purchase Line";
+        Reqdatelvar: Date;
 }

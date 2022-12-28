@@ -93,7 +93,10 @@ report 50164 "Po Report"//>>CH15SEP2022
                 PurchaseHeader.get(PurchaseOrderLine."Document Type", PurchaseOrderLine."Document No.");
                 IndentRequsition.Reset();
                 IndentRequsition.SetRange("No.", PurchaseHeader."Indent Requisition No");
+
                 if IndentRequsition.FindFirst() then begin
+                    if IndentRequsition."No." = '' then
+                        CurrReport.Skip();
                     SNo += 1;
                     ExcelBuffer1.NewRow;
                     ExcelBuffer1.AddColumn(SNo, FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);

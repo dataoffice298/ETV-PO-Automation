@@ -147,6 +147,7 @@ report 50181 "Non Returnable Gatepass"
                     Users.Reset();
                     Users.SetRange("User Name", "Gate Entry Header_B2B"."User ID");
                     if Users.FindFirst() then;
+
                     case "Source Type" of
                         "Source Type"::"Sales Shipment":
                             BEGIN
@@ -194,8 +195,8 @@ report 50181 "Non Returnable Gatepass"
                                             ItemName := TransferShpntLine."Item No.";
                                         until PurchaseRetLinLRec.Next() = 0;
                                 end
-
                             END;
+
                         "Source Type"::"Transfer Receipt":
                             BEGIN
                                 TransferHdr.reset;
@@ -210,10 +211,9 @@ report 50181 "Non Returnable Gatepass"
                                             ItemName := TransferLine."Item No.";
                                         until PurchaseRetLinLRec.Next() = 0;
                                 end
-
                             END;
-
                     end;
+
                 end;
 
             }
@@ -242,7 +242,7 @@ report 50181 "Non Returnable Gatepass"
             {
                 group(GroupName)
                 {
-                    
+
                 }
             }
         }

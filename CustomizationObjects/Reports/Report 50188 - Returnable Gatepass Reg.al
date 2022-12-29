@@ -9,8 +9,8 @@ report 50188 "Returnable Gatepass Reg"
     {
         dataitem("Posted Gate Entry Header_B2B"; "Posted Gate Entry Header_B2B")
         {
-            RequestFilterFields = "Entry Type";//B2BSSD26Dec2022
-            DataItemTableView = where(Type = const(RGP));
+            //RequestFilterFields = "Entry Type";//B2BSSD26Dec2022
+            DataItemTableView = where("Entry Type" = const(Outward), Type = const(RGP));
             dataitem("Posted Gate Entry Line_B2B"; "Posted Gate Entry Line_B2B")
             {
                 DataItemLink = "Entry Type" = field("Entry Type"), "Gate Entry No." = field("No."), Type = field(Type);
@@ -20,8 +20,6 @@ report 50188 "Returnable Gatepass Reg"
                 var
                     PostedRgpOutWard: Record "Posted Gate Entry Header_B2B";
                 begin
-                    if "Posted Gate Entry Header_B2B"."No." = 'NRGP-I' then
-                        CurrReport.Skip();
 
 
                     SNo += 1;

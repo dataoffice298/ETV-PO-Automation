@@ -11,8 +11,9 @@ report 50183 "Returnable Gatepass"
     {
         dataitem("Gate Entry Header_B2B"; "Gate Entry Header_B2B")
         {
+            RequestFilterFields = "No.";
             DataItemTableView = WHERE("Entry Type" = const(Inward),
-                                      Type = FILTER('RGP'));
+                                      Type = const(RGP));
             column(Program; Program)
             { }
             column(No_; "No.")
@@ -175,10 +176,7 @@ report 50183 "Returnable Gatepass"
         {
             area(Content)
             {
-                group(GroupName)
-                {
 
-                }
             }
         }
 
@@ -257,5 +255,4 @@ report 50183 "Returnable Gatepass"
         CheckedCapLbl: Label '2)Checked and allowed at the gate on_____________________Time____________________';
         IncomingVerCapLbl: Label 'Incoming Verification';
         ReturntoCapLbl: Label 'Returned to back on___________________________Time____________and Entered in R/I Register by SI/SS________________________';
-
 }

@@ -9,8 +9,7 @@ report 50187 "NonReturnable Gatepass"
     {
         dataitem("Posted Gate Entry Header_B2B"; "Posted Gate Entry Header_B2B")
         {
-            RequestFilterFields = "Entry Type";//B2BSSD27Dec2022
-            DataItemTableView = where(Type = const(NRGP));
+            DataItemTableView = where("Entry Type" = const(Outward), Type = const(NRGP));
             dataitem("Posted Gate Entry Line_B2B"; "Posted Gate Entry Line_B2B")
             {
                 DataItemLink = "Entry Type" = field("Entry Type"), "Gate Entry No." = field("No."), Type = field(Type);

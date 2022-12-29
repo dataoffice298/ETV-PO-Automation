@@ -11,7 +11,7 @@ report 50186 "Return Receipt Gatepass"
         dataitem("Posted Gate Entry Header_B2B"; "Posted Gate Entry Header_B2B")
         {
             RequestFilterFields = "Entry Type";//B2BSSD26Dec2022
-            DataItemTableView = where(Type = const(RGP));
+            DataItemTableView = where(Type = const(RGP), "Entry Type" = const(Inward));
             dataitem("Posted Gate Entry Line_B2B"; "Posted Gate Entry Line_B2B")
             {
                 DataItemLink = "Entry Type" = field("Entry Type"), "Gate Entry No." = field("No."), Type = field(Type);
@@ -19,7 +19,16 @@ report 50186 "Return Receipt Gatepass"
 
                 trigger OnAfterGetRecord()
                 var
+                    PostedGateEntryLine: Record "Posted Gate Entry Line_B2B";
+                    PostedGateEntryHeader: Record "Posted Gate Entry Header_B2B";
+                    RecepitDate: Date;
                 begin
+
+                    PostedGateEntryHeader.Reset();
+                    PostedGateEntryHeader.SetRange("No.", "Posted RGP OUT NO.");
+                    if PostedGateEntryHeader.FindFirst() then;
+                    RecepitDate := PostedGateEntryHeader."Document Date";
+
 
                     SNo += 1;
                     ExcelBuffer.NewRow();
@@ -35,10 +44,8 @@ report 50186 "Return Receipt Gatepass"
                     ExcelBuffer.AddColumn("Posted Gate Entry Line_B2B".Quantity, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
                     ExcelBuffer.AddColumn("Posted Gate Entry Header_B2B"."Document Date", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Date);
                     ExcelBuffer.AddColumn("Posted Gate Entry Header_B2B"."Location Code", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
-                    ExcelBuffer.AddColumn("Posted Gate Entry Header_B2B"."No.", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);//B@BSSD29Dec2022
+                    ExcelBuffer.AddColumn("Posted Gate Entry Line_B2B"."Posted RGP OUT NO.", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);//B@BSSD29Dec2022
                     ExcelBuffer.AddColumn("Posted Gate Entry Header_B2B"."Document Date", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Date);//B@BSSD29Dec2022
-
-
                 end;
             }
             trigger OnPreDataItem()
@@ -128,8 +135,8 @@ report 50186 "Return Receipt Gatepass"
         ExcelBuffer.AddColumn('QTY', FALSE, '', TRUE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
         ExcelBuffer.AddColumn('RETURN DATE', FALSE, '', TRUE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
         ExcelBuffer.AddColumn('LOCATION', FALSE, '', TRUE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
-        ExcelBuffer.AddColumn('RECEIPT NO', FALSE, '', TRUE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
-        ExcelBuffer.AddColumn('RECEIPT DATE', FALSE, '', TRUE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
+        ExcelBuffer.AddColumn('Posted RGP Outward No.', FALSE, '', TRUE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);//B2BSSD29Dec2022
+        ExcelBuffer.AddColumn('Posted RGP Outward DATE', FALSE, '', TRUE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);//B2BSSD29Dec2022
     end;
 
     PROCEDURE CreateExcelbook()

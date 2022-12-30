@@ -58,6 +58,20 @@ page 50166 "Posted Inward Gate SubFm-RGP"
                 {
                     ApplicationArea = all;
                 }
+                //B2BSSD30Dec2022<<
+                field(Variant; Variant)
+                {
+                    ApplicationArea = All;
+                }
+                field(ModelNo; ModelNo)
+                {
+                    ApplicationArea = All;
+                }
+                field(SerialNo; SerialNo)
+                {
+                    ApplicationArea = All;
+                }
+                //B2BSSD30Dec2022>>
             }
         }
     }

@@ -35,6 +35,20 @@ page 50153 "Posted Outward Gate SubFm-NRGP"
                 {
                     ApplicationArea = ALL;
                 }
+                //B2BSSD30Dec2022<<
+                field(Variant; Variant)
+                {
+                    ApplicationArea = All;
+                }
+                field(ModelNo; ModelNo)
+                {
+                    ApplicationArea = All;
+                }
+                field(SerialNo; SerialNo)
+                {
+                    ApplicationArea = All;
+                }
+                //B2BSSD30Dec2022>>
             }
         }
     }

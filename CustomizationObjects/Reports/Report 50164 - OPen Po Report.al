@@ -115,7 +115,7 @@ report 50164 "OPen Po Report"//>>CH15SEP2022
                     SNo += 1;
                     ExcelBuffer1.NewRow;
                     ExcelBuffer1.AddColumn(SNo, FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn(PurchaseHeader."Indent Requisition No", FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
+                    ExcelBuffer1.AddColumn(PurchaseOrderLine."Indent No.", FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);//B2BSSD30Dec2022
                     ExcelBuffer1.AddColumn(IndentRequsition."Document Date", FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
                     ExcelBuffer1.AddColumn(PurchaseOrderLine."Document No.", FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
                     ExcelBuffer1.AddColumn(PurchaseHeader."Posting Date", FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);

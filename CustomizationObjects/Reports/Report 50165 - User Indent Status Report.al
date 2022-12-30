@@ -17,7 +17,10 @@ report 50165 "User Indent Status Report"
                     Item: Record Item;
                     Users: Record User;
                     FixedAsset: Record "Fixed Asset";
+                    FixedAsset1: Record "Fixed Asset";//B2BSSD30Dec2022
                     ApprovalEntry: Record "Approval Entry";
+                    CATEGORY: Text[100];//B2BSSD30Dec2022
+                    FADepreciationBookOld: Record "FA Depreciation Book";//B2BSSD30Dec2022
                 begin
                     SNo += 1;
 
@@ -28,7 +31,7 @@ report 50165 "User Indent Status Report"
                     if Item.Get("No.") then;
                     if FixedAsset.Get("No.") then;
                     WindPa.Update(1, "Document No.");
-                    //SSD06122022<<
+                    //B2BSSD06122022<<
                     ApprovalEntry.Reset();
                     ApprovalEntry.SetCurrentKey("Sequence No.");
                     ApprovalEntry.SetRange("Document No.", "Indent Header"."No.");
@@ -36,7 +39,29 @@ report 50165 "User Indent Status Report"
                     if ApprovalEntry.FindFirst() then begin
                         "Indent Header"."Approver Name" := ApprovalEntry."Approver ID";
                     end;
-                    //SSD06122022>>
+                    //B2BSSD06122022>>
+
+                    //B2BSSD30Dec2022<<
+                    case Type of
+                        Type::"Item":
+                            begin
+                                if Item.Get("No.") then
+                                    CATEGORY := Item."Item Category Code";
+                            end;
+                        Type::"Fixed Assets":
+                            begin
+                                if FixedAsset1.Get("No.") then
+                                    CATEGORY := FixedAsset1."FA Class Code";
+                                Clear(FADepreciationBookOld);
+                                FADepreciationBookOld.SetRange("FA No.", "No.");
+                                if FADepreciationBookOld.Count <= 1 then begin
+                                    if not FADepreciationBookOld.FindFirst then
+                                        Clear(FADepreciationBookOld);
+                                end;
+                            end;
+                    end;
+                    //B2BSSD30Dec2022>>
+
                     TempExcelBuffer.NewRow();
                     TempExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn("Document No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
@@ -49,10 +74,10 @@ report 50165 "User Indent Status Report"
                     TempExcelBuffer.AddColumn("Release Status", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     //TempExcelBuffer.AddColumn("Indent Header".Authorized, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("Indent Header"."Approver Name", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text); //B2BSSD21Dec2022
-                    TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    //TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn(CATEGORY, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD30Dec2022
                     TempExcelBuffer.AddColumn("Variant Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    //TempExcelBuffer.AddColumn(FixedAsset."Serial No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn("Indent Line"."Spec Id", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    TempExcelBuffer.AddColumn("Indent Line"."Spec Id", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number); //B2BSSD30Dec2022
 
                 end;
             }
@@ -73,11 +98,13 @@ report 50165 "User Indent Status Report"
             {
                 group("Date Filters")
                 {
-                    field(StartDate; StartDate)
+                    field(StartDate;
+                    StartDate)
                     {
                         ApplicationArea = all;
                     }
-                    field(EndDate; EndDate)
+                    field(EndDate;
+                    EndDate)
                     {
                         ApplicationArea = all;
                     }

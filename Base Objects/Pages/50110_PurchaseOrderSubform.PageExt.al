@@ -119,7 +119,16 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         ApplicationArea = All;
                         Image = CreateDocument;
                         trigger OnAction()
+                        var
+                            PurChaseHeader: Record "Purchase Header";//B2BSSDJan2023
                         begin
+                            //B2BSSDJan2023<<
+                            PurChaseHeader.Reset();
+                            PurChaseHeader.SetRange("No.", Rec."Document No.");
+                            if PurChaseHeader.FindFirst() then begin
+                                PurChaseHeader.TestField("Import Type");
+                            end;
+                            //B2BSSDJan2023>>
                             CreateGateEntries(GateEntryType::Inward, GateEntryDocType::RGP)
                         end;
                     }

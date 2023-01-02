@@ -474,10 +474,13 @@ page 50175 "Transfer Indent Header"
                 {
                     Caption = 'Copy Indent';
                     ApplicationArea = All;
+                    Image = CopyDocument;//B2BSSD02Jan2023
 
                     trigger OnAction();
+                    var
+
                     begin
-                        Rec.CopyIndent;
+                        Rec.CopyIndent();
                     end;
                 }
                 separator("Approvals")

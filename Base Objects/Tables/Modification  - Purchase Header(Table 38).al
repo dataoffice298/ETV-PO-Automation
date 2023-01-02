@@ -48,13 +48,19 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
         }
         field(50114; "Import Type"; Option)
         {
-            OptionMembers = Import,Indigenous;
-            OptionCaption = 'Import,Indigenous';
+            OptionMembers = " ",Import,Indigenous;
+            OptionCaption = ' ,Import,Indigenous';
+            NotBlank = true;//B2BSSD02Jan2023
         }
         //B2BMSOn18Oct2022>>
         Field(50115; "Regularization"; Boolean)
         {
             Caption = 'Regularization';
+        }
+        //B2BSSD02Jan2023
+        field(50116; "Vendor Invoice Date"; Date)
+        {
+            DataClassification = CustomerContent;
         }
         //B2BMSOn18Oct2022<<
         field(33002900; "RFQ No."; Code[20])
@@ -96,7 +102,6 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
             OptionMembers = ,Open,"Pending Approval",Released;
             OptionCaption = ' ,Open,Pending Approval,Released';
         }
-
     }
 
 

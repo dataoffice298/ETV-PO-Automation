@@ -30,6 +30,12 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 ApplicationArea = all;
             }
             //B2BMSOn18Oct2022<<
+            //B2BSSD02Jan2023<<
+            field("Vendor Invoice Date"; Rec."Vendor Invoice Date")
+            {
+                ApplicationArea = All;
+            }
+            //B2BSSD02Jan2023>>
         }
     }
     actions
@@ -39,7 +45,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         {
             trigger OnBeforeAction()
             begin
-                
+
                 GateEntry.Reset();
                 GateEntry.SetRange("Source No.", Rec."No.");
                 if GateEntry.FindFirst() then begin

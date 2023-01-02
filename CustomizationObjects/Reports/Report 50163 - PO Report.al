@@ -79,12 +79,12 @@ report 50163 "Po Report"//B2BSSD29DEC2022
         ExcelBuffer1.NewRow();
         ExcelBuffer1.AddColumn('', FALSE, '', TRUE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
         ExcelBuffer1.AddColumn('', FALSE, '', TRUE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
-        ExcelBuffer1.AddColumn('Open PO Report', FALSE, '', TRUE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
+        ExcelBuffer1.AddColumn('PO Report', FALSE, '', TRUE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);//B2BSSD29Dec2022
         ExcelBuffer1.NewRow();
         ExcelBuffer1.AddColumn('', FALSE, '', TRUE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
         ExcelBuffer1.AddColumn('', FALSE, '', TRUE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
         IF (StartDate <> 0D) or (EndDate <> 0D) THEN
-            ExcelBuffer1.AddColumn('Open PO: ' + Format(StartDate) + ' to' + Format(EndDate), FALSE, '', TRUE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
+            ExcelBuffer1.AddColumn('PO: ' + Format(StartDate) + ' to' + Format(EndDate), FALSE, '', TRUE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);//B2BSSD26Dec2022
         ExcelBuffer1.NewRow;
         ExcelBuffer1.AddColumn('S. NO.', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
         ExcelBuffer1.AddColumn('INDENT NUMBER', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
@@ -109,21 +109,20 @@ report 50163 "Po Report"//B2BSSD29DEC2022
         PurchaseOrderLine.Reset();
         PurchaseOrderLine.SetFilter(Quantity, '<>%1', 0);
         PurchaseOrderLine.SetRange("Document Type", PurchaseOrderLine."Document Type"::Order);
-
         if PurchaseOrderLine.FindSet() then
             repeat
 
                 PurchaseHeader.get(PurchaseOrderLine."Document Type", PurchaseOrderLine."Document No.");
                 IndentRequsition.Reset();
                 IndentRequsition.SetRange("No.", PurchaseHeader."Indent Requisition No");
-                IndentRequsition.SetFilter("Document Date", '%1..%2', StartDate, EndDate);//B2BSSD28Dec2022
+                IndentRequsition.SetFilter("Document Date", '%1..%2', StartDate, EndDate);//B2BSSD02Jan2023
                 if IndentRequsition.FindFirst() then;
 
-                if (PurchaseHeader.Status = PurchaseHeader.Status::Open) AND (PurchaseHeader."Indent Requisition No" <> '') then begin
+                if (PurchaseHeader.Status = PurchaseHeader.Status::Released) AND (PurchaseOrderLine."Indent No." <> '') then begin
                     SNo += 1;
                     ExcelBuffer1.NewRow;
                     ExcelBuffer1.AddColumn(SNo, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Number);
-                    ExcelBuffer1.AddColumn(PurchaseHeader."Indent Requisition No", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
+                    ExcelBuffer1.AddColumn(PurchaseOrderLine."Indent No.", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
                     ExcelBuffer1.AddColumn(IndentRequsition."Document Date", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Date);
                     ExcelBuffer1.AddColumn(PurchaseOrderLine."Document No.", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
                     ExcelBuffer1.AddColumn(PurchaseHeader."Posting Date", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Date);
@@ -152,4 +151,6 @@ report 50163 "Po Report"//B2BSSD29DEC2022
         IndentRequsition: Record "Indent Req Header";
         PurchaseOrderLine: Record "Purchase Line";
         Reqdatelvar: Date;
+        IndentHeader: Record "Indent Header";
+        IndentRequsitionLine: Record "Indent Requisitions";
 }

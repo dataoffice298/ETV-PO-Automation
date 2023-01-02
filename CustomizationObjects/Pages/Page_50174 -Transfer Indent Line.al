@@ -89,6 +89,12 @@ page 50174 "Transfer Indent Line"
                     ApplicationArea = all;
                     Editable = false;
                 }
+                //B2BSSD02Jan2023<<
+                field("Variant Code"; Rec."Variant Code")
+                {
+                    ApplicationArea = All;
+                }
+                //B2BSSD02Jan2023>>
             }
         }
     }

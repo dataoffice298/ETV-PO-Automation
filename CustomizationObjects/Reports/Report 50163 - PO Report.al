@@ -113,9 +113,10 @@ report 50163 "Po Report"//B2BSSD29DEC2022
             repeat
 
                 PurchaseHeader.get(PurchaseOrderLine."Document Type", PurchaseOrderLine."Document No.");
+                PurchaseHeader.SetFilter("Posting Date", '%1..%2', StartDate, EndDate);
                 IndentRequsition.Reset();
                 IndentRequsition.SetRange("No.", PurchaseHeader."Indent Requisition No");
-                IndentRequsition.SetFilter("Document Date", '%1..%2', StartDate, EndDate);//B2BSSD02Jan2023
+                //IndentRequsition.SetFilter("Document Date", '%1..%2', StartDate, EndDate);//B2BSSD02Jan2023
                 if IndentRequsition.FindFirst() then;
 
                 if (PurchaseHeader.Status = PurchaseHeader.Status::Released) AND (PurchaseOrderLine."Indent No." <> '') then begin

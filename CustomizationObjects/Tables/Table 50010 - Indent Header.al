@@ -553,27 +553,36 @@ table 50010 "Indent Header"
         IndentHeader: Record 50010;
         ToIndentLine1: Record 50037;
         ToIndentLine2: Record 50037;
+        FromTable: Record "Indent Header";
+        ToTable: Record "Indent Header";
     begin
         TESTFIELD("No.");
         TESTFIELD("Released Status", "Released Status"::Open);
         IF PAGE.RUNMODAL(0, IndentHeader) = ACTION::LookupOK THEN BEGIN
+            //B2BSSD02Jan2023<<       
+            Department := FromTable.Description;
+            Department := FromTable.Department;
+            "Shortcut Dimension 1 Code" := IndentHeader."Shortcut Dimension 1 Code";
+            "Shortcut Dimension 2 Code" := IndentHeader."Shortcut Dimension 2 Code";
+            Modify();
+            //B2BSSD02Jan2023>>
             CopyDocNo := IndentHeader."No.";
             IF CopyDocNo = "No." THEN
                 ERROR(Text000, TABLECAPTION);
-
             FromIndentLine.SETRANGE("Document No.", CopyDocNo);
             IF FromIndentLine.FIND('-') THEN
                 REPEAT
                     ToIndentLine.INIT;
                     ToIndentLine.TRANSFERFIELDS(FromIndentLine);
-                    ToIndentLine2.SETRANGE(ToIndentLine2."Document No.", "No.");
+                    ToIndentLine2.SETRANGE(ToIndentLine2."Document No.", Rec."No.");
                     IF ToIndentLine2.FIND('-') THEN BEGIN
-                        ToIndentLine1.SETRANGE(ToIndentLine1."Document No.", "No.");
+                        ToIndentLine1.SETRANGE(ToIndentLine1."Document No.", Rec."No.");
                         ToIndentLine1.FIND('+');
-                        ToIndentLine."Line No." := ToIndentLine1."Line No." + 10000
+                        ToIndentLine."Line No." := ToIndentLine1."Line No." + 10000;
                     END ELSE
                         ToIndentLine."Line No." := 10000;
                     ToIndentLine."Document No." := "No.";
+                    ToIndentLine."Indent Transfer" := true;
                     ToIndentLine."Indent Status" := ToIndentLine."Indent Status"::Indent;
                     ToIndentLine."Release Status" := ToIndentLine."Release Status"::Open;
                     ToIndentLine."Due Date" := WORKDATE;

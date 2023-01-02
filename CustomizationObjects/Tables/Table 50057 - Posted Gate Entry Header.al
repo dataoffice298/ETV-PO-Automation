@@ -224,6 +224,25 @@ table 50057 "Posted Gate Entry Header_B2B"
         }
         //B2BMSOn14Nov2022<<
 
+        //B2BSSD02Jan2023<<
+        field(50; "Posted RGP Outward No"; Code[50])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(51; "Posted RGP Outward Date"; Date)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(52; "Expected Date of Return"; Date)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(53; "User Name"; Text[20])
+        {
+            DataClassification = CustomerContent;
+        }
+        //B2BSSD02Jan2023>>
+        
     }
 
     keys

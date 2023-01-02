@@ -52,6 +52,16 @@ page 50163 "Posted Inward Gate Entry-RGP"
                 {
                     ApplicationArea = ALL;
                 }
+                //B2BSSD02Jan2023<<
+                field("User ID"; Rec."User ID")
+                {
+                    ApplicationArea = All;
+                }
+                field("User Name"; Rec."User Name")
+                {
+                    ApplicationArea = All;
+                }
+                //B2BSSD02Jan2023>>
                 field("Document Date"; Rec."Document Date")
                 {
                     ApplicationArea = ALL;
@@ -72,15 +82,39 @@ page 50163 "Posted Inward Gate Entry-RGP"
                 {
                     ApplicationArea = ALL;
                 }
-
                 field("Gate Entry No."; Rec."Gate Entry No.")
                 {
                     ApplicationArea = ALL;
                 }
+                //B2BSSD02Jan2023<<
+                field("Posted RGP Outward No"; Rec."Posted RGP Outward No")
+                {
+                    ApplicationArea = All;
+                }
+                field("Posted RGP Outward Date"; Rec."Posted RGP Outward Date")
+                {
+                    ApplicationArea = All;
+                }
+                field("Expected Date of Return"; Rec."Expected Date of Return")
+                {
+                    ApplicationArea = All;
+                }
+                field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
+                {
+                    ApplicationArea = All;
+                    //Caption = 'Department Code';
+                }
+                field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
+                {
+                    ApplicationArea = All;
+                    //Caption = 'Channel Code';
+                }
+                //B2BSSD02Jan2023>>
             }
             part(Control1500028; "Posted Inward Gate SubFm-RGP")
             {
                 SubPageLink = "Entry Type" = FIELD("Entry Type"),
+
                 "Type" = field("Type"),
                               "Gate Entry No." = FIELD("No.");
                 ApplicationArea = ALL;

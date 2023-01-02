@@ -32,17 +32,18 @@ page 50165 "Posted Outward Gate Entry-RGP"
                 {
                     ApplicationArea = ALL;
                     Visible = false;
-
                 }
                 field(Description; Rec.Description)
                 {
                     ApplicationArea = ALL;
                     Visible = false;
+                    Importance = Additional;
                 }
                 field("Item Description"; Rec."Item Description")
                 {
                     ApplicationArea = ALL;
                     Visible = false;
+                    Importance = Additional;
                 }
                 field("Posting Date"; Rec."Posting Date")
                 {
@@ -80,6 +81,7 @@ page 50165 "Posted Outward Gate Entry-RGP"
                 {
                     ApplicationArea = all;
                     Editable = false;
+                    Importance = Additional;
                 }
                 field("Staff Name"; Rec."Staff Name")
                 {
@@ -102,6 +104,7 @@ page 50165 "Posted Outward Gate Entry-RGP"
                 {
                     ApplicationArea = all;
                     Editable = false;
+                    Importance = Additional;
                 }
                 field("Vendor No"; Rec."Vendor No")
                 {
@@ -119,6 +122,32 @@ page 50165 "Posted Outward Gate Entry-RGP"
                     Editable = false;
 
                 }
+                //B2BSSD02Jan2023<<
+                field("User ID"; Rec."User ID")
+                {
+                    ApplicationArea = All;
+                }
+                field("User Name"; Rec."User Name")
+                {
+                    ApplicationArea = All;
+                    Importance = Additional;
+                }
+                field(Designation; Rec.Designation)
+                {
+                    ApplicationArea = All;
+                    Importance = Additional;
+                }
+                field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
+                {
+                    ApplicationArea = All;
+                    Importance = Additional;
+                }
+                field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
+                {
+                    ApplicationArea = All;
+                    Importance = Additional;
+                }
+                //B2BSSD02Jan2023>>
             }
 
             part(Control1500028; "Posted Outward Gate SubFm-RGP")

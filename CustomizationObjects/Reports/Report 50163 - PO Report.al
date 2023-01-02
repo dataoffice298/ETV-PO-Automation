@@ -118,7 +118,7 @@ report 50163 "Po Report"//B2BSSD29DEC2022
                 IndentRequsition.SetFilter("Document Date", '%1..%2', StartDate, EndDate);//B2BSSD02Jan2023
                 if IndentRequsition.FindFirst() then;
 
-                if (PurchaseHeader.Status = PurchaseHeader.Status::Released) then begin
+                if (PurchaseHeader.Status = PurchaseHeader.Status::Released) AND (PurchaseOrderLine."Indent No." <> '') then begin
                     SNo += 1;
                     ExcelBuffer1.NewRow;
                     ExcelBuffer1.AddColumn(SNo, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Number);

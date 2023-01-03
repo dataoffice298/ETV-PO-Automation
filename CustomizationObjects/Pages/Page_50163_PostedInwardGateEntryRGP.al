@@ -98,6 +98,7 @@ page 50163 "Posted Inward Gate Entry-RGP"
                 field(ExpectedDateofReturn; ExpectedDateofReturn)
                 {
                     ApplicationArea = All;
+                    Caption = 'Expected Date of Return';
                 }
                 field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {

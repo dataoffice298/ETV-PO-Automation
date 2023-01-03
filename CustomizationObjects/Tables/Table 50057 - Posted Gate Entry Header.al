@@ -237,7 +237,7 @@ table 50057 "Posted Gate Entry Header_B2B"
         {
             DataClassification = CustomerContent;
         }*/
-        field(53; "User Name"; Text[20])
+        field(53; "User Name"; Code[50])
         {
             DataClassification = CustomerContent;
         }

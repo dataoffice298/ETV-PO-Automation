@@ -95,7 +95,7 @@ page 50163 "Posted Inward Gate Entry-RGP"
                 {
                     ApplicationArea = All;
                 }
-                field("Expected Date of Return"; Rec."Expected Date of Return")
+                field(ExpectedDateofReturn; ExpectedDateofReturn)
                 {
                     ApplicationArea = All;
                 }

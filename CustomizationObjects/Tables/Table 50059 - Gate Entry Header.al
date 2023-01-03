@@ -351,7 +351,7 @@ table 50059 "Gate Entry Header_B2B"
         {
             DataClassification = CustomerContent;
         }
-        field(52; "LR/RR No."; Text[20])
+        field(52; "LR/RR No."; Code[20])
         {
             DataClassification = CustomerContent;
         }

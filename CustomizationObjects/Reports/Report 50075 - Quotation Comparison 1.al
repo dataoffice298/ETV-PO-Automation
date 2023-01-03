@@ -376,7 +376,7 @@ report 50075 "Quotation Comparision"
    PurchaseLine: Record "Purchase Line";
    GSTSetup: Record "GST Setup")
     var
-        ComponentName: Code[30];
+        ComponentName: Code[50];
     begin
         ComponentName := GetComponentName(PurchaseLine, GSTSetup);
 
@@ -410,9 +410,9 @@ report 50075 "Quotation Comparision"
     end;
 
     local procedure GetComponentName(PurchaseLine: Record "Purchase Line";
-       GSTSetup: Record "GST Setup"): Code[30]
+       GSTSetup: Record "GST Setup"): Code[50]
     var
-        ComponentName: Code[30];
+        ComponentName: Code[50];
     begin
         if GSTSetup."GST Tax Type" = GSTLbl then
             if PurchaseLine."GST Jurisdiction Type" = PurchaseLine."GST Jurisdiction Type"::Interstate then
@@ -425,7 +425,7 @@ report 50075 "Quotation Comparision"
         exit(ComponentName)
     end;
 
-    procedure GetGSTRoundingPrecision(ComponentName: Code[30]): Decimal
+    procedure GetGSTRoundingPrecision(ComponentName: Code[50]): Decimal
     var
         TaxComponent: Record "Tax Component";
         GSTSetup: Record "GST Setup";
@@ -452,7 +452,7 @@ report 50075 "Quotation Comparision"
         ComparitiveCapLbl: Label 'Comparitive Statement';
         PurchLine: Record "Purchase Line";
         PurchHdr: Record "Purchase Header";
-        HSNCode: Code[20];
+        HSNCode: Code[50];
         QuoComp: Record "Quotation Comparison Test";
         QuoCompHdr: Record QuotCompHdr;
         UnitPrice: Decimal;
@@ -461,9 +461,9 @@ report 50075 "Quotation Comparision"
         Qty: array[10] of Decimal;
         QRate: array[10] of Decimal;
         QAmount: array[10] of Decimal;
-        Vendor: array[10] of Code[20];
+        Vendor: array[10] of Code[50];
         VendorName: array[10] of Text[50];
-        QuoteNo: array[10] of Code[20];
+        QuoteNo: array[10] of Code[50];
         //QuotationComparision2: Record 50018;
         //QuotationComparision3: Record 50018;
         //QuotationComparision4: Record 50018;
@@ -483,7 +483,7 @@ report 50075 "Quotation Comparision"
         l: Integer;
         Item: Record 27;
         UOM: Code[20];
-        PaymentTermCode: array[10] of Code[20];
+        PaymentTermCode: array[10] of Code[50];
         QuotationComparisonStatementCaptionLbl: Label 'Quotation Comparison Statement';
         REQNoCaptionLbl: Label 'REQ No.';
         VendorNoCaptionLbl: Label 'Supplier No.';
@@ -506,8 +506,8 @@ report 50075 "Quotation Comparision"
         CompanyInfo: Record 79;
         PurchHeader: Record 38;
         NoofVendors: Integer;
-        RFQNOG: Code[20];
-        IndentNo: Code[20];
+        RFQNOG: Code[50];
+        IndentNo: Code[50];
         IndentNoCapLbl: Label 'Indent No.';
         PurposeCapLbl: Label 'Purpose';
         NameoftheIndentorCapLbl: Label 'Name of the Indentor';
@@ -533,7 +533,7 @@ report 50075 "Quotation Comparision"
         RsCapLbl1: Label '(Rs.)';
         Indentor: Text[50];
         Units: Integer;
-        GST: Code[20];
+        GST: Code[50];
         CollectedCapLbl: Label 'Collected by RFC';
 
         CGSTAmt: Decimal;
@@ -551,8 +551,8 @@ report 50075 "Quotation Comparision"
         CGSTPer: Decimal;
         GSTSetup: Record "GST Setup";
         TaxTransactionValue: Record "Tax Transaction Value";
-        Payment: code[20];
-        warranty: Code[20];
+        Payment: code[50];
+        warranty: Code[50];
         DeliveryDays: Date;
         Vend: Record Vendor;
         GSTPerc: Decimal;
@@ -560,9 +560,9 @@ report 50075 "Quotation Comparision"
         ContactPerson: Text[100];
         PhoneNo: Text[30];
         Indentor1: Record "Indent Header";
-        RateCaption: Code[10];
+        RateCaption: Code[50];
 
-        TransMethod: Code[10];
+        TransMethod: Code[50];
 
         SerialNo: Integer;
 

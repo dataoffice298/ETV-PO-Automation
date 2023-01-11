@@ -82,7 +82,8 @@ page 50119 "Indent Requisitions SubForm"
                         ItemVendor.Reset();
                         ItemVendor.SetRange("Item No.", Rec."Item No.");
                         if ItemVendor.FindSet() then begin
-                            if Page.RunModal(Page::"Item Vendor Catalog", ItemVendor) = Action::LookupOK then;
+                            if Page.RunModal(Page::"Item Vendor Catalog", ItemVendor) = Action::LookupOK then
+                                Rec.Validate("Manufacturer Code", ItemVendor."Vendor No.");
                         end;
                     end;
 

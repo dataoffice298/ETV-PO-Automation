@@ -227,6 +227,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         FALRec: Record "Fixed Asset";
         ReservationEntry: Record "Reservation Entry";
         LineNo: Integer;
+        PurchHeader: Record "Purchase Header";
     begin
         Clear(ReservationEntry);
         LineNo := 10000;
@@ -265,6 +266,10 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             GateEntryHeader.Validate("Location Code", Rec."Location Code");
             GateEntryHeader."Purchase Order No." := Rec."Document No.";
             GateEntryHeader."Purchase Order Line No." := Rec."Line No.";
+            //B2BSSD11Jan2023<<
+            GateEntryHeader.Validate("Shortcut Dimension 1 Code", Rec."Shortcut Dimension 1 Code");
+            GateEntryHeader.Validate("Shortcut Dimension 2 Code", Rec."Shortcut Dimension 2 Code");
+            //B2BSSD11Jan2023>>
             GateEntryHeader.Insert(true);
 
             repeat

@@ -285,7 +285,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                             GateEntryLine."Gate Entry No." := GateEntryHeader."No.";
                             GateEntryLine."Line No." := LineNo;
                             GateEntryLine."Source Type" := GateEntryLine."Source Type"::Item;
-                            GateEntryLine.Validate("Source No.", Rec."No.");
+                            GateEntryLine.Validate("Source No.", PurchLine."No.");
                             ItemLRec.Get(PurchLine."No.");
                             GateEntryLine."Source Name" := ItemLRec.Description;
                             GateEntryLine.Description := ItemLRec.Description;
@@ -311,7 +311,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         GateEntryLine."Gate Entry No." := GateEntryHeader."No.";
                         GateEntryLine."Line No." := LineNo;
                         GateEntryLine."Source Type" := GateEntryLine."Source Type"::"Fixed Asset";
-                        GateEntryLine.Validate("Source No.", Rec."No.");
+                        GateEntryLine.Validate("Source No.", PurchLine."No.");
                         FALRec.Get(PurchLine."No.");
                         GateEntryLine."Source Name" := FALRec.Description;
                         GateEntryLine.Description := FALRec.Description;

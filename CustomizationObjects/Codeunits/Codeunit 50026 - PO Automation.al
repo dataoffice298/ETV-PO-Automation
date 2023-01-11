@@ -1451,6 +1451,13 @@ codeunit 50026 "PO Automation"
                             CreateIndents5."Document Type" := PurchaseLine."Document Type"::Order.AsInteger();
                             CreateIndents5."Order No" := PurchaseLine."Document No.";
                             PurchaseLine.VALIDATE("Direct Unit Cost", CreateIndents5."Unit Cost");
+                            //B2BSSD11Jan2023<<
+                            PurchaseLine.Validate("Spec Id", CreateIndents5."Spec Id");
+                            PurchaseLine.Validate(Quantity, CreateIndents5.Quantity);
+                            PurchaseLine.Validate("Location Code", CreateIndents5."Location Code");
+                            PurchaseLine.Validate("Sub Location Code", CreateIndents5."Sub Location Code");
+                            PurchaseLine.Validate("Variant Code", CreateIndents5."Variant Code");
+                            //B2BSSD11Jan2023>>
                             CreateIndents5.MODIFY;
                         END;
                         PurchaseLine.Modify(true);

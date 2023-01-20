@@ -152,7 +152,7 @@ table 50059 "Gate Entry Header_B2B"
             end;
 
         }
-        field(54; "User Name"; Code[50])
+        field(53; "User Name"; Code[50])
         {
             DataClassification = CustomerContent;
             TableRelation = User."Full Name";
@@ -351,11 +351,11 @@ table 50059 "Gate Entry Header_B2B"
         {
             DataClassification = CustomerContent;
         }
-        field(52; "LR/RR No."; Code[20])
+        field(10; "LR/RR No."; Code[20])
         {
             DataClassification = CustomerContent;
         }
-        field(53; "LR/RR Date"; Date)
+        field(11; "LR/RR Date"; Date)
         {
             DataClassification = CustomerContent;
         }

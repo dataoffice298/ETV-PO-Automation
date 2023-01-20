@@ -104,7 +104,48 @@ page 50157 "Outward Gate Entry - RGP"
                 {
                     ApplicationArea = All;
                 }
-
+                //B2BSSD20Jan2023<<
+                field(InstallationFromDate; InstallationFromDate)
+                {
+                    ApplicationArea = All;
+                }
+                field(InstallationToDate; Rec.InstallationToDate)
+                {
+                    ApplicationArea = All;
+                }
+                field(ShootingStartDate; Rec.ShootingStartDate)
+                {
+                    ApplicationArea = All;
+                }
+                field(ShootingEndDate; Rec.ShootingEndDate)
+                {
+                    ApplicationArea = All;
+                }
+                field("User ID"; Rec."User ID")
+                {
+                    ApplicationArea = All;
+                }
+                field("User Name"; Rec."User Name")
+                {
+                    ApplicationArea = All;
+                }
+                field(Designation; Rec.Designation)
+                {
+                    ApplicationArea = All;
+                }
+                field(Purpose; Rec.Purpose)
+                {
+                    ApplicationArea = All;
+                }
+                field(Program; Rec.Program)
+                {
+                    ApplicationArea = All;
+                }
+                field(ExpectedDateofReturn; Rec.ExpectedDateofReturn)
+                {
+                    ApplicationArea = All;
+                }
+                //B2BSSD20Jan2023>>
             }
             part(Control1500028; "Outward Gate Entry SubFrm-RGP")
             {

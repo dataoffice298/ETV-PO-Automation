@@ -361,10 +361,22 @@ table 50059 "Gate Entry Header_B2B"
         }
         field(55; "Department Code"; Code[20])
         {
+            //B2BSSD20Jan2023<<
+            CaptionClass = '1,2,1';
+            Caption = 'Shortcut Dimension 1 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1),
+            Blocked = CONST(false));
+            //B2BSSD20Jan2023>>
             DataClassification = CustomerContent;
         }
         field(56; "Channel  Code"; Code[20])
         {
+            //B2BSSD20Jan2023<<
+            CaptionClass = '1,2,2';
+            Caption = 'Shortcut Dimension 2 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2),
+            Blocked = CONST(false));
+            //B2BSSD20Jan2023>>
             DataClassification = CustomerContent;
         }
         //B2BSSD16Dec2022>>

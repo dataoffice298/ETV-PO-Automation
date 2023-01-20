@@ -296,12 +296,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                             GateEntryLine.Description := ItemLRec.Description;
                             GateEntryLine.Variant := PurchLine."Variant Code";//B2BSSDOn13Dec2022
                             GateEntryLine."Unit of Measure" := Rec."Unit of Measure Code";
-                            if EntryType = EntryType::Inward then
-                                GateEntryLine.Validate(Quantity, ReservationEntry.Quantity)
-                            else
-                                if EntryType = EntryType::Outward then
-                                    GateEntryLine.Validate(Quantity, Rec."Qty. to Reject B2B");
-
+                            GateEntryLine.Validate(Quantity, ReservationEntry.Quantity);
                             GateEntryLine.ModelNo := ReservationEntry."Lot No.";
                             GateEntryLine.SerialNo := ReservationEntry."Serial No.";
                             GateEntryLine.Make := ReservationEntry."Variant Code";

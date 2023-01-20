@@ -47,6 +47,8 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
                         Text16500: Label 'Source Type must not be blank in %1 %2.';
                         //TraVeh: record "Transporter Vehicle";
                         SourName: text[100];
+                        FA: Record "Fixed Asset";
+                        ItemLRec: Record Item;
                     begin
                         GateEntryHeader.GET(Rec."Entry Type", Rec."Type", Rec."Gate Entry No.");
                         case Rec."Source Type" of
@@ -114,6 +116,29 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
                                     if PAGE.RUNMODAL(0, TransShptHeader) = ACTION::LookupOK then begin
                                         Rec."Source No." := TransShptHeader."No.";
                                         Rec."Source Name" := TransShptHeader."Transfer-to Name";
+                                    end;
+                                end;
+                            Rec."Source Type"::"Fixed Asset":
+                                begin
+                                    FA.Reset();
+                                    FA.SetRange(Blocked, false);
+                                    FA.FilterGroup(0);
+                                    if PAGE.RUNMODAL(0, FA) = ACTION::LookupOK then begin
+                                        Rec."Source No." := FA."No.";
+                                        Rec."Source Name" := FA.Description;
+                                        Rec.Description := FA.Description;
+                                    end;
+                                end;
+                            Rec."Source Type"::Item:
+                                begin
+                                    ItemLRec.Reset();
+                                    ItemLRec.SetRange(Blocked, false);
+                                    ItemLRec.FilterGroup(0);
+                                    if PAGE.RUNMODAL(0, ItemLRec) = ACTION::LookupOK then begin
+                                        Rec."Source No." := ItemLRec."No.";
+                                        Rec."Source Name" := ItemLRec.Description;
+                                        Rec.Description := ItemLRec.Description;
+                                        Rec."Unit of Measure" := ItemLRec."Base Unit of Measure";
                                     end;
                                 end;
                         end;

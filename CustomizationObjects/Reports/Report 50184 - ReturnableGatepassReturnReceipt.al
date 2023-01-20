@@ -9,14 +9,17 @@ report 50184 "Return Gatepass Return Rcpt"
 
     dataset
     {
-        dataitem("Gate Entry Header_B2B"; "Gate Entry Header_B2B")
+        dataitem("Posted Gate Entry Header_B2B"; "Posted Gate Entry Header_B2B")
         {
+
             DataItemTableView = WHERE("Entry Type" = const(Inward),
                                       Type = FILTER('RGP'));
             column(Program; Program)
             { }
             column(No_; "No.")
-            { }
+            {
+
+            }
             column(Designation; Designation)
             {
 
@@ -123,7 +126,8 @@ report 50184 "Return Gatepass Return Rcpt"
             { }
             column(ReturntoCapLbl; ReturntoCapLbl)
             { }
-            dataitem("Gate Entry Line_B2B"; "Gate Entry Line_B2B")
+
+            dataitem("Posted Gate Entry Line_B2B"; "Posted Gate Entry Line_B2B")
             {
                 DataItemLink = "Entry Type" = FIELD("Entry Type"),
                 "type" = field("Type"),
@@ -145,11 +149,11 @@ report 50184 "Return Gatepass Return Rcpt"
                 column(SerialNo; SerialNo)
                 { }
                 trigger OnAfterGetRecord()
-                 var
-                  
+                var
+
                 begin
                     Users.Reset();
-                    Users.SetRange("User Name", "Gate Entry Header_B2B"."User ID");
+                    Users.SetRange("User Name", "Posted Gate Entry Header_B2B"."User ID");
                     if Users.FindFirst() then;
                 end;
             }
@@ -160,9 +164,12 @@ report 50184 "Return Gatepass Return Rcpt"
             end;
 
             trigger OnPreDataItem()
+            var
+                PostedGateEntry: Record "Posted Gate Entry Header_B2B";
             begin
                 CompanyInfo.get;
                 CompanyInfo.CALCFIELDS(Picture);
+                SetFilter("No.", '%1', PostedGateEntryNo);//B2BSSD20Jan20023
             end;
 
 
@@ -179,7 +186,15 @@ report 50184 "Return Gatepass Return Rcpt"
             {
                 group(GroupName)
                 {
+                    //B2BSSD20Jan2023<<
+                    field(PostedGateEntryNo; PostedGateEntryNo)
+                    {
 
+                        TableRelation = "Posted Gate Entry Header_B2B"."No." WHERE("Entry Type" = CONST(Inward));
+                        ApplicationArea = All;
+                        Caption = 'Posted Gate Entry No.';
+                    }
+                    //B2BSSD20Jan2023>>
                 }
             }
         }
@@ -238,5 +253,6 @@ report 50184 "Return Gatepass Return Rcpt"
 
         IncomingVerCapLbl: Label 'Incoming Verification';
         ReturntoCapLbl: Label 'Returned to back on___________________________Time____________and Entered in R/I Register by SI/SS________________________';
+        PostedGateEntryNo: Code[30];//B2BSSD20Jan2023
 
 }

@@ -9,11 +9,13 @@ report 50183 "Returnable Gatepass"
 
     dataset
     {
-        dataitem("Gate Entry Header_B2B"; "Gate Entry Header_B2B")
+        dataitem("Posted Gate Entry Header_B2B"; "Posted Gate Entry Header_B2B")//B2BSSD19Jan2023
         {
             RequestFilterFields = "No.";
-            DataItemTableView = WHERE("Entry Type" = const(Inward),
-                                      Type = const(RGP));
+            //DataItemTableView = WHERE("Entry Type" = const(Inward),
+            //Type = const(RGP));
+            DataItemTableView = WHERE("Entry Type" = const(Outward),
+                                      Type = const(RGP));//B2BSSD19Jan2023
             column(Program; Program)
             { }
             column(No_; "No.")
@@ -123,7 +125,7 @@ report 50183 "Returnable Gatepass"
             { }
             column(ReturntoCapLbl; ReturntoCapLbl)
             { }
-            dataitem("Gate Entry Line_B2B"; "Gate Entry Line_B2B")
+            dataitem("Posted Gate Entry Line_B2B"; "Posted Gate Entry Line_B2B")//B2BSSD19Jan2023
             {
                 DataItemLink = "Entry Type" = FIELD("Entry Type"),
                                "type" = field("Type"),
@@ -149,7 +151,7 @@ report 50183 "Returnable Gatepass"
 
                 begin
                     Users.Reset();
-                    Users.SetRange("User Name", "Gate Entry Header_B2B"."User ID");
+                    Users.SetRange("User Name", "Posted Gate Entry Header_B2B"."User ID");
                     if Users.FindFirst() then;
                 end;
             }
@@ -162,6 +164,7 @@ report 50183 "Returnable Gatepass"
             begin
                 CompanyInfo.get;
                 CompanyInfo.CALCFIELDS(Picture);
+                SetFilter("No.", '%1', PostedRGPOutWardList);//B2BSSD20Jan2023
             end;
 
 
@@ -176,7 +179,17 @@ report 50183 "Returnable Gatepass"
         {
             area(Content)
             {
-
+                //B2BSSD20Jan2023<<
+                group(GroUpName)
+                {
+                    field(PostedRGPOutWardList; PostedRGPOutWardList)
+                    {
+                        ApplicationArea = All;
+                        TableRelation = "Posted Gate Entry Header_B2B"."No." where("Entry Type" = const(Outward));
+                        Caption = 'Posted RGP OutWard No.';
+                    }
+                }
+                //B2BSSD20Jan2023>>
             }
         }
 
@@ -255,4 +268,5 @@ report 50183 "Returnable Gatepass"
         CheckedCapLbl: Label '2)Checked and allowed at the gate on_____________________Time____________________';
         IncomingVerCapLbl: Label 'Incoming Verification';
         ReturntoCapLbl: Label 'Returned to back on___________________________Time____________and Entered in R/I Register by SI/SS________________________';
+        PostedRGPOutWardList: Code[30];//B2BSSD20Jan2023
 }

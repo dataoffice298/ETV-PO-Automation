@@ -399,6 +399,7 @@ table 50010 "Indent Header"
                 ItemJnlLine.VALIDATE(ItemJnlLine."Shortcut Dimension 2 Code", IndentLineRec."Shortcut Dimension 2 Code");
                 ItemJnlLine.VALIDATE(ItemJnlLine.Quantity, IndentLineRec."Qty To Issue");
                 ItemJnlLine.VALIDATE("Location Code", IndentLineRec."Delivery Location");
+                //ItemJnlLine.Validate("Issue Location",IndentLineRec."Issue Location");
                 ItemJnlLine."Issue Location" := IndentLineRec."Issue Location";//BaluOn19Oct2022
                 ItemJnlLine."Issue Sub Location" := IndentLineRec."Issue Sub Location";//BaluOn19Oct2022
                 ItemJnlLine."Variant Code" := IndentLineRec."Variant Code";

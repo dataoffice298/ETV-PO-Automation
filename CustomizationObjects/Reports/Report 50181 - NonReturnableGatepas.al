@@ -9,9 +9,9 @@ report 50181 "Non Returnable Gatepass"
 
     dataset
     {
-        dataitem("Gate Entry Header_B2B"; "Gate Entry Header_B2B")
+        dataitem("Posted Gate Entry Header_B2B"; "Posted Gate Entry Header_B2B")
         {
-            DataItemTableView = WHERE("Entry Type" = const(Inward),
+            DataItemTableView = WHERE("Entry Type" = const(Outward),
                                       Type = FILTER('NRGP'));
 
             column(CompanyInfoName; CompanyInfo.Name)
@@ -112,7 +112,7 @@ report 50181 "Non Returnable Gatepass"
             { }
             column(Location_Code; "Location Code")
             { }
-            dataitem("Gate Entry Line_B2B"; "Gate Entry Line_B2B")
+            dataitem("Posted Gate Entry Line_B2B"; "Posted Gate Entry Line_B2B")
             {
                 DataItemLink = "Entry Type" = FIELD("Entry Type"),
                 "type" = field("Type"),
@@ -141,79 +141,9 @@ report 50181 "Non Returnable Gatepass"
                 { }
                 trigger OnAfterGetRecord()
                 begin
-                    Clear(DescriptionLVar);
-                    Clear(QtyDispatchLRec);
-                    Clear(ItemName);
                     Users.Reset();
-                    Users.SetRange("User Name", "Gate Entry Header_B2B"."User ID");
+                    Users.SetRange("User Name", "Posted Gate Entry Header_B2B"."User ID");
                     if Users.FindFirst() then;
-
-                    case "Source Type" of
-                        "Source Type"::"Sales Shipment":
-                            BEGIN
-                                SalesShipmentHeaderLRec.reset;
-                                SalesShipmentHeaderLRec.SetRange("No.", "Source No.");
-                                IF SalesShipmentHeaderLRec.findfirst then begin
-                                    SalesShipmentLinLRec.Reset();
-                                    SalesShipmentLinLRec.SetRange("Document No.", SalesShipmentHeaderLRec."No.");
-                                    SalesShipmentLinLRec.SetRange("Line No.", "Line No.");
-                                    if SalesShipmentLinLRec.FindSet() then
-                                        repeat
-                                            ItemName := SalesShipmentLinLRec."No.";
-                                            DescriptionLVar := SalesShipmentLinLRec.Description;
-                                            QtyDispatchLRec := SalesShipmentLinLRec.Quantity;
-                                        until SalesShipmentLinLRec.Next() = 0;
-                                end
-                            End;
-                        "Source Type"::"Purchase Return Shipment":
-                            BEGIN
-                                PurchaseRetnLRec.reset;
-                                PurchaseRetnLRec.SetRange("No.", "Source No.");
-                                IF PurchaseRetnLRec.findfirst then begin
-                                    PurchaseRetLinLRec.Reset();
-                                    PurchaseRetLinLRec.SetRange("Document No.", PurchaseRetnLRec."No.");
-                                    if PurchaseRetLinLRec.FindSet() then
-                                        repeat
-                                            DescriptionLVar := PurchaseRetLinLRec.Description;
-                                            QtyDispatchLRec := PurchaseRetLinLRec.Quantity;
-                                            ItemName := PurchaseRetLinLRec."No.";
-                                        until PurchaseRetLinLRec.Next() = 0;
-                                end
-
-                            END;
-                        "Source Type"::"Transfer Shipment":
-                            BEGIN
-                                TransferShpntHdr.reset;
-                                TransferShpntHdr.SetRange("No.", "Source No.");
-                                IF TransferShpntHdr.findfirst then begin
-                                    TransferShpntLine.Reset();
-                                    TransferShpntLine.SetRange("Document No.", TransferShpntHdr."No.");
-                                    if TransferShpntLine.FindSet() then
-                                        repeat
-                                            DescriptionLVar := TransferShpntLine.Description;
-                                            QtyDispatchLRec := TransferShpntLine.Quantity;
-                                            ItemName := TransferShpntLine."Item No.";
-                                        until PurchaseRetLinLRec.Next() = 0;
-                                end
-                            END;
-
-                        "Source Type"::"Transfer Receipt":
-                            BEGIN
-                                TransferHdr.reset;
-                                TransferHdr.SetRange("No.", "Source No.");
-                                IF TransferHdr.findfirst then begin
-                                    TransferLine.Reset();
-                                    TransferLine.SetRange("Document No.", TransferHdr."No.");
-                                    if TransferLine.FindSet() then
-                                        repeat
-                                            DescriptionLVar := TransferLine.Description;
-                                            QtyDispatchLRec := TransferLine.Quantity;
-                                            ItemName := TransferLine."Item No.";
-                                        until PurchaseRetLinLRec.Next() = 0;
-                                end
-                            END;
-                    end;
-
                 end;
 
             }
@@ -226,6 +156,7 @@ report 50181 "Non Returnable Gatepass"
             begin
                 CompanyInfo.get;
                 CompanyInfo.CALCFIELDS(Picture);
+                SetFilter("No.", '%1', PostedNrgpOutwardNo);//B2BSSD20Jan2023
             end;
 
 
@@ -242,7 +173,14 @@ report 50181 "Non Returnable Gatepass"
             {
                 group(GroupName)
                 {
-
+                    //B2BSSD20Jan2023<<
+                    field(PostedNrgpOutwardNo; PostedNrgpOutwardNo)
+                    {
+                        TableRelation = "Posted Gate Entry Header_B2B"."No." where("Entry Type" = const(Outward), Type = filter(NRGP));
+                        Caption = 'Posted Nrgp Outward No';
+                        ApplicationArea = All;
+                    }
+                    //B2BSSD20Jan2023>>
                 }
             }
         }
@@ -313,6 +251,7 @@ report 50181 "Non Returnable Gatepass"
         OutgoingVerCapLbl: Label 'Outgoing Verification:';
         ItematerialCapLbl: Label '1)Item/Material checked and entered in Returnable Items Register on________________Time_____________Signature of SI/SS___________________';
         CheckedCapLbl: Label '2)Checked and allowed at the gate on_____________________Time____________________';
+        PostedNrgpOutwardNo: Code[30];//B2BSSD20Jan2023
 
 
 }

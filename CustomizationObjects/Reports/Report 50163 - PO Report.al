@@ -143,7 +143,7 @@ report 50163 "Po Report"//B2BSSD29DEC2022
 
     PROCEDURE CreateExcelbook()
     BEGIN
-        ExcelBuffer1.CreateBookAndOpenExcel('', 'Open Po', '', COMPANYNAME, USERID);
+        ExcelBuffer1.CreateBookAndOpenExcel('', 'Po Report', '', COMPANYNAME, USERID);
 
     END;
 

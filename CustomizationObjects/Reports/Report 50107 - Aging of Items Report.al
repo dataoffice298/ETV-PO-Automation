@@ -18,39 +18,44 @@ report 50107 "Aging of Items Report"
             var
                 ItemLedgerEntry: Record "Item Ledger Entry";
                 AgingDays: Integer;
+                PostedPurchReceipt: Record "Purch. Rcpt. Header";
             begin
                 CalcFields(Inventory);
                 Clear(AgingDays);
                 ItemLedgerEntry.Reset();
-                ItemLedgerEntry.SetFilter("Posting Date", '%1..', StartDate);
+                ItemLedgerEntry.SetCurrentKey("Posting Date");
+                ItemLedgerEntry.SetAscending("Posting Date", true);
                 ItemLedgerEntry.SetRange("Item No.", "No.");
-                ItemLedgerEntry.SetFilter(Quantity, '>0'); //SSD06122022
-                if ItemLedgerEntry.FindSet() then
-                    repeat
-                        AgingDays := WorkDate - ItemLedgerEntry."Posting Date";
-                        SNo += 1;
-                        WindPa.Update(1, "No.");
-                        TempExcelBuffer.NewRow();
-                        TempExcelBuffer.AddColumn("Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                        TempExcelBuffer.AddColumn("No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                        TempExcelBuffer.AddColumn(Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                        TempExcelBuffer.AddColumn("Base Unit of Measure", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                        TempExcelBuffer.AddColumn(ItemLedgerEntry.Quantity, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                        TempExcelBuffer.AddColumn("Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                        TempExcelBuffer.AddColumn(Round(ItemLedgerEntry.Quantity * "Unit Cost", 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                        TempExcelBuffer.AddColumn(ItemLedgerEntry."Posting Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                        TempExcelBuffer.AddColumn(Item."Lot Nos.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                        TempExcelBuffer.AddColumn(AgingDays, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    until ItemLedgerEntry.Next() = 0;
+                if ItemLedgerEntry.FindFirst() then
+                    AgingDays := StartDate - ItemLedgerEntry."Posting Date";
+
+                if ItemLedgerEntry.Quantity = 0 then
+                    CurrReport.Skip();
+
+                SNo += 1;
+                WindPa.Update(1, "No.");
+                TempExcelBuffer.NewRow();
+                TempExcelBuffer.AddColumn("Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                TempExcelBuffer.AddColumn("No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                TempExcelBuffer.AddColumn(Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                TempExcelBuffer.AddColumn("Base Unit of Measure", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                TempExcelBuffer.AddColumn(Inventory, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                TempExcelBuffer.AddColumn("Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                TempExcelBuffer.AddColumn(Round(Inventory * "Unit Cost", 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                TempExcelBuffer.AddColumn(ItemLedgerEntry."Posting Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                TempExcelBuffer.AddColumn(AgingDays, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
 
             end;
 
             trigger OnPreDataItem()
+            var
+                ItemLedgerEntry: Record "Item Ledger Entry";
             begin
                 if StartDate = 0D then
                     Error('Start Date must have a value.');
                 Clear(SNo);
                 MakeExcelHeaders();
+                //ItemLedgerEntry.SetFilter(Quantity, '>0');
             end;
         }
     }
@@ -64,6 +69,7 @@ report 50107 "Aging of Items Report"
                 {
                     field(StartDate; StartDate)
                     {
+                        Caption = 'Ending Date';
                         ApplicationArea = all;
                     }
 
@@ -116,7 +122,6 @@ report 50107 "Aging of Items Report"
         TempExcelBuffer.AddColumn('UNIT RATE', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('AMOUNT', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('POSTING DATE', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-        TempExcelBuffer.AddColumn('LOT NO.', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('AGING DAYS', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
     end;
 }

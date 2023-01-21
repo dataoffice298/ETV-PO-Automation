@@ -1554,7 +1554,10 @@ codeunit 50026 "PO Automation"
     begin
         if (ItemLRec.Get(TempPurchLine."No.")) and (ItemLRec."QC Enabled B2B") then begin
             TempPurchLine."Quantity Accepted B2B" += TempPurchLine."Qty. to Accept B2B";
-            TempPurchLine."Quantity Rejected B2B" += TempPurchLine."Qty. to Reject B2B";
+            if (TempPurchLine."Quantity Accepted B2B" + TempPurchLine."Quantity Rejected B2B") > TempPurchLine.Quantity then
+                TempPurchLine."Quantity Rejected B2B" -= TempPurchLine."Qty. to Accept B2B"
+            else
+                TempPurchLine."Quantity Rejected B2B" += TempPurchLine."Qty. to Reject B2B";
             TempPurchLine."Qty. to Accept B2B" := 0;
             TempPurchLine."Qty. to Reject B2B" := 0;
         end;

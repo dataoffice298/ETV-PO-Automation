@@ -25,23 +25,30 @@ report 50166 "Inward Receipt Details"
                     PurchaseHdr: Record "Purchase Header";
                     VATAmount: Decimal;
                     DocumentTotals: Codeunit "Document Totals";
+                    TaxTransactionValue: Record "Tax Transaction Value";
+                    GSTSetup: Record "GST Setup";
                 begin
                     SNo += 1;
-                    Clear(CGSTAmt);
-                    Clear(SGSTAmt);
-                    Clear(IGSSTAmt);
                     WindPa.Update(1, "Gate Entry No.");
-
-                    //B2BSSD28Dec2022<<
-                    PurchaseHdr.Reset();
-                    PurchaseHdr.SetRange("No.", "Source No.");
-                    if PurchaseHdr.FindSet() then begin
-                        PurchLine.Reset();
-                        PurchLine.SetRange("Document No.", PurchaseHdr."No.");
-                        PurchLine.SetRange("Document Type", PurchaseHdr."Document Type");
-                        if PurchLine.FindSet() then;
+                    if SourceNoGvar <> "Source No." then begin
+                        SourceNoGvar := "Source No.";
+                        //B2BSSD28Dec2022<<
+                        PurchaseHdr.Reset();
+                        PurchaseHdr.SetRange("No.", "Source No.");
+                        PurchaseHdr.SetRange("Document Type", PurchaseHdr."Document Type");
+                        if PurchaseHdr.FindFirst() then begin
+                            PurchLine.Reset();
+                            PurchLine.SetRange("Document No.", PurchaseHdr."No.");
+                            PurchLine.SetRange("Document Type", PurchaseHdr."Document Type");
+                            if PurchLine.FindSet() then
+                                repeat
+                                    //Clear(IGSSTAmt);
+                                    GSTSetup.get();
+                                    GetGSTAmounts(TaxTransactionValue, PurchLine, GSTSetup);
+                                until PurchLine.Next() = 0;
+                        end;
                     end;
-                    //B2BSSD28Dec2022<<
+                    //B2BSSD28Dec2022>>
                     TempExcelBuffer.NewRow();
                     TempExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn("Gate Entry No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
@@ -182,6 +189,9 @@ report 50166 "Inward Receipt Details"
     var
         ComponentName: Code[30];
     begin
+        Clear(CGSTAmt);
+        Clear(SGSTAmt);
+        Clear(IGSSTAmt);
         GSTSetup.Get();
         ComponentName := GetComponentName(PurchaseLine, GSTSetup);
 
@@ -292,4 +302,5 @@ report 50166 "Inward Receipt Details"
         GSTGroupCode: Code[10];
         NextLoop: Boolean;
         TotAmt: Decimal;
+        SourceNoGvar: Text;
 }

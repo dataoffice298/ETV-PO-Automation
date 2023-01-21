@@ -44,6 +44,8 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         modify(Post)
         {
             trigger OnBeforeAction()
+            var
+                Err001: Label 'Qty. to Accept and Qty. to Reject must not be greater than Quantity.';
             begin
 
                 GateEntry.Reset();
@@ -57,7 +59,14 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                                 Error('Gate entry available for the purchase document. Hence, It must be filled in Line No. %1.', PurchLine."Line No.");
                         until PurchLine.Next = 0;
                 end;
-
+                PurchLine.Reset();
+                PurchLine.SetRange("Document No.", Rec."No.");
+                if PurchLine.FindSet() then
+                    repeat
+                        if (PurchLine."Qty. to Accept B2B" + PurchLine."Qty. to Reject B2B"
+                            + PurchLine."Quantity Accepted B2B") > PurchLine.Quantity then
+                            Error(Err001);
+                    until PurchLine.Next = 0;
             end;
         }
         //B2BVCOn03Oct2022<<

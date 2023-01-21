@@ -175,7 +175,7 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             begin
                 if "Qty. to Accept B2B" <> 0 then
                     CheckTracking(Rec);
-                if ("Qty. to Accept B2B") > Quantity then
+                if ("Qty. to Accept B2B" + "Quantity Accepted B2B") > Quantity then
                     Error(Err0001);
                 if "Qty. to Accept B2B" <> 0 then
                     Validate("Qty. to Receive", "Qty. to Accept B2B");
@@ -193,6 +193,8 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
                     CheckTracking(Rec);
                 if Quantity = "Quantity Received" then
                     Error(RejErr);
+                if ("Qty. to Reject B2B" + "Quantity Rejected B2B") > Quantity then
+                    Error(Err0002);
             end;
         }
         field(60014; "Quantity Accepted B2B"; Decimal)
@@ -275,6 +277,7 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         PurchaseLineLRec: Record 39;
         PurchaseLnGRec: Record 39;
         Err0001: Label 'The Qty. to Accept must not be greater than Quantity.';
+        Err0002: Label 'The Qty. to Reject must not be greater than Quantity.';
         ReservationEntry: Record "Reservation Entry";
 
     procedure CheckTracking(PurchLine: Record "Purchase Line")

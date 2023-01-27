@@ -46,6 +46,11 @@ pageextension 50103 LocationExt_B2B extends "Location Card"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Outward RGP No. Series_B2B field.';
                 }
+                field("Address 3"; Rec."Address 3")//B2BSSD25Jan2023
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Address field.';
+                }
             }
         }
     }

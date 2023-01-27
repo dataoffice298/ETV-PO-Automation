@@ -365,5 +365,44 @@ codeunit 50016 "MyBaseSubscr"
         end;
     end;
     //B2BMSOn28Oct2022<<
+
+    //B2BSSD25Jan2023<<
+    [EventSubscriber(ObjectType::Table, database::"Purchase Header", 'OnAfterInsertEvent', '', false, false)]
+    local procedure InsertTermsConditions(var Rec: Record "Purchase Header")
+    Var
+        TermsAndConditions: Record "PO Terms And Conditions";
+        TermsAndConditionsetup: Record "Terms&ConditionSetUp";
+        LineNo: Integer;
+    begin
+        LineNo := 10000;
+        //if Rec."Document Type" = rec."Document Type"::Quote then begin
+        TermsAndConditionsetup.Reset();
+        //TermsAndConditionsetup.SetRange("Line Type", Rec."Document Type");
+        if TermsAndConditionsetup.FindSet then begin
+            repeat
+                TermsAndConditions.Init();
+                TermsAndConditions.DocumentNo := Rec."No.";
+                TermsAndConditions.LineNo := LineNo;
+                TermsAndConditions.Sequence := TermsAndConditionsetup.Sequence;
+                TermsAndConditions.LineType := TermsAndConditionsetup."Line Type";
+                TermsAndConditions.Description := TermsAndConditionsetup.Description;
+                TermsAndConditions.Insert();
+                LineNo += 10000;
+            until TermsAndConditionsetup.Next = 0;
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Table, database::"Purchase Header", 'OnBeforeOnDelete', '', false, false)]
+    local procedure OnBeforeOnDelete(var PurchaseHeader: Record "Purchase Header"; var IsHandled: Boolean)
+    var
+        TermsAndConditions: Record "PO Terms And Conditions";
+    begin
+        TermsAndConditions.Reset();
+        TermsAndConditions.SetRange(DocumentType, TermsAndConditions.DocumentType);
+        TermsAndConditions.SetRange(DocumentNo, PurchaseHeader."No.");
+        if TermsAndConditions.FindSet() then;
+        TermsAndConditions.DeleteAll();
+    end;
+    //B2BSSD25Jan2023>>
 }
 

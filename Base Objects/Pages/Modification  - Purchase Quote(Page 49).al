@@ -38,6 +38,18 @@ pageextension 50073 pageextension70000001 extends "Purchase Quote"
                 Editable = false;
             }
         }
+        //B2BSSD25Jan2023<<
+        addafter(PurchLines)
+        {
+            part(TrermsAndCondition; "Terms and Condition")
+            {
+                ApplicationArea = all;
+                SubPageLink = DocumentNo = field("No.");
+                SubPageView = where(DocumentType = const(Quote));
+                UpdatePropagation = Both;
+            }
+        }
+        //B2BSSD25Jan2023>>
     }
     //Unsupported feature: PropertyChange. Please convert manually.
     //B2BVCOn03Oct22>>>

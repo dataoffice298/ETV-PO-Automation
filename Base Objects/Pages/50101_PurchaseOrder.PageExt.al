@@ -37,6 +37,17 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             }
             //B2BSSD02Jan2023>>
         }
+        //B2BSSD25Jan2023<<
+        addafter(PurchLines)
+        {
+            part(TrermsAndCondition; "Terms and Condition")
+            {
+                ApplicationArea = all;
+                SubPageLink = DocumentNo = field("No.");
+                UpdatePropagation = Both;
+            }
+        }
+        //B2BSSD25Jan2023>>
     }
     actions
     {
@@ -121,11 +132,5 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         PurchLine: Record "Purchase Line";
         LCDetails: Record "LC Details";
 
-    /*   actions
-       {
-           // Add changes to page actions here
-       }
-
-       var
-           myInt: Integer;*/
+    
 }

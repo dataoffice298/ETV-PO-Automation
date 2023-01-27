@@ -1,4 +1,4 @@
-report 50180 "Quant Explo of BOM In Indent"
+report 50191 "Quant Explo of BOM In Indent"
 {
     //ApplicationArea = Manufacturing;
     //UsageCategory = ReportsAndAnalysis;

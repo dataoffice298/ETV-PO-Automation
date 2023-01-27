@@ -21,10 +21,10 @@ page 50179 "Terms and Condition"
                 {
                     ApplicationArea = All;
                 }
-                field("Location Code"; Rec."Location Code")
+                /*field("Location Code"; Rec."Location Code")
                 {
                     ApplicationArea = all;
-                }
+                }*/
                 field(Description; rec.Description)
                 {
                     ApplicationArea = All;

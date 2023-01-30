@@ -51,6 +51,11 @@ tableextension 50068 "Location Ext" extends Location
             DataClassification = ToBeClassified;
             Caption = 'Outward NRGP No. Series';
         }
+        field(50108; "Address 3"; Text[100])//B2BSSD25Jan2023
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Address 3';
+        }
     }
 
     var

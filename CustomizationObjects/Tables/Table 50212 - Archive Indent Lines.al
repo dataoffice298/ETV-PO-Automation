@@ -1,4 +1,4 @@
-table 50048 "Archive Indent Line"
+table 50212 "Archive Indent Line"
 {
     LookupPageId = "Archive Indent Subform";
     DrillDownPageId = "Archive Indent Subform";
@@ -189,7 +189,7 @@ table 50048 "Archive Indent Line"
 
 
     var
-        IndentHeader: Record 50010;
+        IndentHeader: Record "Indent Header";
         Item: Record 27;
         ItemVariant: Record 5401;
         cust: Record 18;

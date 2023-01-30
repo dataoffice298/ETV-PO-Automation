@@ -1,10 +1,7 @@
-table 50041 "Quotation Comparison"
+table 50208 "Archive Quotation Comparison"
 {
-    // version PH1.0,PO1.0
 
-    // Resource : SM-SivaMohan
-    // 
-    // SM  1.0  04/06/08   "Indent Req No","Indent Req Line No" Fields Added
+    // version PH1.0,PO1.0
 
 
     fields
@@ -177,40 +174,54 @@ table 50041 "Quotation Comparison"
         field(49; Quality; Decimal)
         {
         }
-        field(54; "Indent Req No"; Code[20])
+        field(100; "CWIP No."; Code[10])
         {
-            Description = 'PO1.0';
-            //TableRelation = Table50067;//Balu
+            DataClassification = CustomerContent;
+            //TableRelation = "CWIP Masters";
+
         }
-        field(55; "Indent Req Line No"; Integer)
+        //Service08Jul2021>>
+        field(101; "Service Code"; Code[20])
         {
-            Description = 'PO1.0';
+            DataClassification = CustomerContent;
         }
-        field(50000; "Terms & Conditions"; Option)
+
+        //Service08Jul2021<<
+        //B2BMSOn06Oct21>>
+        field(110; "Currency Code"; Code[10])
         {
-            OptionCaption = '" ,payment terms,delivery,freight,VAT,shipment mode,packing,mode of payment"';
-            OptionMembers = " ","payment terms",delivery,freight,VAT,"shipment mode",packing,"mode of payment";
+            DataClassification = CustomerContent;
+            Caption = 'Currency Code';
+            TableRelation = Currency;
         }
-        field(50001; "Approval Status"; Option)
+        //B2BMSOn06Oct21<<
+        field(111; "Type"; Option)
         {
-            DataClassification = ToBeClassified;
-            OptionMembers = " ",Open,"Pending Approval",Released;
-            OptionCaption = ' ,Open,Pending Approval,Released';
+            DataClassification = CustomerContent;
+            OptionMembers = Item,"Fixed Assets",Description,"G/L Account";
         }
+        field(112; Version; Integer)
+        {
+            DataClassification = CustomerContent;
+        }
+        //B2BMSOn08Nov2022>>
+        field(120; "Indent Req. No."; Code[20])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(121; "Indent Req. Line No."; Integer)
+        {
+            DataClassification = CustomerContent;
+        }
+        //B2BMSOn08Nov2022<<
     }
 
     keys
     {
-        key(Key1; "Line No.")
+        key(Key1; "Line No.", "RFQ No.", Version)
         {
         }
-        key(Key2; "Item No.")
-        {
-        }
-        key(Key3; "RFQ No.", "Item No.", "Variant Code")
-        {
-        }
-        key(Key4; "Parent Vendor")
+        key(Key2; "RFQ No.")
         {
         }
     }

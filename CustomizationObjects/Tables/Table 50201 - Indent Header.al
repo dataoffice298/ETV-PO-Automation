@@ -1,4 +1,4 @@
-table 50010 "Indent Header"
+table 50201 "Indent Header"
 {
     // version PH1.0,PO1.0
 
@@ -247,8 +247,8 @@ table 50010 "Indent Header"
     var
         PurchaseSetup: Record 312;
         NoSeriesMgt: Codeunit NoSeriesManagement;
-        PIndent: Record 50010;
-        IndentLine: Record 50037;
+        PIndent: Record "Indent Header";
+        IndentLine: Record "Indent Line";
         Item: Record 27;
         Text000: Label 'The %1 cannot be copied to itself.';
         Text002: Label 'Do you want to release the Indent?';
@@ -263,8 +263,8 @@ table 50010 "Indent Header"
         Employee: Record 5200;
         Job: Record 167;
         CompSetup: Record 79;
-        IndentLineRec: Record 50037;
-        IndentHeaderRec: Record 50010;
+        IndentLineRec: Record "Indent Line";
+        IndentHeaderRec: Record "Indent Header";
         Text006Lbl: Label 'You do not have permission to edit the MRS Qty-to issue. %1 and %2';
         Text007Lbl: Label '%1 %2 cannot be more than %3 %4.';
         NoworkfloweableErr: Label 'No work flows enabled';
@@ -452,7 +452,7 @@ table 50010 "Indent Header"
 
     procedure ReleaseIndent();
     var
-        IndentLine: Record 50037;
+        IndentLine: Record "Indent Line";
     begin
         IF NOT CONFIRM(Text002, FALSE) THEN
             EXIT;
@@ -521,7 +521,7 @@ table 50010 "Indent Header"
 
     procedure ReopenIndent();
     var
-        IndentLine: Record 50037;
+        IndentLine: Record "Indent Line";
         Text000: Label 'Indent Status must be ''Indent'' in the Indent Lines';
         Text007: Label 'Can not Reopen the indent if status is Cancel/Closed.';
     begin
@@ -549,11 +549,11 @@ table 50010 "Indent Header"
 
     procedure CopyIndent();
     var
-        FromIndentLine: Record 50037;
-        ToIndentLine: Record 50037;
-        IndentHeader: Record 50010;
-        ToIndentLine1: Record 50037;
-        ToIndentLine2: Record 50037;
+        FromIndentLine: Record "Indent Line";
+        ToIndentLine: Record "Indent Line";
+        IndentHeader: Record "Indent Header";
+        ToIndentLine1: Record "Indent Line";
+        ToIndentLine2: Record "Indent Line";
         FromTable: Record "Indent Header";
         ToTable: Record "Indent Header";
     begin

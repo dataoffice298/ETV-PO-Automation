@@ -1,4 +1,4 @@
-table 50042 "Delivery Ratings"
+table 50206 "Delivery Ratings"
 {
     // version PH1.0,PO1.0
 

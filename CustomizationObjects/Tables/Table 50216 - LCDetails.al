@@ -1,4 +1,4 @@
-table 50054 "LC Details"
+table 50216 "LC Details"
 {
     Caption = 'LC Details';
     DataClassification = ToBeClassified;

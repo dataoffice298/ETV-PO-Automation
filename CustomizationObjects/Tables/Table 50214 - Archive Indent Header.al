@@ -1,4 +1,4 @@
-table 50052 "Archive Indent Header"
+table 50214 "Archive Indent Header"
 {
     LookupPageId = "Archive Indent List";
     DrillDownPageId = "Archive Indent List";

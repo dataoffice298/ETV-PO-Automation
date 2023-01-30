@@ -1,10 +1,6 @@
-table 50049 "Archive Quotation Header"
+table 50211 QuotCompHdr
 {
-
     DataClassification = CustomerContent;
-    Caption = 'Archive Quotation Header';
-    LookupPageId = "Archive Quotation List";
-    DrillDownPageId = "Archive Quotation List";
 
     fields
     {
@@ -33,7 +29,13 @@ table 50049 "Archive Quotation Header"
             OptionMembers = " ",Open,"Pending Approval",Released;
             OptionCaption = ' ,Open,Pending Approval,Released';
             trigger OnValidate();
+            var
+                QuotationLines: Record "Quotation Comparison Test";
             begin
+                QuotationLines.Reset();
+                QuotationLines.SetRange("Quot Comp No.", rec."No.");
+                if QuotationLines.FindSet() then
+                    QuotationLines.ModifyAll(Status, Rec.Status);
             end;
 
 
@@ -102,8 +104,6 @@ table 50049 "Archive Quotation Header"
             Editable = false;
             //TableRelation = "Purch. Req Header";
         }
-        field(23; "Version"; Integer)
-        { }
         field(50001; "Shortcut Dimension 1 Code"; Code[20])
         {
             CaptionClass = '1,2,1';
@@ -119,10 +119,26 @@ table 50049 "Archive Quotation Header"
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2),
             Blocked = CONST(false));
         }
+        //B2BMSOn18Oct2022>>
+        Field(50003; "Regularization"; Boolean)
+        {
+            Caption = 'Regularization';
+        }
+        //B2BMSOn18Oct2022<<
+
+        //B2BMSOn28Oct2022>>
+        Field(50004; "No. of Archived Versions"; Integer)
+        {
+            Caption = 'No. of Archived Versions';
+            Editable = false;
+            FieldClass = FlowField;
+            CalcFormula = max("Archive Quotation Header".Version where("No." = field("No.")));
+        }
+        //B2BMSOn28Oct2022<<
     }
     keys
     {
-        key(pk; "No.", Version)
+        key(pk; "No.")
         {
             Clustered = true;
         }
@@ -140,8 +156,8 @@ table 50049 "Archive Quotation Header"
         PurchaseSetUp.GET();
 
         if "No." = '' then begin
-            TestNoSeries();
-            NoSeriesMgt.InitSeries(GetNoSeriesCode(), xRec."No. Series", "Document Date", "No.", "No. Series");
+            PurchaseSetUp.TESTFIELD("Quote Comparision");
+            NoSeriesMgt.InitSeries(PurchaseSetUp."Quote Comparision", xRec."No. Series", 0D, "No.", "No. Series");
         end;
 
         "Document Date" := WORKDATE();
@@ -184,5 +200,18 @@ table 50049 "Archive Quotation Header"
         exit(PurchaseSetUp."Quote Comparision");
     end;
 
-
+    procedure AssistEdit(OldQC: Record QuotCompHdr): Boolean;
+    begin
+        OldQCGv.COPY(Rec);
+        PurchaseSetUp.GET;
+        PurchaseSetUp.TestField("Quotation Comparision Nos.");
+        //TestNoSeries();
+        if NoSeriesMgt.SelectSeries(PurchaseSetUp."Quotation Comparision Nos.", OldQC."No. Series", OldQCGv."No. Series") then begin
+            NoSeriesMgt.SetSeries(OldQCGv."No.");
+            if OldQCGv.GET(OldQCGv."No.") then
+                ERROR(Text004Lbl, LOWERCASE(FORMAT(OldQCGv."No.")));
+            Rec := OldQCGv;
+            exit(true);
+        end;
+    end;
 }

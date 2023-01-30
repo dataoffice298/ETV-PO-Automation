@@ -1,4 +1,4 @@
-table 50043 "Indent Vendor Items"
+table 50207 "Indent Vendor Items"
 {
     // version PH1.0,PO1.0
 

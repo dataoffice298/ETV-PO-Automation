@@ -1,4 +1,4 @@
-table 50037 "Indent Line"
+table 50202 "Indent Line"
 {
     // version PH1.0,PO1.0
 
@@ -405,7 +405,7 @@ table 50037 "Indent Line"
     end;
 
     var
-        IndentHeader: Record 50010;
+        IndentHeader: Record "Indent Header";
         Item: Record 27;
         ItemVariant: Record 5401;
         cust: Record 18;

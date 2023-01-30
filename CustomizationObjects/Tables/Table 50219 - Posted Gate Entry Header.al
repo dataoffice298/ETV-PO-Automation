@@ -1,4 +1,4 @@
-table 50057 "Posted Gate Entry Header_B2B"
+table 50219 "Posted Gate Entry Header_B2B"
 {
     // version NAVIN9.00.00.45778
 

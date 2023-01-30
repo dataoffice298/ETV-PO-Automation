@@ -1,4 +1,4 @@
-table 50058 "Posted Gate Entry Line_B2B"
+table 50220 "Posted Gate Entry Line_B2B"
 {
     // version NAVIN7.00
 

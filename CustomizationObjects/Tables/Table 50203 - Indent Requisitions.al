@@ -1,4 +1,4 @@
-table 50038 "Indent Requisitions"
+table 50203 "Indent Requisitions"
 {
     // version PH1.0,PO1.0
 

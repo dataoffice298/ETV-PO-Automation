@@ -1,4 +1,4 @@
-table 50056 "Gate Entry Location Setup_B2B"
+table 50218 "Gate Entry Location Setup_B2B"
 {
     // version NAVIN9.00.00.45778
 

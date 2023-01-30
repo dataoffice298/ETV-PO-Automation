@@ -1,4 +1,4 @@
-table 50046 "Quotation Comparison Test"
+table 50210 "Quotation Comparison Test"
 {
     fields
     {

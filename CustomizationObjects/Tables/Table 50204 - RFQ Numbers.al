@@ -1,4 +1,4 @@
-table 50039 "RFQ Numbers"
+table 50204 "RFQ Numbers"
 {
     // version PH1.0,PO1.0
 

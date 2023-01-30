@@ -1,4 +1,4 @@
-table 50045 "Indent Req Header"
+table 50209 "Indent Req Header"
 {
     // version PH1.0,PO1.0
 
@@ -138,13 +138,13 @@ table 50045 "Indent Req Header"
     var
         PurchaseSetup: Record 312;
         NoSeriesMgt: Codeunit NoSeriesManagement;
-        IndentReq: Record 50045;
-        OldIndentReq: Record 50045;
+        IndentReq: Record "Indent Req Header";
+        OldIndentReq: Record "Indent Req Header";
         Noseries: Record 310;
         IndentHdr: Record "Indent Header";
         IndentLine: Record "Indent Line";
 
-    procedure AssistEdit(OldIndentReq: Record 50045): Boolean;
+    procedure AssistEdit(OldIndentReq: Record "Indent Req Header"): Boolean;
     begin
         IndentReq := Rec;
         PurchaseSetup.GET;

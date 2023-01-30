@@ -1,4 +1,4 @@
-table 50059 "Gate Entry Header_B2B"
+table 50221 "Gate Entry Header_B2B"
 {
     // version NAVIN9.00.00.45778
     DataCaptionFields = "No.";

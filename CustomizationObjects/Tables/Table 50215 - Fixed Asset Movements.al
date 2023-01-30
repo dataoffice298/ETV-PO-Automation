@@ -1,4 +1,4 @@
-table 50053 "Fixed Asset Movements"
+table 50215 "Fixed Asset Movements"
 {
     DataClassification = ToBeClassified;
     LookupPageId = "Fixed Asset Movements";

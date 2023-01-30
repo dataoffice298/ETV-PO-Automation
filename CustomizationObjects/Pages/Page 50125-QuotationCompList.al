@@ -2,7 +2,7 @@ page 50125 "Quotation Comparison List"
 {
     PageType = Card;
     //ApplicationArea = All;
-    SourceTable = 50041;
+    SourceTable = "Quotation Comparison";
 
 
     layout

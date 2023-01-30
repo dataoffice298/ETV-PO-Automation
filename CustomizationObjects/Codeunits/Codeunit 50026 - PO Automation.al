@@ -10,16 +10,16 @@ codeunit 50026 "PO Automation"
         Item: Record 27;
         Text005: Label '"Rating of payment term code  ''%1'' Should not be zero "';
         Text006: Label 'Payment Term Code  should not be blank in Quotation No: %1';
-        CreateIndents4: Record 50038;
+        CreateIndents4: Record "Indent Requisitions";
         ItemUnitofMeasure: Record 5404;
         ConversionQty: Decimal;
-        CreateIndents5: Record 50038;
+        CreateIndents5: Record "Indent Requisitions";
         TEXT50050: Label 'Vendor No. must have Value in Lines.';
 
     procedure CreateIndents(TemplateName: Code[20]; "Jnl.BatchName": Code[20]);
     var
-        IndentHeader: Record 50010;
-        IndentLine: Record 50037;
+        IndentHeader: Record "Indent Header";
+        IndentLine: Record "Indent Line";
         ReqLine: Record 246;
         PPSetup: Record 312;
         NoSeriesMgt: Codeunit NoSeriesManagement;
@@ -58,8 +58,8 @@ codeunit 50026 "PO Automation"
 
     procedure GetIndentLines();
     var
-        CreateIndents: Record 50038;
-        IndentLine: Record 50037;
+        CreateIndents: Record "Indent Requisitions";
+        IndentLine: Record "Indent Line";
         Item2: Record 27;
         ItemUnitofMeasure: Record 5404;
         PPsetup: Record 312;
@@ -132,11 +132,11 @@ codeunit 50026 "PO Automation"
         CreateIndents.RESET;
     end;
 
-    procedure InsertIndentItemvendor(var CreateIndentsLocal: Record 50038; var Vendor: Record 23);
+    procedure InsertIndentItemvendor(var CreateIndentsLocal: Record "Indent Requisitions"; var Vendor: Record 23);
     var
-        IndentVendorItems: Record 50043;
+        IndentVendorItems: Record "Indent Vendor Items";
         ItemVendor: Record 99;
-        CreateIndents: Record 50038;
+        CreateIndents: Record "Indent Requisitions";
         Text000: Label 'Default Vendor is not Mentioned In the Vendor Item Catalog For  Item No ''%1''';
         Text001: Label 'First Select Vendor';
     begin
@@ -173,11 +173,11 @@ codeunit 50026 "PO Automation"
             UNTIL CreateIndents.NEXT = 0;
     end;
 
-    procedure InsertOrderItemvendor(var CreateIndentsLocal: Record 50038);
+    procedure InsertOrderItemvendor(var CreateIndentsLocal: Record "Indent Requisitions");
     var
-        IndentVendorItems: Record 50043;
+        IndentVendorItems: Record "Indent Vendor Items";
         ItemVendor: Record 99;
-        CreateIndents: Record 50038;
+        CreateIndents: Record "Indent Requisitions";
         Text000: Label 'Default Vendor is not Mentioned In the Vendor Item Catalog For  Item No ''%1''';
     begin
         IndentVendorItems.DELETEALL;
@@ -205,16 +205,16 @@ codeunit 50026 "PO Automation"
             UNTIL CreateIndents.NEXT = 0;
     end;
 
-    procedure CreateEnquiries(var CreateIndentsEnquiry: Record 50038; var Vendor: Record 23; var Noseries: Code[20]);
+    procedure CreateEnquiries(var CreateIndentsEnquiry: Record "Indent Requisitions"; var Vendor: Record 23; var Noseries: Code[20]);
     var
-        IndentVendorItems: Record 50043;
-        IndentVendorEnquiry: Record 50043;
+        IndentVendorItems: Record "Indent Vendor Items";
+        IndentVendorEnquiry: Record "Indent Vendor Items";
         PurchaseHeader: Record 38;
         PurchaseLine: Record 39;
         NoSeriesMgt: Codeunit 396;
         PPSetup: Record 312;
-        CreateIndents2: Record 50038;
-        IndentLine: Record 50037;
+        CreateIndents2: Record "Indent Requisitions";
+        IndentLine: Record "Indent Line";
         Item2: Record 27;
         ItemUnitofMeasure: Record 5404;
         BaseUOMQtyMeasure: Decimal;
@@ -309,16 +309,16 @@ codeunit 50026 "PO Automation"
             UNTIL IndentVendorItems.NEXT = 0;
     end;
 
-    procedure CreateQuotes(var CreateIndentsQuotes: Record 50038; var Vendor: Record 23; var Noseries: Code[20]);
+    procedure CreateQuotes(var CreateIndentsQuotes: Record "Indent Requisitions"; var Vendor: Record 23; var Noseries: Code[20]);
     var
-        IndentVendorItems: Record 50043;
-        IndentVendorEnquiry: Record 50043;
+        IndentVendorItems: Record "Indent Vendor Items";
+        IndentVendorEnquiry: Record "Indent Vendor Items";
         PurchaseHeader: Record 38;
         PurchaseLine: Record 39;
         NoSeriesMgt: Codeunit NoSeriesManagement;
         PPSetup: Record 312;
-        CreateIndents2: Record 50038;
-        IndentLine: Record 50037;
+        CreateIndents2: Record "Indent Requisitions";
+        IndentLine: Record "Indent Line";
         Item2: Record 27;
         ItemUnitofMeasure: Record 5404;
         BaseUOMQtyMeasure: Decimal;
@@ -416,16 +416,16 @@ codeunit 50026 "PO Automation"
             UNTIL IndentVendorItems.NEXT = 0;
     end;
 
-    procedure CreateOrder(var CreateIndentsQuotes: Record 50038; var Vendor: Record 23; var Noseries: Code[20]);
+    procedure CreateOrder(var CreateIndentsQuotes: Record "Indent Requisitions"; var Vendor: Record 23; var Noseries: Code[20]);
     var
-        IndentVendorItems: Record 50043;
-        IndentVendorEnquiry: Record 50043;
+        IndentVendorItems: Record "Indent Vendor Items";
+        IndentVendorEnquiry: Record "Indent Vendor Items";
         PurchaseHeader: Record 38;
         PurchaseLine: Record 39;
         NoSeriesMgt: Codeunit NoSeriesManagement;
         PPSetup: Record 312;
-        CreateIndents2: Record 50038;
-        IndentLine: Record 50037;
+        CreateIndents2: Record "Indent Requisitions";
+        IndentLine: Record "Indent Line";
         Item2: Record 27;
         ItemUnitofMeasure: Record 5404;
         BaseUOMQtyMeasure: Decimal;
@@ -522,18 +522,18 @@ codeunit 50026 "PO Automation"
     procedure InsertQuotationLines(var RFQNumber: Code[20]);
     var
         PurchaseHeader: Record 38;
-        QuoteCompare: Record 50041;
+        QuoteCompare: Record "Quotation Comparison";
         PurchaseLine: Record 39;
         //Structure: Record 13795;
         Amount: Decimal;
-        QuoteCompareAmount: Record 50041;
+        QuoteCompareAmount: Record "Quotation Comparison";
         PreviousItem: Code[20];
         LeastLineAmount: Decimal;
-        QuoteCompare1: Record 50041;
+        QuoteCompare1: Record "Quotation Comparison";
         PurchaseSetup: Record 312;
         TotalWeightage: Decimal;
         PaymentTerms: Record 3;
-        QuoteCompare2: Record 50041;
+        QuoteCompare2: Record "Quotation Comparison";
         MaxPayment: Decimal;
         Text0010: Label 'Item Price should  not be blank in Quotation No. %1';
         ColourCode: Code[20];
@@ -1211,7 +1211,7 @@ codeunit 50026 "PO Automation"
         NoSeriesMgt: Codeunit NoSeriesManagement;
         PurchaseLineQuote: Record 39;
         Text001: Label 'Enquiry %1 has been changed to Quote %2';
-        IndentLine: Record 50037;
+        IndentLine: Record "Indent Line";
     begin
         PurchaseHeader.INIT;
         PurchaseHeader."Document Type" := PurchaseHeader."Document Type"::Quote;
@@ -1289,10 +1289,10 @@ codeunit 50026 "PO Automation"
         Rec.DELETE;
     end;
 
-    procedure GetReqLines(var IndreqHeader: Record 50045);
+    procedure GetReqLines(var IndreqHeader: Record "Indent Req Header");
     var
-        CreateIndents: Record 50038;
-        IndentLine: Record 50037;
+        CreateIndents: Record "Indent Requisitions";
+        IndentLine: Record "Indent Line";
         Item2: Record 27;
         ItemUnitofMeasure: Record 5404;
         PPsetup: Record 312;
@@ -1370,16 +1370,16 @@ codeunit 50026 "PO Automation"
     begin
     end;
 
-    procedure CreateOrder2(var CreateIndentsQuotes: Record 50038; var Vendor: Record 23; var Noseries: Code[20]);
+    procedure CreateOrder2(var CreateIndentsQuotes: Record "Indent Requisitions"; var Vendor: Record 23; var Noseries: Code[20]);
     var
-        IndentVendorItems: Record 50043;
-        IndentVendorEnquiry: Record 50043;
+        IndentVendorItems: Record "Indent Vendor Items";
+        IndentVendorEnquiry: Record "Indent Vendor Items";
         PurchaseHeader: Record 38;
         PurchaseLine: Record 39;
         NoSeriesMgt: Codeunit NoSeriesManagement;
         PPSetup: Record 312;
-        CreateIndents2: Record 50038;
-        IndentLine: Record 50037;
+        CreateIndents2: Record "Indent Requisitions";
+        IndentLine: Record "Indent Line";
         Item2: Record 27;
         ItemUnitofMeasure: Record 5404;
         BaseUOMQtyMeasure: Decimal;
@@ -1467,11 +1467,11 @@ codeunit 50026 "PO Automation"
             UNTIL IndentVendorItems.NEXT = 0;
     end;
 
-    procedure InsertIndentItemvendor2(var CreateIndentsLocal: Record 50038; var Vendor: Record 23);
+    procedure InsertIndentItemvendor2(var CreateIndentsLocal: Record "Indent Requisitions"; var Vendor: Record 23);
     var
-        IndentVendorItems: Record 50043;
+        IndentVendorItems: Record "Indent Vendor Items";
         ItemVendor: Record 99;
-        CreateIndents: Record 50038;
+        CreateIndents: Record "Indent Requisitions";
         Text000: Label 'Default Vendor is not Mentioned In the Vendor Item Catalog For  Item No ''%1''';
         Text001: Label 'First Select Vendor';
         VendorGrec: Record 23;

@@ -182,7 +182,7 @@ page 50126 "Quotation Comparision Doc"
                     POCreation: Report "Purchase Order Creation New";
                     QuotationComparisionDelete: Record "Quotation Comparison Test";
                     POAutomation: Codeunit 50026;
-                    QuoteCompareArchive: Record 50044;
+                    QuoteCompareArchive: Record "Archive Quotation Comparison";
                     ArchiveQuotationHeader: Record "Archive Quotation Header";
                     QuoCompHdr: Record QuotCompHdr;
 
@@ -325,7 +325,7 @@ page 50126 "Quotation Comparision Doc"
                 Image = ReleaseDoc;
                 trigger OnAction()
                 var
-                    QuotationLines: Record 50046;
+                    QuotationLines: Record "Quotation Comparison Test";
                 begin
                     IF WorkflowManagement.CanExecuteWorkflow(Rec, allinoneCU.RunworkflowOnSendQuoteComparisionCusforApprovalCode()) then
                         error('Workflow is enabled. You can not release manually.');
@@ -349,7 +349,7 @@ page 50126 "Quotation Comparision Doc"
                 trigger OnAction();
                 var
                     RecordRest: Record "Restricted Record";
-                    QuotationLines: Record 50046;
+                    QuotationLines: Record "Quotation Comparison Test";
                 begin
                     //B2BMSOn11Oct2022>>
                     if Rec."Orders Created" then

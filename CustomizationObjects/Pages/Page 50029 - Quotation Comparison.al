@@ -247,7 +247,7 @@ page 50029 "Quotation Comparison"
 
                     trigger OnAction();
                     var
-                        QuoteCompareLocal: Record 50041;
+                        QuoteCompareLocal: Record "Quotation Comparison";
                     begin
 
                         /*    QuoteCompareArchive.SETRANGE("RFQ No.", rec."RFQ No.");
@@ -415,14 +415,14 @@ page 50029 "Quotation Comparison"
 
     var
         ActualExpansionStatus: Integer;
-        ReqLine: Record 50041;
-        TempReqLine: Record 50041 temporary;
+        ReqLine: Record "Quotation Comparison";
+        TempReqLine: Record "Quotation Comparison" temporary;
         RFQNumber: Code[20];
-        RFQNumbers: Record 50039;
-        QuoteCompare: Record 50041;
-        QuotationComparisionDelete: Record 50041;
+        RFQNumbers: Record "RFQ Numbers";
+        QuoteCompare: Record "Quotation Comparison";
+        QuotationComparisionDelete: Record "Quotation Comparison";
         POAutomation: Codeunit 50026;
-        QuoteCompareArchive: Record 50044;
+        QuoteCompareArchive: Record "Archive Quotation Comparison";
         Item: Record 27;
         [InDataSet]
         "Quote No.Emphasize": Boolean;
@@ -447,7 +447,7 @@ page 50029 "Quotation Comparison"
         Text50000: Label 'Quantity Exceeded than  Order Raised';
         POCreationReport: Report 50099;
 
-    local procedure IsExpanded(ActualReqLine: Record 50041): Boolean;
+    local procedure IsExpanded(ActualReqLine: Record "Quotation Comparison"): Boolean;
     begin
         TempReqLine := ActualReqLine;
         IF TempReqLine.NEXT = 0 THEN
@@ -457,7 +457,7 @@ page 50029 "Quotation Comparison"
 
     local procedure ToggleExpandCollapse();
     var
-        ReqLine: Record 50041;
+        ReqLine: Record "Quotation Comparison";
     begin
         IF ActualExpansionStatus = 0 THEN BEGIN // Has children, but not expanded
             ReqLine.SETRANGE(Level, Rec.Level, Rec.Level + 1);
@@ -508,7 +508,7 @@ page 50029 "Quotation Comparison"
 
     local procedure ExpandAll();
     var
-        ReqLine: Record 50041;
+        ReqLine: Record "Quotation Comparison";
     begin
         ReqLine.RESET;
         ReqLine.COPYFILTERS(TempReqLine);
@@ -544,7 +544,7 @@ page 50029 "Quotation Comparison"
 
     end;
 
-    procedure ArchiveQCS(QuotationComparision2: Record 50041);
+    procedure ArchiveQCS(QuotationComparision2: Record "Quotation Comparison");
     begin
         QuoteCompareArchive.RESET;
         QuoteCompareArchive.INIT;

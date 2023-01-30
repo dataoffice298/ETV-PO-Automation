@@ -8,8 +8,8 @@ codeunit 50001 ApprovalMgt
     local procedure InsertArchiveDocument(var Rec: Record "Approval Entry")
     var
         ArchiveVersion: Integer;
-        IndentLine: Record 50037;
-        IndentHeader: Record 50010;
+        IndentLine: Record "Indent Line";
+        IndentHeader: Record "Indent Header";
         ArchiveIndHdr: Record "Archive Indent Header";
         ArchiveIndLine: record "Archive Indent Line";
     begin

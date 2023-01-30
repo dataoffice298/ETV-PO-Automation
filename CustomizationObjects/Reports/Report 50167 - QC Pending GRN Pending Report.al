@@ -51,8 +51,7 @@ report 50167 "QC Pending GRN Pending Report"
                         //B2BSSD21Dec2022>>
                     end;
                     //B2BSSD21Dec2022<<
-                    if (PostGateEntryHdr."No." = '') or (PurchHdr."No." = '') or
-                        (PurchLine.Quantity = 0) then
+                    if (PostGateEntryHdr."No." = '') or (PurchHdr."No." = '') then
                         CurrReport.Skip();
                     //B2BSSD21Dec2022>>
 

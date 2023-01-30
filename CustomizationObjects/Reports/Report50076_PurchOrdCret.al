@@ -43,11 +43,6 @@ report 50076 "Purchase Order Creation New"
                 GLAccBool: Boolean;
                 FADepBook: Record "FA Depreciation Book";
                 QuotCompHdr: Record QuotCompHdr; //B2BMSOn18Oct2022
-                PurchQuoteTermsConditions: Record "PO Terms And Conditions";
-                purchOrdTermsCondition: Record "PO Terms And Conditions";
-                LineNoTerCOn: Integer;
-                purChaseQuo: Record "Purchase Header";
-                purchaseOrd: Record "Purchase Header";
             begin
 
                 PurchaseHeader.RESET;
@@ -82,7 +77,6 @@ report 50076 "Purchase Order Creation New"
                         PurchaseHeaderOrder.Validate("Shortcut Dimension 1 Code", "Quotation Comparison1"."Shortcut Dimension 1 Code");//B2BPAV
                         PurchaseHeaderOrder.Validate("Shortcut Dimension 2 Code", "Quotation Comparison1"."Shortcut Dimension 2 Code");//B2BPAV
                         PurchaseHeaderOrder.Validate("Payment Terms Code", "Quotation Comparison1"."Payment Term Code");
-
                         //B2BMSOn18Oct2022>>
                         if QuotCompHdr.Get("Quotation Comparison1"."Quot Comp No.") then
                             PurchaseHeaderOrder.Regularization := QuotCompHdr.Regularization;
@@ -149,11 +143,7 @@ report 50076 "Purchase Order Creation New"
                         until PurchaseLine.Next() = 0;
                     END;
                 end;
-                //B2BSSD27Jan2023<<
-                PurchQuoteTermsConditions.Init();
-                PurchQuoteTermsConditions.TransferFields(purchOrdTermsCondition);
-                PurchQuoteTermsConditions.Insert(true);
-                //B2BSSD27Jan2023>>
+
                 QutComLine.RESET;
                 QutComLine.SetRange("Quot Comp No.", "Quot Comp No.");
                 QutComLine.SetRange("Line No.", "Line No.");

@@ -202,11 +202,11 @@ report 50099 "Purchase Order Creation"
         PPSetup: Record 312;
         PurchaseHeader: Record 38;
         PurchaseLine: Record 39;
-        RFQNumbers: Record 50039;
-        IndentLine: Record 50037;
+        RFQNumbers: Record "RFQ Numbers";
+        IndentLine: Record "Indent Line";
         PurchaseLineOrder2: Record 38;
         Noseries2: Code[20];
-        IndentReq: Record 50038;
+        IndentReq: Record "Indent Requisitions";
         NoSeries: Record 310;
         LineNo: Integer;
 

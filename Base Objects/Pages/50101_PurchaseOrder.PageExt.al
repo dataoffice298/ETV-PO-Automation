@@ -132,5 +132,11 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         PurchLine: Record "Purchase Line";
         LCDetails: Record "LC Details";
 
-    
+    /*   actions
+       {
+           // Add changes to page actions here
+       }
+
+       var
+           myInt: Integer;*/
 }

@@ -366,6 +366,7 @@ codeunit 50016 "MyBaseSubscr"
     end;
     //B2BMSOn28Oct2022<<
 
+    
     //B2BSSD25Jan2023<<
     [EventSubscriber(ObjectType::Table, database::"Purchase Header", 'OnAfterInsertEvent', '', false, false)]
     local procedure InsertTermsConditions(var Rec: Record "Purchase Header")

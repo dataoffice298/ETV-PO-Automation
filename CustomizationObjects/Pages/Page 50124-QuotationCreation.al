@@ -5,7 +5,7 @@ page 50124 "Quotation Creation"
     Caption = 'Quotation Comparision Cus';
     PageType = List;
     //UsageCategory = Lists;
-    SourceTable = 50045;
+    SourceTable = "Indent Req Header";
     //ApplicationArea = all;
 
     layout
@@ -81,8 +81,8 @@ page 50124 "Quotation Creation"
 
     var
         UserSetupGrec: Record 91;
-        RFQNumbers: Record 50039;
-        IndentRequisitions2: Record 50038;
+        RFQNumbers: Record "RFQ Numbers";
+        IndentRequisitions2: Record "Indent Requisitions";
         PrevPRNo: Code[20];
 }
 

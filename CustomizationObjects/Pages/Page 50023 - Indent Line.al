@@ -238,8 +238,8 @@ page 50023 "Indent Line"
 
     var
         ItemLedgerEntry: Record 32;
-        IndentHeader: Record 50010;
-        IndentLine: Record 50037;
+        IndentHeader: Record "Indent Header";
+        IndentLine: Record "Indent Line";
         FieldEditable: Boolean;
 
 }

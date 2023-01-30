@@ -629,8 +629,8 @@ page 50175 "Transfer Indent Header"
     //BaluOn19Oct2022<<
 
     var
-        IndentLine: Record 50037;
-        IndentHeader: Record 50010;
+        IndentLine: Record "Indent Line";
+        IndentHeader: Record "Indent Header";
         LocationRec: Record Location;
         //B2BMSOn13Sep2022>>
         ArchiveIndHdr: Record "Archive Indent Header";
@@ -667,7 +667,7 @@ page 50175 "Transfer Indent Header"
         Text13708: Label '"You are requested to verify and authorise the above document at the earliest. "';
         Text13709: Label '"Thank you, "';
         Text13710: Label '"From:  "';
-        WFIndentLine: Record 50041;
+        WFIndentLine: Record "Quotation Comparison";
         Company: Record 79;
         PurchSetup: Record 312;
         WFAmount: Decimal;
@@ -684,7 +684,7 @@ page 50175 "Transfer Indent Header"
         User: Record 2000000120;
         Indent: Page 50024;
         WFPurchLine: Record 39;
-        IndentLineRec: Record 50037;
+        IndentLineRec: Record "Indent Line";
         //Approval Actions Variables - B2BMSOn09Sep2022>>
         approvalmngmt: Codeunit "Approvals Mgmt.";
         allinoneCU: Codeunit "Approvals MGt 4";

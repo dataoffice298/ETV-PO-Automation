@@ -344,10 +344,10 @@ page 50120 "Indent Requisition Document"
 
     var
         Carry: Integer;
-        IndentReqHeader: Record 50045;
-        Indentreqline: Record 50038;
+        IndentReqHeader: Record "Indent Req Header";
+        Indentreqline: Record "Indent Requisitions";
         POAutomation: Codeunit 50026;
-        CreateIndents: Record 50038;
+        CreateIndents: Record "Indent Requisitions";
         Vendor: Record 23;
         VendorList: Page 27;
         PurchaseOrder: Record 38;
@@ -372,8 +372,8 @@ page 50120 "Indent Requisition Document"
 
     procedure CheckRemainingQuantity();
     var
-        IndentReqHeaderCheck: Record 50045;
-        IndentRequisitionsCheck: Record 50038;
+        IndentReqHeaderCheck: Record "Indent Req Header";
+        IndentRequisitionsCheck: Record "Indent Requisitions";
         CountVar: Integer;
         Text001: Label 'You Cannot create PO . Quantity not more than Zero.';
     begin
@@ -405,11 +405,11 @@ page 50120 "Indent Requisition Document"
 
     procedure UpdateReqQty();
     var
-        IndenReqRec: Record 50038;
-        IndentLineRec: Record 50037;
-        IndentReqHeaderRec: Record 50045;
+        IndenReqRec: Record "Indent Requisitions";
+        IndentLineRec: Record "Indent Line";
+        IndentReqHeaderRec: Record "Indent Req Header";
         QuantyLvar: Decimal;
-        IndentLineRec2: Record 50037;
+        IndentLineRec2: Record "Indent Line";
     begin
         IndenReqRec.RESET;
         IndenReqRec.SETRANGE("Document No.", Rec."No.");

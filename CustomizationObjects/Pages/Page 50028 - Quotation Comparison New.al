@@ -15,7 +15,7 @@ page 50028 "Quotation Comparison New" //PKON22J1
     // 1.0       B2B        Raju          16-Dec-2016--> Added New Function PrintQC;old Code Commented.
 
     PageType = Worksheet;
-    SourceTable = 50041;
+    SourceTable = "Quotation Comparison";
     //UsageCategory = Tasks;
     //ApplicationArea = all;
 
@@ -239,7 +239,7 @@ page 50028 "Quotation Comparison New" //PKON22J1
                     ApplicationArea = all;
                     trigger OnAction();
                     var
-                        QuoteCompareLocal: Record 50041;
+                        QuoteCompareLocal: Record "Quotation Comparison";
                     begin
                         /*
                         QuoteCompareArchive.SETRANGE("RFQ No.","RFQ No.");
@@ -406,14 +406,14 @@ page 50028 "Quotation Comparison New" //PKON22J1
 
     var
         ActualExpansionStatus: Integer;
-        ReqLine: Record 50041;
-        TempReqLine: Record 50041 temporary;
+        ReqLine: Record "Quotation Comparison";
+        TempReqLine: Record "Quotation Comparison" temporary;
         RFQNumber: Code[20];
-        RFQNumbers: Record 50039;
-        QuoteCompare: Record 50041;
-        QuotationComparisionDelete: Record 50041;
+        RFQNumbers: Record "RFQ Numbers";
+        QuoteCompare: Record "Quotation Comparison";
+        QuotationComparisionDelete: Record "Quotation Comparison";
         POAutomation: Codeunit 50026;
-        QuoteCompareArchive: Record 50044;
+        QuoteCompareArchive: Record "Archive Quotation Comparison";
         Item: Record 27;
         [InDataSet]
         "Quote No.Emphasize": Boolean;
@@ -438,7 +438,7 @@ page 50028 "Quotation Comparison New" //PKON22J1
         Text50000: Label 'Quantity Exceeded than  Order Raised';
         POCreationReport: Report 50099;
 
-    local procedure IsExpanded(ActualReqLine: Record 50041): Boolean;
+    local procedure IsExpanded(ActualReqLine: Record "Quotation Comparison"): Boolean;
     begin
         TempReqLine := ActualReqLine;
         IF TempReqLine.NEXT = 0 THEN
@@ -448,7 +448,7 @@ page 50028 "Quotation Comparison New" //PKON22J1
 
     local procedure ToggleExpandCollapse();
     var
-        ReqLine: Record 50041;
+        ReqLine: Record "Quotation Comparison";
     begin
         IF ActualExpansionStatus = 0 THEN BEGIN // Has children, but not expanded
             ReqLine.SETRANGE(Level, Rec.Level, Rec.Level + 1);
@@ -499,7 +499,7 @@ page 50028 "Quotation Comparison New" //PKON22J1
 
     local procedure ExpandAll();
     var
-        ReqLine: Record 50041;
+        ReqLine: Record "Quotation Comparison";
     begin
         ReqLine.RESET;
         ReqLine.COPYFILTERS(TempReqLine);
@@ -535,7 +535,7 @@ page 50028 "Quotation Comparison New" //PKON22J1
 
     end;
 
-    procedure ArchiveQCS(QuotationComparision2: Record 50041);
+    procedure ArchiveQCS(QuotationComparision2: Record "Quotation Comparison");
     begin
         QuoteCompareArchive.RESET;
         QuoteCompareArchive.INIT;

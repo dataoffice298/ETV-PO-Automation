@@ -194,7 +194,7 @@ page 50123 "IndentRequisitionDocument New"
 
                 trigger OnAction();
                 var
-                    QuoteCompareLocal: Record 50041;
+                    QuoteCompareLocal: Record "Quotation Comparison";
                 begin
                     /*
                     QuoteCompareArchive.SETRANGE("RFQ No.","RFQ No.");
@@ -308,11 +308,11 @@ page 50123 "IndentRequisitionDocument New"
 
     var
         Carry: Integer;
-        IndentReqHeader: Record 50045;
-        Indentreqline: Record 50038;
+        IndentReqHeader: Record "Indent Req Header";
+        Indentreqline: Record "Indent Requisitions";
         POAutomation: Codeunit 50026;
-        CreateIndents: Record 50038;
-        QuoteCompare: Record 50041;
+        CreateIndents: Record "Indent Requisitions";
+        QuoteCompare: Record "Quotation Comparison";
         Vendor: Record 23;
         VendorList: Page 27;
         PurchaseOrder: Record 38;
@@ -327,8 +327,8 @@ page 50123 "IndentRequisitionDocument New"
         UserSetup2: Record 91;
         IndentReqLines: Report 50001;
         RFQNumber: Code[20];
-        ReqLine: Record 50041;
-        TempReqLine: Record 50041 temporary;
+        ReqLine: Record "Quotation Comparison";
+        TempReqLine: Record "Quotation Comparison" temporary;
         approvalmngmt: Codeunit 50001;
         "Location CodeEmphasize": Boolean;
         Text19068734: Label 'RFQ No.';
@@ -341,9 +341,9 @@ page 50123 "IndentRequisitionDocument New"
         PORaiseQty: Decimal;
         PurchHeader: Record 38;
         PurchLine: Record 39;
-        QuotationComparisionDelete: Record 50041;
+        QuotationComparisionDelete: Record "Quotation Comparison";
 
-        QuoteCompareArchive: Record 50044;
+        QuoteCompareArchive: Record "Archive Quotation Comparison";
 
 
 
@@ -365,8 +365,8 @@ page 50123 "IndentRequisitionDocument New"
 
     procedure CheckRemainingQuantity();
     var
-        IndentReqHeaderCheck: Record 50045;
-        IndentRequisitionsCheck: Record 50038;
+        IndentReqHeaderCheck: Record "Indent Req Header";
+        IndentRequisitionsCheck: Record "Indent Requisitions";
         CountVar: Integer;
         Text001: Label 'You Cannot create PO . Quantity not more than Zero.';
     begin
@@ -385,7 +385,7 @@ page 50123 "IndentRequisitionDocument New"
             ERROR(Text001);
     end;
 
-    procedure ArchiveQCS(QuotationComparision2: Record 50041);
+    procedure ArchiveQCS(QuotationComparision2: Record "Quotation Comparison");
     begin
         QuoteCompareArchive.RESET;
         QuoteCompareArchive.INIT;
@@ -472,7 +472,7 @@ page 50123 "IndentRequisitionDocument New"
 
     local procedure ExpandAll();
     var
-        ReqLine: Record 50041;
+        ReqLine: Record "Quotation Comparison";
     begin
         ReqLine.RESET;
         ReqLine.COPYFILTERS(TempReqLine);
@@ -487,11 +487,11 @@ page 50123 "IndentRequisitionDocument New"
 
     procedure UpdateReqQty();
     var
-        IndenReqRec: Record 50038;
-        IndentLineRec: Record 50037;
-        IndentReqHeaderRec: Record 50045;
+        IndenReqRec: Record "Indent Requisitions";
+        IndentLineRec: Record "Indent Line";
+        IndentReqHeaderRec: Record "Indent Req Header";
         QuantyLvar: Decimal;
-        IndentLineRec2: Record 50037;
+        IndentLineRec2: Record "Indent Line";
     begin
         //B2B.1.4 START
         IndenReqRec.RESET;

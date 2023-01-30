@@ -138,15 +138,15 @@ report 50001 "Indent Requestion Lines"
     }
 
     var
-        IndentRequisitions: Record 50038;
+        IndentRequisitions: Record "Indent Requisitions";
         RecItem: Record 27;
         RecVendor: Record 23;
         RecLocation: Record 14;
         TempLineNo: Integer;
         QtyNotAvailable: Boolean;
         BoolGvar: Boolean;
-        IndentReqHeader: Record 50045;
-        IndentReqHeaderGRec: Record 50045;
+        IndentReqHeader: Record "Indent Req Header";
+        IndentReqHeaderGRec: Record "Indent Req Header";
         RequestNo: Code[20];
         ResponsibilityCenter: Code[20];
         Count1: Integer;

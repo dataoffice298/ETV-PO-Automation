@@ -148,10 +148,10 @@ page 50122 "IndentRequisitionsSubForm New"
     }
 
     var
-        CreateIndents: Record 50038;
+        CreateIndents: Record "Indent Requisitions";
         Indent: Text[1024];
         Carry: Integer;
-        IndentLine: Record 50037;
+        IndentLine: Record "Indent Line";
         PurchaseOrder: Record 38;
         Vendor: Record 99;
 }

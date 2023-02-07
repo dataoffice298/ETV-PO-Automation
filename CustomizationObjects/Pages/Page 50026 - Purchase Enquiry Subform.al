@@ -43,6 +43,10 @@ page 50026 "Purchase Enquiry Subform"
                     ApplicationArea = All;
 
                 }
+                field("Indentor Description"; Rec."Indentor Description")//B2BSSD03Feb2023
+                {
+                    ApplicationArea = All;
+                }
                 field("Location Code"; Rec."Location Code")
                 {
                     ApplicationArea = All;

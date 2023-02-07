@@ -18,6 +18,16 @@ table 50203 "Indent Requisitions"
             ELSE
             IF ("Line Type" = CONST("G/L Account")) "G/L Account";
             Caption = 'No.';
+            //B2BSSD02Jan2023<<
+            trigger OnLookup()
+            var
+                Item: Record Item;
+            begin
+                if Page.RunModal(0, Item) = Action::LookupOK then
+                    "Item No." := Item."No.";
+                Description := Item.Description;
+            end;
+            //B2BSSD02Jan2023>>
         }
         field(2; Description; Text[50])
         {
@@ -242,6 +252,10 @@ table 50203 "Indent Requisitions"
             DataClassification = CustomerContent;
         }
         field(50017; "Spec Id"; Text[250])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50018; "Indentor Description"; Text[100])//B2BSSD02Feb2023
         {
             DataClassification = CustomerContent;
         }

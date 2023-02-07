@@ -110,9 +110,24 @@ page 50116 "Indent Header"
                 //Editable = PageEditable;//B2BVCOn28Sep22
             }
         }
-
+        //B2BSSD30Jan2023<<
+        area(FactBoxes)
+        {
+            systempart(Control1905767507; Notes)//B2BSSD31Jan2023
+            {
+                ApplicationArea = Notes;
+            }
+            part(AttachmentDoc; "Document Attachment Factbox")
+            {
+                ApplicationArea = All;
+                Caption = 'Attachments';
+                Provider = indentLine;
+                SubPageLink = "Table ID" = CONST(50202),
+                "No." = field("Document No."), "Line No." = field("Line No.");
+            }
+        }
+        //B2BSSD30Jan2023>>
     }
-
     actions
     {
         area(processing)
@@ -468,6 +483,8 @@ page 50116 "Indent Header"
                     var
                         RelError: Label 'This document is enabled for workflow. Manual release is not possible.';
                         ItemVariantLRec: Record "Item Variant";
+                        IndentLine: Record "Indent Line";
+                        Techspec: Record "Technical Specifications";
                     begin
                         //B2BMSOn13Sep2022>>
                         IF allinoneCU.ISIndentDocworkflowenabled(Rec) then
@@ -499,6 +516,7 @@ page 50116 "Indent Header"
                             MESSAGE(Text001, Rec."No.");
                         CurrPage.UPDATE;
                     end;
+
                 }
                 action("Re&open")
                 {
@@ -607,7 +625,6 @@ page 50116 "Indent Header"
                     REPORT.RUNMODAL(REPORT::"Material Issue Slip", TRUE, false, IndentHeader);
                 end;
             }
-
         }
     }
 

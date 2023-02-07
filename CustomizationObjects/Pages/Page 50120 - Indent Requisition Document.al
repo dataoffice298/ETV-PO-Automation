@@ -64,6 +64,25 @@ page 50120 "Indent Requisition Document"
                 ApplicationArea = All;
             }
         }
+        //B2BSSD31Jan2023<<
+        area(FactBoxes)
+        {
+
+            systempart(Control1905767507; Notes)
+            {
+                ApplicationArea = Notes;
+            }
+            part(AttachmentDoc; "Document Attachment Factbox")
+            {
+                Editable = false;
+                ApplicationArea = All;
+                Caption = 'Attachments';
+                Provider = Indentrequisations;
+                SubPageLink = "Table ID" = CONST(50203),
+                             "No." = FIELD("Document No."), "Line No." = field("Line No.");
+            }
+        }
+        //B2BSSD31Jan2023>>
     }
 
     actions
@@ -472,6 +491,7 @@ page 50120 "Indent Requisition Document"
             FieldEditable := true;
             ShowAct := false;
         end;
+
     end;
 
 
@@ -479,4 +499,6 @@ page 50120 "Indent Requisition Document"
     begin
         Rec.Status := Rec.Status::Open;
     end;
+
+    var
 }

@@ -434,6 +434,10 @@ table 50210 "Quotation Comparison Test"
         {
             DataClassification = CustomerContent;
         }
+        field(60025; "Indentor Description"; Code[100])//B2BSSD07Feb2023
+        {
+            DataClassification = CustomerContent;
+        }
 
     }
 

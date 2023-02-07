@@ -165,6 +165,11 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             Description = 'PO1.0';
             Editable = false;
         }
+        field(33002906; "Indentor Description"; Code[100])//B2BSSD02Feb2023
+        {
+            Description = 'PO1.0';
+            Editable = false;
+        }
 
         //B2BMSOn03Nov2022>>
         field(60012; "Qty. to Accept B2B"; Decimal)

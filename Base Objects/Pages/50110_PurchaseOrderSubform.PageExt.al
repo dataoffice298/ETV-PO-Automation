@@ -44,6 +44,10 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 ApplicationArea = all;
                 Editable = false;
             }
+            field("Indentor Description"; Rec."Indentor Description")//B2BSSD02Feb2023
+            {
+                ApplicationArea = All;
+            }
             field("Spec Id"; rec."Spec Id")
             {
                 ApplicationArea = all;
@@ -214,6 +218,39 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             }
             //B2BMSOn03Nov2022<<
         }
+        //B2BSSD07Feb2023<<
+        addlast("O&rder")
+        {
+            group("Fixed Assets")
+            {
+                action("Fixed Asssets&Imports")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Import Fixed Assets';
+                    Image = Import;
+                    ToolTip = 'Executes the Excel Imported action.';
+                    trigger OnAction()
+                    begin
+                        FixedAssetsReadExcelSheet();
+                        FixedAssetsImportExcelData();
+                    end;
+                }
+                action("Fixed Assets&Export")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Export Fixed Assets';
+                    Image = Export;
+                    ToolTip = 'Executes the Excel Exported action.';
+                    trigger OnAction()
+                    var
+                        PurchaseLine: Record "Purchase Line";
+                    begin
+                        FixedAssetsExportExcelBuffer(Rec);
+                    end;
+                }
+            }
+        }
+        //B2BSSD07Feb2023>>
     }
 
     procedure CreateGateEntries(EntryType: Option Inward,Outward; DocType: Option RGP,NRGP)
@@ -358,4 +395,112 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
     var
         GateEntryType: Option Inward,Outward;
         GateEntryDocType: Option RGP,NRGP;
+        //B2BSS07Feb2023<<
+        ExcelImportSuccess: Label 'Excel File Imported Successfully';
+        uplodMsg: Label 'Please Choose The Excel file';
+        FileName: text[100];
+        SheetName: Text[100];
+        TempExcelBuffer: Record "Excel Buffer" temporary;
+        NoFileMsg: Label 'No excel File Found';
+    //B2BSS07Feb2023>>
+
+    //B2BSS07Feb2023 Import Start >>
+    local procedure FixedAssetsReadExcelSheet()
+    var
+        FileManagement: Codeunit "File Management";
+        Istream: InStream;
+        FromFile: Text[100];
+    begin
+        UploadIntoStream(uplodMsg, '', '', FromFile, Istream);
+        if FromFile <> '' then begin
+            FileName := FileManagement.GetFileName(FromFile);
+            SheetName := TempExcelBuffer.SelectSheetsNameStream(Istream)
+        end else
+            Error(NoFileMsg);
+        TempExcelBuffer.Reset();
+        TempExcelBuffer.DeleteAll();
+        TempExcelBuffer.OpenBookStream(Istream, SheetName);
+        TempExcelBuffer.ReadSheet();
+    end;
+
+    local procedure GetCellValue(RowNo: Integer; ColNo: Integer): Text
+    begin
+        TempExcelBuffer.Reset();
+        if TempExcelBuffer.Get(RowNo, ColNo) then
+            exit(TempExcelBuffer."Cell Value As Text")
+        else
+            exit('');
+    end;
+
+    local procedure FixedAssetsImportExcelData()
+    var
+        PurcahaseLine: Record "Purchase Line";
+        RowNo: Integer;
+        ColNo: Integer;
+        LineNo: Integer;
+        MaxRow: Integer;
+    begin
+        RowNo := 0;
+        ColNo := 0;
+        LineNo := 0;
+        MaxRow := 0;
+        PurcahaseLine.Reset();
+        if PurcahaseLine.FindFirst() then
+            LineNo := PurcahaseLine."Line No.";
+        TempExcelBuffer.Reset();
+        if TempExcelBuffer.FindLast() then begin
+            MaxRow := TempExcelBuffer."Row No.";
+        end;
+        for RowNo := 2 to MaxRow Do begin
+            LineNo := LineNo + 10000;
+
+            PurcahaseLine.Init();
+            //Evaluate(ExcelImport."Transaction Name", TransName1);
+            PurcahaseLine."Line No." := LineNo;
+            Evaluate(PurcahaseLine."Document No.", GetCellValue(RowNo, 1));
+            Evaluate(PurcahaseLine."Line No.", GetCellValue(RowNo, 2));
+            Evaluate(PurcahaseLine."Serial No.", GetCellValue(RowNo, 3));
+            Evaluate(PurcahaseLine."Model No.", GetCellValue(RowNo, 4));
+            Evaluate(PurcahaseLine.Make_B2B, GetCellValue(RowNo, 5));
+            PurcahaseLine.Insert();
+        end;
+        Message(ExcelImportSuccess);
+    end;
+    //B2BSS07Feb2023 Import End>>
+
+    //B2BSSD07Feb Export Start <<
+    local procedure FixedAssetsExportExcelBuffer(var PurchaseLine: Record "Purchase Line")
+    var
+        TempExcelBuffer: Record "Excel Buffer" temporary;
+        PurchaseLine1: Label 'Product Entries';
+        ExcelFileName: Label 'Excel Entries_%1_%2';
+    begin
+        TempExcelBuffer.Reset();
+        TempExcelBuffer.DeleteAll();
+        TempExcelBuffer.NewRow();
+        TempExcelBuffer.AddColumn(PurchaseLine.FieldCaption("Document No."), false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
+        TempExcelBuffer.AddColumn(PurchaseLine.FieldCaption("Line No."), false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
+        TempExcelBuffer.AddColumn(PurchaseLine.FieldCaption("No."), false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
+        TempExcelBuffer.AddColumn(PurchaseLine.FieldCaption("Serial No."), false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
+        TempExcelBuffer.AddColumn(PurchaseLine.FieldCaption("Model No."), false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
+        TempExcelBuffer.AddColumn(PurchaseLine.FieldCaption(Make_B2B), false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
+
+        if PurchaseLine.FindSet() then
+            repeat
+                TempExcelBuffer.NewRow();
+                TempExcelBuffer.AddColumn(PurchaseLine."Document No.", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
+                TempExcelBuffer.AddColumn(PurchaseLine."Line No.", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
+                TempExcelBuffer.AddColumn(PurchaseLine."No.", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
+                TempExcelBuffer.AddColumn(PurchaseLine."Serial No.", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
+                TempExcelBuffer.AddColumn(PurchaseLine."Model No.", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
+                TempExcelBuffer.AddColumn(PurchaseLine.Make_B2B, false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
+            until PurchaseLine.Next() = 0;
+
+        TempExcelBuffer.CreateNewBook(PurchaseLine1);
+        TempExcelBuffer.WriteSheet(PurchaseLine1, CompanyName, UserId);
+        TempExcelBuffer.CloseBook();
+        TempExcelBuffer.SetFriendlyFilename(StrSubstNo(ExcelFileName, CurrentDateTime, UserId));
+        TempExcelBuffer.OpenExcel();
+    end;
+    //B2BSSD07Feb Export End >>
 }

@@ -261,6 +261,11 @@ codeunit 50026 "PO Automation"
                             PurchaseLine.Type := PurchaseLine.Type::"Fixed Asset";
                         if IndentVendorEnquiry."Line Type" = IndentVendorEnquiry."Line Type"::"G/L Account" then
                             PurchaseLine.Type := PurchaseLine.Type::"G/L Account";
+                        //B2BSSD03Feb2023<<
+                        if IndentVendorEnquiry."Line Type" = IndentVendorEnquiry."Line Type"::Description then
+                            PurchaseLine.Type := PurchaseLine.Type::Description;
+                        //B2BSSD03Feb2023>>
+
                         //ETVPO1.1 <<
                         PurchaseLine."No." := IndentVendorEnquiry."Item No.";
 
@@ -288,6 +293,15 @@ codeunit 50026 "PO Automation"
                         PurchaseLine."Location Code" := IndentVendorEnquiry."Location Code";
                         PurchaseLine."Sub Location Code" := IndentVendorEnquiry."Sub Location Code";
                         PurchaseLine."Spec Id" := IndentVendorEnquiry."Spec Id";
+
+                        //B2BSSD03Feb2023<<
+                        CreateIndents2.Reset();
+                        CreateIndents2.SetRange("Document No.", IndentVendorEnquiry."Indent Req No");
+                        CreateIndents2.SetRange("Line No.", IndentVendorEnquiry."Indent Req Line No");
+                        if CreateIndents2.FindFirst() then
+                            PurchaseLine."Indentor Description" := CreateIndents2."Indentor Description";
+                        //B2BSSD03Feb2023>>
+
                         //PurchaseLine.VALIDATE("Location Code");//B2BESGOn19May2022
                         // PurchaseLine."Shortcut Dimension 1 Code" := IndentVendorEnquiry."Project No.";
                         // PurchaseLine."Shortcut Dimension 2 Code" := IndentVendorEnquiry.Department;
@@ -874,7 +888,7 @@ codeunit 50026 "PO Automation"
                             //QuoteCompare."Purch. Req Line No" := PurchaseLine."Indent Req Line No";
                             QuoteCompare."Indent Req. No." := PurchaseLine."Indent Req No";
                             QuoteCompare."Indent Req. Line No." := PurchaseLine."Indent Req Line No";
-
+                            QuoteCompare."Indentor Description" := PurchaseLine."Indentor Description";//B2BSSD07Feb2023
                             //PhaniFeb102021 >>
                             QuoteCompare."VAT Bus. Posting Group" := PurchaseLine."VAT Bus. Posting Group";
                             QuoteCompare."VAT Prod. Posting Group" := PurchaseLine."VAT Prod. Posting Group";
@@ -1260,8 +1274,9 @@ codeunit 50026 "PO Automation"
                 PurchaseLineQuote.validate("Shortcut Dimension 1 Code", PurchaseLine."Shortcut Dimension 1 Code");
                 PurchaseLineQuote.validate("Shortcut Dimension 2 Code", PurchaseLine."Shortcut Dimension 2 Code");
                 //B2BMSOn14Sep2022<<
-                PurchaseLineQuote."Sub Location Code" := PurchaseLine."Sub Location Code";
+                PurchaseLineQuote."Sub Location Code" := PurchaseLine."Sub Location Code";//B2BSSD07Feb2023
                 PurchaseLineQuote."Spec Id" := PurchaseLine."Spec Id";
+                PurchaseLineQuote."Indentor Description" := PurchaseLine."Indentor Description";
                 PurchaseLineQuote.VALIDATE("Variant Code", PurchaseLine."Variant Code");
                 PurchaseLineQuote.VALIDATE("Unit of Measure Code", PurchaseLine."Unit of Measure Code");
                 // END ELSE BEGIN
@@ -1458,6 +1473,7 @@ codeunit 50026 "PO Automation"
                             PurchaseLine.Validate("Sub Location Code", CreateIndents5."Sub Location Code");
                             PurchaseLine.Validate("Variant Code", CreateIndents5."Variant Code");
                             //B2BSSD11Jan2023>>
+                            PurchaseLine.Validate("Indentor Description", CreateIndents5."Indentor Description");//B2BSSD02Feb2023
                             CreateIndents5.MODIFY;
                         END;
                         PurchaseLine.Modify(true);
@@ -1588,6 +1604,6 @@ codeunit 50026 "PO Automation"
             PurchLine.TestField("Serial No.");
         end;
     end;
-    //B2BMSOn03Nov2022<<
+    //B2BMSOn03Nov2022<<    
 }
 

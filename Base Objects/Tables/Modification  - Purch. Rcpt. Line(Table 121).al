@@ -171,6 +171,10 @@ tableextension 50052 tableextension70000003 extends "Purch. Rcpt. Line"
         {
             DataClassification = CustomerContent;
         }
+        field(33002906; "Indentor Description"; Code[100])//B2BSSD07Feb2023
+        {
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {

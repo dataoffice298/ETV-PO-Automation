@@ -44,6 +44,11 @@ page 50127 QuotationComparSubForm
                 {
                     ApplicationArea = all;
                 }
+                field("Indentor Description"; Rec."Indentor Description")//B2BSSD07Feb2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'Indentor Description';
+                }
                 field(Description; Rec.Description)
                 {
                     Editable = false;

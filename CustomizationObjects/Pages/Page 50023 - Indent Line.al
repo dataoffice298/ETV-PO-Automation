@@ -32,6 +32,10 @@ page 50023 "Indent Line"
                     ApplicationArea = All;
                     Editable = FieldEditable;
                 }
+                field(Select; Rec.Select)//B2BSSD30Jan2023
+                {
+                    ApplicationArea = All;
+                }
                 field("Spec Id"; rec."Spec Id")
                 {
                     ApplicationArea = all;
@@ -211,11 +215,72 @@ page 50023 "Indent Line"
                             Page.Run(0, FAMovement);
                     END;
                 }
+                //B2BSSD30Jan2023<<
+                action("Item Specification")
+                {
+                    ApplicationArea = All;
+                    Image = Import;
+                    Caption = 'Specification ID Import';
+                    trigger OnAction()
+                    var
+                        TechnicalSpec: Record "Technical Specifications";
+                    begin
+                        if Rec.Select = false then
+                            Error(SelectErr);
+                        TechnicalSpec.ReadExcelSheet();
+                        TechnicalSpec.ImportExcelData();
+                    end;
+                }
+                action("Item TechnicalSpec")
+                {
+                    ApplicationArea = All;
+                    Image = Import;
+                    Caption = 'Specification';
+                    trigger OnAction()
+                    var
+                        TechnicalSpec: Page TechnicalSpecifications;
+                        TechnicalspecRec: Record "Technical Specifications";
+                    begin
+                        if Rec.Select = false then
+                            Error(SelectErr);
+                        TechnicalspecRec.Reset();
+                        TechnicalspecRec.SetRange("Item No.", Rec."No.");
+                        TechnicalspecRec.SetRange("Document No.", Rec."Document No.");
+                        TechnicalspecRec.SetRange("Line No.", Rec."Line No.");
+                        TechnicalSpec.SetTableView(TechnicalspecRec);
+                        TechnicalSpec.Run();
+                    end;
+                }
+                //B2BSSD30Jan2023>> 
 
+                //B2BSSD31Jan2023<<
+                action(DocAttach)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Attachments';
+                    Image = Attach;
+                    ToolTip = 'Add a file as an attachment. You can attach images as well as documents.';
+                    trigger OnAction()
+                    var
+                        DocumentAttachmentDetails: Page "Document Attachment Details";
+                        DocumentAttRec: Record "Document Attachment";
+                        RecRef: RecordRef;
+                        Attachemnets: Codeunit Attachments;
+                    begin
+                        if Rec.Select = false then
+                            Error(SelectErr)
+                        else
+                            RecRef.GetTable(Rec);
+                        DocumentAttachmentDetails.OpenForRecRef(RecRef);
+                        DocumentAttachmentDetails.RunModal();
+                        CurrPage.Update();
+                    end;
+                }
+                //B2BSSD31Jan2023>>
             }
         }
-
     }
+
 
     //B2BMSOn04Nov2022>>
     trigger OnInit()
@@ -234,13 +299,19 @@ page 50023 "Indent Line"
             FieldEditable := true;
     end;
     //B2BMSOn04Nov2022<<
+    trigger OnOpenPage()
+    var
+        TechnicalSpec: Record "Technical Specifications";
+    begin
 
+    end;
 
     var
         ItemLedgerEntry: Record 32;
         IndentHeader: Record "Indent Header";
         IndentLine: Record "Indent Line";
         FieldEditable: Boolean;
-
+        SelectErr: Label 'No Lines Selected';
+        Attachemnets: Codeunit Attachments;
 }
 

@@ -158,13 +158,8 @@ report 50181 "Non Returnable Gatepass"
                 CompanyInfo.CALCFIELDS(Picture);
                 SetFilter("No.", '%1', PostedNrgpOutwardNo);//B2BSSD20Jan2023
             end;
-
-
         }
-
     }
-
-
     requestpage
     {
         layout

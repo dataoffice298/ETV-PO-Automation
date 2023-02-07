@@ -364,6 +364,10 @@ table 50202 "Indent Line"
         {
             DataClassification = CustomerContent;
         }
+        field(50018; "Select"; Boolean)//B2BSSD30Jan2023
+        {
+            DataClassification = CustomerContent;
+        }
         field(50017; "Indentor Description"; Text[100])
         {
             DataClassification = CustomerContent;

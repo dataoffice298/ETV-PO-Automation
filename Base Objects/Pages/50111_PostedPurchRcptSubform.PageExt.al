@@ -19,6 +19,11 @@ pageextension 50111 PostedPurchRcptSubform extends "Posted Purchase Rcpt. Subfor
             {
                 ApplicationArea = all;
             }
+            field("Indentor Description"; Rec."Indentor Description")//B2BSSD07Feb2023
+            {
+                ApplicationArea = All;
+                Caption = 'Indentor Description';
+            }
         }
     }
 

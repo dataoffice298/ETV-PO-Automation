@@ -42,6 +42,10 @@ page 50119 "Indent Requisitions SubForm"
                     ApplicationArea = All;
                     Editable = FieldEditable;
                 }
+                field("Indentor Description"; Rec."Indentor Description")//B2BSSD02Feb2023
+                {
+                    ApplicationArea = All;
+                }
                 field("Spec Id"; rec."Spec Id")
                 {
                     ApplicationArea = all;
@@ -81,10 +85,9 @@ page 50119 "Indent Requisitions SubForm"
                     begin
                         ItemVendor.Reset();
                         ItemVendor.SetRange("Item No.", Rec."Item No.");
-                        if ItemVendor.FindSet() then begin
+                        if ItemVendor.FindSet() then
                             if Page.RunModal(Page::"Item Vendor Catalog", ItemVendor) = Action::LookupOK then
                                 Rec.Validate("Manufacturer Code", ItemVendor."Vendor No.");
-                        end;
                     end;
 
                     trigger OnValidate();
@@ -193,7 +196,49 @@ page 50119 "Indent Requisitions SubForm"
                     ApplicationArea = all;
                     Editable = false;
                 }
+            }
+        }
+    }
+    actions
+    {
+        area(Processing)
+        {
+            action("Doc&Attachments")
+            {
+                ApplicationArea = All;
+                Image = Attachments;
+                Caption = 'Attachments';
+                ToolTip = 'Add a file as an attachment. You can attach images as well as documents.';
+                trigger OnAction()
+                var
+                    DocumentAttachmentDetails: Page "Document Attachment Details";
+                    DocumentAttRec: Record "Document Attachment";
+                    RecRef: RecordRef;
+                    Attachemnets: Codeunit Attachments;
+                    SelectErr: Label 'No Lines Selected';
+                begin
+                    //if Rec.Select = false then
+                    //Error(SelectErr)
+                    RecRef.GetTable(Rec);
+                    DocumentAttachmentDetails.OpenForRecRef(RecRef);
+                    DocumentAttachmentDetails.RunModal();
+                    CurrPage.Update();
+                end;
+            }
+            //B2BSSD02Jan2023<<
+            action("Item TechnicalSpec")
+            {
+                RunPageMode = View;
+                ApplicationArea = All;
+                Image = Import;
+                Caption = 'Specification';
+                RunObject = page TechnicalSpecifications;
+                RunPageLink = "Item No." = field("Item No."), "Line No." = field("Line No.");
+                trigger OnAction()
+                var
+                begin
 
+                end;
             }
         }
     }

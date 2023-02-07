@@ -52,6 +52,7 @@ report 50001 "Indent Requestion Lines"
                         IndentRequisitions."Line No." := TempLineNo;
                         IndentRequisitions."Line Type" := Type;
                         IndentRequisitions."Item No." := "No.";
+                        IndentRequisitions."Indentor Description" := "Indentor Description";//B2BSSD02Feb2023
                         IndentRequisitions.Description := Description;
                         IF RecItem.GET(IndentRequisitions."Item No.") THEN
                             IndentRequisitions."Unit of Measure" := RecItem."Base Unit of Measure";

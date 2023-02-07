@@ -28,6 +28,10 @@ pageextension 50114 PurchQuoteSubformExtB2B extends "Purchase Quote Subform"
             {
                 ApplicationArea = all;
             }
+            field("Indentor Description"; Rec."Indentor Description")//B2BSSD03Feb2023
+            {
+                ApplicationArea = All;
+            }
         }
     }
 

@@ -202,6 +202,18 @@ table 50201 "Indent Header"
             DataClassification = CustomerContent;
         }
         //SSD06122022>>
+
+
+        //B2BSSD20Feb2023<<
+        field(50014; "Shortcut Dimension 9 Code"; Code[20])
+        {
+            DataClassification = CustomerContent;
+            CaptionClass = '1,2,9';
+            Caption = 'Shortcut Dimension 9 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(9),Blocked = CONST(false));
+        }
+        //B2BSSD20Feb2023>>
+
     }
 
     keys

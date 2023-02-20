@@ -22,12 +22,12 @@ page 50181 TechnicalSpecifications
                     Editable = false;
 
                 }
-                field("Document Type"; Rec."Document Type")
+                /*field("Document Type"; Rec."Document Type")
                 {
                     ApplicationArea = All;
                     Caption = 'Document Type';
                     Editable = false;
-                }
+                }*/
                 field("Item No."; Rec."Item No.")
                 {
                     ApplicationArea = All;
@@ -74,6 +74,16 @@ page 50181 TechnicalSpecifications
                 {
                     ApplicationArea = All;
                 }*/
+                field("Unit Price"; Rec."Unit Price")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Unit Price';
+                }
+                field("Total Amount"; Rec."Total Amount")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Unit Price';
+                }
             }
         }
     }

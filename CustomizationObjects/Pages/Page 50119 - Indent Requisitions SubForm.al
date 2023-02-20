@@ -77,18 +77,19 @@ page 50119 "Indent Requisitions SubForm"
                     Caption = 'Vendor';
                     //TableRelation = "Item Vendor"."Vendor No." WHERE("Item No." = FIELD("Item No."));
                     ApplicationArea = All;
+                    TableRelation = Vendor;
 
-                    trigger OnLookup(var Text: Text): Boolean
-                    var
-                        ItemVendor: Record "Item Vendor";
-                        Vendor: Record Vendor;
-                    begin
-                        ItemVendor.Reset();
-                        ItemVendor.SetRange("Item No.", Rec."Item No.");
-                        if ItemVendor.FindSet() then
-                            if Page.RunModal(Page::"Item Vendor Catalog", ItemVendor) = Action::LookupOK then
-                                Rec.Validate("Manufacturer Code", ItemVendor."Vendor No.");
-                    end;
+                    /* trigger OnLookup(var Text: Text): Boolean
+                     var
+                         ItemVendor: Record "Item Vendor";
+                         Vendor: Record Vendor;
+                     begin
+                         ItemVendor.Reset();
+                         ItemVendor.SetRange("Item No.", Rec."Item No.");
+                         if ItemVendor.FindSet() then
+                             if Page.RunModal(Page::"Item Vendor Catalog", ItemVendor) = Action::LookupOK then
+                                 Rec.Validate("Manufacturer Code", ItemVendor."Vendor No.");
+                     end;*/
 
                     trigger OnValidate();
                     begin
@@ -213,15 +214,12 @@ page 50119 "Indent Requisitions SubForm"
                 var
                     DocumentAttachmentDetails: Page "Document Attachment Details";
                     DocumentAttRec: Record "Document Attachment";
-                    RecRef: RecordRef;
-                    Attachemnets: Codeunit Attachments;
-                    SelectErr: Label 'No Lines Selected';
                 begin
-                    //if Rec.Select = false then
-                    //Error(SelectErr)
-                    RecRef.GetTable(Rec);
-                    DocumentAttachmentDetails.OpenForRecRef(RecRef);
-                    DocumentAttachmentDetails.RunModal();
+                    DocumentAttRec.Reset();
+                    DocumentAttRec.SetRange("No.", Rec."Indent No.");
+                    DocumentAttRec.SetRange("Line No.", Rec."Indent Line No.");
+                    if DocumentAttRec.FindSet() then
+                        Page.RunModal(50183, DocumentAttRec);
                     CurrPage.Update();
                 end;
             }
@@ -233,7 +231,7 @@ page 50119 "Indent Requisitions SubForm"
                 Image = Import;
                 Caption = 'Specification';
                 RunObject = page TechnicalSpecifications;
-                RunPageLink = "Item No." = field("Item No."), "Line No." = field("Line No.");
+                RunPageLink = "Document No." = field("Indent No."), "Line No." = field("Indent Line No.");
                 trigger OnAction()
                 var
                 begin

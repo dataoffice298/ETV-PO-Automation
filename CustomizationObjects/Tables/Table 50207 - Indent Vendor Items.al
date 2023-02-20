@@ -82,7 +82,7 @@ table 50207 "Indent Vendor Items"
         field(50014; "Line Type"; Option)
         {
             DataClassification = CustomerContent;
-            OptionMembers = Item,"Fixed Assets",Description,"G/L Account";
+            OptionMembers = Item,"Fixed Assets",Description,"G/L Account",Resource;
         }
         field(50015; "Sub Location Code"; Code[20])
         {
@@ -93,6 +93,16 @@ table 50207 "Indent Vendor Items"
         {
             DataClassification = CustomerContent;
         }
+        //B2BSSD20FEB2023<<
+        field(50018; "Shortcut Dimension 9 Code"; Code[20])
+        {
+            DataClassification = CustomerContent;
+            CaptionClass = '1,2,9';
+            Caption = 'Shortcut Dimension 9 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(9),
+            Blocked = CONST(false));
+        }
+        //B2BSSD20FEB2023>>
     }
 
     keys

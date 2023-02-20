@@ -11,29 +11,73 @@ table 50203 "Indent Requisitions"
     {
         field(1; "Item No."; Code[20])
         {
-
+            Caption = 'No.';
             TableRelation = IF ("Line Type" = CONST(Item)) Item
             ELSE
             IF ("Line Type" = CONST("Fixed Assets")) "Fixed Asset"
             ELSE
-            IF ("Line Type" = CONST("G/L Account")) "G/L Account";
-            Caption = 'No.';
+            IF ("Line Type" = CONST("G/L Account")) "G/L Account"
+            ELSE
+            IF ("Line Type" = CONST(Resource)) Resource;//B2BSSD09Feb2023
             //B2BSSD02Jan2023<<
-            trigger OnLookup()
+            /*trigger OnLookup()
             var
                 Item: Record Item;
             begin
                 if Page.RunModal(0, Item) = Action::LookupOK then
                     "Item No." := Item."No.";
                 Description := Item.Description;
-            end;
+            end;*/
             //B2BSSD02Jan2023>>
+
+            //B2BSSD09Feb2023<<
+            trigger OnValidate()
+            var
+                Item: Record Item;
+                FixedAssets: Record "Fixed Asset";
+                GLAccount: Record "G/L Account";
+                Resource: Record Resource;
+            begin
+                case "Line Type" of
+                    "Line Type"::Item:
+                        if Item.Get("Item No.") then begin
+                            Description := Item.Description;
+                            Item.TESTFIELD(Blocked, FALSE);
+                            Description := Item.Description;
+                            "Due Date" := CALCDATE(Item."Lead Time Calculation", WORKDATE);
+                            "Unit of Measure" := Item."Base Unit of Measure";
+                            VALIDATE("Unit Cost", Item."Last Direct Cost");
+                            "Vendor No." := Item."Vendor No.";
+                        end;
+                    "Line Type"::"Fixed Assets":
+                        if FixedAssets.Get("Item No.") then begin
+                            FixedAssets.TestField(Blocked, false);
+                            Description := FixedAssets.Description;
+                            "Variant Code" := FixedAssets.Make_B2B;
+                        end;
+                    "Line Type"::"G/L Account":
+                        if GLAccount.Get("Item No.") then begin
+                            GLAccount.TestField(Blocked, false);
+                            Description := GLAccount.Name;
+                        end;
+                    "Line Type"::Resource:
+                        if Resource.Get("Item No.") then begin
+                            Resource.TestField(Blocked, false);
+                            Description := Resource.Name;
+                        end;
+                End;
+            end;
+            //B2BSSD09Feb2023>>
         }
-        field(2; Description; Text[50])
+        field(2;
+        Description;
+        Text[50])
         {
 
         }
-        field(3; Quantity; Decimal)
+        field(3;
+        Quantity;
+        Decimal)
         {
             DecimalPlaces = 0 : 5;
             //B2BESGOn23May2022++
@@ -82,7 +126,8 @@ table 50203 "Indent Requisitions"
         }
         field(14; "Vendor No."; Code[20])
         {
-            TableRelation = "Item Vendor"."Vendor No." WHERE("Item No." = FIELD("Item No."));
+            //TableRelation = "Item Vendor"."Vendor No." WHERE("Item No." = FIELD("Item No."));   
+            TableRelation = "Item Vendor";
         }
         field(15; Department; Code[20])
         {
@@ -239,7 +284,7 @@ table 50203 "Indent Requisitions"
         field(50014; "Line Type"; Option)
         {
             DataClassification = CustomerContent;
-            OptionMembers = Item,"Fixed Assets",Description,"G/L Account";
+            OptionMembers = Item,"Fixed Assets",Description,"G/L Account",Resource;
         }
         field(50015; "Sub Location Code"; Code[20])
         {
@@ -259,8 +304,21 @@ table 50203 "Indent Requisitions"
         {
             DataClassification = CustomerContent;
         }
-    }
+        //B2BSSD17FEB2023<<
 
+        //B2BSSD20Feb2023<<
+        field(50019; "Shortcut Dimension 9 Code"; Code[20])
+        {
+            DataClassification = CustomerContent;
+            CaptionClass = '1,2,9';
+            Caption = 'Shortcut Dimension 9 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(9),
+            Blocked = CONST(false));
+        }
+        //B2BSSD20Feb2023>>
+
+    }
+    //B2BSSD17FEB2023>>
     keys
     {
         key(Key1; "Document No.", "Line No.")

@@ -9,7 +9,6 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
             OptionCaptionML = ENU = 'Quote,Order,Invoice,Credit Memo,Blanket Order,Return Order,Enquiry', ENN = 'Quote,Order,Invoice,Credit Memo,Blanket Order,Return Order,Enquiry';
 
             //Unsupported feature: Change OptionString on ""Document Type"(Field 1)". Please convert manually.
-
         }
         field(51000; Subject; Text[200])
         {
@@ -63,8 +62,10 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
             DataClassification = CustomerContent;
         }
         //B2BMSOn18Oct2022<<
+
         field(33002900; "RFQ No."; Code[20])
         {
+            NotBlank = true;//B2BSSD08Feb2023
             Description = 'PO1.0';
             TableRelation = "RFQ Numbers"."RFQ No." WHERE(Completed = FILTER(false));
 

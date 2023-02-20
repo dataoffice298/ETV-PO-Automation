@@ -24,6 +24,15 @@ pageextension 50114 PurchQuoteSubformExtB2B extends "Purchase Quote Subform"
                 ApplicationArea = all;
                 Editable = false;
             }
+
+            field(warranty; Rec.warranty)//B2BSSD11Feb2023
+            {
+                ApplicationArea = All;
+                Caption = 'warranty';
+            }
+        }
+        addafter(Type)
+        {
             field("Spec Id"; rec."Spec Id")
             {
                 ApplicationArea = all;
@@ -33,13 +42,51 @@ pageextension 50114 PurchQuoteSubformExtB2B extends "Purchase Quote Subform"
                 ApplicationArea = All;
             }
         }
-    }
 
+    }
+    //B2BSSD07Feb2023<<
     actions
     {
-        // Add changes to page actions here
-    }
+        addlast("&Line")
+        {
+            action(Specification)
+            {
+                ApplicationArea = All;
+                Image = Import;
+                Caption = 'Specification';
+                RunObject = page TechnicalSpecifications;
+                RunPageLink = "Document No." = field("Indent No."), "Line No." = field("Indent Line No."),
+                "Item No." = field("No.");
+            }
+        }
 
-    var
-        myInt: Integer;
+        //B2BSSD17FEB2023<<
+        modify(DocAttach)
+        {
+            Visible = false;
+        }
+        addafter(Specification)
+        {
+            action(AttachmentsPurQuo)
+            {
+                ApplicationArea = All;
+                Image = Attachments;
+                Caption = 'Attachements';
+                ToolTip = 'Add a file as an attachment. You can attach images as well as documents.';
+                trigger OnAction()
+                var
+                    DocumentAttachmentDetails: Page "Document Attachment Details";
+                    DocumentAttRec: Record "Document Attachment";
+                begin
+                    DocumentAttRec.Reset();
+                    DocumentAttRec.SetRange("No.", Rec."Indent No.");
+                    DocumentAttRec.SetRange("Line No.", Rec."Indent Line No.");
+                    if DocumentAttRec.FindSet() then
+                        Page.RunModal(50183, DocumentAttRec);
+                end;
+            }
+        }
+        //B2BSSD17FEB2023>>
+    }
+    //B2BSSD07Feb2023>>
 }

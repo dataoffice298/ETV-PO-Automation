@@ -160,6 +160,8 @@ codeunit 50026 "PO Automation"
                 IndentVendorItems."Indent Req Line No" := CreateIndents."Line No.";
                 IndentVendorItems."Shortcut Dimension 1 Code" := CreateIndents."Shortcut Dimension 1 Code"; //B2BPAV
                 IndentVendorItems."Shortcut Dimension 2 Code" := CreateIndents."Shortcut Dimension 2 Code"; //B2BPAV
+                IndentVendorItems."Shortcut Dimension 9 Code" := CreateIndents."Shortcut Dimension 9 Code";//B2BSSD20FEB2023
+
                 IndentVendorItems."Sub Location Code" := CreateIndents."Sub Location Code";
                 //Message('Here is the code ? %1', CreateIndents."Shortcut Dimension 1 Code");
                 IndentVendorItems."Spec Id" := CreateIndents."Spec Id";
@@ -215,6 +217,7 @@ codeunit 50026 "PO Automation"
         PPSetup: Record 312;
         CreateIndents2: Record "Indent Requisitions";
         IndentLine: Record "Indent Line";
+        indentHeader: Record "Indent Header";//B2BSSD20FEB2023
         Item2: Record 27;
         ItemUnitofMeasure: Record 5404;
         BaseUOMQtyMeasure: Decimal;
@@ -242,6 +245,7 @@ codeunit 50026 "PO Automation"
                     PurchaseHeader."Order Date" := WORKDATE;
                     PurchaseHeader."Document Date" := WORKDATE;
                     PurchaseHeader."Indent Requisition No" := IndentVendorEnquiry."Indent Req No";
+
                     //PurchaseHeader.VALIDATE("Location Code", IndentVendorEnquiry."Location Code");//B2BESGOn19May2022
                     PurchaseHeader."Location Code" := IndentVendorEnquiry."Location Code";
                     PurchaseHeader.Validate("Shortcut Dimension 1 Code", IndentVendorEnquiry."Shortcut Dimension 1 Code");//B2BPAV
@@ -261,14 +265,14 @@ codeunit 50026 "PO Automation"
                             PurchaseLine.Type := PurchaseLine.Type::"Fixed Asset";
                         if IndentVendorEnquiry."Line Type" = IndentVendorEnquiry."Line Type"::"G/L Account" then
                             PurchaseLine.Type := PurchaseLine.Type::"G/L Account";
-                        //B2BSSD03Feb2023<<
+                        //B2BSSD09Feb2023<<
                         if IndentVendorEnquiry."Line Type" = IndentVendorEnquiry."Line Type"::Description then
                             PurchaseLine.Type := PurchaseLine.Type::Description;
-                        //B2BSSD03Feb2023>>
-
+                        if IndentVendorEnquiry."Line Type" = IndentVendorEnquiry."Line Type"::Resource then
+                            PurchaseLine.Type := PurchaseLine.Type::Resource;
+                        //B2BSSD09Feb2023>>
                         //ETVPO1.1 <<
                         PurchaseLine."No." := IndentVendorEnquiry."Item No.";
-
                         PurchaseLine.VALIDATE(PurchaseLine."No.");
                         PurchaseLine."Variant Code" := IndentVendorEnquiry."Variant Code";
                         IF Item2.GET(PurchaseLine."No.") THEN;
@@ -384,6 +388,13 @@ codeunit 50026 "PO Automation"
                             PurchaseLine.Type := PurchaseLine.Type::"G/L Account";
                         //ETVPO1.1 <<
 
+                        //B2BSSD16FEB2023<<
+                        if IndentVendorEnquiry."Line Type" = IndentVendorEnquiry."Line Type"::Resource then
+                            PurchaseLine.Type := PurchaseLine.Type::Resource;
+                        if IndentVendorEnquiry."Line Type" = IndentVendorEnquiry."Line Type"::Description then
+                            PurchaseLine.Type := PurchaseLine.Type::Description;
+                        //B2BSSD16FEB2023>>
+
                         PurchaseLine."No." := IndentVendorEnquiry."Item No.";
                         PurchaseLine.VALIDATE(PurchaseLine."No.");
                         PurchaseLine.VALIDATE("Variant Code", IndentVendorEnquiry."Variant Code");
@@ -397,6 +408,15 @@ codeunit 50026 "PO Automation"
                                 BaseUOMQtyMeasure := ItemUnitofMeasure."Qty. per Unit of Measure";
                             IndentVendorEnquiry.Quantity := IndentVendorEnquiry.Quantity / PurchUOMQtyMeasure;
                         END;
+
+                        //B2BSSD16FEB2023<<
+                        CreateIndents2.Reset();
+                        CreateIndents2.SetRange("Document No.", IndentVendorEnquiry."Indent Req No");
+                        CreateIndents2.SetRange("Line No.", IndentVendorEnquiry."Indent Req Line No");
+                        if CreateIndents2.FindFirst() then
+                            PurchaseLine."Indentor Description" := CreateIndents2."Indentor Description";
+                        //B2BSSD16FEB2023>>
+
                         PurchaseLine.VALIDATE(Quantity, IndentVendorEnquiry.Quantity);
                         PurchaseLine."Indent No." := IndentVendorEnquiry."Indent No.";
                         PurchaseLine."Indent Line No." := IndentVendorEnquiry."Indent Line No.";
@@ -857,6 +877,10 @@ codeunit 50026 "PO Automation"
                                 QuoteCompare.Type := QuoteCompare.Type::"Fixed Assets";
                             If PurchaseLine.Type = PurchaseLine.Type::"G/L Account" then
                                 QuoteCompare.Type := QuoteCompare.Type::"G/L Account";
+                            //B2BSSD09Feb2023<<
+                            if PurchaseLine.Type = PurchaseLine.Type::Resource then
+                                QuoteCompare.Type := QuoteCompare.Type::Resource;
+                            //B2BSSD09Feb2023>>
                             QuoteCompare."Item No." := PurchaseLine."No.";
                             QuoteCompare.Description := PurchaseLine.Description;
                             QuoteCompare.Description2 := PurchaseLine."Description 2";
@@ -867,6 +891,15 @@ codeunit 50026 "PO Automation"
                             IF PurchaseLine."Direct Unit Cost" = 0 THEN
                                 ERROR(Text0010Lbl, PurchaseLine."Document No.");
                             QuoteCompare."Payment Term Code" := PurchaseHeader."Payment Terms Code";
+
+                            //B2BSSD16FEB2023<<
+                            QuoteCompare."Transaction Specification" := PurchaseHeader."Transaction Specification";
+                            QuoteCompare."Transactio Type" := PurchaseHeader."Transaction Type";
+                            QuoteCompare."Shipment Method Code" := PurchaseHeader."Shipment Method Code";
+                            QuoteCompare."Payment Method Code" := PurchaseHeader."Payment Method Code";
+                            QuoteCompare."Transport Method" := PurchaseHeader."Transport Method";
+                            //B2BSSD16FEB2023>>
+
                             //QuoteCompare."Purc. Req No" := PurchaseLine."Sub Document No.";
                             //QuoteCompare."Purch. Req Line No" := PurchaseLine."Sub Document Line No.";
                             QuoteCompare."Location Code" := PurchaseHeader."Location Code";
@@ -890,6 +923,8 @@ codeunit 50026 "PO Automation"
                             QuoteCompare."Indent Req. Line No." := PurchaseLine."Indent Req Line No";
                             QuoteCompare."Indentor Description" := PurchaseLine."Indentor Description";//B2BSSD07Feb2023
                             //PhaniFeb102021 >>
+                            QuoteCompare.warranty := PurchaseLine.warranty;//B2BSSD10Feb2023
+                            QuoteCompare.Discount := PurchaseLine."Line Discount %";//B2BSSD14FEB2023
                             QuoteCompare."VAT Bus. Posting Group" := PurchaseLine."VAT Bus. Posting Group";
                             QuoteCompare."VAT Prod. Posting Group" := PurchaseLine."VAT Prod. Posting Group";
                             //PhaniFeb102021 <<
@@ -1226,6 +1261,7 @@ codeunit 50026 "PO Automation"
         PurchaseLineQuote: Record 39;
         Text001: Label 'Enquiry %1 has been changed to Quote %2';
         IndentLine: Record "Indent Line";
+        DimentionSetEntry: Record "Dimension Set Entry";//B2BSSD20Feb2023
     begin
         PurchaseHeader.INIT;
         PurchaseHeader."Document Type" := PurchaseHeader."Document Type"::Quote;
@@ -1245,7 +1281,8 @@ codeunit 50026 "PO Automation"
         //B2BMSOn14Sep2022>>
         PurchaseHeader.Validate("Shortcut Dimension 1 Code", Rec."Shortcut Dimension 1 Code");
         PurchaseHeader.Validate("Shortcut Dimension 2 Code", Rec."Shortcut Dimension 2 Code");
-        PurchaseHeader.Modify();
+
+
         //B2BMSOn14Sep2022<<
         PurchaseLine.SETRANGE("Document Type", PurchaseLine."Document Type"::Enquiry);
         PurchaseLine.SETRANGE("Document No.", Rec."No.");
@@ -1273,6 +1310,7 @@ codeunit 50026 "PO Automation"
                 //PurchaseLineQuote."Shortcut Dimension 2 Code" := PurchaseLine."Shortcut Dimension 2 Code";
                 PurchaseLineQuote.validate("Shortcut Dimension 1 Code", PurchaseLine."Shortcut Dimension 1 Code");
                 PurchaseLineQuote.validate("Shortcut Dimension 2 Code", PurchaseLine."Shortcut Dimension 2 Code");
+
                 //B2BMSOn14Sep2022<<
                 PurchaseLineQuote."Sub Location Code" := PurchaseLine."Sub Location Code";//B2BSSD07Feb2023
                 PurchaseLineQuote."Spec Id" := PurchaseLine."Spec Id";
@@ -1400,6 +1438,7 @@ codeunit 50026 "PO Automation"
         BaseUOMQtyMeasure: Decimal;
         PurchUOMQtyMeasure: Decimal;
         VendorNo: Code[20];
+        indentRequisitions: Record "Indent Requisitions";
     begin
         CreateIndents4.COPYFILTERS(CreateIndentsQuotes);
         InsertIndentItemvendor2(CreateIndents4, Vendor);
@@ -1442,12 +1481,25 @@ codeunit 50026 "PO Automation"
                         PurchaseLine."Line No." := PurchaseLine."Line No." + 10000;
                         PurchaseLine.Insert(true);
                         PurchaseLine."Buy-from Vendor No." := PurchaseHeader."Buy-from Vendor No.";
-                        PurchaseLine.VALIDATE("Buy-from Vendor No.");
+                        //PurchaseLine.VALIDATE("Buy-from Vendor No.");
+
+                        //B2BSSD16FEB2023<<
                         PurchaseLine.Type := PurchaseLine.Type::Item;
+                        if PurchaseLine.Type = PurchaseLine.Type::Item then;
+                        if PurchaseLine."No." <> '' then
+                            Error('No. Must have a value');
                         PurchaseLine."No." := IndentVendorEnquiry."Item No.";
-                        PurchaseLine.VALIDATE(PurchaseLine."No.");
-                        PurchaseLine.VALIDATE("Variant Code", IndentVendorEnquiry."Variant Code");
-                        PurchaseLine.VALIDATE(Quantity, IndentVendorEnquiry.Quantity);
+                        PurchaseLine.Type := PurchaseLine.Type::Description;
+                        if PurchaseLine.Type = PurchaseLine.Type::Description then;
+                        if PurchaseLine."No." = '' then
+                            PurchaseLine."No." := IndentVendorEnquiry."Item No.";
+                        //B2BSSD16FEB2023>>
+
+                        // PurchaseLine.VALIDATE(PurchaseLine."No.");
+                        //PurchaseLine.VALIDATE("Variant Code", IndentVendorEnquiry."Variant Code");
+                        PurchaseLine."Variant Code" := IndentVendorEnquiry."Variant Code";
+                        //PurchaseLine.VALIDATE(Quantity, IndentVendorEnquiry.Quantity);
+                        PurchaseLine.Quantity := IndentVendorEnquiry.Quantity;
                         PurchaseLine."Outstanding Quantity" := PurchaseLine.Quantity;
                         PurchaseLine."Outstanding Qty. (Base)" := PurchaseLine.Quantity;
                         PurchaseLine."Indent No." := IndentVendorEnquiry."Indent No.";

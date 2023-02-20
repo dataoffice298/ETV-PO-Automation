@@ -265,7 +265,6 @@ page 50023 "Indent Line"
                         DocumentAttachmentDetails: Page "Document Attachment Details";
                         DocumentAttRec: Record "Document Attachment";
                         RecRef: RecordRef;
-                        Attachemnets: Codeunit Attachments;
                     begin
                         if Rec.Select = false then
                             Error(SelectErr)

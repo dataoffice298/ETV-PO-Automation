@@ -175,6 +175,10 @@ tableextension 50052 tableextension70000003 extends "Purch. Rcpt. Line"
         {
             DataClassification = CustomerContent;
         }
+        field(60025; warranty; Code[50])//B2BSSD10Feb2023
+        {
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {

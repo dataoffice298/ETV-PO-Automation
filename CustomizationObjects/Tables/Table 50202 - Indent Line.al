@@ -26,7 +26,9 @@ table 50202 "Indent Line"
             ELSE
             IF (Type = CONST("Fixed Assets")) "Fixed Asset"
             ELSE
-            IF (Type = CONST("G/L Account")) "G/L Account";
+            IF (Type = CONST("G/L Account")) "G/L Account"
+            ELSE
+            IF (Type = CONST(Resource)) Resource;//B2BSSD09Feb2023
 
             trigger OnValidate();
             var
@@ -57,7 +59,14 @@ table 50202 "Indent Line"
                             GLAccount.TESTFIELD(Blocked, FALSE);
                             Description := GLAccount.Name;
                         END;
-                //PO1.0>>
+                    //PO1.0>>
+                    //B2BSSD09Feb2023<<
+                    Type::Resource:
+                        if Resource.Get("No.") then begin
+                            Resource.TestField(Blocked, false);
+                            Description := Resource.Name;
+                        end;
+                //B2BSSD09Feb2023>>
                 END;
                 IF IndentHeader.GET("Document No.") THEN;
                 "Delivery Location" := IndentHeader."Delivery Location";
@@ -185,7 +194,7 @@ table 50202 "Indent Line"
         field(30; Type; Option)
         {
             Description = 'PO1.0';
-            OptionMembers = Item,"Fixed Assets",Description,"G/L Account";
+            OptionMembers = Item,"Fixed Assets",Description,"G/L Account",Resource;
 
             trigger OnValidate();
             begin
@@ -372,6 +381,17 @@ table 50202 "Indent Line"
         {
             DataClassification = CustomerContent;
         }
+
+        //B2BSSD20Feb2023<<
+        field(50019; "Shortcut Dimension 9 Code"; Code[20])
+        {
+            DataClassification = CustomerContent;
+            CaptionClass = '1,2,9';
+            Caption = 'Shortcut Dimension 9 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(9),
+            Blocked = CONST(false));
+        }
+        //B2BSS20FEB2023>>
     }
 
     keys
@@ -400,6 +420,7 @@ table 50202 "Indent Line"
         If IndHdr.GET("Document No.") then begin
             Validate("Shortcut Dimension 1 Code", IndHdr."Shortcut Dimension 1 Code");
             Validate("Shortcut Dimension 2 Code", IndHdr."Shortcut Dimension 2 Code");
+            Validate("Shortcut Dimension 9 Code", IndHdr."Shortcut Dimension 9 Code");//B2BSSD20FEB2023
         End;
     end;
 
@@ -423,6 +444,7 @@ table 50202 "Indent Line"
         Fixedasset: Record 5600;
         GLAccount: Record 15;
         NoStatusCheck: Boolean;
+        Resource: Record Resource;//B2BSSD09Feb2023
 
     procedure NoHeadStatusCheck(StatusCheck: Boolean)
     begin

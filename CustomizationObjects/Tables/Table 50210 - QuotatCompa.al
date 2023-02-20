@@ -157,6 +157,7 @@ table 50210 "Quotation Comparison Test"
             TableRelation = "Payment Terms".Code;
             DataClassification = CustomerContent;
         }
+
         field(19; "Delivery Date"; Date)
         {
             DataClassification = CustomerContent;
@@ -412,7 +413,7 @@ table 50210 "Quotation Comparison Test"
         field(111; "Type"; Option)
         {
             DataClassification = CustomerContent;
-            OptionMembers = Item,"Fixed Assets",Description,"G/L Account";
+            OptionMembers = Item,"Fixed Assets",Description,"G/L Account",Resource;
         }
         //Do not use 112 Field id
         //B2BMSOn08Nov2022>>
@@ -438,7 +439,33 @@ table 50210 "Quotation Comparison Test"
         {
             DataClassification = CustomerContent;
         }
-
+        field(60026; "warranty"; Code[50])//B2BSSD08Feb2023
+        {
+            DataClassification = ToBeClassified;
+        }
+        //B2BSSD16Feb2023<<
+        field(60027; "Transaction Specification"; Code[10])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(60028; "Transactio Type"; Code[10])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(60029; "Shipment Method Code"; Code[10])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(60030; "Transport Method"; Code[10])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(60031; "Payment Method Code"; Code[10])
+        {
+            DataClassification = ToBeClassified;
+        }
+        
+        //B2BSSD16Feb2023<<
     }
 
     keys

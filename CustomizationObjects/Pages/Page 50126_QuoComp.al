@@ -133,8 +133,24 @@ page 50126 "Quotation Comparision Doc"
                 ApplicationArea = all;
                 SubPageLink = "Quot Comp No." = FIELD("No.");
             }
-
         }
+        //B2BSSD14Feb2023<<
+        area(FactBoxes)
+        {
+            part(AttachmentQuoComp; "Document Attachment Factbox")
+            {
+                ApplicationArea = All;
+                Caption = 'Attachments';
+                Provider = QuotationComparSubForm;
+                SubPageLink = "Table ID" = CONST(50202),
+                             "No." = FIELD("Indent No."), "Line No." = field("Indent Line No.");
+            }
+            systempart(Control1905767507; Notes)
+            {
+                ApplicationArea = Notes;
+            }
+        }
+        //B2BSSD14Feb2023>>
     }
 
     actions

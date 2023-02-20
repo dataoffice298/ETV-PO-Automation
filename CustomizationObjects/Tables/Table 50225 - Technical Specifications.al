@@ -60,6 +60,7 @@ table 50225 "Technical Specifications"//B2BSSD30Jan2023
         {
             DataClassification = CustomerContent;
             Caption = 'Units';
+            TableRelation = "Item Unit of Measure";
         }
         field(11; Make; Text[50])
         {
@@ -80,6 +81,16 @@ table 50225 "Technical Specifications"//B2BSSD30Jan2023
         {
             DataClassification = CustomerContent;
             Caption = 'Entry No.';
+        }
+        field(15; "Unit Price"; Decimal)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Uint Price';
+        }
+        field(16; "Total Amount"; Decimal)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Total Amount';
         }
     }
 

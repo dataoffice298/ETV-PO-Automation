@@ -465,9 +465,16 @@ page 50127 QuotationComparSubForm
                     ApplicationArea = ALL;
                     Visible = false;
                 }
+                field(warranty; Rec.warranty)//B2BSSD08Feb2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'warranty';
+                }
             }
         }
     }
+
+
     actions
     {
         area(Processing)
@@ -507,16 +514,65 @@ page 50127 QuotationComparSubForm
                     RunPageLink = "RFQ No." = FIELD("RFQ No."),
                                   "Vendor No." = FIELD("Vendor No.");
                 }
+                //B2BSSD08Feb2023<<
+                action("Item TechnicalSpec")
+                {
+                    RunPageMode = View;
+                    ApplicationArea = All;
+                    Image = Import;
+                    Caption = 'Specification';
+                    RunObject = page TechnicalSpecifications;
+                    RunPageLink = "Document No." = field("Indent No."), "Line No." = field("Indent Line No.");
+                    trigger OnAction()
+                    var
+                    begin
+
+                    end;
+                }
+                //B2BSSD15FEB2023<<
+                action(Quotation)
+                {
+                    ApplicationArea = All;
+                    Image = ViewPage;
+                    Promoted = true;
+                    PromotedCategory = Category5;
+                    RunObject = page "Purchase Quote";
+                    RunPageLink = "No." = field("Parent Quote No.");
+                }
+                //B2BSSD15FEB2023>>
+                action("AttachmentsQuoComp")
+                {
+                    ApplicationArea = All;
+                    Image = Attachments;
+                    Caption = 'Attachments';
+                    ToolTip = 'Add a file as an attachment. You can attach images as well as documents.';
+                    trigger OnAction()
+                    var
+                        DocumentAttachmentDetails: Page "Document Attachment Details";
+                        DocumentAttRec: Record "Document Attachment";
+                        RecRef: RecordRef;
+                    begin
+                        //if Rec.Select = false then
+                        //Error(SelectErr)
+                        DocumentAttRec.Reset();
+                        DocumentAttRec.SetRange("No.", Rec."Indent No.");
+                        DocumentAttRec.SetRange("Line No.", Rec."Indent Line No.");
+                        if DocumentAttRec.FindSet() then
+                            Page.RunModal(50183, DocumentAttRec);
+                        CurrPage.Update();
+                    end;
+                }
+                //B2BSSD08Feb2023>>
             }
         }
     }
 
-    trigger OnModifyRecord(): Boolean;
+    /*trigger OnModifyRecord(): Boolean;
     begin
         IF (Rec.Status <> Rec.Status::Open) or (Rec.Status <> Rec.Status::" ") then
             error('You can only Modify the lines when approval status is in open.');
 
-    end;
+    end;*/
 
     procedure InitTempTable();
     begin

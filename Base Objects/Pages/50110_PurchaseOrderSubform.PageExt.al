@@ -15,6 +15,34 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 Visible = false;
             }
         }
+        //B2BSSD16FEB2023<<
+        addafter("Item Reference No.")
+        {
+            field("Depreciation Book Code"; Rec."Depreciation Book Code")
+            {
+                ApplicationArea = All;
+            }
+        }
+        addafter("Depreciation Book Code")
+        {
+            field("Posting Group"; Rec."Posting Group")
+            {
+                ApplicationArea = All;
+                Editable = true;
+            }
+        }
+        //B2BSSD16FEB2023>>
+        addafter("No.")//B2BSSD15FEB2023
+        {
+            field("Indentor Description"; Rec."Indentor Description")//B2BSSD02Feb2023
+            {
+                ApplicationArea = All;
+            }
+            field("Spec Id"; rec."Spec Id")
+            {
+                ApplicationArea = all;
+            }
+        }
         addafter("Location Code")
         {
             field("Sub Location Code"; Rec."Sub Location Code")
@@ -22,6 +50,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 ApplicationArea = All;
             }
         }
+
         addbefore("Shortcut Dimension 1 Code")
         {
             field("Indent No."; Rec."Indent No.")
@@ -44,15 +73,6 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 ApplicationArea = all;
                 Editable = false;
             }
-            field("Indentor Description"; Rec."Indentor Description")//B2BSSD02Feb2023
-            {
-                ApplicationArea = All;
-            }
-            field("Spec Id"; rec."Spec Id")
-            {
-                ApplicationArea = all;
-            }
-
             //B2BMSOn03Nov2022>>
             field("QC Enabled B2B"; Rec."QC Enabled B2B")
             {
@@ -80,6 +100,11 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 ApplicationArea = All;
             }
             //B2BMSOn03Nov2022<<
+            field(warranty; Rec.warranty)//B2BSSD08Feb2023
+            {
+                ApplicationArea = All;
+                Caption = 'warranty';
+            }
         }
     }
 
@@ -227,30 +252,77 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 {
                     ApplicationArea = All;
                     Caption = 'Import Fixed Assets';
-                    Image = Import;
+                    Image = ImportExcel;
                     ToolTip = 'Executes the Excel Imported action.';
                     trigger OnAction()
+                    var
+                        PurchaseLine1: Record "Purchase Line";
                     begin
+                        PurchaseLine1.Reset();
+                        PurchaseLine1.SetRange("Document No.", Rec."Document No.");
+                        PurchaseLine1.SetRange("Document Type", Rec."Document Type");
+                        if PurchaseLine1.FindFirst() then begin
+                            IndentNo := PurchaseLine1."Indent No.";
+                            IndetReqNo := PurchaseLine1."Indent Req No";
+                        end;
+                        PurchaseLine1.Reset();
+                        PurchaseLine1.SetRange("Document No.", Rec."Document No.");
+                        PurchaseLine1.SetRange("Document Type", Rec."Document Type");
+                        PurchaseLine1.SetFilter("No.", '');
+                        PurchaseLine1.DeleteAll();
+                        //Rec.DeleteAll();
                         FixedAssetsReadExcelSheet();
                         FixedAssetsImportExcelData();
-                    end;
-                }
-                action("Fixed Assets&Export")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Export Fixed Assets';
-                    Image = Export;
-                    ToolTip = 'Executes the Excel Exported action.';
-                    trigger OnAction()
-                    var
-                        PurchaseLine: Record "Purchase Line";
-                    begin
-                        FixedAssetsExportExcelBuffer(Rec);
                     end;
                 }
             }
         }
         //B2BSSD07Feb2023>>
+
+        //B2BSSD10Feb2023<<
+        addlast("O&rder")
+        {
+            group(Specification)
+            {
+                action(Specification1)
+                {
+                    ApplicationArea = All;
+                    Image = Import;
+                    Caption = 'Specification';
+                    RunObject = page TechnicalSpecifications;
+                    RunPageLink = "Document No." = field("Indent No."), "Line No." = field("Indent Line No."),
+                "Item No." = field("No.");
+                    trigger OnAction()
+                    var
+                    begin
+
+                    end;
+                }
+                //B2BSSD14FEB2023<<
+                action(DocAttachPurOrd)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Attachments';
+                    Image = Attach;
+                    ToolTip = 'Add a file as an attachment. You can attach images as well as documents.';
+                    trigger OnAction()
+                    var
+                        DocumentAttachmentDetails: Page "Document Attachment Details";
+                        DocumentAttRec: Record "Document Attachment";
+                    begin
+                        DocumentAttRec.Reset();
+                        DocumentAttRec.SetRange("No.", Rec."Indent No.");
+                        DocumentAttRec.SetRange("Line No.", Rec."Indent Line No.");
+                        if DocumentAttRec.FindSet() then
+                            Page.RunModal(50183, DocumentAttRec);
+                        CurrPage.Update();
+                    end;
+                }
+                //B2BSSD14FEB2023>>
+            }
+        }
+        //B2BSSD10Feb2023>>
+
     }
 
     procedure CreateGateEntries(EntryType: Option Inward,Outward; DocType: Option RGP,NRGP)
@@ -311,7 +383,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
 
             repeat
                 if PurchLine.Type = PurchLine.Type::Item then begin
-                    ReservationEntry.Reset();
+                    /*ReservationEntry.Reset();
                     ReservationEntry.SetRange("Item No.", PurchLine."No.");
                     ReservationEntry.SetRange("Source Type", 39);
                     ReservationEntry.SetRange("Source Subtype", 1);
@@ -319,27 +391,28 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                     ReservationEntry.SetRange("Source ID", PurchLine."Document No.");
                     ReservationEntry.SetRange("Source Ref. No.", PurchLine."Line No.");
                     ReservationEntry.SetRange(Positive, true);
-                    if ReservationEntry.Findset() then
-                        repeat
-                            GateEntryLine.Init();
-                            GateEntryLine."Entry Type" := GateEntryHeader."Entry Type";
-                            GateEntryLine.Type := GateEntryHeader.Type;
-                            GateEntryLine."Gate Entry No." := GateEntryHeader."No.";
-                            GateEntryLine."Line No." := LineNo;
-                            GateEntryLine."Source Type" := GateEntryLine."Source Type"::Item;
-                            GateEntryLine.Validate("Source No.", PurchLine."No.");
-                            ItemLRec.Get(PurchLine."No.");
-                            GateEntryLine."Source Name" := ItemLRec.Description;
-                            GateEntryLine.Description := ItemLRec.Description;
-                            GateEntryLine.Variant := PurchLine."Variant Code";//B2BSSDOn13Dec2022
-                            GateEntryLine."Unit of Measure" := Rec."Unit of Measure Code";
-                            GateEntryLine.Validate(Quantity, ReservationEntry.Quantity);
-                            GateEntryLine.ModelNo := ReservationEntry."Lot No.";
-                            GateEntryLine.SerialNo := ReservationEntry."Serial No.";
-                            GateEntryLine.Make := ReservationEntry."Variant Code";
-                            GateEntryLine.Insert(true);
-                            LineNo += 10000;
-                        until ReservationEntry.Next() = 0;
+                    if ReservationEntry.Findset() then*/
+                    //repeat
+                    GateEntryLine.Init();
+                    GateEntryLine."Entry Type" := GateEntryHeader."Entry Type";
+                    GateEntryLine.Type := GateEntryHeader.Type;
+                    GateEntryLine."Gate Entry No." := GateEntryHeader."No.";
+                    GateEntryLine."Line No." := LineNo;
+                    GateEntryLine."Source Type" := GateEntryLine."Source Type"::Item;
+                    GateEntryLine.Validate("Source No.", PurchLine."No.");
+                    ItemLRec.Get(PurchLine."No.");
+                    GateEntryLine."Source Name" := ItemLRec.Description;
+                    GateEntryLine.Description := ItemLRec.Description;
+                    GateEntryLine.Variant := PurchLine."Variant Code";//B2BSSDOn13Dec2022
+                    GateEntryLine."Unit of Measure" := Rec."Unit of Measure Code";
+                    //GateEntryLine.Validate(Quantity, ReservationEntry.Quantity);
+                    GateEntryLine.Quantity := PurchLine.Quantity;//B2BSSD13Feb2023
+                    //GateEntryLine.ModelNo := ReservationEntry."Lot No.";
+                    //GateEntryLine.SerialNo := ReservationEntry."Serial No.";
+                    //GateEntryLine.Make := ReservationEntry."Variant Code";
+                    GateEntryLine.Insert(true);
+                    LineNo += 10000;
+                    //until ReservationEntry.Next() = 0;
                 end else
                     if PurchLine.Type = PurchLine.Type::"Fixed Asset" then begin
                         GateEntryLine.Init();
@@ -402,9 +475,11 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         SheetName: Text[100];
         TempExcelBuffer: Record "Excel Buffer" temporary;
         NoFileMsg: Label 'No excel File Found';
+        IndentNo: Code[30];
+        IndetReqNo: Code[30];
     //B2BSS07Feb2023>>
 
-    //B2BSS07Feb2023 Import Start >>
+    //B2BSSD07Feb2023 Import Start >>
     local procedure FixedAssetsReadExcelSheet()
     var
         FileManagement: Codeunit "File Management";
@@ -423,7 +498,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         TempExcelBuffer.ReadSheet();
     end;
 
-    local procedure GetCellValue(RowNo: Integer; ColNo: Integer): Text
+    procedure GetCellValue(RowNo: Integer; ColNo: Integer): Text
     begin
         TempExcelBuffer.Reset();
         if TempExcelBuffer.Get(RowNo, ColNo) then
@@ -432,75 +507,88 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             exit('');
     end;
 
-    local procedure FixedAssetsImportExcelData()
+    procedure FixedAssetsImportExcelData()
     var
-        PurcahaseLine: Record "Purchase Line";
+        PurchaseLine: Record "Purchase Line";
+        purChaseLine1: Record "Purchase Line";
         RowNo: Integer;
         ColNo: Integer;
         LineNo: Integer;
         MaxRow: Integer;
+        No: code[20];
+        Quantity: Integer;
+        DirectUnitCost: Decimal;
+        SerialNo: Code[50];
+        ModelNo: Code[50];
+        Make: Code[50];
+        DepreciationBookCode: Code[30];
+        PostingGroup: Code[30];
+        GenProdPostingGroup: Code[30];
+        GSTGroupCode: Code[20];
+        HSNSACCode: Code[20];
+        GSTCredit: Code[20];
+        SourceType: Text[20];
+
     begin
         RowNo := 0;
         ColNo := 0;
         LineNo := 0;
         MaxRow := 0;
-        PurcahaseLine.Reset();
-        if PurcahaseLine.FindFirst() then
-            LineNo := PurcahaseLine."Line No.";
-        TempExcelBuffer.Reset();
+        PurchaseLine.Reset();
+        PurchaseLine.SetRange("Document Type", Rec."Document Type");
+        PurchaseLine.SetRange("Document No.", Rec."Document No.");
+        if PurchaseLine.FindLast() then
+            LineNo := PurchaseLine."Line No."
+        else
+            //LineNo := 10000;
+            TempExcelBuffer.Reset();
         if TempExcelBuffer.FindLast() then begin
             MaxRow := TempExcelBuffer."Row No.";
         end;
         for RowNo := 2 to MaxRow Do begin
-            LineNo := LineNo + 10000;
+            Evaluate(SourceType, GetCellValue(RowNo, 1));
+            Evaluate(No, GetCellValue(RowNo, 2));
+            Evaluate(Quantity, GetCellValue(RowNo, 3));
+            Evaluate(DirectUnitCost, GetCellValue(RowNo, 4));
+            Evaluate(SerialNo, GetCellValue(RowNo, 5));
+            Evaluate(ModelNo, GetCellValue(RowNo, 6));
+            Evaluate(Make, GetCellValue(RowNo, 7));
+            Evaluate(DepreciationBookCode, GetCellValue(RowNo, 8));
+            Evaluate(PostingGroup, GetCellValue(RowNo, 9));
+            Evaluate(GenProdPostingGroup, GetCellValue(RowNo, 10));
+            Evaluate(GSTGroupCode, GetCellValue(RowNo, 11));
+            Evaluate(HSNSACCode, GetCellValue(RowNo, 12));
+            Evaluate(GSTCredit, GetCellValue(RowNo, 13));
 
-            PurcahaseLine.Init();
-            //Evaluate(ExcelImport."Transaction Name", TransName1);
-            PurcahaseLine."Line No." := LineNo;
-            Evaluate(PurcahaseLine."Document No.", GetCellValue(RowNo, 1));
-            Evaluate(PurcahaseLine."Line No.", GetCellValue(RowNo, 2));
-            Evaluate(PurcahaseLine."Serial No.", GetCellValue(RowNo, 3));
-            Evaluate(PurcahaseLine."Model No.", GetCellValue(RowNo, 4));
-            Evaluate(PurcahaseLine.Make_B2B, GetCellValue(RowNo, 5));
-            PurcahaseLine.Insert();
+            PurchaseLine.Init();
+            LineNo += 10000;
+            PurchaseLine."Document No." := Rec."Document No.";
+            PurchaseLine."Document Type" := Rec."Document Type";
+            PurchaseLine."Line No." := LineNo;
+            PurchaseLine.Insert();
+            Evaluate(PurchaseLine.Type, SourceType);
+            PurchaseLine."No." := No;
+            PurchaseLine.Validate(Quantity, Quantity);
+            //PurcahaseLine.Quantity := Quantity;
+            PurchaseLine.Validate("Direct Unit Cost", DirectUnitCost);
+            //PurcahaseLine."Direct Unit Cost" := DirectUnitCost;
+            PurchaseLine."Serial No." := SerialNo;
+            PurchaseLine."Model No." := ModelNo;
+            PurchaseLine.Make_B2B := Make;
+            PurchaseLine."Depreciation Book Code" := DepreciationBookCode;
+            PurchaseLine."Posting Group" := PostingGroup;
+            PurchaseLine."Gen. Prod. Posting Group" := GenProdPostingGroup;
+            PurchaseLine."GST Group Code" := GSTCredit;
+            PurchaseLine."HSN/SAC Code" := HSNSACCode;
+            Evaluate(PurchaseLine."GST Credit", GSTCredit);
+
+            if PurchaseLine."Indent No." = '' then
+                PurchaseLine."Indent No." := IndentNo;
+            if PurchaseLine."Indent Req No" = '' then
+                PurchaseLine."Indent Req No" := IndetReqNo;
+            PurchaseLine.Modify(true);
         end;
         Message(ExcelImportSuccess);
     end;
-    //B2BSS07Feb2023 Import End>>
-
-    //B2BSSD07Feb Export Start <<
-    local procedure FixedAssetsExportExcelBuffer(var PurchaseLine: Record "Purchase Line")
-    var
-        TempExcelBuffer: Record "Excel Buffer" temporary;
-        PurchaseLine1: Label 'Product Entries';
-        ExcelFileName: Label 'Excel Entries_%1_%2';
-    begin
-        TempExcelBuffer.Reset();
-        TempExcelBuffer.DeleteAll();
-        TempExcelBuffer.NewRow();
-        TempExcelBuffer.AddColumn(PurchaseLine.FieldCaption("Document No."), false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
-        TempExcelBuffer.AddColumn(PurchaseLine.FieldCaption("Line No."), false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
-        TempExcelBuffer.AddColumn(PurchaseLine.FieldCaption("No."), false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
-        TempExcelBuffer.AddColumn(PurchaseLine.FieldCaption("Serial No."), false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
-        TempExcelBuffer.AddColumn(PurchaseLine.FieldCaption("Model No."), false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
-        TempExcelBuffer.AddColumn(PurchaseLine.FieldCaption(Make_B2B), false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
-
-        if PurchaseLine.FindSet() then
-            repeat
-                TempExcelBuffer.NewRow();
-                TempExcelBuffer.AddColumn(PurchaseLine."Document No.", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
-                TempExcelBuffer.AddColumn(PurchaseLine."Line No.", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
-                TempExcelBuffer.AddColumn(PurchaseLine."No.", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
-                TempExcelBuffer.AddColumn(PurchaseLine."Serial No.", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
-                TempExcelBuffer.AddColumn(PurchaseLine."Model No.", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
-                TempExcelBuffer.AddColumn(PurchaseLine.Make_B2B, false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
-            until PurchaseLine.Next() = 0;
-
-        TempExcelBuffer.CreateNewBook(PurchaseLine1);
-        TempExcelBuffer.WriteSheet(PurchaseLine1, CompanyName, UserId);
-        TempExcelBuffer.CloseBook();
-        TempExcelBuffer.SetFriendlyFilename(StrSubstNo(ExcelFileName, CurrentDateTime, UserId));
-        TempExcelBuffer.OpenExcel();
-    end;
-    //B2BSSD07Feb Export End >>
+    //B2BSSD07Feb2023 Import End>>
 }

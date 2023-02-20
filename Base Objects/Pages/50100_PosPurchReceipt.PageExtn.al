@@ -34,8 +34,9 @@ pageextension 50100 PosPurchReceipt extends "Posted Purchase Receipt"
             {
                 ApplicationArea = All;
                 Caption = 'Attachments';
-                SubPageLink = "Table ID" = CONST(120),
-                              "No." = FIELD("No.");
+                Provider = PurchReceiptLines;
+                SubPageLink = "Table ID" = CONST(50202),
+                             "No." = FIELD("Indent No."), "Line No." = field("Indent Line No.");
             }
         }
 
@@ -82,7 +83,6 @@ pageextension 50100 PosPurchReceipt extends "Posted Purchase Receipt"
                     RecRef.GetTable(Rec);
                     DocumentAttachmentDetails.OpenForRecRef(RecRef);
                     DocumentAttachmentDetails.RunModal;
-
                 end;
             }
         }

@@ -56,7 +56,14 @@ page 50120 "Indent Requisition Document"
                     Caption = 'Shortcut Dimension 2 Code';
                     Editable = FieldEditable;
                 }
-
+                //B2BSSD17FEB2023<<
+                field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Shortcut Dimension 9 Code';
+                    Editable = FieldEditable;
+                }
+                //B2BSSD17FEB2023>>
             }
             part(Indentrequisations; 50119)
             {
@@ -67,7 +74,6 @@ page 50120 "Indent Requisition Document"
         //B2BSSD31Jan2023<<
         area(FactBoxes)
         {
-
             systempart(Control1905767507; Notes)
             {
                 ApplicationArea = Notes;
@@ -78,8 +84,8 @@ page 50120 "Indent Requisition Document"
                 ApplicationArea = All;
                 Caption = 'Attachments';
                 Provider = Indentrequisations;
-                SubPageLink = "Table ID" = CONST(50203),
-                             "No." = FIELD("Document No."), "Line No." = field("Line No.");
+                SubPageLink = "Table ID" = CONST(50202),
+                             "No." = FIELD("Indent No."), "Line No." = field("Indent Line No.");
             }
         }
         //B2BSSD31Jan2023>>

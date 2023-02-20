@@ -47,8 +47,28 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 UpdatePropagation = Both;
             }
         }
+
         //B2BSSD25Jan2023>>
+
+        //B2BSSD14FEB2023<<
+        modify("Attached Documents")
+        {
+            Visible = false;
+        }
+        addafter("Attached Documents")
+        {
+            part(AttachmentDocPurOrd; "Document Attachment Factbox")
+            {
+                ApplicationArea = All;
+                Caption = 'Attachments';
+                Provider = PurchLines;
+                SubPageLink = "Table ID" = CONST(50202),
+                "No." = FIELD("Indent No."), "Line No." = field("Indent Line No.");
+            }
+        }
+        //B2BSSD14FEB2023>>
     }
+
     actions
     {
         //B2BVCOn03Oct2022>>
@@ -125,6 +145,12 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 end;
             }
         }
+        //B2BSSD14Feb2023<<
+        modify(DocAttach)
+        {
+            Visible = false;
+        }
+        //B2BSSD14Feb2023>>
     }
     var
         cu90: Codeunit "Purch.-Post";

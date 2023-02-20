@@ -77,6 +77,13 @@ report 50076 "Purchase Order Creation New"
                         PurchaseHeaderOrder.Validate("Shortcut Dimension 1 Code", "Quotation Comparison1"."Shortcut Dimension 1 Code");//B2BPAV
                         PurchaseHeaderOrder.Validate("Shortcut Dimension 2 Code", "Quotation Comparison1"."Shortcut Dimension 2 Code");//B2BPAV
                         PurchaseHeaderOrder.Validate("Payment Terms Code", "Quotation Comparison1"."Payment Term Code");
+                        //B2BSSD16FEB2023<<
+                        PurchaseHeaderOrder.Validate("Transaction Specification", "Quotation Comparison1"."Transaction Specification");
+                        PurchaseHeaderOrder.Validate("Transaction Type", "Quotation Comparison1"."Transactio Type");
+                        PurchaseHeaderOrder.Validate("Shipment Method Code", "Quotation Comparison1"."Shipment Method Code");
+                        PurchaseHeaderOrder.Validate("Payment Method Code", "Quotation Comparison1"."Payment Method Code");
+                        PurchaseHeaderOrder.Validate("Transport Method", "Quotation Comparison1"."Transport Method");
+                        //B2BSSD16FEB2023
                         //B2BMSOn18Oct2022>>
                         if QuotCompHdr.Get("Quotation Comparison1"."Quot Comp No.") then
                             PurchaseHeaderOrder.Regularization := QuotCompHdr.Regularization;
@@ -88,7 +95,8 @@ report 50076 "Purchase Order Creation New"
                     PurchaseLine.SETRANGE("Document Type", PurchaseLine."Document Type"::Quote);
                     PurchaseLine.SETRANGE("Document No.", "Parent Quote No.");
                     PurchaseLine.SETRANGE("Buy-from Vendor No.", "Vendor No.");
-                    PurchaseLine.SetRange("No.", "Item No.");
+                    if "Item No." <> '' then
+                        PurchaseLine.SetRange("No.", "Item No.");
                     IF PurchaseLine.FindFirst() THEN BEGIN
                         LneLVar := PurchaseLine."Line No."; //B2BMSOn18Oct2022
                         repeat
@@ -131,12 +139,17 @@ report 50076 "Purchase Order Creation New"
                                 PurchaseLineOrder.validate("Shortcut Dimension 2 Code");
                                 PurchaseLineOrder.Validate("Dimension Set ID");
                                 PurchaseLineOrder."Spec Id" := "Quotation Comparison1"."Spec Id";
+                                //B2BSSD08FEB2023<<
+                                PurchaseLineOrder.warranty := "Quotation Comparison1".warranty;
+                                PurchaseLineOrder."Indentor Description" := "Quotation Comparison1"."Indentor Description";
+                                //B2BSSD08FEB2023>>
                                 //B2BMSOn21Sep2022>>
                                 PurchaseLineOrder."Indent No." := "Quotation Comparison1"."Indent No.";
                                 PurchaseLineOrder."Indent Line No." := "Quotation Comparison1"."Indent Line No.";
                                 PurchaseLineOrder."Indent Req No" := "Quotation Comparison1"."Indent Req. No.";
                                 PurchaseLineOrder."Indent Req Line No" := "Quotation Comparison1"."Indent Req. Line No.";
                                 //B2BMSOn21Sep2022<<
+
                                 PurchaseLineOrder.Modify();
                                 LneLVar += 10000;
                             end;

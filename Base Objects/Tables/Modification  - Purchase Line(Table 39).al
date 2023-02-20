@@ -168,7 +168,17 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         field(33002906; "Indentor Description"; Code[100])//B2BSSD02Feb2023
         {
             Description = 'PO1.0';
-            Editable = false;
+            trigger OnValidate()//B2BSSD15FEB2023
+            var
+                purchaseHeader: Record "Purchase Header";
+                purchaseline: Record "Purchase Line";
+            begin
+                purchaseHeader.Reset();
+                purchaseHeader.SetRange("No.", "Document No.");
+                if purchaseHeader.FindFirst() then
+                    "Buy-from Vendor No." := purchaseHeader."Buy-from Vendor No.";
+                //purchaseHeader.Modify();
+            end;
         }
 
         //B2BMSOn03Nov2022>>
@@ -250,16 +260,16 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         {
             DataClassification = CustomerContent;
         }
-        field(60020; Make_B2B; Text[250])
+        field(60020; Make_B2B; Code[50])
         {
             Caption = 'Make';
             DataClassification = CustomerContent;
         }
-        field(60021; "Model No."; Text[100])
+        field(60021; "Model No."; Code[50])
         {
             DataClassification = CustomerContent;
         }
-        field(60022; "Serial No."; Text[50])
+        field(60022; "Serial No."; Code[50])
         {
             DataClassification = CustomerContent;
         }
@@ -267,7 +277,10 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         {
             DataClassification = CustomerContent;
         }
-
+        field(60025; warranty; Code[50])//B2BSSD08Feb2023
+        {
+            DataClassification = CustomerContent;
+        }
     }
 
 
@@ -312,5 +325,8 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             end;
         end;
     end;
+
+    var
+        purcahseorder: Record "Purchase Header";
 }
 

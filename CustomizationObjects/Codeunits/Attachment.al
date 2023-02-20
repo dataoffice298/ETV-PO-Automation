@@ -32,7 +32,8 @@ codeunit 50027 Attachments //B2BSSD02Feb2023
     end;
 
     [EventSubscriber(ObjectType::Page, Page::"Document Attachment Details", 'OnAfterOpenForRecRef', '', false, false)]
-    procedure OnAfterOpenForRecRef(var DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef);
+    procedure OnAfterOpenForRecRef(var DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef;
+    FlowFieldsEditable: Boolean);
     var
         FieldRef: FieldRef;
         RecNo: Code[20];
@@ -53,24 +54,8 @@ codeunit 50027 Attachments //B2BSSD02Feb2023
                     FieldRef := RecRef.Field(2);
                     LineNo := FieldRef.Value;
                     DocumentAttachment.SetRange("Line No.", LineNo);
+                    FlowFieldsEditable := false;
                 end;
         end;
     end;
-
-    /* [EventSubscriber(ObjectType::Table, Database::"Document Attachment", 'OnAfterInitFieldsFromRecRef', '', false, false)]
-     procedure OnAfterInitFieldsFromRecRef(var DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef)
-     var
-         FieldRef: FieldRef;
-         RecNo: Code[20];
-         LineNo: Integer;
-     begin
-         case RecRef.Number of
-             DATABASE::"Technical Specifications":
-                 begin
-                     FieldRef := RecRef.Field(1);
-                     RecNo := FieldRef.Value;
-                     DocumentAttachment.Validate("No.", RecNo);
-                 end;
-         end;
-     end;*/
 }

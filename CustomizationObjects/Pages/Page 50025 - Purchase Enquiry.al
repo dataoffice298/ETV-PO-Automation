@@ -82,6 +82,7 @@ page 50025 "Purchase Enquiry"
                 ApplicationArea = All;
                 Editable = PageEditable; //B2BVCOn28Sep22
             }
+
             group(Invoicing)
             {
                 Caption = 'Invoicing';
@@ -176,6 +177,23 @@ page 50025 "Purchase Enquiry"
                 }
             }
         }
+        //B2BSSD17FEB2023<<
+        area(FactBoxes)
+        {
+            part(AttachmentDoc; "Document Attachment Factbox")
+            {
+                ApplicationArea = All;
+                Caption = 'Attachments';
+                Provider = PurchLines;
+                SubPageLink = "Table ID" = CONST(50202),
+                "No." = field("Indent No."), "Line No." = field("Line No.");
+            }
+            systempart(Control1905767507; Notes)
+            {
+                ApplicationArea = Notes;
+            }
+        }
+        //B2BSSD17FEB2023>>
     }
 
     actions
@@ -207,7 +225,7 @@ page 50025 "Purchase Enquiry"
         }
         area(processing)
         {
-            
+
             group("F&unctions")
             {
                 Caption = 'F&unctions';

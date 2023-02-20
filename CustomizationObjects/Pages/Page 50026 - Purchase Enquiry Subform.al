@@ -86,9 +86,51 @@ page 50026 "Purchase Enquiry Subform"
             }
         }
     }
-
+    //B2BSSD07Feb2023<<
     actions
     {
+        area(Processing)
+        {
+            action(Specification)
+            {
+                ApplicationArea = All;
+                Image = Import;
+                Caption = 'Specification';
+                RunObject = page TechnicalSpecifications;
+                RunPageLink = "Document No." = field("Indent No."), "Line No." = field("Indent Line No."),
+                "Item No." = field("No.");
+                trigger OnAction()
+                var
+                begin
+
+                end;
+            }
+            //B2BSSD07Feb2023>>
+
+            //B2BSSD17FEB2023<<
+            action(AttachmentsPurEnq)
+            {
+                ApplicationArea = All;
+                Image = Attachments;
+                Caption = 'Attachments';
+                ToolTip = 'Add a file as an attachment. You can attach images as well as documents.';
+                trigger OnAction()
+                var
+                    DocumentAttachmentDetails: Page "Document Attachment Details";
+                    DocumentAttRec: Record "Document Attachment";
+                    RecRef: RecordRef;
+                begin
+                    DocumentAttRec.Reset();
+                    DocumentAttRec.SetRange("No.", Rec."Indent No.");
+                    DocumentAttRec.SetRange("Line No.", Rec."Indent Line No.");
+                    if DocumentAttRec.FindSet() then
+                        Page.RunModal(50183, DocumentAttRec);
+                end;
+            }
+            //B2BSSD17FEB2023>>
+        }
+
+
     }
 
     trigger OnAfterGetRecord();

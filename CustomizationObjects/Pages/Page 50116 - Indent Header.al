@@ -100,6 +100,13 @@ page 50116 "Indent Header"
                     ApplicationArea = all;
                     Caption = 'Shortcut Dimension 2 Code';
                 }
+               
+                
+                field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Shortcut Dimension 9 Code';
+                }
 
             }
             //B2BPAV<<

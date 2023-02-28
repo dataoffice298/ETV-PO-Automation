@@ -157,7 +157,6 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         GateEntry: Record "Posted Gate Entry Line_B2B";
         PurchLine: Record "Purchase Line";
         LCDetails: Record "LC Details";
-
     /*   actions
        {
            // Add changes to page actions here

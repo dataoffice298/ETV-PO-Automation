@@ -128,6 +128,10 @@ page 50144 "Inward Gate Entry-NRGP"
                 {
                     ApplicationArea = all;
                 }
+                field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")//B2BSSD22FEB2023
+                {
+                    ApplicationArea = All;
+                }
                 field(Designation; rec.Designation)
                 {
                     ApplicationArea = all;

@@ -11,14 +11,14 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
         {
             repeater(Control1500000)
             {
-                field("Challan No."; Rec."Challan No.")
+                /*field("Challan No."; Rec."Challan No.")
                 {
                     ApplicationArea = ALL;
                 }
                 field("Challan Date"; Rec."Challan Date")
                 {
                     ApplicationArea = ALL;
-                }
+                }*/
                 field("Source Type"; Rec."Source Type")
                 {
                     ApplicationArea = ALL;
@@ -254,11 +254,11 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
                     Visible = false;
                 }
                 //BaluonNov82022>>
-                field(Variant; rec.Variant)
+                /*field(Variant; rec.Variant)
                 {
                     ApplicationArea = all;
                     Editable = false; //B2B@SSDon12Dec2022
-                }
+                }*/
                 field(ModelNo; rec.ModelNo)
                 {
                     ApplicationArea = all;
@@ -270,6 +270,10 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
                     Editable = false; //B2B@SSDon12Dec2022
                 }
                 //BaluonNov82022<<
+                field(Make; Rec.Make)//B2BSSD23FEB2023
+                {
+                    ApplicationArea = All;
+                }
             }
         }
 
@@ -398,8 +402,8 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
                     GateLine.Reset();
                     GateLine.SetRange("Entry Type", Rec."Entry Type");
                     GateLine.SetRange("Gate Entry No.", Rec."Gate Entry No.");
-                    GateLine.SetFilter("Challan No.", '<>%1', '');
-                    GateLine.SetFilter("Challan Date", '<>%1', 0D);
+                    //GateLine.SetFilter("Challan No.", '<>%1', '');
+                    //GateLine.SetFilter("Challan Date", '<>%1', 0D);
                     GateLine.SetFilter("Posted RGP OUT NO.", '%1', '');
                     IF GateLine.FindFirst() THEN BEGIN
                         LineNo := GateLine."Line No.";

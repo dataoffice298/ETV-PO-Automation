@@ -55,8 +55,7 @@ pageextension 50114 PurchQuoteSubformExtB2B extends "Purchase Quote Subform"
                 Image = Import;
                 Caption = 'Specification';
                 RunObject = page TechnicalSpecifications;
-                RunPageLink = "Document No." = field("Indent No."), "Line No." = field("Indent Line No."),
-                "Item No." = field("No.");
+                RunPageLink = "Document No." = field("Indent No."), "Line No." = field("Indent Line No.");
             }
         }
 
@@ -71,18 +70,27 @@ pageextension 50114 PurchQuoteSubformExtB2B extends "Purchase Quote Subform"
             {
                 ApplicationArea = All;
                 Image = Attachments;
+                Visible = true;
                 Caption = 'Attachements';
                 ToolTip = 'Add a file as an attachment. You can attach images as well as documents.';
                 trigger OnAction()
                 var
                     DocumentAttachmentDetails: Page "Document Attachment Details";
                     DocumentAttRec: Record "Document Attachment";
+                    RecRef: RecordRef;
+                    IndentLine: Record "Indent Line";
                 begin
                     DocumentAttRec.Reset();
                     DocumentAttRec.SetRange("No.", Rec."Indent No.");
                     DocumentAttRec.SetRange("Line No.", Rec."Indent Line No.");
                     if DocumentAttRec.FindSet() then
-                        Page.RunModal(50183, DocumentAttRec);
+                        Page.RunModal(50183, DocumentAttRec)
+                    else begin
+                        IndentLine.Get(Rec."Indent No.", Rec."Indent Line No.");
+                        RecRef.GetTable(IndentLine);
+                        DocumentAttachmentDetails.OpenForRecRef(RecRef);
+                        DocumentAttachmentDetails.RunModal();
+                    end;
                 end;
             }
         }

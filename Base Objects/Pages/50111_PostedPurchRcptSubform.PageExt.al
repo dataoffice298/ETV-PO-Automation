@@ -30,6 +30,7 @@ pageextension 50111 PostedPurchRcptSubform extends "Posted Purchase Rcpt. Subfor
                 Caption = 'warranty';
             }
         }
+
     }
     //B2BSSD10Feb2023<<
     actions
@@ -42,41 +43,42 @@ pageextension 50111 PostedPurchRcptSubform extends "Posted Purchase Rcpt. Subfor
                 Image = Import;
                 Caption = 'Specification';
                 RunObject = page TechnicalSpecifications;
-                RunPageLink = "Document No." = field("Indent No."), "Line No." = field("Indent Line No."),
-                "Item No." = field("No.");
+                RunPageLink = "Document No." = field("Indent No."), "Line No." = field("Indent Line No.");
+            }
+        }
+        addafter("Item TechnicalSpec")
+        {
+            action(DocAttach)
+            {
+                ApplicationArea = All;
+                Caption = 'Attachments';
+                Image = Attach;
+                Promoted = true;
+                ToolTip = 'Add a file as an attachment. You can attach images as well as documents.';
+
                 trigger OnAction()
                 var
+                    DocumentAttachmentDetails: Page "Document Attachment Details";
+                    DocumentAttRec: Record "Document Attachment";
+                    RecRef: RecordRef;
+                    IndentLine: Record "Indent Line";
                 begin
-
+                    DocumentAttRec.Reset();
+                    DocumentAttRec.SetRange("No.", Rec."Indent No.");
+                    DocumentAttRec.SetRange("Line No.", Rec."Indent Line No.");
+                    if DocumentAttRec.FindSet() then
+                        Page.RunModal(50183, DocumentAttRec)
+                    else begin
+                        IndentLine.Get(Rec."Indent No.", Rec."Indent Line No.");
+                        RecRef.GetTable(IndentLine);
+                        DocumentAttachmentDetails.OpenForRecRef(RecRef);
+                        DocumentAttachmentDetails.RunModal;
+                    end;
+                    CurrPage.Update();
                 end;
             }
         }
     }
+
     //B2BSSD10Feb2023>>
-
-
-    // //B2BSSD07Feb2023<<
-    // actions
-    // {
-    //     addlast("&Line")
-    //     {
-    //         action("Import&Export")
-    //         {
-    //             ApplicationArea = All;
-    //             Caption = 'Import & Export';
-    //             Image = ImportExport;
-    //             trigger OnAction()
-    //             var
-    //                 PostedPurchReceip: Record "Purch. Rcpt. Line";
-    //             begin
-    //                 PostedPurchReceip.Reset();
-    //                 PostedPurchReceip.SetRange("Document No.", Rec."Document No.");
-    //                 Xmlport.Run(50500, true, false, PostedPurchReceip);
-    //             end;
-    //         }
-    //     }
-    // }
-    // //B2BSSD07Feb2023>>
-    var
-        myInt: Integer;
 }

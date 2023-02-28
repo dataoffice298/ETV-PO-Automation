@@ -210,7 +210,7 @@ table 50201 "Indent Header"
             DataClassification = CustomerContent;
             CaptionClass = '1,2,9';
             Caption = 'Shortcut Dimension 9 Code';
-            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(9),Blocked = CONST(false));
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(9), Blocked = CONST(false));
         }
         //B2BSSD20Feb2023>>
 

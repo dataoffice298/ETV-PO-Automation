@@ -111,6 +111,10 @@ page 50163 "Posted Inward Gate Entry-RGP"
                     //Caption = 'Channel Code';
                 }
                 //B2BSSD02Jan2023>>
+                field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")//B2BSSD22FEB2023
+                {
+                    ApplicationArea = All;
+                }
             }
             part(Control1500028; "Posted Inward Gate SubFm-RGP")
             {

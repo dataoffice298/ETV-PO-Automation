@@ -75,6 +75,7 @@ page 50025 "Purchase Enquiry"
                 {
                     ApplicationArea = All;
                 }
+                
             }
             part(PurchLines; "Purchase Enquiry Subform")
             {

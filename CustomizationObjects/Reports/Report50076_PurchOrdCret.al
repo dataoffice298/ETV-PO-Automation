@@ -76,6 +76,7 @@ report 50076 "Purchase Order Creation New"
                         PurchaseHeaderOrder."Currency Code" := "Quotation Comparison1"."Currency Code";
                         PurchaseHeaderOrder.Validate("Shortcut Dimension 1 Code", "Quotation Comparison1"."Shortcut Dimension 1 Code");//B2BPAV
                         PurchaseHeaderOrder.Validate("Shortcut Dimension 2 Code", "Quotation Comparison1"."Shortcut Dimension 2 Code");//B2BPAV
+                        PurchaseHeaderOrder.Validate("Shortcut Dimension 9 Code", "Quotation Comparison1"."Shortcut Dimension 9 Code");//B2BSSD21FEB2023
                         PurchaseHeaderOrder.Validate("Payment Terms Code", "Quotation Comparison1"."Payment Term Code");
                         //B2BSSD16FEB2023<<
                         PurchaseHeaderOrder.Validate("Transaction Specification", "Quotation Comparison1"."Transaction Specification");
@@ -94,9 +95,12 @@ report 50076 "Purchase Order Creation New"
                     PurchaseLine.Reset();
                     PurchaseLine.SETRANGE("Document Type", PurchaseLine."Document Type"::Quote);
                     PurchaseLine.SETRANGE("Document No.", "Parent Quote No.");
-                    PurchaseLine.SETRANGE("Buy-from Vendor No.", "Vendor No.");
-                    if "Item No." <> '' then
-                        PurchaseLine.SetRange("No.", "Item No.");
+                    PurchaseLine.SetRange("Line No.", "Parent Quote Line No");
+                    //PurchaseLine.SETRANGE("Buy-from Vendor No.", "Vendor No.");
+                    // PurchaseLine.SetRange(Type, Type);
+                    // if "Item No." <> '' then
+                    //     //if "Item No." = '' then
+                    //     PurchaseLine.SetRange("No.", "Item No.");
                     IF PurchaseLine.FindFirst() THEN BEGIN
                         LneLVar := PurchaseLine."Line No."; //B2BMSOn18Oct2022
                         repeat
@@ -118,8 +122,9 @@ report 50076 "Purchase Order Creation New"
                                 PurchaseLineOrder."Line No." := LneLVar;
                                 PurchaseLineOrder."Buy-from Vendor No." := PurchaseHeaderOrder."Buy-from Vendor No.";
                                 PurchaseLineOrder.VALIDATE("Buy-from Vendor No.");
-                                PurchaseLineOrder.Type := PurchaseLine.type;
-                                PurchaseLineOrder.VALIDATE("No.", "Item No.");
+                                PurchaseLineOrder.Type := PurchaseLine.Type;
+                                //PurchaseLineOrder."No." := "Quotation Comparison1"."Item No.";
+                                PurchaseLineOrder.VALIDATE("No.", PurchaseLine."No.");
                                 PurchaseLineOrder."Description 2" := "Quotation Comparison1".Description2;
                                 PurchaseLineOrder.VALIDATE(Quantity, "Quotation Comparison1".Quantity);
                                 PurchaseLineOrder."Direct Unit Cost" := "Quotation Comparison1".Rate;
@@ -132,6 +137,7 @@ report 50076 "Purchase Order Creation New"
                                 PurchaseLineOrder."Dimension Set ID" := "Quotation Comparison1"."Dimension Set ID";
                                 PurchaseLineOrder."Shortcut Dimension 1 Code" := "Quotation Comparison1"."Shortcut Dimension 1 Code";
                                 PurchaseLineOrder."Shortcut Dimension 2 Code" := "Quotation Comparison1"."Shortcut Dimension 2 Code";
+                                PurchaseLineOrder."Shortcut Dimension 9 Code" := "Quotation Comparison1"."Shortcut Dimension 9 Code";//B2BSSD21FEB2023
                                 PurchaseLineOrder."Dimension Set ID" := "Quotation Comparison1"."Dimension Set ID";
                                 PurchaseLineOrder."Currency Code" := "Quotation Comparison1"."Currency Code";
                                 PurchaseLineOrder.INSERT();
@@ -149,7 +155,6 @@ report 50076 "Purchase Order Creation New"
                                 PurchaseLineOrder."Indent Req No" := "Quotation Comparison1"."Indent Req. No.";
                                 PurchaseLineOrder."Indent Req Line No" := "Quotation Comparison1"."Indent Req. Line No.";
                                 //B2BMSOn21Sep2022<<
-
                                 PurchaseLineOrder.Modify();
                                 LneLVar += 10000;
                             end;

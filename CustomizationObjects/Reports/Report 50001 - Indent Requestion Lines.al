@@ -27,6 +27,7 @@ report 50001 "Indent Requestion Lines"
                     IndentRequisitions.SETRANGE("Variant Code", "Variant Code");
                     IndentRequisitions.SETRANGE("Location Code", "Delivery Location");
                     IndentRequisitions.SETRANGE("Vendor No.", "Vendor No.");
+                    IndentRequisitions.SetRange("Line No.", "Indent Req Line No");//B2BSSD20Feb2023
                     IndentRequisitions.SETRANGE("Document No.", IndentReqHeader."No.");
                     IF IndentRequisitions.FIND('-') THEN BEGIN
                         //B2BMSOn14Nov2022>>
@@ -38,14 +39,13 @@ report 50001 "Indent Requestion Lines"
                         IndentRequisitions."Qty. To Order" += "Req.Quantity" - Abs("Qty Issued");
                         IndentRequisitions."Remaining Quantity" += "Req.Quantity" - Abs("Qty Issued");
                         //B2BMSOn14Nov2022<<
-
                         ItemVendorGvar.RESET;
                         ItemVendorGvar.SETRANGE("Item No.", IndentRequisitions."Item No.");
                         ItemVendorGvar.SETRANGE("Vendor No.", IndentRequisitions."Manufacturer Code");
                         IF ItemVendorGvar.FINDFIRST THEN;
                         IndentRequisitions.MODIFY;
-
-                    END ELSE BEGIN
+                    END
+                    ELSE BEGIN
                         CalcFields("Qty Issued");
                         IndentRequisitions.INIT;
                         IndentRequisitions."Document No." := IndentReqHeader."No.";
@@ -66,6 +66,7 @@ report 50001 "Indent Requestion Lines"
                         IndentRequisitions."Indent No." := "Document No.";
                         IndentRequisitions."Indent Line No." := "Line No.";
                         IndentRequisitions."Indent Status" := "Indent Status";
+
                         //B2BMSOn14Nov2022>>
                         //IndentRequisitions.Quantity += "Quantity (Base)";
                         //IndentRequisitions."Remaining Quantity" := "Quantity (Base)";
@@ -74,28 +75,29 @@ report 50001 "Indent Requestion Lines"
                         //B2BMSOn14Nov2022<<
                         IndentRequisitions.VALIDATE(IndentRequisitions.Quantity);
                         IndentRequisitions."Unit Cost" := "Unit Cost";  //Divya
+                        IndentRequisitions.Validate(Amount, Amount);//B2BSSD20FEB2023
                         IndentRequisitions."Location Code" := "Delivery Location";
-                        IndentRequisitions."Indent Quantity" := "Req.Quantity";//B2B1.1
-                                                                               //    IndentRequisitions."Manufacturer Ref. No." := "Manufacturer Ref. No.";
+                        IndentRequisitions."Indent Quantity" := "Req.Quantity";//B2B1.1                                                //    IndentRequisitions."Manufacturer Ref. No." := "Manufacturer Ref. No.";
                         IndentRequisitions."Due Date" := "Due Date";
-                        //    IndentRequisitions."Payment Method Code" := "Indent Line"."Payment Meathod Code";//Divya
+                        //IndentRequisitions."Payment Method Code" := "Indent Line"."Payment Meathod Code";//Divya
                         IndentRequisitions."Carry out Action" := TRUE;
                         IndentRequisitions.Validate("Shortcut Dimension 1 Code", "Shortcut Dimension 1 Code");//B2BPAV
                         IndentRequisitions.Validate("Shortcut Dimension 2 Code", "Shortcut Dimension 2 Code");//B2BPAV
+                        IndentRequisitions."Shortcut Dimension 9 Code" := "Indent Line"."Shortcut Dimension 9 Code";//B2BSSD20FEB2023
                         IndentRequisitions."Sub Location Code" := "Issue Sub Location";
                         IndentRequisitions."Spec Id" := "Spec Id";
-                        IndentRequisitions.INSERT;
+                        IndentRequisitions.INSERT();
                         TempLineNo += 10000;
                     END;
                     "Indent Req No" := IndentRequisitions."Document No.";
                     "Indent Req Line No" := IndentRequisitions."Line No.";
-
                     MODIFY;
                     if not BoolGvar then begin
                         BoolGvar := true;
                         if IndentReqHeaderGRec.Get(IndentReqHeader."No.") then begin
                             IndentReqHeaderGRec.Validate("Shortcut Dimension 1 Code", "Shortcut Dimension 1 Code");//B2BPAV
                             IndentReqHeaderGRec.Validate("Shortcut Dimension 2 Code", "Shortcut Dimension 2 Code");//B2BPAV
+                            IndentReqHeaderGRec.Validate("Shortcut Dimension 9 Code", "Shortcut Dimension 9 Code");//B2BSSD21Feb2023
                             IndentReqHeaderGRec.Modify();  //B2BPAV
                         end;
                     end;
@@ -105,7 +107,6 @@ report 50001 "Indent Requestion Lines"
                 begin
                     IndentReqHeader.RESET;
                     IF IndentReqHeader.GET(RequestNo) THEN;
-
                     IndentRequisitions.RESET;
                     IndentRequisitions.SETRANGE("Document No.", IndentReqHeader."No.");
                     IF IndentRequisitions.FINDLAST THEN

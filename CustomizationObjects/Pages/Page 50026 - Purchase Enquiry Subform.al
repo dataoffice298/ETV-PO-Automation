@@ -119,12 +119,20 @@ page 50026 "Purchase Enquiry Subform"
                     DocumentAttachmentDetails: Page "Document Attachment Details";
                     DocumentAttRec: Record "Document Attachment";
                     RecRef: RecordRef;
+                    IndentLine: Record "Indent Line";
                 begin
                     DocumentAttRec.Reset();
                     DocumentAttRec.SetRange("No.", Rec."Indent No.");
                     DocumentAttRec.SetRange("Line No.", Rec."Indent Line No.");
                     if DocumentAttRec.FindSet() then
-                        Page.RunModal(50183, DocumentAttRec);
+                        Page.RunModal(50183, DocumentAttRec)
+                    else begin
+                        IndentLine.Get(Rec."Indent No.", Rec."Indent Line No.");
+                        RecRef.GetTable(IndentLine);
+                        DocumentAttachmentDetails.OpenForRecRef(RecRef);
+                        DocumentAttachmentDetails.RunModal();
+                    end;
+                    CurrPage.Update();
                 end;
             }
             //B2BSSD17FEB2023>>

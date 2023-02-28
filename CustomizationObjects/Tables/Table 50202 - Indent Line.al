@@ -246,9 +246,9 @@ table 50202 "Indent Line"
                         "Description 2" := Item."Description 2";
                     END;
 
-                ItemVariant.GET("No.", "Variant Code");
+                /*ItemVariant.GET("No.", "Variant Code");
                 Description := ItemVariant.Description;
-                "Description 2" := ItemVariant."Description 2";
+                "Description 2" := ItemVariant."Description 2";*/
 
                 "Avail.Qty" := 0;
                 ItemLedgerEntry.RESET;

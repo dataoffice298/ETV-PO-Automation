@@ -173,7 +173,6 @@ page 50120 "Indent Requisition Document"
 
                 trigger OnAction();
                 begin
-
                     Rec.TESTFIELD(Status, Rec.Status::Release);
                     Rec.TESTFIELD(Type, Rec.Type::Quote);
                     Carry := 0;

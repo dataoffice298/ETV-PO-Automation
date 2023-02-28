@@ -387,6 +387,28 @@ table 50221 "Gate Entry Header_B2B"
             DataClassification = CustomerContent;
         }
         //B2BSSD22Dec2022>>
+
+        //B2BSSD20FEB2023<<
+        field(50001; "Challan No."; Code[20])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Challan No.';
+        }
+        field(50002; "Challan Date"; Date)
+        {
+            DataClassification = ToBeClassified;
+        }
+        //B2BSSD20FEB2023>>
+
+        //B2BSSD21FEB2023<<
+        field(50003; "Shortcut Dimension 9 Code"; Code[20])
+        {
+            CaptionClass = '1,2,9';
+            Caption = 'Shortcut Dimension 9 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(9),
+            Blocked = CONST(false));
+        }
+        //B2BSSD21FEB2023>>
     }
 
     keys
@@ -527,8 +549,8 @@ table 50221 "Gate Entry Header_B2B"
             IF GAteENtLines.FINDSET then
                 repeat
                     GAteENtLines.TestField("Source No.");
-                    GAteENtLines.TestField("Challan No.");
-                    GAteENtLines.TestField("Challan Date");
+                    //GAteENtLines.TestField("Challan No.");
+                    //GAteENtLines.TestField("Challan Date");
                     IF GAteENtLines.Type = GAteENtLines.Type::RGP THEN begin
                         GAteENtLines.TestField(Quantity);
                         GAteENtLines.TestField("Unit of Measure");

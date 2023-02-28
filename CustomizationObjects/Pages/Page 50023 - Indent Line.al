@@ -103,6 +103,12 @@ page 50023 "Indent Line"
                     ApplicationArea = all;
                     Editable = FieldEditable;
                 }
+                field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")//B2BSSD20Feb2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'Shortcut Dimension 9 Code';
+                    Editable = FieldEditable;
+                }
                 field("Qty To Issue"; Rec."Qty To Issue")
                 {
                     ApplicationArea = all;
@@ -267,9 +273,9 @@ page 50023 "Indent Line"
                         RecRef: RecordRef;
                     begin
                         if Rec.Select = false then
-                            Error(SelectErr)
-                        else
-                            RecRef.GetTable(Rec);
+                            Error(SelectErr);
+
+                        RecRef.GetTable(Rec);
                         DocumentAttachmentDetails.OpenForRecRef(RecRef);
                         DocumentAttachmentDetails.RunModal();
                         CurrPage.Update();

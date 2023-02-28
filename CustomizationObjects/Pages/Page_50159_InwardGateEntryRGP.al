@@ -130,6 +130,10 @@ page 50159 "Inward Gate Entry-RGP"
                 {
                     ApplicationArea = all;
                 }
+                field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")//B2BSSD22FEB2023
+                {
+                    ApplicationArea = All;
+                }
                 field(Designation; rec.Designation)
                 {
                     ApplicationArea = all;
@@ -166,6 +170,16 @@ page 50159 "Inward Gate Entry-RGP"
                     ApplicationArea = All;
                 }
                 //B2BSSD22Dec2022>>
+                field("Challan No."; Rec."Challan No.")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Challan No.';
+                }
+                field("Challan Date"; Rec."Challan Date")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Challan Date';
+                }
             }
             part(Control1500028; "Inward Gate Entry SubFrm-RGP")
             {

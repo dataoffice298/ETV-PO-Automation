@@ -77,19 +77,19 @@ page 50119 "Indent Requisitions SubForm"
                     Caption = 'Vendor';
                     //TableRelation = "Item Vendor"."Vendor No." WHERE("Item No." = FIELD("Item No."));
                     ApplicationArea = All;
-                    TableRelation = Vendor;
+                    TableRelation = Vendor."No.";
 
-                    /* trigger OnLookup(var Text: Text): Boolean
-                     var
-                         ItemVendor: Record "Item Vendor";
-                         Vendor: Record Vendor;
-                     begin
-                         ItemVendor.Reset();
-                         ItemVendor.SetRange("Item No.", Rec."Item No.");
-                         if ItemVendor.FindSet() then
-                             if Page.RunModal(Page::"Item Vendor Catalog", ItemVendor) = Action::LookupOK then
-                                 Rec.Validate("Manufacturer Code", ItemVendor."Vendor No.");
-                     end;*/
+                    /*trigger OnLookup(var Text: Text): Boolean
+                    var
+                        ItemVendor: Record "Item Vendor";
+                        Vendor: Record Vendor;
+                    begin
+                        ItemVendor.Reset();
+                        ItemVendor.SetRange("Item No.", Rec."Item No.");
+                        if ItemVendor.FindSet() then
+                            if Page.RunModal(Page::"Item Vendor Catalog", ItemVendor) = Action::LookupOK then
+                                Rec.Validate("Manufacturer Code", ItemVendor."Vendor No.");
+                    end;*/
 
                     trigger OnValidate();
                     begin
@@ -187,6 +187,12 @@ page 50119 "Indent Requisitions SubForm"
                     ApplicationArea = All;
                     Editable = false;
                 }
+                field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")//B2BSSD20FEB2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'Shortcut Dimension 9 Code';
+                    Editable = false;
+                }
                 field("Indent No."; Rec."Indent No.")
                 {
                     ApplicationArea = all;
@@ -214,12 +220,20 @@ page 50119 "Indent Requisitions SubForm"
                 var
                     DocumentAttachmentDetails: Page "Document Attachment Details";
                     DocumentAttRec: Record "Document Attachment";
+                    RecRef: RecordRef;
+                    IndentLine: Record "Indent Line";
                 begin
                     DocumentAttRec.Reset();
                     DocumentAttRec.SetRange("No.", Rec."Indent No.");
                     DocumentAttRec.SetRange("Line No.", Rec."Indent Line No.");
                     if DocumentAttRec.FindSet() then
-                        Page.RunModal(50183, DocumentAttRec);
+                        Page.RunModal(50183, DocumentAttRec)
+                    else begin
+                        IndentLine.Get(Rec."Indent No.", Rec."Indent Line No.");
+                        RecRef.GetTable(IndentLine);
+                        DocumentAttachmentDetails.OpenForRecRef(RecRef);
+                        DocumentAttachmentDetails.RunModal();
+                    end;
                     CurrPage.Update();
                 end;
             }

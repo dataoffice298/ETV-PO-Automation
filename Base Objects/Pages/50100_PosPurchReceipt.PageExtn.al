@@ -1,45 +1,49 @@
 pageextension 50100 PosPurchReceipt extends "Posted Purchase Receipt"
 {
-    Editable = false;
+
     layout
     {
-        addlast(Invoicing)
-        {
-            field("LC No."; Rec."LC No.")
-            {
-                ApplicationArea = All;
-            }
-            field("Bill of Entry No"; Rec."Bill of Entry No")
-            {
-                ApplicationArea = All;
-            }
-            field("EPCG No."; Rec."EPCG No.")
-            {
-                ApplicationArea = all;
-            }
-            field("EPCG Scheme"; rec."EPCG Scheme")
-            {
-                ApplicationArea = all;
-            }
-            field("Import Type"; rec."Import Type")
-            {
-                ApplicationArea = all;
-            }
-
-        }
-
+        //B2BSSD23FEB2023<<
         addfirst(factboxes)
         {
-            part("Attached Documents"; "Document Attachment Factbox")
+            part(AttachmentDocPostedPurOrd; "Document Attachment Factbox")
             {
                 ApplicationArea = All;
                 Caption = 'Attachments';
                 Provider = PurchReceiptLines;
                 SubPageLink = "Table ID" = CONST(50202),
-                             "No." = FIELD("Indent No."), "Line No." = field("Indent Line No.");
+                "No." = FIELD("Indent No."), "Line No." = field("Indent Line No.");
             }
         }
-
+        //B2BSSD23FEB2023>>
+        addlast(Invoicing)
+        {
+            field("LC No."; Rec."LC No.")
+            {
+                ApplicationArea = All;
+                Editable = false;
+            }
+            field("Bill of Entry No"; Rec."Bill of Entry No")
+            {
+                ApplicationArea = All;
+                Editable = false;
+            }
+            field("EPCG No."; Rec."EPCG No.")
+            {
+                ApplicationArea = all;
+                Editable = false;
+            }
+            field("EPCG Scheme"; rec."EPCG Scheme")
+            {
+                ApplicationArea = all;
+                Editable = false;
+            }
+            field("Import Type"; rec."Import Type")
+            {
+                ApplicationArea = all;
+                Editable = false;
+            }
+        }
     }
 
     actions
@@ -63,27 +67,6 @@ pageextension 50100 PosPurchReceipt extends "Posted Purchase Receipt"
                     REPORT.RUNMODAL(50071, TRUE, TRUE, PurRcptHeader);
                 end;
                 //B2BMMOn06Oct2022<<
-            }
-        }
-        addafter(Approvals)
-        {
-            action(DocAttach)
-            {
-                ApplicationArea = All;
-                Caption = 'Attachments';
-                Image = Attach;
-                Promoted = true;
-                ToolTip = 'Add a file as an attachment. You can attach images as well as documents.';
-
-                trigger OnAction()
-                var
-                    DocumentAttachmentDetails: Page "Document Attachment Details";
-                    RecRef: RecordRef;
-                begin
-                    RecRef.GetTable(Rec);
-                    DocumentAttachmentDetails.OpenForRecRef(RecRef);
-                    DocumentAttachmentDetails.RunModal;
-                end;
             }
         }
     }

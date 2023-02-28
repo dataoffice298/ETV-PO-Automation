@@ -243,6 +243,15 @@ table 50219 "Posted Gate Entry Header_B2B"
         }
         //B2BSSD02Jan2023>>
 
+        //B2BSSD22FEB2023<<
+        field(54; "Shortcut Dimension 9 Code"; Code[20])
+        {
+            CaptionClass = '1,2,9';
+            Caption = 'Shortcut Dimension 9 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(9),
+            Blocked = CONST(false));
+        }
+        //B2BSSD22FEB2023>>
     }
 
     keys

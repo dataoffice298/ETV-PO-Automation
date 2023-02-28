@@ -37,13 +37,14 @@ table 50203 "Indent Requisitions"
                 FixedAssets: Record "Fixed Asset";
                 GLAccount: Record "G/L Account";
                 Resource: Record Resource;
+                pu: Record "Purchase Line";
             begin
                 case "Line Type" of
                     "Line Type"::Item:
                         if Item.Get("Item No.") then begin
                             Description := Item.Description;
                             Item.TESTFIELD(Blocked, FALSE);
-                            Description := Item.Description;
+                            //Description := Item.Description;
                             "Due Date" := CALCDATE(Item."Lead Time Calculation", WORKDATE);
                             "Unit of Measure" := Item."Base Unit of Measure";
                             VALIDATE("Unit Cost", Item."Last Direct Cost");
@@ -75,9 +76,7 @@ table 50203 "Indent Requisitions"
         {
 
         }
-        field(3;
-        Quantity;
-        Decimal)
+        field(3; Quantity; Decimal)
         {
             DecimalPlaces = 0 : 5;
             //B2BESGOn23May2022++
@@ -186,6 +185,7 @@ table 50203 "Indent Requisitions"
             begin
                 Vendor.RESET;
                 IF Vendor.GET("Manufacturer Code") THEN BEGIN
+                    "Vendor No." := Vendor."No.";//SSD
                     "Vendor Name" := Vendor.Name;
                     "Payment Method Code" := Vendor."Payment Method Code";
                     /*

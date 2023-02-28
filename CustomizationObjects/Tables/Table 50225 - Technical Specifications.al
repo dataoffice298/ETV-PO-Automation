@@ -51,16 +51,23 @@ table 50225 "Technical Specifications"//B2BSSD30Jan2023
             DataClassification = CustomerContent;
             Caption = 'Description';
         }
-        field(9; Quantity; Code[250])
+        field(9; Quantity; Decimal)
         {
             DataClassification = CustomerContent;
             Caption = 'Quantity';
+            trigger OnValidate()
+            var
+                myInt: Integer;
+            begin
+                "Total Amount" := Quantity * "Unit Price";
+            end;
+
         }
         field(10; Units; Text[50])
         {
             DataClassification = CustomerContent;
             Caption = 'Units';
-            TableRelation = "Item Unit of Measure";
+            TableRelation = "Item Unit of Measure".Code;
         }
         field(11; Make; Text[50])
         {
@@ -86,11 +93,18 @@ table 50225 "Technical Specifications"//B2BSSD30Jan2023
         {
             DataClassification = CustomerContent;
             Caption = 'Uint Price';
+            trigger OnValidate()
+            var
+                myInt: Integer;
+            begin
+                "Total Amount" := Quantity * "Unit Price";
+            end;
         }
         field(16; "Total Amount"; Decimal)
         {
             DataClassification = CustomerContent;
             Caption = 'Total Amount';
+
         }
     }
 

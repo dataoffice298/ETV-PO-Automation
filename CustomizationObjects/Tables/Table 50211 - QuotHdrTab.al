@@ -135,6 +135,16 @@ table 50211 QuotCompHdr
             CalcFormula = max("Archive Quotation Header".Version where("No." = field("No.")));
         }
         //B2BMSOn28Oct2022<<
+
+        //B2BSSD21FEB2023<<
+        field(50005; "Shortcut Dimension 9 Code"; Code[20])
+        {
+            CaptionClass = '1,2,9';
+            Caption = 'Shortcut Dimension 9 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(9),
+            Blocked = CONST(false));
+        }
+        //B2BSSD21FEB2023>>
     }
     keys
     {

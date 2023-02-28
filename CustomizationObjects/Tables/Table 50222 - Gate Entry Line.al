@@ -24,9 +24,7 @@ table 50222 "Gate Entry Line_B2B"
         field(4; "Source Type"; Option)
         {
             DataClassification = CustomerContent;
-            OptionMembers = " ","Sales Shipment","Sales Return Order","Purchase Order","Purchase Return Shipment","Transfer Receipt","Transfer Shipment","Item","Fixed Asset",Others,Indent;
-
-
+            OptionMembers = " ","Sales Shipment","Sales Return Order","Purchase Order","Purchase Return Shipment","Transfer Receipt","Transfer Shipment","Item","Fixed Asset",Others,Indent,Description;
             trigger OnValidate();
             begin
                 if "Source Type" <> xRec."Source Type" then begin
@@ -65,16 +63,6 @@ table 50222 "Gate Entry Line_B2B"
         {
             DataClassification = CustomerContent;
         }
-        field(9; "Challan No."; Code[20])
-        {
-            DataClassification = CustomerContent;
-
-        }
-        field(10; "Challan Date"; Date)
-        {
-            DataClassification = CustomerContent;
-        }
-
         field(12; "Source Line No."; integer)
         {
             Editable = false;

@@ -16,7 +16,7 @@ page 50183 "DocAttachment_NonEditable"
         {
             repeater(Group)
             {
-                field(Name; "File Name")
+                field(Name; Rec."File Name")
                 {
                     ApplicationArea = All;
                     Editable = false;
@@ -27,40 +27,40 @@ page 50183 "DocAttachment_NonEditable"
                         TempBlob: Codeunit "Temp Blob";
                         FileName: Text;
                     begin
-                        if "Document Reference ID".HasValue then
-                            Export(true)
+                        if Rec."Document Reference ID".HasValue then
+                            Rec.Export(true)
                         else begin
                             ImportWithFilter(TempBlob, FileName);
                             if FileName <> '' then
-                                SaveAttachment(FromRecRef, FileName, TempBlob);
+                                Rec.SaveAttachment(FromRecRef, FileName, TempBlob);
                             CurrPage.Update(false);
                         end;
                     end;
                 }
-                field("File Extension"; "File Extension")
+                field("File Extension"; Rec."File Extension")
                 {
                     ApplicationArea = All;
                     Editable = false;
                     ToolTip = 'Specifies the file extension of the attachment.';
                 }
-                field("File Type"; "File Type")
+                field("File Type"; Rec."File Type")
                 {
                     ApplicationArea = All;
                     Editable = false;
                     ToolTip = 'Specifies the type of document that the attachment is.';
                 }
-                field(User; User)
+                field(User; Rec.User)
                 {
                     ApplicationArea = All;
                     Editable = false;
                     ToolTip = 'Specifies the user who attached the document.';
                 }
-                field("Attached Date"; "Attached Date")
+                field("Attached Date"; Rec."Attached Date")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the date when the document was attached.';
                 }
-                field("Document Flow Purchase"; "Document Flow Purchase")
+                field("Document Flow Purchase"; Rec."Document Flow Purchase")
                 {
                     ApplicationArea = All;
                     CaptionClass = GetCaptionClass(9);
@@ -68,7 +68,7 @@ page 50183 "DocAttachment_NonEditable"
                     ToolTip = 'Specifies if the attachment must flow to transactions.';
                     Visible = PurchaseDocumentFlow;
                 }
-                field("Document Flow Sales"; "Document Flow Sales")
+                field("Document Flow Sales"; Rec."Document Flow Sales")
                 {
                     ApplicationArea = All;
                     CaptionClass = GetCaptionClass(11);
@@ -124,8 +124,8 @@ page 50183 "DocAttachment_NonEditable"
 
                 trigger OnAction()
                 begin
-                    if "File Name" <> '' then
-                        Export(true);
+                    if Rec."File Name" <> '' then
+                        Rec.Export(true);
                 end;
             }
         }
@@ -146,7 +146,7 @@ page 50183 "DocAttachment_NonEditable"
 
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
-        "File Name" := SelectFileTxt;
+        Rec."File Name" := SelectFileTxt;
     end;
 
     var
@@ -185,11 +185,11 @@ page 50183 "DocAttachment_NonEditable"
         LineNo: Integer;
         VATRepConfigType: Enum "VAT Report Configuration";
     begin
-        Reset;
+        Rec.Reset;
 
         FromRecRef := RecRef;
 
-        SetRange("Table ID", RecRef.Number);
+        Rec.SetRange("Table ID", RecRef.Number);
 
         if RecRef.Number = DATABASE::Item then begin
             SalesDocumentFlow := true;
@@ -227,7 +227,7 @@ page 50183 "DocAttachment_NonEditable"
                 begin
                     FieldRef := RecRef.Field(1);
                     RecNo := FieldRef.Value;
-                    SetRange("No.", RecNo);
+                    Rec.SetRange("No.", RecNo);
                 end;
         end;
 
@@ -239,11 +239,11 @@ page 50183 "DocAttachment_NonEditable"
                 begin
                     FieldRef := RecRef.Field(1);
                     DocType := FieldRef.Value;
-                    SetRange("Document Type", DocType);
+                    Rec.SetRange("Document Type", DocType);
 
                     FieldRef := RecRef.Field(3);
                     RecNo := FieldRef.Value;
-                    SetRange("No.", RecNo);
+                    Rec.SetRange("No.", RecNo);
 
                     FlowFieldsEditable := false;
                 end;
@@ -255,7 +255,7 @@ page 50183 "DocAttachment_NonEditable"
                 begin
                     FieldRef := RecRef.Field(4);
                     LineNo := FieldRef.Value;
-                    SetRange("Line No.", LineNo);
+                    Rec.SetRange("Line No.", LineNo);
                 end;
         end;
 
@@ -267,7 +267,7 @@ page 50183 "DocAttachment_NonEditable"
                 begin
                     FieldRef := RecRef.Field(3);
                     RecNo := FieldRef.Value;
-                    SetRange("No.", RecNo);
+                    Rec.SetRange("No.", RecNo);
 
                     FlowFieldsEditable := false;
                 end;
@@ -294,7 +294,7 @@ page 50183 "DocAttachment_NonEditable"
         if RecRef.Number = Database::"VAT Report Header" then begin
             FieldRef := RecRef.Field(2);
             VATRepConfigType := FieldRef.Value;
-            SetRange("VAT Report Config. Code", VATRepConfigType);
+            Rec.SetRange("VAT Report Config. Code", VATRepConfigType);
         end;
 
         OnAfterOpenForRecRef(Rec, RecRef, FlowFieldsEditable);

@@ -60,7 +60,7 @@ page 50181 TechnicalSpecifications
                     ApplicationArea = All;
                     Caption = 'Units';
                 }
-                field(Make; Rec.Make)
+                /*field(Make; Rec.Make)
                 {
                     ApplicationArea = All;
                     Caption = 'Make';
@@ -69,10 +69,6 @@ page 50181 TechnicalSpecifications
                 {
                     ApplicationArea = All;
                     Caption = 'CAT No.';
-                }
-                /*field("Line No."; Rec."Line No.")
-                {
-                    ApplicationArea = All;
                 }*/
                 field("Unit Price"; Rec."Unit Price")
                 {
@@ -82,7 +78,7 @@ page 50181 TechnicalSpecifications
                 field("Total Amount"; Rec."Total Amount")
                 {
                     ApplicationArea = All;
-                    Caption = 'Unit Price';
+                    Caption = 'Total Amount';
                 }
             }
         }

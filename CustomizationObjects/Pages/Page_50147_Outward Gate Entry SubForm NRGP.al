@@ -11,14 +11,15 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
         {
             repeater(Control1500000)
             {
-                field("Challan No."; Rec."Challan No.")
+                /*field("Challan No."; Rec."Challan No.")
                 {
                     ApplicationArea = ALL;
                 }
                 field("Challan Date"; Rec."Challan Date")
                 {
                     ApplicationArea = ALL;
-                }
+                }*/
+
                 field("Source Type"; Rec."Source Type")
                 {
                     ApplicationArea = ALL;

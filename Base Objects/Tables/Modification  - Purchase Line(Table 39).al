@@ -241,12 +241,16 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             var
                 ItemLRec: Record Item;
                 FALRec: Record "Fixed Asset";
+                FaLedGer: Record "FA Ledger Entry";
+                PurchaseLine: Record "Purchase Line";
             begin
                 if ItemLRec.Get("No.") then
                     Rec."QC Enabled B2B" := ItemLRec."QC Enabled B2B";
                 if Rec.Type = Rec.Type::"Fixed Asset" then
                     if FALRec.Get(Rec."No.") then
                         Rec.Make_B2B := FALRec.Make_B2B;
+                Rec."Model No." := FALRec."Model No.";
+                Rec."Serial No." := FALRec."Serial No.";
             end;
         }
 

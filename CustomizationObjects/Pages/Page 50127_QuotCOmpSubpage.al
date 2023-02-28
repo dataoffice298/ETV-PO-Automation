@@ -551,6 +551,7 @@ page 50127 QuotationComparSubForm
                         DocumentAttachmentDetails: Page "Document Attachment Details";
                         DocumentAttRec: Record "Document Attachment";
                         RecRef: RecordRef;
+                        IndentLine: Record "Indent Line";
                     begin
                         //if Rec.Select = false then
                         //Error(SelectErr)
@@ -558,7 +559,13 @@ page 50127 QuotationComparSubForm
                         DocumentAttRec.SetRange("No.", Rec."Indent No.");
                         DocumentAttRec.SetRange("Line No.", Rec."Indent Line No.");
                         if DocumentAttRec.FindSet() then
-                            Page.RunModal(50183, DocumentAttRec);
+                            Page.RunModal(50183, DocumentAttRec)
+                        else begin
+                            IndentLine.Get(Rec."Indent No.", Rec."Indent Line No.");
+                            RecRef.GetTable(IndentLine);
+                            DocumentAttachmentDetails.OpenForRecRef(RecRef);
+                            DocumentAttachmentDetails.RunModal();
+                        end;
                         CurrPage.Update();
                     end;
                 }

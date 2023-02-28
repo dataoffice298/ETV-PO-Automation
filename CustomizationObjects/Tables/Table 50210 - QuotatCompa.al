@@ -464,8 +464,18 @@ table 50210 "Quotation Comparison Test"
         {
             DataClassification = ToBeClassified;
         }
-        
-        //B2BSSD16Feb2023<<
+
+        //B2BSSD20Feb2023<<
+        field(60032; "Shortcut Dimension 9 Code"; Code[20])
+        {
+            CaptionClass = '1,2,9';
+            Caption = 'Shortcut Dimension 9 Code';
+            Editable = true;
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(9),
+            Blocked = CONST(false));
+            DataClassification = CustomerContent;
+        }
+        //B2BSSD21FEB2023
     }
 
     keys

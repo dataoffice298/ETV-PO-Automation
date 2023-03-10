@@ -23,7 +23,7 @@ page 50131 "FA Movements Confirmation"
                 ApplicationArea = all;
                 Caption = 'Issued Date Time';
             }
-            field(IssuedTo; IssuedTo)
+            field(IssuedTo; IndentHeader."User Id")
             {
                 ApplicationArea = all;
                 Caption = 'Issued To User';
@@ -38,6 +38,7 @@ page 50131 "FA Movements Confirmation"
             {
                 ApplicationArea = all;
                 Caption = 'To Location';
+                TableRelation = Location;//B2BSSD01MAR2023
             }
             field(Comment; Comment)
             {
@@ -60,6 +61,7 @@ page 50131 "FA Movements Confirmation"
 
     var
         IndentLine: Record "Indent Line";
+        IndentHeader: Record "Indent Header";
         IssuedDateTime: DateTime;
         FromLocation: Code[20];
         ToLocation: Code[20];
@@ -72,12 +74,17 @@ page 50131 "FA Movements Confirmation"
         IndentLine := IndentLine1;
     end;
 
-    procedure ReturnPostingInfo(var IssuedDateTime2: DateTime; var Issueto2: Text[50]; var FromLocation2: Code[20]; var ToLocation2: Code[20]; var Comment2: Text[500])
+    procedure SetUser(var IndentHeader1: Record "Indent Header")
+    begin
+        IndentHeader := IndentHeader1;
+    end;
+
+    procedure ReturnPostingInfo(var IssuedDateTime2: DateTime; /*var Issueto2: Text[50];*/ var FromLocation2: Code[20]; var ToLocation2: Code[20]; var Comment2: Text[500])
     var
         IsHandled: Boolean;
     begin
         IssuedDateTime2 := IssuedDateTime;
-        Issueto2 := IssuedTo;
+        //Issueto2 := IssuedTo;
         FromLocation2 := FromLocation;
         ToLocation2 := ToLocation;
         Comment2 := Comment;

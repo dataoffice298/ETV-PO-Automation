@@ -224,8 +224,8 @@ report 50071 "GRN RECEIPT"
                 PostGateEntLinB2B.Reset();
                 PostGateEntLinB2B.SetRange("Source No.", "Order No.");
                 if PostGateEntLinB2B.FindFirst() then begin
-                    DCNO := PostGateEntLinB2B."Challan No.";
-                    DCDate := PostGateEntLinB2B."Challan Date";
+                    //DCNO := PostGateEntLinB2B."Challan No.";
+                    //DCDate := PostGateEntLinB2B."Challan Date";
 
                 end;
                 //B2BMMOn06Oct2022>>

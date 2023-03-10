@@ -21,7 +21,13 @@ report 50001 "Indent Requestion Lines"
 
                 trigger OnAfterGetRecord();
                 begin
-
+                    //B2BSSD01MAR2023<<
+                    CalcFields("Qty Issued");
+                    if "Req.Quantity" - Abs("Qty Issued") = 0 then
+                        CurrReport.Skip();
+                    if Acquired = true then
+                        CurrReport.Skip();
+                    //B2BSSD01MAR2023<<
                     IndentRequisitions.RESET;
                     IndentRequisitions.SETRANGE("Item No.", "No.");
                     IndentRequisitions.SETRANGE("Variant Code", "Variant Code");
@@ -46,7 +52,7 @@ report 50001 "Indent Requestion Lines"
                         IndentRequisitions.MODIFY;
                     END
                     ELSE BEGIN
-                        CalcFields("Qty Issued");
+
                         IndentRequisitions.INIT;
                         IndentRequisitions."Document No." := IndentReqHeader."No.";
                         IndentRequisitions."Line No." := TempLineNo;

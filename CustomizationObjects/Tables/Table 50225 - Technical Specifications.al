@@ -189,13 +189,10 @@ table 50225 "Technical Specifications"//B2BSSD30Jan2023
             TechnicalSpec.Init();
             //Evaluate(ExcelImport."Transaction Name", TransName1);
             TechnicalSpec."Line No." := LineNo;
-            Evaluate(TechnicalSpec."S.No.", GetCellValue(RowNo, 1));
-            Evaluate(TechnicalSpec."Product Name", GetCellValue(RowNo, 2));
-            Evaluate(TechnicalSpec.Description, GetCellValue(RowNo, 3));
-            Evaluate(TechnicalSpec.Quantity, GetCellValue(RowNo, 4));
-            Evaluate(TechnicalSpec.Units, GetCellValue(RowNo, 5));
-            Evaluate(TechnicalSpec.Make, GetCellValue(RowNo, 6));
-            Evaluate(TechnicalSpec."CAT No.", GetCellValue(RowNo, 7));
+            Evaluate(TechnicalSpec."Product Name", GetCellValue(RowNo, 1));
+            Evaluate(TechnicalSpec.Description, GetCellValue(RowNo, 2));
+            Evaluate(TechnicalSpec.Quantity, GetCellValue(RowNo, 3));
+            Evaluate(TechnicalSpec.Units, GetCellValue(RowNo, 4));
             TechnicalSpec."Imported Date" := Today;
             TechnicalSpec.Insert();
         end;

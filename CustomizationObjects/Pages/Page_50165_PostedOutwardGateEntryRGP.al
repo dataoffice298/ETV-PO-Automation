@@ -148,6 +148,17 @@ page 50165 "Posted Outward Gate Entry-RGP"
                     Importance = Additional;
                 }
                 //B2BSSD02Jan2023>>
+
+                //B2BSSD02MAR2023<<
+                field("Challan No."; Rec."Challan Date")
+                {
+                    ApplicationArea = All;
+                }
+                field("Challan Date"; Rec."Challan Date")
+                {
+                    ApplicationArea = All;
+                }
+                //B2BSSD02MAR2023>>
             }
 
             part(Control1500028; "Posted Outward Gate SubFm-RGP")

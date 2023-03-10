@@ -42,14 +42,6 @@ table 50220 "Posted Gate Entry Line_B2B"
         {
             DataClassification = CustomerContent;
         }
-        field(9; "Challan No."; Code[20])
-        {
-            DataClassification = CustomerContent;
-        }
-        field(10; "Challan Date"; Date)
-        {
-            DataClassification = CustomerContent;
-        }
         field(11; Mark; Boolean)
         {
             DataClassification = CustomerContent;

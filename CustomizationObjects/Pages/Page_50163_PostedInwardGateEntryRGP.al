@@ -115,6 +115,14 @@ page 50163 "Posted Inward Gate Entry-RGP"
                 {
                     ApplicationArea = All;
                 }
+                field("Challan No."; Rec."Challan No.")//B2BSSD02MAR2023
+                {
+                    ApplicationArea = All;
+                }
+                field("Challan Date"; Rec."Challan Date")//B2BSSD02MAR2023
+                {
+                    ApplicationArea = All;
+                }
             }
             part(Control1500028; "Posted Inward Gate SubFm-RGP")
             {

@@ -409,6 +409,17 @@ table 50221 "Gate Entry Header_B2B"
             Blocked = CONST(false));
         }
         //B2BSSD21FEB2023>>
+        field(50004; "Indent Document No"; Code[30])//B2BSSD02MAR2023
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Indent Document No';
+            Editable = false;
+        }
+        field(50005; "Indent Line No"; Integer)//B2BSSD02MAR2023
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Indent Line No';
+        }
     }
 
     keys

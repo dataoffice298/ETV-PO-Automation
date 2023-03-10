@@ -1,4 +1,4 @@
-table 50062 "PO Terms And Conditions"
+table 50224 "PO Terms And Conditions"
 {
     DataClassification = CustomerContent;
     Caption = 'PO Terms And Conditions';

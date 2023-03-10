@@ -10,14 +10,6 @@ page 50151 "Posted Inward Gate SubFm-NRGP"
         {
             repeater(Control1500000)
             {
-                field("Challan No."; Rec."Challan No.")
-                {
-                    ApplicationArea = ALL;
-                }
-                field("Challan Date"; Rec."Challan Date")
-                {
-                    ApplicationArea = ALL;
-                }
                 field("Source Type"; Rec."Source Type")
                 {
                     ApplicationArea = ALL;

@@ -252,6 +252,17 @@ table 50219 "Posted Gate Entry Header_B2B"
             Blocked = CONST(false));
         }
         //B2BSSD22FEB2023>>
+
+        //B2BSSD02MAR2023<<
+        field(50001; "Challan No."; Code[20])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50002; "Challan Date"; Date)
+        {
+            DataClassification = CustomerContent;
+        }
+        //B2BSSD02MAR2023>>
     }
 
     keys

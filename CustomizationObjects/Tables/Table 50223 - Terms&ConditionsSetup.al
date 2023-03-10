@@ -1,4 +1,4 @@
-table 50061 "Terms&ConditionSetUp"
+table 50223 "Terms&ConditionSetUp"
 {
     DataClassification = CustomerContent;
     Caption = 'Terms & Condition SetUp';

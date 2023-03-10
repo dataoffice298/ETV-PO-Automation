@@ -161,7 +161,7 @@ codeunit 50016 "MyBaseSubscr"
     begin
         FAMovementForm.Set(IndentLine);
         if FAMovementForm.RunModal = ACTION::Yes then begin
-            FAMovementForm.ReturnPostingInfo(IssuedDateTime, IssuedTo, FromLocation, ToLocation, Comment);
+            FAMovementForm.ReturnPostingInfo(IssuedDateTime, FromLocation, ToLocation, Comment);
             if Comment = '' then
                 Error('Comment must have a value');
             if IssuedDateTime = 0DT then
@@ -180,7 +180,7 @@ codeunit 50016 "MyBaseSubscr"
         end;
     end;
 
-    local procedure InsertMovementEntries(IndentLine: Record "Indent Line";
+    procedure InsertMovementEntries(IndentLine: Record "Indent Line";
         IssuedDateTime: DateTime;
         IssuedTo: Text[50];
         FromLocation: Code[20];
@@ -366,7 +366,7 @@ codeunit 50016 "MyBaseSubscr"
     end;
     //B2BMSOn28Oct2022<<
 
-    
+
     //B2BSSD25Jan2023<<
     [EventSubscriber(ObjectType::Table, database::"Purchase Header", 'OnAfterInsertEvent', '', false, false)]
     local procedure InsertTermsConditions(var Rec: Record "Purchase Header")

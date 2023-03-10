@@ -2,6 +2,15 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
 {
     layout
     {
+        //B2BSSD28FEB2023<<
+        addafter("Include GST in TDS Base")
+        {
+            field(Regularization; Rec.Regularization)
+            {
+                ApplicationArea = all;
+            }
+        }
+        //B2BSSD28FEB2023>>
         addlast("Invoice Details")
         {
             field("LC No."; Rec."LC No.")
@@ -24,12 +33,6 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             {
                 ApplicationArea = all;
             }
-            //B2BMSOn18Oct2022>>
-            field(Regularization; Rec.Regularization)
-            {
-                ApplicationArea = all;
-            }
-            //B2BMSOn18Oct2022<<
             //B2BSSD02Jan2023<<
             field("Vendor Invoice Date"; Rec."Vendor Invoice Date")
             {

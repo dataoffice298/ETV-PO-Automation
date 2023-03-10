@@ -19,7 +19,7 @@ table 50202 "Indent Line"
         field(2; "Line No."; Integer)
         {
         }
-        field(3; "No."; Code[20])
+        field(3; "No."; Code[30])
         {
             Description = 'PO1.0';
             TableRelation = IF (Type = CONST(Item)) Item
@@ -53,6 +53,10 @@ table 50202 "Indent Line"
                             Description := Fixedasset.Description;
                             "Description 2" := Fixedasset."Description 2";
                             "Variant Code" := Fixedasset.Make_B2B;//B2BVOn20Dec22
+                            Fixedasset.CalcFields(Acquired);//B2BSS01MAR2023
+                            Acquired := Fixedasset.Acquired;//B2BSSD01MAR2023
+
+
                         END;
                     Type::"G/L Account":
                         IF GLAccount.GET("No.") THEN BEGIN
@@ -392,6 +396,12 @@ table 50202 "Indent Line"
             Blocked = CONST(false));
         }
         //B2BSS20FEB2023>>
+        field(50020; Acquired; Boolean)//B2BSSD01MAR2023
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Acquired';
+        }
+
     }
 
     keys

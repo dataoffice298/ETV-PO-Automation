@@ -1705,5 +1705,33 @@ codeunit 50026 "PO Automation"
         //B2BSSD28FEB2023>>
     end;
     //B2BMSOn03Nov2022<<    
+
+    //B2BSSD28FEB2023<<
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPostPurchLines', '', true, true)]
+    local procedure OnAfterPostPurchLines(var PurchHeader: Record "Purchase Header"; var PurchRcptHeader: Record "Purch. Rcpt. Header"; var PurchInvHeader: Record "Purch. Inv. Header"; var PurchCrMemoHdr: Record "Purch. Cr. Memo Hdr."; var ReturnShipmentHeader: Record "Return Shipment Header";
+        WhseShip: Boolean;
+        WhseReceive: Boolean;
+        var PurchLinesProcessed: Boolean;
+        CommitIsSuppressed: Boolean;
+        EverythingInvoiced: Boolean;
+        var TempInvoicePostBuffer: Record "Invoice Post. Buffer";
+        var TempPurchLineGlobal: Record "Purchase Line"
+    )
+    var
+        FixedAssets: Record "Fixed Asset";
+    begin
+        FixedAssets.Reset();
+        FixedAssets.SetRange("No.", TempPurchLineGlobal."No.");
+        if FixedAssets.FindSet() then
+            repeat
+                FixedAssets.Init();
+                FixedAssets.Make_B2B := TempPurchLineGlobal.Make_B2B;
+                FixedAssets."Serial No." := TempPurchLineGlobal."Serial No.";
+                FixedAssets."Model No." := TempPurchLineGlobal."Model No.";
+                FixedAssets.Modify();
+            until FixedAssets.Next() = 0;
+        Message('Fixed Assets Updated');
+    end;
+    //B2BSSD28FEB2023>>
 }
 

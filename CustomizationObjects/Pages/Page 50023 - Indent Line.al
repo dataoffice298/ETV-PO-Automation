@@ -45,6 +45,11 @@ page 50023 "Indent Line"
                     ApplicationArea = All;
                     Editable = FieldEditable;
                 }
+                field(Acquired; Rec.Acquired)//B2BSSD01MAR2023
+                {
+                    ApplicationArea = All;
+                    Editable = FieldEditable;
+                }
                 field("Variant Code"; Rec."Variant Code")
                 {
                     //Caption = 'Make';
@@ -283,9 +288,165 @@ page 50023 "Indent Line"
                 }
                 //B2BSSD31Jan2023>>
             }
+            //B2BSSD02MAR2023<<
+            group(RGP)
+            {
+                action(CreateRPGInward)
+                {
+                    Caption = 'Create RGP Inward';
+                    Image = CreateDocument;
+                    trigger OnAction()
+                    var
+                    begin
+                        if Rec.Type = Rec.Type::Item then
+                            Rec.TestField(Select, true);
+                        if Rec.Type = Rec.Type::"Fixed Assets" then
+                            Rec.TestField(Acquired, true);
+                        CreateRGPfromIndent(GateEntryType::Inward, GateEntryDocType::RGP);
+                    end;
+                }
+                action(CreateRGPOutward)
+                {
+                    Caption = 'Create RGP Outward';
+                    Image = CreateDocument;
+                    trigger OnAction()
+                    var
+                        myInt: Integer;
+                    begin
+                        if Rec.Type = Rec.Type::Item then
+                            Rec.TestField(Select, true);
+                        if Rec.Type = Rec.Type::"Fixed Assets" then
+                            Rec.TestField(Acquired, true);
+                        CreateRGPfromIndent(GateEntryType::Outward, GateEntryDocType::RGP);
+                    end;
+                }
+                //B2BSSD09MAR2023<<
+                action(CretaeNRGPOutward)
+                {
+                    Caption = 'Create NRGP Outward';
+                    Image = CreateDocument;
+                    trigger OnAction()
+                    var
+                    begin
+                        if Rec.Type = Rec.Type::Item then
+                            Rec.TestField(Select, true);
+                        if Rec.Type = Rec.Type::"Fixed Assets" then
+                            Rec.TestField(Acquired, true);
+                        CreateRGPfromIndent(GateEntryType::Outward, GateEntryDocType::NRGP);
+                    end;
+                }
+                //B2BSSD09MAR2023>>
+            }
+            //B2BSSD02MAR2023>>
         }
     }
+    //B2BSSD02MAR2023<<
+    local procedure CreateRGPfromIndent(EntryType: Option Inward,Outward; DocType: Option RGP,NRGP)
+    var
+        GateEntryHeader: Record "Gate Entry Header_B2B";
+        GateEntryLine: Record "Gate Entry Line_B2B";
+        LineNo: Integer;
+        OpenText: Label 'An Gate Entry document - %1 is created. \Do you want to open the document?';
+        SelErr: Label 'No line selected.';
+    begin
+        IndentLine.Reset();
+        IndentLine.SetRange("Document No.", Rec."Document No.");
+        IndentLine.SetRange(Select, true);
+        if IndentLine.FindFirst() then
+            Rec.TestField("Qty Issued");
 
+        GateEntryHeader.Reset();
+        GateEntryHeader.SetRange("Indent Document No", Rec."Document No.");
+        GateEntryHeader.SetRange("Indent Line No", Rec."Line No.");
+        if GateEntryHeader.FindFirst() then
+            if EntryType = EntryType::Outward then
+                Rec.TestField("Qty Issued")
+            else
+                if EntryType = EntryType::Inward then
+                    Rec.TestField("Qty Returned");
+
+        GateEntryHeader.Init();
+        if EntryType = EntryType::Inward then
+            GateEntryHeader."Entry Type" := GateEntryHeader."Entry Type"::Inward
+        else
+            if EntryType = EntryType::Outward then
+                GateEntryHeader."Entry Type" := GateEntryHeader."Entry Type"::Outward;
+
+        if DocType = DocType::RGP then
+            GateEntryHeader.Type := GateEntryHeader.Type::RGP
+        else
+            if DocType = DocType::NRGP then
+                GateEntryHeader.Type := GateEntryHeader.Type::NRGP;
+
+        GateEntryHeader.Validate("Location Code", Rec."Issue Location");
+        GateEntryHeader.Insert(true);
+        GateEntryHeader."Indent Document No" := Rec."Document No.";
+        GateEntryHeader."Indent Line No" := Rec."Line No.";
+        GateEntryHeader."Item Description" := Rec.Description;
+        GateEntryHeader."Shortcut Dimension 1 Code" := Rec."Shortcut Dimension 1 Code";
+        GateEntryHeader."Shortcut Dimension 2 Code" := Rec."Shortcut Dimension 2 Code";
+        GateEntryHeader."Shortcut Dimension 9 Code" := Rec."Shortcut Dimension 9 Code";
+        GateEntryHeader.SubLocation := Rec."Issue Sub Location";
+        GateEntryHeader.Modify();
+        //end;
+
+        if IndentLine.Type = IndentLine.Type::Item then begin
+            GateEntryLine.Init();
+            GateEntryLine."Entry Type" := GateEntryHeader."Entry Type";
+            GateEntryLine.Type := GateEntryHeader.Type;
+            GateEntryLine."Gate Entry No." := GateEntryHeader."No.";
+            GateEntryLine."Line No." := 10000;
+            GateEntryLine.Insert(true);
+            GateEntryLine."Source Type" := GateEntryLine."Source Type"::Item;
+            GateEntryLine."Source No." := Rec."No.";
+            GateEntryLine.Variant := Rec."Variant Code";
+            GateEntryLine."Source Name" := Rec.Description;
+            GateEntryLine.Description := Rec.Description;
+            if EntryType = EntryType::Outward then
+                GateEntryLine.Validate(Quantity, Abs(Rec."Qty Issued"))
+            else
+                if EntryType = EntryType::Inward then
+                    GateEntryLine.Validate(Quantity, Abs(Rec."Qty Returned"));
+            GateEntryLine."Unit of Measure" := Rec."Unit of Measure";
+            GateEntryLine.Modify();
+        end;
+
+        if IndentLine.Type = IndentLine.Type::"Fixed Assets" then begin
+            GateEntryLine.Init();
+            GateEntryLine."Entry Type" := GateEntryHeader."Entry Type";
+            GateEntryLine.Type := GateEntryHeader.Type;
+            GateEntryLine."Gate Entry No." := GateEntryHeader."No.";
+            GateEntryLine."Line No." := 10000;
+            GateEntryLine.Insert(true);
+            GateEntryLine."Source Type" := GateEntryLine."Source Type"::Item;
+            GateEntryLine."Source No." := Rec."No.";
+            GateEntryLine.Variant := Rec."Variant Code";
+            GateEntryLine."Source Name" := Rec.Description;
+            GateEntryLine.Description := Rec.Description;
+            if EntryType = EntryType::Outward then
+                GateEntryLine.Validate(Quantity, Abs(Rec."Qty Issued"))
+            else
+                if EntryType = EntryType::Inward then
+                    GateEntryLine.Validate(Quantity, Abs(Rec."Qty Returned"));
+            GateEntryLine."Unit of Measure" := Rec."Unit of Measure";
+            GateEntryLine.Modify();
+        end;
+
+        if Confirm(OpenText, false, GateEntryHeader."No.") then
+            if (EntryType = EntryType::Inward) and (DocType = DocType::RGP) then
+                Page.Run(Page::"Inward Gate Entry-RGP", GateEntryHeader)
+            else
+                if (EntryType = EntryType::Inward) and (DocType = DocType::NRGP) then
+                    Page.Run(Page::"Inward Gate Entry-NRGP", GateEntryHeader)
+                else
+                    if (EntryType = EntryType::Outward) and (DocType = DocType::RGP) then
+                        Page.Run(Page::"Outward Gate Entry - RGP", GateEntryHeader)
+                    else
+                        if (EntryType = EntryType::Outward) and (DocType = DocType::NRGP) then
+                            Page.Run(Page::"Outward Gate Entry - NRGP", GateEntryHeader);
+    end;
+
+    //B2BSSD02MAR2023>>
 
     //B2BMSOn04Nov2022>>
     trigger OnInit()
@@ -318,5 +479,7 @@ page 50023 "Indent Line"
         FieldEditable: Boolean;
         SelectErr: Label 'No Lines Selected';
         Attachemnets: Codeunit Attachments;
+        GateEntryType: Option Inward,Outward;
+        GateEntryDocType: Option RGP,NRGP;
 }
 

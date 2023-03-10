@@ -40,14 +40,6 @@ page 50142 "Posted Gate Entry Line List"
                 {
                     ApplicationArea = ALL;
                 }
-                field("Challan No."; Rec."Challan No.")
-                {
-                    ApplicationArea = ALL;
-                }
-                field("Challan Date"; Rec."Challan Date")
-                {
-                    ApplicationArea = ALL;
-                }
                 field(Quantity; Rec.Quantity)
                 {
                     ApplicationArea = all;

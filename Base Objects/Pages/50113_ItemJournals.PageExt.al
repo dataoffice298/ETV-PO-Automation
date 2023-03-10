@@ -15,6 +15,13 @@ pageextension 50113 ItemJournalsB2B extends "Item Journal"
                 Editable = false;
             }
         }
+        addafter("Shortcut Dimension 2 Code")//B2BSSD01MAR2023
+        {
+            field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")
+            {
+                ApplicationArea = All;
+            }
+        }
     }
 
     actions

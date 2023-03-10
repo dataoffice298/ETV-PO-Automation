@@ -37,14 +37,6 @@ page 50143 "Outward Gate Entry Line List"
                 {
                     ApplicationArea = ALL;
                 }
-                field("Challan No."; Rec."Challan No.")
-                {
-                    ApplicationArea = ALL;
-                }
-                field("Challan Date"; Rec."Challan Date")
-                {
-                    ApplicationArea = ALL;
-                }
             }
         }
     }

@@ -211,6 +211,15 @@ table 50201 "Indent Header"
             CaptionClass = '1,2,9';
             Caption = 'Shortcut Dimension 9 Code';
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(9), Blocked = CONST(false));
+            //B2BSSD03MAR2023<<
+            trigger OnValidate()
+            begin
+                IndentLine.Reset();
+                IndentLine.SetRange("Document No.", "No.");
+                IF IndentLine.FINDSET THEN
+                    IndentLine.Modifyall("Shortcut Dimension 9 Code", "Shortcut Dimension 9 Code");
+            END;
+            //B2BSSD03MAR2023>>
         }
         //B2BSSD20Feb2023>>
 
@@ -334,6 +343,7 @@ table 50201 "Indent Header"
                 ItemJnlLine.VALIDATE(ItemJnlLine."Unit of Measure Code", IndentLineRec."Unit of Measure");
                 ItemJnlLine.VALIDATE(ItemJnlLine."Shortcut Dimension 1 Code", IndentLineRec."Shortcut Dimension 1 Code");
                 ItemJnlLine.VALIDATE(ItemJnlLine."Shortcut Dimension 2 Code", IndentLineRec."Shortcut Dimension 2 Code");
+                ItemJnlLine.Validate(ItemJnlLine."Shortcut Dimension 9 Code", IndentLineRec."Shortcut Dimension 9 Code");//B2BSSD03MAR2023
                 ItemJnlLine.VALIDATE(ItemJnlLine.Quantity, IndentLineRec."Qty To Issue");
                 ItemJnlLine.VALIDATE("Location Code", IndentLineRec."Delivery Location");
                 ItemJnlLine."Indent No." := IndentLineRec."Document No.";
@@ -409,6 +419,7 @@ table 50201 "Indent Header"
                 ItemJnlLine."Reason Code" := ItemJnlTemp."Reason Code";
                 ItemJnlLine.VALIDATE(ItemJnlLine."Shortcut Dimension 1 Code", indentlinerec."Shortcut Dimension 1 Code");
                 ItemJnlLine.VALIDATE(ItemJnlLine."Shortcut Dimension 2 Code", IndentLineRec."Shortcut Dimension 2 Code");
+                ItemJnlLine.Validate(ItemJnlLine."Shortcut Dimension 9 Code", IndentLineRec."Shortcut Dimension 9 Code");//B2BSSD01MAR2023
                 ItemJnlLine.VALIDATE(ItemJnlLine.Quantity, IndentLineRec."Qty To Issue");
                 ItemJnlLine.VALIDATE("Location Code", IndentLineRec."Delivery Location");
                 //ItemJnlLine.Validate("Issue Location",IndentLineRec."Issue Location");
@@ -577,6 +588,7 @@ table 50201 "Indent Header"
             Department := FromTable.Department;
             "Shortcut Dimension 1 Code" := IndentHeader."Shortcut Dimension 1 Code";
             "Shortcut Dimension 2 Code" := IndentHeader."Shortcut Dimension 2 Code";
+            "Shortcut Dimension 9 Code" := IndentHeader."Shortcut Dimension 9 Code";
             Modify();
             //B2BSSD02Jan2023>>
             CopyDocNo := IndentHeader."No.";

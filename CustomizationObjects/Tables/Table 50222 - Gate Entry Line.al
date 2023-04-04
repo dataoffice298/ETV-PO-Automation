@@ -116,9 +116,11 @@ table 50222 "Gate Entry Line_B2B"
             DataClassification = CustomerContent;
             Caption = 'Make';
         }
-
         //BaluonNov82022<<
-
+        field(50000; "Avail Qty"; Integer)//B2BSSD03APR2023
+        {
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

@@ -9,10 +9,10 @@ table 50223 "Terms&ConditionSetUp"
         {
             DataClassification = CustomerContent;
         }
-        field(2; "Line Type"; Option)
+        field(2; "Line Type"; Code[50])
         {
-            OptionMembers = ,Unloading,"Installation/configuration",Rates,GST,"Packing & Forwarding",Transportation,"AMC Period","Billing & Installation Address","Billing & Delivery Address","Billing Address","Contract Period","Contract Value",Completion,"Completion Timelines","Delivery & Completion",Delivery,"Delivery Address","Delivery & Installation","Liquidated Damages",Maintenance,"ManPower Requirement","Nature Of Work",Others,Payment,Packing,"Payment Terms","Shifting Date","Shipping Address","Support Period",Taxes,"Terms & Conditions","Total AMC Value Yearly","Total Contract Value",Warranty,"Delivery Address2","Event Date","Courier Charges";
-            OptionCaption = 'Unloading,Installation/configuration,Rates,GST,Packing & Forwarding,Transportation,AMC Period,Billing & Installation Address,Billing & Delivery Address,Billing Address,Contract Period,Contract Value,Completion,Completion Timelines,Delivery & Completion,Delivery,Delivery Address,Delivery & Installation,Liquidated Damages,Maintenance,ManPower Requirement,Nature Of Work,Others,Payment,Packing,Payment Terms,Shifting Date,Shipping Address,Support Period,Taxes,Terms & Conditions,Total AMC Value Yearly,Total Contract Value,Warranty,Delivery Address2,Event Date,Courier Charges';
+            TableRelation = TechnicalSpecOption;
+            Caption = 'Type';
         }
         field(3; Description; Text[500])
         {

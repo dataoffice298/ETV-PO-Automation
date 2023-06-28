@@ -36,6 +36,22 @@ pageextension 50102 FixedAssetCard extends "Fixed Asset Card"
             }
         }
         //B2BVCOn19Dec22<<<
+        addafter(Acquired)//B2BSSD202APR2023
+        {
+            field("available/Unavailable"; Rec."available/Unavailable")
+            {
+                ApplicationArea = All;
+                Caption = 'Avail / Unavail';
+            }
+        }
+        addafter("FA Location Code")//B2BSS15JUN2023
+        {
+            field("FA Sub Location"; Rec."FA Sub Location")
+            {
+                ApplicationArea = All;
+                Caption = 'FA Sub Location';
+            }
+        }
     }
 
     actions
@@ -51,19 +67,19 @@ pageextension 50102 FixedAssetCard extends "Fixed Asset Card"
                     QRGenerator: Codeunit "QR Generator";
                     TempBlob: Codeunit "Temp Blob";
                     FixedAsset: Record "Fixed Asset";
+                    IndentLine: Record "Indent Line";
                     FieldRef: FieldRef;
                     RecRef: RecordRef;
                     CF: Char;
                     LF: Char;
                     QRText: Text;
+                    QRDescription: Text;
                 begin
                     if FixedAsset.Get(Rec."No.") then begin
                         RecRef.GetTable(FixedAsset);
-                        CF := 15;
-                        LF := 20;
-                        //QRText := 'Description : ' + FixedAsset.Description + ' ' + FixedAsset."Description 2" + ' ' + 'Model No. : ' + FixedAsset."Model No."
-                        //             + 'Serial No. : ' + FixedAsset."Serial No.";
-                        QRText := FixedAsset."No.";
+                        CF := 150;
+                        LF := 200;
+                        QRText := FixedAsset."No." + ',' + 'Description : ' + FixedAsset.Description + ',' + 'Model No. : ' + FixedAsset."Model No." + ',' + 'Serial No. : ' + FixedAsset."Serial No." + ',' + 'Make. :' + FixedAsset.Make_B2B;//B2BSSD13JUN2023
                         QRGenerator.GenerateQRCodeImage(QRText, TempBlob);
                         FieldRef := RecRef.Field(FixedAsset.FieldNo("QR Code"));
                         TempBlob.ToRecordRef(RecRef, FixedAsset.FieldNo("QR Code"));

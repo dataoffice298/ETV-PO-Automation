@@ -1,6 +1,6 @@
 page 50023 "Indent Line"
 {
-    // version PH1.0,PO1.0
+    //     // version PH1.0,PO1.0
 
     AutoSplitKey = true;
     //DelayedInsert = true;
@@ -9,6 +9,7 @@ page 50023 "Indent Line"
     SourceTable = "Indent Line";
     Caption = 'Indent Line';
     SourceTableView = where("Indent Transfer" = const(false));//BaluOn19Oct2022>>
+    RefreshOnActivate = true;//B2BSSD22MAY2023
 
 
     layout
@@ -44,6 +45,8 @@ page 50023 "Indent Line"
                 {
                     ApplicationArea = All;
                     Editable = FieldEditable;
+                    QuickEntry = true;
+
                 }
                 field(Acquired; Rec.Acquired)//B2BSSD01MAR2023
                 {
@@ -77,6 +80,17 @@ page 50023 "Indent Line"
                 {
                     ApplicationArea = All;
                     Editable = FieldEditable;
+                    //B2BSSD25Apr2023<<
+                    // trigger OnValidate()
+                    // var
+                    //     myInt: Integer;
+                    // begin
+                    //     if Rec.Type = Rec.type::Item then begin//B2BSSD27APR2023
+                    //         if rec."Req.Quantity" > rec."Avail.Qty" then
+                    //             Error('Requested Quantity should not be greater than Available Quantity');
+                    //     end;
+                    // end;
+                    //B2BSSD25Apr2023>>
                 }
                 field("Unit of Measure"; rec."Unit of Measure")
                 {
@@ -137,14 +151,27 @@ page 50023 "Indent Line"
                 field("Issue Location"; rec."Issue Location")
                 {
                     ApplicationArea = all;
+                    //B2BSS11APR2023<<
+                    Caption = 'From Location';
+                    trigger OnValidate()
+                    var
+                        UserWiseLocation: Record "Location Wise User";
+                        UserwiseSecurity: Codeunit UserWiseSecuritySetup;
+                    begin
+                        if not UserwiseSecurity.CheckUserLocation(UserId, Rec."Issue Location", 5) then
+                            Error('User %1 dont have permission to location %2', UserId, Rec."Issue Location");
+                    end;
+                    //B2BSS11APR2023<<
                 }
                 field("Issue Sub Location"; rec."Issue sub Location")
                 {
                     ApplicationArea = all;
+                    Caption = 'To Location';//B2BSSD05APR2023
                 }
             }
         }
     }
+
 
     actions
     {
@@ -174,7 +201,6 @@ page 50023 "Indent Line"
                         Page.RunModal(40, ItemJournalLine);
                     END;
                 }
-
                 action(ShowItemJournalBatchReturn)
                 {
                     ApplicationArea = ALL;
@@ -196,7 +222,7 @@ page 50023 "Indent Line"
                         Page.RunModal(40, ItemJournalLine);
                     END;
                 }
-                action(createFAMovement)
+                /*action(createFAMovement)
                 {
                     ApplicationArea = ALL;
                     Caption = 'create FA Movement';
@@ -225,7 +251,8 @@ page 50023 "Indent Line"
                         if FAMovement.FindSet() then
                             Page.Run(0, FAMovement);
                     END;
-                }
+                }*/
+
                 //B2BSSD30Jan2023<<
                 action("Item Specification")
                 {
@@ -302,6 +329,7 @@ page 50023 "Indent Line"
                             Rec.TestField(Select, true);
                         if Rec.Type = Rec.Type::"Fixed Assets" then
                             Rec.TestField(Acquired, true);
+                        Rec.TestField(Select, true);//B2BSSD13APR2023
                         CreateRGPfromIndent(GateEntryType::Inward, GateEntryDocType::RGP);
                     end;
                 }
@@ -312,32 +340,109 @@ page 50023 "Indent Line"
                     trigger OnAction()
                     var
                         myInt: Integer;
+                        indentHeader: Record "Indent Header";
+                        indentLine: Record "Indent Line";
+                        FixedAsset: Record "Fixed Asset";
+                        ERRORmsg: Label 'Fixed Assets is Not Available for Transfer';
                     begin
-                        if Rec.Type = Rec.Type::Item then
+                        if Rec.Type = Rec.Type::Item then begin
                             Rec.TestField(Select, true);
-                        if Rec.Type = Rec.Type::"Fixed Assets" then
+                            Rec.TestField("Issue Location");
+                            Rec.TestField("Issue Sub Location");
+                            //B2BSSD26APR2023>>
+                            Rec.CalcFields("Qty Issued");
+                            if Rec."Qty Issued" = 0 then
+                                error('Quantity Issued is Zero');
+                            //B2BSSD26APR2023>>
+                        end;
+
+                        if Rec.Type = Rec.Type::"Fixed Assets" then begin
                             Rec.TestField(Acquired, true);
+                            Rec.TestField(Select, true);
+
+                            //B2BSSD21APR2023>>
+                            indentLine.Reset();
+                            indentLine.SetRange("Document No.", Rec."Document No.");
+                            indentLine.SetRange("Line No.", Rec."Line No.");
+                            if indentLine.FindSet() then begin
+                                if indentLine."Avail/UnAvail" = true then
+                                    Error(ERRORmsg);
+                            end;
+                            //B2BSSD21APR2023<<
+                        end;
                         CreateRGPfromIndent(GateEntryType::Outward, GateEntryDocType::RGP);
                     end;
                 }
-                //B2BSSD09MAR2023<<
+                // //B2BSSD09MAR2023<<
                 action(CretaeNRGPOutward)
                 {
                     Caption = 'Create NRGP Outward';
                     Image = CreateDocument;
                     trigger OnAction()
                     var
+                        ERRORmsg: Label 'Fixed Assets is Not Available for Transfer';
                     begin
                         if Rec.Type = Rec.Type::Item then
                             Rec.TestField(Select, true);
-                        if Rec.Type = Rec.Type::"Fixed Assets" then
+                        Rec.TestField("Qty Issued");
+                        if Rec.Type = Rec.Type::"Fixed Assets" then begin
                             Rec.TestField(Acquired, true);
+                            //B2BSSD21APR2023>>
+                            indentLine.Reset();
+                            indentLine.SetRange("Document No.", Rec."Document No.");
+                            indentLine.SetRange("Line No.", Rec."Line No.");
+                            if indentLine.FindSet() then begin
+                                //repeat
+                                if indentLine."Avail/UnAvail" = true then
+                                    Error(ERRORmsg);
+                                //until indentLine.Next() = 0;
+                            end;
+                            //B2BSSD21APR2023<<
+                        end;
                         CreateRGPfromIndent(GateEntryType::Outward, GateEntryDocType::NRGP);
                     end;
                 }
                 //B2BSSD09MAR2023>>
+
+                //B2BSSD02MAR2023>>
+
+                //B2BSSD14MAR2023<<
+                action(FromIndOpenGateEntries)
+                {
+                    ApplicationArea = All;
+                    Image = Open;
+                    Caption = 'Inward/Outward Entries';
+                    trigger OnAction()
+                    var
+                        GateEntryHdr: Record "Gate Entry Header_B2B";
+                    begin
+                        GateEntryHdr.Reset();
+                        GateEntryHdr.FilterGroup(2);
+                        GateEntryHdr.SetRange("Indent Document No", Rec."Document No.");
+                        GateEntryHdr.SetRange("Indent Line No", Rec."Line No.");
+                        GateEntryHdr.FilterGroup(0);
+                        Page.RunModal(Page::"Gate Entry List", GateEntryHdr);
+                    end;
+                }
+                action(FromIndOpenPostedGateEntries)
+                {
+                    ApplicationArea = All;
+                    Image = History;
+                    Caption = 'Posted Inward/Outward Entries';
+                    trigger OnAction()
+                    var
+                        PostedGateEntryHdr: Record "Posted Gate Entry Header_B2B";
+                    begin
+                        PostedGateEntryHdr.Reset();
+                        PostedGateEntryHdr.FilterGroup(2);
+                        PostedGateEntryHdr.SetRange("Indent Document No", Rec."Document No.");
+                        PostedGateEntryHdr.SetRange("Indent Line No", Rec."Line No.");
+                        PostedGateEntryHdr.FilterGroup(0);
+                        Page.RunModal(Page::"Posted Gate Entries List", PostedGateEntryHdr);
+                    end;
+                }
             }
-            //B2BSSD02MAR2023>>
+            //B2BSSD14MAR2023>>
         }
     }
     //B2BSSD02MAR2023<<
@@ -348,104 +453,118 @@ page 50023 "Indent Line"
         LineNo: Integer;
         OpenText: Label 'An Gate Entry document - %1 is created. \Do you want to open the document?';
         SelErr: Label 'No line selected.';
+        item: Record Item;
+        FA: Record "Fixed Asset";
+        indentLine: Record "Indent Line";
     begin
+        //B2BSSD17APR2023>>
+        indentLine.Reset();
+        indentLine.SetRange("Document No.", Rec."Document No.");
+        indentLine.SetRange("Release Status", Rec."Release Status"::Released);
+        if not indentLine.FindSet() then
+            Error('Status Must Be equals to Release');
+        //B2BSSD17APR2023<<
         IndentLine.Reset();
         IndentLine.SetRange("Document No.", Rec."Document No.");
         IndentLine.SetRange(Select, true);
-        if IndentLine.FindFirst() then
-            Rec.TestField("Qty Issued");
+        if IndentLine.FindSet() then begin
 
-        GateEntryHeader.Reset();
-        GateEntryHeader.SetRange("Indent Document No", Rec."Document No.");
-        GateEntryHeader.SetRange("Indent Line No", Rec."Line No.");
-        if GateEntryHeader.FindFirst() then
-            if EntryType = EntryType::Outward then
-                Rec.TestField("Qty Issued")
+            GateEntryHeader.Init();
+            if DocType = DocType::RGP then
+                GateEntryHeader.Type := GateEntryHeader.Type::RGP
             else
-                if EntryType = EntryType::Inward then
-                    Rec.TestField("Qty Returned");
+                if DocType = DocType::NRGP then
+                    GateEntryHeader.Type := GateEntryHeader.Type::NRGP;
 
-        GateEntryHeader.Init();
-        if EntryType = EntryType::Inward then
-            GateEntryHeader."Entry Type" := GateEntryHeader."Entry Type"::Inward
-        else
-            if EntryType = EntryType::Outward then
-                GateEntryHeader."Entry Type" := GateEntryHeader."Entry Type"::Outward;
-
-        if DocType = DocType::RGP then
-            GateEntryHeader.Type := GateEntryHeader.Type::RGP
-        else
-            if DocType = DocType::NRGP then
-                GateEntryHeader.Type := GateEntryHeader.Type::NRGP;
-
-        GateEntryHeader.Validate("Location Code", Rec."Issue Location");
-        GateEntryHeader.Insert(true);
-        GateEntryHeader."Indent Document No" := Rec."Document No.";
-        GateEntryHeader."Indent Line No" := Rec."Line No.";
-        GateEntryHeader."Item Description" := Rec.Description;
-        GateEntryHeader."Shortcut Dimension 1 Code" := Rec."Shortcut Dimension 1 Code";
-        GateEntryHeader."Shortcut Dimension 2 Code" := Rec."Shortcut Dimension 2 Code";
-        GateEntryHeader."Shortcut Dimension 9 Code" := Rec."Shortcut Dimension 9 Code";
-        GateEntryHeader.SubLocation := Rec."Issue Sub Location";
-        GateEntryHeader.Modify();
-        //end;
-
-        if IndentLine.Type = IndentLine.Type::Item then begin
-            GateEntryLine.Init();
-            GateEntryLine."Entry Type" := GateEntryHeader."Entry Type";
-            GateEntryLine.Type := GateEntryHeader.Type;
-            GateEntryLine."Gate Entry No." := GateEntryHeader."No.";
-            GateEntryLine."Line No." := 10000;
-            GateEntryLine.Insert(true);
-            GateEntryLine."Source Type" := GateEntryLine."Source Type"::Item;
-            GateEntryLine."Source No." := Rec."No.";
-            GateEntryLine.Variant := Rec."Variant Code";
-            GateEntryLine."Source Name" := Rec.Description;
-            GateEntryLine.Description := Rec.Description;
-            if EntryType = EntryType::Outward then
-                GateEntryLine.Validate(Quantity, Abs(Rec."Qty Issued"))
+            //B2BSSD03MAY2023>>
+            if EntryType = EntryType::Inward then begin
+                GateEntryHeader."Entry Type" := GateEntryHeader."Entry Type"::Inward;
+                GateEntryHeader.Validate("Location Code", Rec."Issue Sub Location");
+                GateEntryHeader.Validate("To Location", Rec."Issue Location");
+            end
             else
-                if EntryType = EntryType::Inward then
-                    GateEntryLine.Validate(Quantity, Abs(Rec."Qty Returned"));
-            GateEntryLine."Unit of Measure" := Rec."Unit of Measure";
-            GateEntryLine.Modify();
-        end;
+                if EntryType = EntryType::Outward then begin
+                    GateEntryHeader."Entry Type" := GateEntryHeader."Entry Type"::Outward;
+                    GateEntryHeader.Validate("Location Code", Rec."Issue Location");
+                    GateEntryHeader."To Location" := Rec."Issue Sub Location";
+                end;
+            //B2BSSD03MAY2023<<
 
-        if IndentLine.Type = IndentLine.Type::"Fixed Assets" then begin
-            GateEntryLine.Init();
-            GateEntryLine."Entry Type" := GateEntryHeader."Entry Type";
-            GateEntryLine.Type := GateEntryHeader.Type;
-            GateEntryLine."Gate Entry No." := GateEntryHeader."No.";
-            GateEntryLine."Line No." := 10000;
-            GateEntryLine.Insert(true);
-            GateEntryLine."Source Type" := GateEntryLine."Source Type"::Item;
-            GateEntryLine."Source No." := Rec."No.";
-            GateEntryLine.Variant := Rec."Variant Code";
-            GateEntryLine."Source Name" := Rec.Description;
-            GateEntryLine.Description := Rec.Description;
-            if EntryType = EntryType::Outward then
-                GateEntryLine.Validate(Quantity, Abs(Rec."Qty Issued"))
-            else
-                if EntryType = EntryType::Inward then
-                    GateEntryLine.Validate(Quantity, Abs(Rec."Qty Returned"));
-            GateEntryLine."Unit of Measure" := Rec."Unit of Measure";
-            GateEntryLine.Modify();
-        end;
+            GateEntryHeader.Insert(true);
+            GateEntryHeader."Indent Document No" := Rec."Document No.";
+            GateEntryHeader."Indent Line No" := Rec."Line No.";
+            GateEntryHeader."Shortcut Dimension 1 Code" := Rec."Shortcut Dimension 1 Code";
+            GateEntryHeader."Shortcut Dimension 2 Code" := Rec."Shortcut Dimension 2 Code";
+            GateEntryHeader."Shortcut Dimension 9 Code" := Rec."Shortcut Dimension 9 Code";
+            GateEntryHeader.SubLocation := Rec."Issue Location";
 
-        if Confirm(OpenText, false, GateEntryHeader."No.") then
-            if (EntryType = EntryType::Inward) and (DocType = DocType::RGP) then
-                Page.Run(Page::"Inward Gate Entry-RGP", GateEntryHeader)
-            else
-                if (EntryType = EntryType::Inward) and (DocType = DocType::NRGP) then
-                    Page.Run(Page::"Inward Gate Entry-NRGP", GateEntryHeader)
+            //B2BSSD07APR2023<<
+            IndentHeader.Reset();
+            IndentHeader.SetRange("No.", Rec."Document No.");
+            if IndentHeader.FindFirst() then begin
+                IndentLine.Reset();
+                IndentLine.SetRange("Document No.", GateEntryHeader."Indent Document No");
+                if IndentLine.FindFirst() then
+                    GateEntryHeader.Purpose := IndentHeader.Purpose;
+                GateEntryHeader.Program := IndentHeader."programme Name";
+            end;
+            //B2BSSD07APR2023>>
+            GateEntryHeader.Modify();
+            LineNo := 10000;
+            repeat
+
+
+                GateEntryLine.Init();
+                GateEntryLine."Entry Type" := GateEntryHeader."Entry Type";
+                GateEntryLine.Type := GateEntryHeader.Type;
+                GateEntryLine."Gate Entry No." := GateEntryHeader."No.";
+                GateEntryLine."Line No." := LineNo;
+                GateEntryLine.Insert(true);
+                if IndentLine.Type = IndentLine.Type::Item then begin
+                    GateEntryLine."Source Type" := GateEntryLine."Source Type"::Item;
+                end else
+                    if IndentLine.Type = IndentLine.Type::"Fixed Assets" then
+                        GateEntryLine."Source Type" := GateEntryLine."Source Type"::"Fixed Asset";
+                GateEntryLine."Source No." := IndentLine."No.";
+
+                //B2BSSD17APR2023>>
+                FixedAsset.Reset();
+                FixedAsset.SetRange("No.", GateEntryLine."Source No.");
+                if FixedAsset.FindFirst() then begin
+                    FixedAsset."available/Unavailable" := true;
+                    FixedAsset.Modify();
+                end;
+                //B2BSSD17APR2023<<
+
+                GateEntryLine.Variant := IndentLine."Variant Code";
+                indentLine.CalcFields("Qty Issued");//B2BSSD28APR2023
+                GateEntryLine.Quantity := abs(IndentLine."Qty Issued");//B2BSSD07APR2023
+                GateEntryLine."Source Name" := IndentLine.Description;
+                GateEntryLine.Description := IndentLine.Description;
+                LineNo += 10000;
+                GateEntryLine."Avail Qty" := IndentLine."Avail.Qty";//B2BSSD03APR2023
+                GateEntryLine."Unit of Measure" := Rec."Unit of Measure";
+                if FA.Get(GateEntryLine."Source No.") then
+                    GateEntryLine.ModelNo := FA."Model No.";
+                GateEntryLine.SerialNo := FA."Serial No.";
+                GateEntryLine.Variant := FA.Make_B2B;
+                GateEntryLine.Modify();
+
+            until IndentLine.Next() = 0;
+            if Confirm(OpenText, false, GateEntryHeader."No.") then
+                if (EntryType = EntryType::Inward) and (DocType = DocType::RGP) then
+                    Page.Run(Page::"Inward Gate Entry-RGP", GateEntryHeader)
                 else
-                    if (EntryType = EntryType::Outward) and (DocType = DocType::RGP) then
-                        Page.Run(Page::"Outward Gate Entry - RGP", GateEntryHeader)
+                    if (EntryType = EntryType::Inward) and (DocType = DocType::NRGP) then
+                        Page.Run(Page::"Inward Gate Entry-NRGP", GateEntryHeader)
                     else
-                        if (EntryType = EntryType::Outward) and (DocType = DocType::NRGP) then
-                            Page.Run(Page::"Outward Gate Entry - NRGP", GateEntryHeader);
+                        if (EntryType = EntryType::Outward) and (DocType = DocType::RGP) then
+                            Page.Run(Page::"Outward Gate Entry - RGP", GateEntryHeader)
+                        else
+                            if (EntryType = EntryType::Outward) and (DocType = DocType::NRGP) then
+                                Page.Run(Page::"Outward Gate Entry - NRGP", GateEntryHeader);
+        end;
     end;
-
     //B2BSSD02MAR2023>>
 
     //B2BMSOn04Nov2022>>
@@ -465,12 +584,23 @@ page 50023 "Indent Line"
             FieldEditable := true;
     end;
     //B2BMSOn04Nov2022<<
-    trigger OnOpenPage()
-    var
-        TechnicalSpec: Record "Technical Specifications";
-    begin
 
+    //B2BSSD22MAY2023>>
+    trigger OnAfterGetCurrRecord()//B2BSSD06JUN2023
+    var
+        ItemLedgerEntry: Record "Item Ledger Entry";
+    begin
+        Rec."Avail.Qty" := 0;
+        ItemLedgerEntry.RESET;
+        ItemLedgerEntry.SETRANGE("Item No.", Rec."No.");
+        ItemLedgerEntry.SETRANGE("Variant Code", Rec."Variant Code");
+        ItemLedgerEntry.SETRANGE("Location Code", Rec."Delivery Location");
+        IF ItemLedgerEntry.FindSet() THEN begin
+            ItemLedgerEntry.CalcSums(Quantity);
+            Rec."Avail.Qty" := ItemLedgerEntry.Quantity;
+        end;
     end;
+    //B2BSSD22MAY2023<<
 
     var
         ItemLedgerEntry: Record 32;
@@ -481,5 +611,5 @@ page 50023 "Indent Line"
         Attachemnets: Codeunit Attachments;
         GateEntryType: Option Inward,Outward;
         GateEntryDocType: Option RGP,NRGP;
+        FixedAsset: Record "Fixed Asset";
 }
-

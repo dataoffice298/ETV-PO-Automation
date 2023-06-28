@@ -41,6 +41,14 @@ tableextension 50049 tableextension70000004 extends "Purch. Inv. Header"
         {
             Caption = 'Regularization';
         }
+        field(50117; "Programme Name"; Code[50])//B2BSSD20MAR2023
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50118; Purpose; Text[250])//B2BSSD21MAR2023
+        {
+            DataClassification = CustomerContent;
+        }
         field(33002900; "RFQ No."; Code[20])
         {
             Description = 'PO1.0';

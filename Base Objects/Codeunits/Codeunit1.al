@@ -156,12 +156,11 @@ codeunit 50016 "MyBaseSubscr"
 
     procedure CreateFAMovememt(var IndentLine: Record "Indent Line")
     var
-        myInt: Integer;
         FAMovementForm: Page "FA Movements Confirmation";
     begin
         FAMovementForm.Set(IndentLine);
         if FAMovementForm.RunModal = ACTION::Yes then begin
-            FAMovementForm.ReturnPostingInfo(IssuedDateTime, FromLocation, ToLocation, Comment);
+            FAMovementForm.ReturnPostingInfo(IssuedDateTime, IssuedTo, FromLocation, ToLocation, Comment);
             if Comment = '' then
                 Error('Comment must have a value');
             if IssuedDateTime = 0DT then
@@ -170,8 +169,7 @@ codeunit 50016 "MyBaseSubscr"
                 Error('From Location must have a value');
             if ToLocation = '' then
                 Error('To Location must have a value');
-            if IssuedTo = '' then
-                Error('Issued To User must have a value');
+
             if FromLocation = ToLocation then
                 Error('From location and To location  must not be same value');
             InsertMovementEntries(IndentLine, IssuedDateTime, IssuedTo, FromLocation, ToLocation, Comment);
@@ -340,8 +338,17 @@ codeunit 50016 "MyBaseSubscr"
             IndentLine.Get(NewItemLedgEntry."Indent No.", NewItemLedgEntry."Indent Line No.");
             IndentLine.NoHeadStatusCheck(true);
             IndentLine.Validate("Delivery Location");
-            IndentLine."Avail.Qty" := IndentLine."Avail.Qty" - ItemJournalLine.Quantity; //B2BMSOn07Nov2022
-            IndentLine."Qty To Issue" := 0; //B2BMSOn07Nov2022
+            //B2BSSD03MAY2023>>
+            if NewItemLedgEntry."Entry Type" = NewItemLedgEntry."Entry Type"::"Negative Adjmt." then begin
+                IndentLine."Avail.Qty" := IndentLine."Avail.Qty" - ItemJournalLine.Quantity;
+
+            end else
+                if NewItemLedgEntry."Entry Type" = NewItemLedgEntry."Entry Type"::"Positive Adjmt." then begin
+                    IndentLine."Avail.Qty" := IndentLine."Avail.Qty" + ItemJournalLine.Quantity;
+                end
+                //B2BSSD03MAY2023<<
+                else
+                    IndentLine."Qty To Issue" := 0; //B2BMSOn07Nov2022
             IndentLine.Modify();
         end;
     end;
@@ -405,5 +412,13 @@ codeunit 50016 "MyBaseSubscr"
         TermsAndConditions.DeleteAll();
     end;
     //B2BSSD25Jan2023>>
+
+    //B2BSSD16JUN2023>>
+    [EventSubscriber(ObjectType::Report, Report::"Copy Fixed Asset", 'OnOnPreReportOnBeforeFA2Insert', '', true, true)]
+    local procedure OnOnPreReportOnBeforeFA2Insert(var FixedAsset2: Record "Fixed Asset"; var FixedAsset: Record "Fixed Asset")
+    begin
+        FixedAsset2."available/Unavailable" := false;
+    end;
+    //B2BSSD16JUN2023<<
 }
 

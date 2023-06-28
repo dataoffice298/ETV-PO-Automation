@@ -29,12 +29,27 @@ table 50202 "Indent Line"
             IF (Type = CONST("G/L Account")) "G/L Account"
             ELSE
             IF (Type = CONST(Resource)) Resource;//B2BSSD09Feb2023
+            ValidateTableRelation = false;
 
             trigger OnValidate();
             var
                 ItemUnitofMeasure: Record 5404;
+                textvar: Text;
             begin
-                TestStatusOpen;
+                TestStatusOpen();
+                //B2BSSD06APR2023<<
+                if (StrPos("No.", ',')) > 1 then begin
+                    if SelectStr(2, Rec."No.") = 'FIXED ASSET' then
+                        Type := type::"Fixed Assets"
+                    else
+                        Type := type::Item;
+                    IF SelectStr(1, Rec."No.") <> '' then begin
+                        Rec."No." := SelectStr(1, Rec."No.");
+                        if Rec.Type = Rec.Type::"Fixed Assets" then
+                            Validate("Req.Quantity", 1);
+                    end;
+                end;
+                //B2BSSD06APR2023>>
                 CASE Type OF
                     Type::Item:
                         IF Item.GET("No.") THEN BEGIN
@@ -53,10 +68,12 @@ table 50202 "Indent Line"
                             Description := Fixedasset.Description;
                             "Description 2" := Fixedasset."Description 2";
                             "Variant Code" := Fixedasset.Make_B2B;//B2BVOn20Dec22
-                            Fixedasset.CalcFields(Acquired);//B2BSS01MAR2023
-                            Acquired := Fixedasset.Acquired;//B2BSSD01MAR2023
 
-
+                            //B2BSS01MAR2023<<
+                            Fixedasset.CalcFields(Acquired);
+                            Acquired := Fixedasset.Acquired;
+                            //B2BSSD01MAR2023>>
+                            "Avail/UnAvail" := Fixedasset."available/Unavailable";//B2BSSD17APR2023
                         END;
                     Type::"G/L Account":
                         IF GLAccount.GET("No.") THEN BEGIN
@@ -72,18 +89,18 @@ table 50202 "Indent Line"
                         end;
                 //B2BSSD09Feb2023>>
                 END;
-                IF IndentHeader.GET("Document No.") THEN;
-                "Delivery Location" := IndentHeader."Delivery Location";
-                IndentHeader.MODIFY;//PO1.0
+
                 "Avail.Qty" := 0;
                 ItemLedgerEntry.RESET;
                 ItemLedgerEntry.SETRANGE("Item No.", "No.");
                 ItemLedgerEntry.SETRANGE("Variant Code", "Variant Code");
                 ItemLedgerEntry.SETRANGE("Location Code", "Delivery Location");
-                IF ItemLedgerEntry.FINDFIRST THEN
-                    REPEAT
-                        "Avail.Qty" += ItemLedgerEntry."Remaining Quantity";
-                    UNTIL ItemLedgerEntry.NEXT = 0;
+                IF ItemLedgerEntry.FindSet() THEN begin
+                    ItemLedgerEntry.CalcSums(Quantity);
+                    "Avail.Qty" := ItemLedgerEntry.Quantity;
+                end;
+
+
             end;
         }
         field(4; Description; Text[50])
@@ -100,6 +117,8 @@ table 50202 "Indent Line"
             MinValue = 0;
 
             trigger OnValidate();
+            var
+                indentLine: Record "Indent Line";
             begin
                 //TestStatusOpen;
                 Amount := "Req.Quantity" * "Unit Cost";
@@ -138,10 +157,10 @@ table 50202 "Indent Line"
                 ItemLedgerEntry.SETRANGE("Item No.", "No.");
                 ItemLedgerEntry.SETRANGE("Variant Code", "Variant Code");
                 ItemLedgerEntry.SETRANGE("Location Code", "Delivery Location");
-                IF ItemLedgerEntry.FINDFIRST THEN
-                    REPEAT
-                        "Avail.Qty" += ItemLedgerEntry."Remaining Quantity";
-                    UNTIL ItemLedgerEntry.NEXT = 0;
+                IF ItemLedgerEntry.FindSet() THEN begin
+                    ItemLedgerEntry.CalcSums(Quantity);
+                    "Avail.Qty" := ItemLedgerEntry.Quantity;
+                end;
             end;
         }
         field(12; "Unit of Measure"; Code[10])
@@ -166,16 +185,21 @@ table 50202 "Indent Line"
             Editable = false;
 
             trigger OnValidate();
+            var
+                IndentLine: Record "Indent Line";
             begin
-                "Avail.Qty" := 0;
-                ItemLedgerEntry.RESET;
-                ItemLedgerEntry.SETRANGE("Item No.", "No.");
-                ItemLedgerEntry.SETRANGE("Variant Code", "Variant Code");
-                ItemLedgerEntry.SETRANGE("Location Code", "Delivery Location");
-                IF ItemLedgerEntry.FINDFIRST THEN
-                    REPEAT
-                        "Avail.Qty" += ItemLedgerEntry."Remaining Quantity";
-                    UNTIL ItemLedgerEntry.NEXT = 0;
+                //if IndentLine.Type = IndentLine.Type::Item then begin
+                // "Avail.Qty" := 0;
+                // ItemLedgerEntry.RESET;
+                // ItemLedgerEntry.SETRANGE("Item No.", "No.");
+                // ItemLedgerEntry.SETRANGE("Variant Code", "Variant Code");
+                // ItemLedgerEntry.SETRANGE("Location Code", "Delivery Location");
+                // IF ItemLedgerEntry.FINDFIRST THEN
+                //     REPEAT
+                //         "Avail.Qty" += ItemLedgerEntry."Remaining Quantity";
+                //     UNTIL ItemLedgerEntry.NEXT = 0;
+
+                //end;
             end;
 
         }
@@ -201,8 +225,12 @@ table 50202 "Indent Line"
             OptionMembers = Item,"Fixed Assets",Description,"G/L Account",Resource;
 
             trigger OnValidate();
+            var
+                Textvar: Text[50];
             begin
+
                 TestStatusOpen;
+
             end;
         }
         field(32; "Unit Cost"; Decimal)
@@ -234,7 +262,7 @@ table 50202 "Indent Line"
         field(37; "Description 2"; Text[50])
         {
         }
-        field(38; "Variant Code"; Code[10])
+        field(38; "Variant Code"; Code[50])//B2BSSD12APR2023 (Length Issue)  
         {
             Caption = 'Variant Code';
             TableRelation = IF (Type = CONST(Item)) "Item Variant".Code WHERE("Item No." = FIELD("No."));
@@ -259,10 +287,10 @@ table 50202 "Indent Line"
                 ItemLedgerEntry.SETRANGE("Item No.", "No.");
                 ItemLedgerEntry.SETRANGE("Variant Code", "Variant Code");
                 ItemLedgerEntry.SETRANGE("Location Code", "Delivery Location");
-                IF ItemLedgerEntry.FINDFIRST THEN
-                    REPEAT
-                        "Avail.Qty" += ItemLedgerEntry."Remaining Quantity";
-                    UNTIL ItemLedgerEntry.NEXT = 0;
+                IF ItemLedgerEntry.FindSet() then begin
+                    ItemLedgerEntry.CalcSums(Quantity);
+                    "Avail.Qty" := ItemLedgerEntry.Quantity;
+                end;
             end;
         }
         field(39; Remarks; Text[30])
@@ -309,16 +337,27 @@ table 50202 "Indent Line"
             DataClassification = CustomerContent;
 
             trigger OnValidate()
+            var
+                IndentLine: Record "Indent Line";
             begin
+
                 CalcFields("Qty issued");
-                if "Qty To Issue" > "Avail.Qty" then
-                    Error('Qty Should not be greater than Available Qty');
 
-                if "Qty To Issue" > (Rec."Req.Quantity" - abs(Rec."Qty Issued")) then
-                    Error('Qty to return should not be greater than %1', (Rec."Req.Quantity" - abs(Rec."Qty Issued")));
+                if IndentLine.Type = IndentLine.Type::Item then begin
+                    if "Qty To Issue" > "Avail.Qty" then
+                        Error('Qty Should not be greater than Available Qty');
 
-                if "Qty To Return" > (Rec."Req.Quantity" - Abs(Rec."Qty Returned")) then
-                    Error('Qty to return should not be greater than %1', (Rec."Req.Quantity" - Abs(Rec."Qty Returned")));
+                    //B2BSSD03MAY2023>>
+                    if "Qty To Return" > abs("Qty Issued") then
+                        Error('Qty Returned should not be greater than Qty Issued %1', Rec."Qty Issued");
+                    // //B2BSSD03MAY2023<<
+
+                    // if "Qty To Issue" > (Rec."Req.Quantity" - abs(Rec."Qty Issued")) then //B2BSSD03MAY2023
+                    //     Error('Qty to return should not be greater than %1', (Rec."Req.Quantity" - abs(Rec."Qty Issued")));
+
+                    if "Qty To Return" > (Rec."Req.Quantity" - Abs(Rec."Qty Returned")) then
+                        Error('Qty to return should not be greater than %1', (Rec."Req.Quantity" - Abs(Rec."Qty Returned")));
+                end;
             end;
         }
         field(50006; "Qty To Return"; Decimal)
@@ -326,8 +365,9 @@ table 50202 "Indent Line"
             DataClassification = CustomerContent;
 
             trigger OnValidate()
+            var
+                IndenLine: Record "Indent Line";
             begin
-                CalcFields("Qty Returned");
                 if "Qty To Return" > "Avail.Qty" then
                     Error('Qty Should not be greater than Available Qty');
 
@@ -401,6 +441,15 @@ table 50202 "Indent Line"
             DataClassification = CustomerContent;
             Caption = 'Acquired';
         }
+        field(50021; "Indent No"; Code[50])//B2BSSD23MAR2023
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50022; "Avail/UnAvail"; Boolean)
+        {
+            DataClassification = CustomerContent;
+
+        }
 
     }
 
@@ -431,6 +480,18 @@ table 50202 "Indent Line"
             Validate("Shortcut Dimension 1 Code", IndHdr."Shortcut Dimension 1 Code");
             Validate("Shortcut Dimension 2 Code", IndHdr."Shortcut Dimension 2 Code");
             Validate("Shortcut Dimension 9 Code", IndHdr."Shortcut Dimension 9 Code");//B2BSSD20FEB2023
+
+            //B2BSSD06JUN2023>>
+            "Avail.Qty" := 0;
+            ItemLedgerEntry.RESET;
+            ItemLedgerEntry.SETRANGE("Item No.", "No.");
+            ItemLedgerEntry.SETRANGE("Variant Code", "Variant Code");
+            ItemLedgerEntry.SETRANGE("Location Code", "Delivery Location");
+            IF ItemLedgerEntry.FindSet() then begin
+                ItemLedgerEntry.CalcSums(Quantity);
+                "Avail.Qty" := ItemLedgerEntry.Quantity;
+            end;
+            //B2BSSD06JUN2023<<
         End;
     end;
 
@@ -455,6 +516,7 @@ table 50202 "Indent Line"
         GLAccount: Record 15;
         NoStatusCheck: Boolean;
         Resource: Record Resource;//B2BSSD09Feb2023
+        Translation: Codeunit Translation;
 
     procedure NoHeadStatusCheck(StatusCheck: Boolean)
     begin

@@ -5,6 +5,7 @@ table 50201 "Indent Header"
     LookupPageID = "Indent List";
     DrillDownPageId = "Indent List";
 
+
     fields
     {
         field(1; "No."; Code[20])
@@ -52,7 +53,8 @@ table 50201 "Indent Header"
                 IF IndentLine.FIND('-') THEN BEGIN
                     TestStatusOpen;
                     REPEAT
-                        IndentLine."Delivery Location" := "Delivery Location";
+                        IndentLine.Validate("Delivery Location", "Delivery Location");//B2BSSD22MAY2023
+                        //IndentLine."Delivery Location" := "Delivery Location";
                         IndentLine.MODIFY;
                     UNTIL IndentLine.NEXT = 0;
                 END;
@@ -165,6 +167,17 @@ table 50201 "Indent Header"
         {
             Caption = 'Transfer-from Code';
             TableRelation = Location WHERE("Use As In-Transit" = CONST(false));
+            //B2BSSD30MAR2023<<
+            // trigger OnValidate()
+            // var
+            //     UserWiseLocation: Record "Location Wise User";
+            //     UserwiseSecurity: Codeunit UserWiseSecuritySetup;
+            //     LocationLRec: Record Location;
+            // begin
+            //     if not UserwiseSecurity.CheckUserLocation(UserId, Rec."Transfer-from Code", 5) then
+            //         Error('User %1 dont have permission to location %2', UserId, Rec."Transfer-from Code");
+            // end;
+            //B2BSSD30MAR2023>>
         }
         field(50004; "Transfer-to Code"; Code[10])
         {
@@ -222,7 +235,14 @@ table 50201 "Indent Header"
             //B2BSSD03MAR2023>>
         }
         //B2BSSD20Feb2023>>
-
+        field(50015; "programme Name"; Code[100])//B2BSSD20MAR2023
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50016; Purpose; Text[250])//B2BSSD21MAR2023
+        {
+            DataClassification = CustomerContent;
+        }
     }
 
     keys
@@ -573,49 +593,115 @@ table 50201 "Indent Header"
     procedure CopyIndent();
     var
         FromIndentLine: Record "Indent Line";
+        FromIndentHeader: Record "Indent Header";
+        ToIndentHeader: Record "Indent Header";
         ToIndentLine: Record "Indent Line";
         IndentHeader: Record "Indent Header";
-        ToIndentLine1: Record "Indent Line";
-        ToIndentLine2: Record "Indent Line";
-        FromTable: Record "Indent Header";
-        ToTable: Record "Indent Header";
+        LineNo: Integer;
+    //ToIndentLine1: Record "Indent Line";
+    //ToIndentLine2: Record "Indent Line";
+
     begin
         TESTFIELD("No.");
         TESTFIELD("Released Status", "Released Status"::Open);
-        IF PAGE.RUNMODAL(0, IndentHeader) = ACTION::LookupOK THEN BEGIN
+        IF PAGE.RUNMODAL(PAGE::"Indent List", IndentHeader) = ACTION::LookupOK then begin
             //B2BSSD02Jan2023<<       
-            Department := FromTable.Description;
-            Department := FromTable.Department;
+            Description := IndentHeader.Description;
+            Department := IndentHeader.Department;
             "Shortcut Dimension 1 Code" := IndentHeader."Shortcut Dimension 1 Code";
             "Shortcut Dimension 2 Code" := IndentHeader."Shortcut Dimension 2 Code";
             "Shortcut Dimension 9 Code" := IndentHeader."Shortcut Dimension 9 Code";
+            "programme Name" := IndentHeader."programme Name";//B2BSSD23MAR2023
+            Purpose := IndentHeader.Purpose;//B2BSSD23MAR2023
             Modify();
             //B2BSSD02Jan2023>>
             CopyDocNo := IndentHeader."No.";
             IF CopyDocNo = "No." THEN
                 ERROR(Text000, TABLECAPTION);
+            FromIndentLine.Reset();//B2BSSD13MAR2023
             FromIndentLine.SETRANGE("Document No.", CopyDocNo);
-            IF FromIndentLine.FIND('-') THEN
+            if FromIndentLine.FindSet() then
                 REPEAT
+                    LineNo += 10000;
                     ToIndentLine.INIT;
-                    ToIndentLine.TRANSFERFIELDS(FromIndentLine);
-                    ToIndentLine2.SETRANGE(ToIndentLine2."Document No.", Rec."No.");
-                    IF ToIndentLine2.FIND('-') THEN BEGIN
-                        ToIndentLine1.SETRANGE(ToIndentLine1."Document No.", Rec."No.");
-                        ToIndentLine1.FIND('+');
-                        ToIndentLine."Line No." := ToIndentLine1."Line No." + 10000;
-                    END ELSE
-                        ToIndentLine."Line No." := 10000;
                     ToIndentLine."Document No." := "No.";
+                    //B2BSSD23MAR2023<<
+                    ToIndentLine."No." := FromIndentLine."No.";
+                    ToIndentLine.Type := FromIndentLine.Type;//B2BSS12APR2023
+                    ToIndentLine.Description := FromIndentLine.Description;
+                    ToIndentLine."Unit of Measure" := FromIndentLine."Unit of Measure";
+                    ToIndentLine."Variant Code" := FromIndentLine."Variant Code";
+                    ToIndentLine."Issue Location" := FromIndentLine."Issue Location";
+                    ToIndentLine."Issue Sub Location" := FromIndentLine."Issue Sub Location";
+                    ToIndentLine."Req.Quantity" := FromIndentLine."Req.Quantity";
+                    ToIndentLine."Avail.Qty" := FromIndentLine."Avail.Qty";
+                    ToIndentLine."Indent No" := FromIndentLine."Document No.";
+                    ToIndentLine."Line No." := LineNo;
+                    ToIndentLine."Indentor Description" := FromIndentLine."Indentor Description";//B2BSSD09MAR2023
+                    ToIndentLine."Spec Id" := FromIndentLine."Spec Id";//B2BSSD09MAR2023
+                    //B2BSSD23MAR2023>>
+                    ToIndentLine."Indent Transfer" := false;//B2BSSD31MAR2023
+                    ToIndentLine."Indent Status" := ToIndentLine."Indent Status"::Indent;
+                    ToIndentLine."Release Status" := ToIndentLine."Release Status"::Open;
+                    ToIndentLine."Due Date" := WORKDATE;
+                    ToIndentLine."Delivery Location" := "Delivery Location";
+                    ToIndentLine.INSERT(true);
+                UNTIL FromIndentLine.NEXT = 0;
+        END;
+        Message('Lines inserted successfully');//B2BSS12APR2023
+    end;
+
+    //B2BSSD31MAR2023<<
+    procedure CopyTransforIndent()
+    var
+        FromIndentLine: Record "Indent Line";
+        FromIndentHeader: Record "Indent Header";
+        ToIndentHeader: Record "Indent Header";
+        ToIndentLine: Record "Indent Line";
+        IndentHeader: Record "Indent Header";
+        LineNo: Integer;
+    begin
+        TESTFIELD("No.");
+        TESTFIELD("Released Status", "Released Status"::Open);
+        IF PAGE.RUNMODAL(PAGE::"Indent List", IndentHeader) = ACTION::LookupOK then begin
+            Description := IndentHeader.Description;
+            Department := IndentHeader.Department;
+            "Shortcut Dimension 1 Code" := IndentHeader."Shortcut Dimension 1 Code";
+            "Shortcut Dimension 2 Code" := IndentHeader."Shortcut Dimension 2 Code";
+            "Shortcut Dimension 9 Code" := IndentHeader."Shortcut Dimension 9 Code";
+            "programme Name" := IndentHeader."programme Name";
+            Purpose := IndentHeader.Purpose;
+            Modify();
+            CopyDocNo := IndentHeader."No.";
+            IF CopyDocNo = "No." THEN
+                ERROR(Text000, TABLECAPTION);
+            FromIndentLine.Reset();
+            FromIndentLine.SETRANGE("Document No.", CopyDocNo);
+            if FromIndentLine.FindSet() then
+                REPEAT
+                    LineNo += 10000;
+                    ToIndentLine."Document No." := "No.";
+                    ToIndentLine."No." := FromIndentLine."No.";
+                    ToIndentLine.Description := FromIndentLine.Description;
+                    ToIndentLine."Unit of Measure" := FromIndentLine."Unit of Measure";
+                    ToIndentLine."Variant Code" := FromIndentLine."Variant Code";
+                    ToIndentLine."Issue Location" := FromIndentLine."Issue Location";
+                    ToIndentLine."Issue Sub Location" := FromIndentLine."Issue Sub Location";
+                    ToIndentLine."Req.Quantity" := FromIndentLine."Req.Quantity";
+                    ToIndentLine."Indent No" := FromIndentLine."Document No.";
+                    ToIndentLine."Line No." := LineNo;
                     ToIndentLine."Indent Transfer" := true;
                     ToIndentLine."Indent Status" := ToIndentLine."Indent Status"::Indent;
                     ToIndentLine."Release Status" := ToIndentLine."Release Status"::Open;
                     ToIndentLine."Due Date" := WORKDATE;
                     ToIndentLine."Delivery Location" := "Delivery Location";
-                    ToIndentLine.INSERT;
+                    ToIndentLine."Indentor Description" := FromIndentLine."Indentor Description";//B2BSSD09MAR2023
+                    toindentline."Spec Id" := FromIndentLine."Spec Id";//B2BSSD09MAR2023
+                    ToIndentLine.INSERT(true);
                 UNTIL FromIndentLine.NEXT = 0;
         END;
     end;
+    //B2BSSD31MAR2023>>
 
     procedure CreateTransferOrder()
     var
@@ -649,7 +735,9 @@ table 50201 "Indent Header"
                     TransHead.Validate("Posting Date", WorkDate());
                     TransHead.Validate("Shortcut Dimension 1 Code", "Shortcut Dimension 1 Code"); //B2BMSOn10Oct2022
                     TransHead.Validate("Shortcut Dimension 2 Code", "Shortcut Dimension 2 Code"); //B2BMSOn10Oct2022
-
+                    TransHead.Validate("Shortcut Dimension 9 Code", "Shortcut Dimension 9 Code");//B2BSSD21MAR2023
+                    TransHead.Validate("Programme Name", "programme Name"); //B2BSSD21MAR2023
+                    TransHead.Purpose := Rec.Purpose;//B2BSSD23MAR2023
                     TransHead.Modify(true);
                     TransferOrderNo := TransHead."No.";
                 end;
@@ -670,6 +758,7 @@ table 50201 "Indent Header"
                 IndentLine.NoHeadStatusCheck(true);
                 TransLine.Validate("Shortcut Dimension 1 Code", "Shortcut Dimension 1 Code"); //B2BMSOn10Oct2022
                 TransLine.Validate("Shortcut Dimension 2 Code", "Shortcut Dimension 2 Code"); //B2BMSOn10Oct2022
+                TransLine.Validate("Shortcut Dimension 9 Code", "Shortcut Dimension 9 Code"); //B2BSSD21MAR2023
                 IndentLine.Modify(true);
 
             until IndentLine.Next() = 0;

@@ -145,6 +145,14 @@ table 50211 QuotCompHdr
             Blocked = CONST(false));
         }
         //B2BSSD21FEB2023>>
+        field(50006; Purpose; Text[250])//B2BSSD23MAR2023
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50007; "Programme Name"; Code[250])//B2BSSD23MAR2023
+        {
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {

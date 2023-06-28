@@ -56,6 +56,12 @@ tableextension 50068 "Location Ext" extends Location
             DataClassification = CustomerContent;
             Caption = 'Address 3';
         }
+        field(50109; "Location Type"; Option)//B2BSSD29MAR2023
+        {
+            DataClassification = CustomerContent;
+            OptionMembers = " ","Shooting";
+            OptionCaption = ' ,Shooting';
+        }
     }
 
     var

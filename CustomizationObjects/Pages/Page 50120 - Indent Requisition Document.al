@@ -64,6 +64,16 @@ page 50120 "Indent Requisition Document"
                     Editable = FieldEditable;
                 }
                 //B2BSSD17FEB2023>>
+                field("programme Name"; Rec."programme Name")//B2BSSD20MAR2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'programme Name';
+                }
+                field(Purpose; Rec.Purpose)//B2BSSD21MAR2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'Purpose';
+                }
             }
             part(Indentrequisations; 50119)
             {
@@ -145,9 +155,10 @@ page 50120 "Indent Requisition Document"
                     IF Indentreqline.FIND('-') THEN BEGIN
                         IF NOT CONFIRM(Text003) THEN
                             EXIT;
-                        CreateIndents.RESET;
-                        CreateIndents.SETRANGE("Document No.", Rec."No.");
-                        CreateIndents.SETRANGE("Carry out Action", TRUE);
+                        // CreateIndents.RESET;
+                        // CreateIndents.SETRANGE("Document No.", Rec."No.");
+                        // CreateIndents.SETRANGE("Carry out Action", TRUE);
+                        CurrPage.Indentrequisations.Page.SetSelectionFilter(CreateIndents);//B2BSSD18APR2023
                         CLEAR(VendorList);
                         VendorList.LOOKUPMODE(TRUE);
                         IF VendorList.RUNMODAL = ACTION::LookupOK THEN BEGIN
@@ -200,7 +211,6 @@ page 50120 "Indent Requisition Document"
                         IF Vendor.COUNT >= 1 THEN BEGIN
                             POAutomation.CreateQuotes(CreateIndents, Vendor, Rec."No.Series");
                             MESSAGE(Text0011);
-
                         END ELSE
                             EXIT;
                     END;
@@ -218,6 +228,10 @@ page 50120 "Indent Requisition Document"
 
                 trigger OnAction();
                 begin
+                    //B2BSSD09MAY2023>>
+                    if Rec."Create Purchase Order" = true then
+                        Error('Purchase Order already created');
+                    //B2BSSD09MAY2023<<
                     Rec.TESTFIELD(Status, Rec.Status::Release);
                     Rec.TESTFIELD(Type, Rec.Type::Order);
                     Carry := 0;
@@ -239,6 +253,10 @@ page 50120 "Indent Requisition Document"
                         CreateIndents.SETRANGE("Carry out Action", TRUE);
                         UpdateReqQty;
                         POAutomation.CreateOrder2(CreateIndents, Vendor, Rec."No.Series");
+                        //B2BSSD09MAY2023>>
+                        Rec."Create Purchase Order" := true;
+                        CurrPage.Update();
+                        //B2BSSD09MAY2023<<
                         MESSAGE(Text001);
                     END;
 

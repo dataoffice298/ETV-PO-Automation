@@ -33,11 +33,6 @@ page 50026 "Purchase Enquiry Subform"
                 {
                     ApplicationArea = all;
                 }
-                field("Variant Code"; Rec."Variant Code")
-                {
-                    Visible = false;
-                    ApplicationArea = All;
-                }
                 field(Description; Rec.Description)
                 {
                     ApplicationArea = All;
@@ -51,6 +46,10 @@ page 50026 "Purchase Enquiry Subform"
                 {
                     ApplicationArea = All;
 
+                }
+                field("Variant Code"; Rec."Variant Code")//B2BSSD18APR2023
+                {
+                    ApplicationArea = All;
                 }
                 field(Quantity; Rec.Quantity)
                 {

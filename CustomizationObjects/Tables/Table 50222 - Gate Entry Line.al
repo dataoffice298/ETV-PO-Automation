@@ -36,17 +36,70 @@ table 50222 "Gate Entry Line_B2B"
         field(5; "Source No."; Code[20])
         {
             DataClassification = CustomerContent;
+            TableRelation = IF ("Source Type" = CONST(Item)) Item
+            ELSE
+            IF ("Source Type" = CONST("Fixed Asset")) "Fixed Asset"
+            else
+            if ("Source Type" = const("Purchase Order")) "Purchase Header";//B2BSSD03MAY2023
+            ValidateTableRelation = false;
 
             trigger OnValidate()
             var
                 FALRec: Record "Fixed Asset";
+                Item: Record Item;
+                ItemLedgEntry: Record "Item Ledger Entry";
             begin
-                if (Rec."Entry Type" = Rec."Entry Type"::Outward) and (FALRec.Get("Source No.")) then begin
-                    Rec.Make := FALRec.Make_B2B;
-                    Rec.ModelNo := FALRec."Model No.";
-                    Rec.SerialNo := FALRec."Serial No.";
+                //B2BSSD06APR2023<<
+                case "Source Type" of
+                    Rec."Source Type"::"Fixed Asset":
+                        IF FALRec.GET("Source No.") THEN BEGIN
+                            "Source No." := FALRec."No.";
+                            Description := FALRec.Description;
+                            Variant := FALRec.Make_B2B;
+                            "Source Name" := FALRec.Description;
+                            Description := FALRec."Description";
+                            ModelNo := FALRec."Model No.";
+                            SerialNo := FALRec."Serial No.";
+                            "Avail/UnAvail" := FALRec."available/Unavailable";//B2BSSD07JUN2023
+                        END;
+                    Rec."Source Type"::Item:
+                        if Item.Get("Source No.") then begin
+                            "Source No." := Item."No.";
+                            "Source Name" := Item.Description;
+                            Description := Item.Description;
+                            "Unit of Measure" := Item."Base Unit of Measure";
+                        end;
                 end;
+                if (StrPos("Source No.", ',')) > 1 then begin
+                    if SelectStr(2, Rec."Source No.") = 'FIXED ASSET' then
+                        Rec."Source Type" := Rec."Source Type"::"Fixed Asset"
+                    else
+                        Rec."Source Type" := Rec."Source Type"::Item;
+                    IF SelectStr(1, Rec."Source No.") <> '' then begin
+                        Rec."Source No." := SelectStr(1, Rec."Source No.");
+                        if Rec."Source Type" = Rec."Source Type"::"Fixed Asset" then
+                            Validate(Quantity, 1);
+                        if FALRec.Get(Rec."Source No.") then
+                            Rec.ModelNo := FALRec."Model No.";
+                        Rec.SerialNo := FALRec."Serial No.";
+                        Rec."Source Name" := FALRec."Description";
+                        Rec.Description := FALRec."Description";
+                        Rec.Variant := FALRec.Make_B2B;
+                    END;
+                end;
+                //B2BSSD06APR2023>>
+
+                //B2BSSD25APR2023<<
+                ItemLedgEntry.Reset();
+                ItemLedgEntry.SetRange("Item No.", "Source No.");
+                itemLedgEntry.SetRange("Variant Code", Variant);
+                if itemLedgEntry.FindLast then
+                    repeat
+                        "Avail Qty" += ItemLedgEntry."Remaining Quantity";
+                    until ItemLedgEntry.Next() = 0;
+                //B2BSSD25APR2023>>
             end;
+
 
         }
         field(6; "Source Name"; Text[200])
@@ -80,13 +133,22 @@ table 50222 "Gate Entry Line_B2B"
         field(26; Quantity; Decimal)
         {
             DataClassification = CustomerContent;
+            //B2BSSD25APR2023<<
+            // trigger OnValidate()
+            // begin
+            //     if "Source Type" = "Source Type"::Item then begin
+            //         if "Quantity" > "Avail Qty" then
+            //             Error('Quantity should not be greater than available quantity');
+            //     end;
+            // end;
+            //B2BSSD25APR2023>>
         }
         field(27; "Unit of Measure"; code[20])
         {
             DataClassification = CustomerContent;
-
             TableRelation = IF ("Source Type" = CONST(Item)) "Item Unit of Measure".Code ELSE
-            IF ("Source Type" = CONST("Fixed Asset")) "Unit of Measure".Code;
+            IF ("Source Type" = CONST("Fixed Asset")) "Unit of Measure".Code else
+            if ("Source Type" = const(Description)) "Unit of Measure".Code;
         }
         field(29; "Posted RGP OUT NO. Line"; Integer)
         {
@@ -118,6 +180,10 @@ table 50222 "Gate Entry Line_B2B"
         }
         //BaluonNov82022<<
         field(50000; "Avail Qty"; Integer)//B2BSSD03APR2023
+        {
+            DataClassification = CustomerContent;
+        }
+        field(35; "Avail/UnAvail"; Boolean)//B2BSSD07JUN2023
         {
             DataClassification = CustomerContent;
         }

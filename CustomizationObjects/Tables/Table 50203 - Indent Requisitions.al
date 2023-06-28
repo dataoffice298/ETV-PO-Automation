@@ -70,9 +70,7 @@ table 50203 "Indent Requisitions"
             end;
             //B2BSSD09Feb2023>>
         }
-        field(2;
-        Description;
-        Text[50])
+        field(2; Description; Text[50])
         {
 
         }
@@ -285,6 +283,7 @@ table 50203 "Indent Requisitions"
         {
             DataClassification = CustomerContent;
             OptionMembers = Item,"Fixed Assets",Description,"G/L Account",Resource;
+            OptionCaption = 'Item,"Fixed Assets",Description,"G/L Account",Resource';//B2BSSD16JUN2023
         }
         field(50015; "Sub Location Code"; Code[20])
         {
@@ -316,9 +315,9 @@ table 50203 "Indent Requisitions"
             Blocked = CONST(false));
         }
         //B2BSSD20Feb2023>>
-
     }
     //B2BSSD17FEB2023>>
+
     keys
     {
         key(Key1; "Document No.", "Line No.")

@@ -761,7 +761,7 @@
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="SNo">
+                        <Textbox Name="Quote_No_">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -779,7 +779,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>SNo</rd:DefaultName>
+                          <rd:DefaultName>Quote_No_</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -807,7 +807,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Description.Value</Value>
+                                  <Value>=Fields!Description1.Value</Value>
                                   <Style>
                                     <FontFamily>Times New Roman</FontFamily>
                                   </Style>
@@ -1209,7 +1209,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!TotalLineAmount.Value</Value>
+                                  <Value>=sum(Fields!Line_Amount.Value)</Value>
                                   <Style>
                                     <FontFamily>Times New Roman</FontFamily>
                                     <Format>0.00;(0.00)</Format>
@@ -1739,9 +1739,6 @@
                 <TablixMember />
                 <TablixMember>
                   <Group Name="Details" />
-                  <Visibility>
-                    <Hidden>=iif(Fields!No_PurchLine.Value &lt;&gt; "", false, true)</Hidden>
-                  </Visibility>
                 </TablixMember>
                 <TablixMember>
                   <KeepWithGroup>After</KeepWithGroup>
@@ -1775,7 +1772,7 @@
             <Top>6.10341cm</Top>
             <Left>0.63183cm</Left>
             <Height>3cm</Height>
-            <Width>18.75081cm</Width>
+            <Width>18.75083cm</Width>
             <ZIndex>10</ZIndex>
             <Style>
               <Border>
@@ -1817,7 +1814,7 @@
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value>=Fields!AmountText.Value</Value>
+                    <Value>=last(Fields!AmountText.Value)</Value>
                     <Style>
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Normal</FontWeight>
@@ -2445,7 +2442,7 @@
             </Style>
           </Textbox>
         </ReportItems>
-        <Height>18.22979cm</Height>
+        <Height>17.51541cm</Height>
         <Style />
       </Body>
       <Width>19.72662cm</Width>
@@ -3087,14 +3084,14 @@ tm3feuutVVVVplTrkZfykiVLqqurR9WP49VTV1d3ww03HD58ePXq1ZweFZLnecPDw2vWrFm5clUQkJQY
         <Field Name="Line_No_">
           <DataField>Line_No_</DataField>
         </Field>
-        <Field Name="SNo">
-          <DataField>SNo</DataField>
-        </Field>
         <Field Name="No_PurchLine">
           <DataField>No_PurchLine</DataField>
         </Field>
-        <Field Name="Description">
-          <DataField>Description</DataField>
+        <Field Name="Description1">
+          <DataField>Description1</DataField>
+        </Field>
+        <Field Name="SNo">
+          <DataField>SNo</DataField>
         </Field>
         <Field Name="HSN_SAC_Code">
           <DataField>HSN_SAC_Code</DataField>

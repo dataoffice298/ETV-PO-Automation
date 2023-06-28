@@ -103,6 +103,14 @@ table 50207 "Indent Vendor Items"
             Blocked = CONST(false));
         }
         //B2BSSD20FEB2023>>
+        field(50019; "Programme Name"; code[50])//B2BSSD20MAR2023
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50020; Purpose; Text[250])//B2BSSD21MAR2023
+        {
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

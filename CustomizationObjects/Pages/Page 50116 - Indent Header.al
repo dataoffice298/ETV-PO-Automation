@@ -100,14 +100,28 @@ page 50116 "Indent Header"
                     ApplicationArea = all;
                     Caption = 'Shortcut Dimension 2 Code';
                 }
-               
-                
+
+
                 field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")
                 {
                     ApplicationArea = All;
                     Caption = 'Shortcut Dimension 9 Code';
                 }
-
+                field("programme Name"; Rec."programme Name")//B2BSS20MAR2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'programme Name';
+                }
+                field(Purpose; Rec.Purpose)//B2BSSD21MAR2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'Purpose';
+                }
+                field("Delivery Location"; Rec."Delivery Location")//B2BSSD03MAY2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'Location Code';
+                }
             }
             //B2BPAV<<
             part(indentLine; "Indent Line")
@@ -244,6 +258,8 @@ page 50116 "Indent Header"
                 PromotedCategory = Process;
                 PromotedOnly = true;
                 trigger OnAction()
+                var
+                    ItemVariantLRec: Record "Item Variant";
                 begin
                     Rec.TESTFIELD("Released Status", Rec."Released Status"::Open);
                     Rec.TESTFIELD(Indentor);
@@ -263,7 +279,21 @@ page 50116 "Indent Header"
                                 IndentLine.TestField("Issue Location");
                                 IndentLine.TestField("Issue Sub Location");
                             end;
-                            IndentLine.TestField("Variant Code");
+                            //B2BSSD12APR2023>>
+                            if IndentLine.Type = IndentLine.Type::Item then
+                                //IndentLine.TestField("Variant Code")
+                             if IndentLine."Variant Code" = '' then begin
+                                    ItemVariantLRec.Reset();
+                                    ItemVariantLRec.SetRange("Item No.", IndentLine."No.");
+                                    if ItemVariantLRec.FindFirst() then
+                                        Error('Variant Code must not be empty as variants are defined against to the item - %1 in Line No. - %2.',
+                                             IndentLine."No.", IndentLine."Line No.")
+                                end
+                                else
+                                    if IndentLine.Type = IndentLine.Type::"Fixed Assets" then
+                                        IndentLine.TestField("Variant Code");
+                        //B2BSSD12APR2023<<
+
                         //B2BMSOn27Oct2022<<
                         UNTIL IndentLine.NEXT = 0;
                     IF allinoneCU.CheckIndentDocApprovalsWorkflowEnabled(Rec) then
@@ -498,6 +528,7 @@ page 50116 "Indent Header"
                             Error(RelError);
                         //B2BMSOn13Sep2022<<
                         Rec.TESTFIELD("Document Date");
+
                         IndentLine.Reset();
                         IndentLine.SETRANGE("Document No.", Rec."No.");
                         IF IndentLine.FIND('-') THEN begin
@@ -539,6 +570,15 @@ page 50116 "Indent Header"
                         text000: Label 'Cannot Reopen the indent if the status is Cancel/Closed.';
                         ArchiveVersion: Integer;
                     begin
+                        //B2BSSD29MAY2023
+                        IndentHeader.Reset();
+                        IndentHeader.SetRange("No.", ArchiveIndHdr."No.");
+                        if IndentHeader.FindFirst() then begin
+                            if IndentHeader."Released Status" = IndentHeader."Released Status"::Released then begin
+                                IndentHeader.TestField("Ammendent Comments");
+                            end;
+                        end;
+                        //B2BSSD29MAY2023
                         IF NOT (Rec."Indent Status" = Rec."Indent Status"::Close) OR (Rec."Indent Status" = Rec."Indent Status"::Cancel) THEN BEGIN
                             //B2BMSOn02Nov2022>>
                             ArchiveIndHdr.Reset();
@@ -660,6 +700,8 @@ page 50116 "Indent Header"
     end;
     //B2BVCOn28Sep22>>>
 
+
+
     var
         IndentLine: Record "Indent Line";
         IndentHeader: Record "Indent Header";
@@ -728,5 +770,6 @@ page 50116 "Indent Header"
         CanrequestApprovForFlow: Boolean;
         //Approval Actions Variables - B2BMSOn09Sep2022<<
         PageEditable: Boolean;//B2BVCOn28Sep22
+
 }
 

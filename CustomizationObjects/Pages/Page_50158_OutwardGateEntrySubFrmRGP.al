@@ -21,7 +21,7 @@ page 50158 "Outward Gate Entry SubFrm-RGP"
                 field("Source No."; Rec."Source No.")
                 {
                     ApplicationArea = ALL;
-                    trigger OnLookup(var Text: Text): Boolean
+                    /*trigger OnLookup(var Text: Text): Boolean
                     var
                         IndentHdt: Record "Indent Header";
                         FA: record "Fixed Asset";
@@ -32,6 +32,7 @@ page 50158 "Outward Gate Entry SubFrm-RGP"
                     begin
                         if GateEntryHeader.GET(Rec."Entry Type", Rec."Type", Rec."Gate Entry No.") then;
                         case Rec."Source Type" of
+
                             Rec."Source Type"::"Fixed Asset":
                                 begin
                                     FA.Reset();
@@ -41,6 +42,8 @@ page 50158 "Outward Gate Entry SubFrm-RGP"
                                         Rec."Source No." := FA."No.";
                                         Rec."Source Name" := FA.Description;
                                         Rec.Description := FA.Description;
+                                        Rec.ModelNo := FA."Model No.";//B2BSSD04APR2023
+                                        Rec.SerialNo := FA."Serial No.";//B2BSSD04APR2023
                                     end;
                                 end;
                             Rec."Source Type"::Item:
@@ -88,6 +91,7 @@ page 50158 "Outward Gate Entry SubFrm-RGP"
                         TransHeader: Record "Transfer Header";
                         TransShptHeader: Record "Transfer Shipment Header";
                         Text16500: Label 'Source Type must not be blank in %1 %2.';
+                        FA: Record "Fixed Asset";
                     BEGIN
                         if Rec."Source Type" = 0 then
                             ERROR(Text16500, Rec.FIELDCAPTION("Line No."), Rec."Line No.");
@@ -97,7 +101,7 @@ page 50158 "Outward Gate Entry SubFrm-RGP"
                             Rec."Source Name" := '';
                             exit;
                         end;
-                    end;
+                    end;*/
                 }
                 field("Source Name"; Rec."Source Name")
                 {
@@ -110,15 +114,27 @@ page 50158 "Outward Gate Entry SubFrm-RGP"
                 field(Quantity; Rec.Quantity)
                 {
                     ApplicationArea = all;
+
+                    //B2bSSD25APR2023<<
+                    trigger OnValidate()
+                    var
+                        myInt: Integer;
+                    begin
+                        if rec."Source Type" = Rec."Source Type"::Item then begin
+                            if Rec.Quantity > Rec."Avail Qty" then
+                                Error('Quantity should not be greater than Available Quantity');
+                        end;
+                    end;
+                    // B2bSSD25APR2023>>
                 }
                 field("Unit of Measure"; Rec."Unit of Measure")
                 {
                     ApplicationArea = all;
                 }
-                field("Expected Receipt Date"; Rec."Expected Receipt Date")
-                {
-                    ApplicationArea = all;
-                }
+                // field("Expected Receipt Date"; Rec."Expected Receipt Date")
+                // {
+                //     ApplicationArea = all;
+                // }
                 field("Source Line No."; Rec."Source Line No.")
                 {
                     ApplicationArea = all;

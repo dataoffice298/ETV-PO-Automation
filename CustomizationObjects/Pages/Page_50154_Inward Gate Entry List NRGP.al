@@ -41,10 +41,6 @@ page 50154 "Inward Gate Entry List-NRGP"
                 {
                     ApplicationArea = ALL;
                 }
-                field("Item Description"; Rec."Item Description")
-                {
-                    ApplicationArea = ALL;
-                }
             }
         }
     }

@@ -11,7 +11,6 @@ report 50182 "Regularization Order"
     {
         dataitem("Purchase Header"; "Purchase Header")
         {
-            RequestFilterFields = "No.";
             column(No_; "No.")
             { }
             column(Picture_CompanyInfo; CompanyInfo.Picture)
@@ -59,18 +58,22 @@ report 50182 "Regularization Order"
 
             dataitem("Purchase Line"; "Purchase Line")
             {
+                DataItemLinkReference = "Purchase Header";
                 DataItemLink = "Document No." = field("No.");
+                //DataItemLink = "Document Type" = field("Document Type"), "Document No." = field("No.");
                 DataItemTableView = sorting("Document Type", "Document No.", "Line No.");
 
                 column(Document_No_; "Document No.")
                 { }
                 column(Line_No_; "Line No.")
                 { }
-                column(SNo; SNo)
-                { }
                 column(No_PurchLine; "No.")
                 { }
-                column(Description; Description)
+                column(Description1; Description)
+                {
+
+                }
+                column(SNo; SNo)
                 { }
                 column(HSN_SAC_Code; "HSN/SAC Code")
                 { }
@@ -99,24 +102,38 @@ report 50182 "Regularization Order"
                 end;
 
                 trigger OnAfterGetRecord()
+                var
+                    purOr: Record "Purchase Header";
                 begin
                     SNo += 1;
                     Clear(CGSTAmt);
                     Clear(SGSTAmt);
                     Clear(IGSSTAmt);
 
-                    TotalLineAmount += "Purchase Line"."Line Amount";
+                    // TotalLineAmount += "Purchase Line"."Line Amount";
 
-                    GetGSTAmounts("Purchase Line");
-                    TotalGSTAmount += CGSTAmt + SGSTAmt + IGSSTAmt;
+                    // GetGSTAmounts("Purchase Line");
+                    // TotalGSTAmount += CGSTAmt + SGSTAmt + IGSSTAmt;
+                    Clear(GstTotal);
+
+                    GstTotal := CGSTAmt + SGSTAmt + IGSSTAmt;
+                    GstTotalSum := GstTotalSum + GstTotal;
+                    //GSTPerQTY := GstTotal / Quantity;
+                    //GSTPertotal := CGSTPer + SGSTPer + IGSTPer;
+                    //Message('%1', GstTotal);
+                    Clear(AmountVendor1);
+                    AmountVendor += "Line Amount";
+                    AmountVendor1 := AmountVendor + GstTotalSum;
+                    GateEntryPostYesNo.InitTextVariable;
+                    GateEntryPostYesNo.FormatNoText(AmountText, Round(AmountVendor1, 1, '='), "Currency Code");
                 end;
 
                 trigger OnPostDataItem()
                 begin
-                    TotalOrderAmount := TotalLineAmount + TotalGSTAmount;
+                    /*TotalOrderAmount := TotalLineAmount + TotalGSTAmount;
                     Clear(AmountText);
                     GateEntryPostYesNo.InitTextVariable;
-                    GateEntryPostYesNo.FormatNoText(AmountText, Round(TotalOrderAmount, 1, '='), "Currency Code");
+                    GateEntryPostYesNo.FormatNoText(AmountText, Round(TotalOrderAmount, 1, '='), "Currency Code");*/
                 end;
             }
 
@@ -198,10 +215,8 @@ report 50182 "Regularization Order"
                 PurchLine.SetFilter("No.", '<>%1', '');
                 if PurchLine.FindFirst() then
                     if IndentHdr.Get(PurchLine."Indent No.") then;
-
                 Subject := StrSubstNo(Subject1, "Quote No.", "Purchase Header"."Document Date");
                 Subject := Subject + StrSubstNo(Subject2, IndentHdr."No.", IndentHdr."Document Date");
-
                 PurchLine.Reset();
                 PurchLine.SetCurrentKey("GST Group Code");
                 PurchLine.SetRange("Document No.", "No.");
@@ -216,7 +231,6 @@ report 50182 "Regularization Order"
             end;
         }
     }
-
 
     var
         CompanyInfo: Record "Company Information";
@@ -234,6 +248,8 @@ report 50182 "Regularization Order"
         SGSTLbl: Label 'SGST';
         CGSTLbl: Label 'CGST';
         GSTLbl: Label 'GST';
+        AmountVendor: Decimal;
+        GstTotalSum: Decimal;
         CGSTAmt: Decimal;
         SGSTAmt: Decimal;
         IGSSTAmt: Decimal;
@@ -242,18 +258,22 @@ report 50182 "Regularization Order"
         TotalGSTAmount: Decimal;
         TotalOrderAmount: Decimal;
         GSTPercent: Decimal;
-        GSTGroupCode: Code[10];
+        GSTGroupCode: Code[50];//B2BSSD28MAR2023 (Length Incre)
         NextLoop: Boolean;
         GSTText: Label 'GST @%1% on S.No. ';
         GSTPerText: Text;
         LineSNo: Text;
         AmountText: array[2] of Text;
+        AmountVendor1: Decimal;
         GateEntryPostYesNo: Codeunit "Gate Entry- Post Yes/No";
         AckLbl: Label 'Please acknowledge the receipt of the order and arrange the material at the earliest.';
         ThankYouLbl: Label 'Thanking you,';
         ETVLbl: Label 'For EENADU TELEVISION PVT. LIMITED';
         GSTAmountLine: array[10] of Decimal;
         I: Integer;
+        PONumber: Code[50];//B2BSSD28MAR2023
+        purcahseOrder: Record "Purchase Header";
+        GstTotal: Decimal;
 
     //GST Starts>>
     local procedure GetGSTAmounts(PurchaseLine: Record "Purchase Line")

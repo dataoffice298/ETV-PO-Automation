@@ -21,13 +21,28 @@ page 50157 "Outward Gate Entry - RGP"
                 field("Location Code"; Rec."Location Code")
                 {
                     ApplicationArea = ALL;
+                    //B2BSSD11APR2023<<
+                    trigger OnValidate()
+                    var
+                        Userwisesetup: Codeunit UserWiseSecuritySetup;
+                    begin
+                        if not Userwisesetup.CheckUserLocation(UserId, Rec."Location Code", 3) then
+                            Error('User %1 dont have permission to location %2', UserId, Rec."Location Code");
+                    end;
+                    //B2BSSD11APR2023>>
                 }
-                //B2BSSD20Dec2022<<
-                field(SubLocation; Rec.SubLocation)
+                field("To Location"; Rec."To Location")//B2BSSD31MAR2023
                 {
                     ApplicationArea = All;
-                    TableRelation = Location;
+                    Caption = 'To Location';
                 }
+                //B2BSSD20Dec2022<<
+                // field(SubLocation; Rec.SubLocation)
+                // {
+                //     ApplicationArea = All;
+                //     TableRelation = Location;
+                //     Importance = Additional;
+                // }
                 //B2BSSD20Dec2022>>
                 field("No."; Rec."No.")
                 {
@@ -58,11 +73,6 @@ page 50157 "Outward Gate Entry - RGP"
                     ApplicationArea = ALL;
                     Visible = false;
                 }
-                field("Item Description"; Rec."Item Description")
-                {
-                    ApplicationArea = ALL;
-                    Visible = false;
-                }
                 field("Document Date"; Rec."Document Date")
                 {
                     ApplicationArea = ALL;
@@ -78,11 +88,13 @@ page 50157 "Outward Gate Entry - RGP"
                 field("Posting Time"; Rec."Posting Time")
                 {
                     ApplicationArea = ALL;
+                    Importance = Additional;
                 }
 
                 field("Vehicle No."; Rec."Vehicle No.")
                 {
                     ApplicationArea = ALL;
+                    ShowMandatory = true;
                     trigger OnValidate()
                     begin
                         Rec.TestField("Vehicle No.");
@@ -96,11 +108,15 @@ page 50157 "Outward Gate Entry - RGP"
                 {
                     ApplicationArea = ALL;
                 }
-                field("Channel  Code"; Rec."Channel  Code")
+                field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")//B2BSSD27MAR2023
                 {
                     ApplicationArea = All;
                 }
-                field("Department Code"; Rec."Department Code")
+                field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")//B2BSSD27MAR2023
+                {
+                    ApplicationArea = All;
+                }
+                field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")//B2BSSD27MAR2023
                 {
                     ApplicationArea = All;
                 }
@@ -128,18 +144,22 @@ page 50157 "Outward Gate Entry - RGP"
                 field("User Name"; Rec."User Name")
                 {
                     ApplicationArea = All;
+                    Importance = Additional;
                 }
                 field(Designation; Rec.Designation)
                 {
                     ApplicationArea = All;
+                    Importance = Additional;
                 }
                 field(Purpose; Rec.Purpose)
                 {
                     ApplicationArea = All;
+                    Importance = Additional;
                 }
                 field(Program; Rec.Program)
                 {
                     ApplicationArea = All;
+                    Importance = Additional;//B2BSSD31MAR2023
                 }
                 field(ExpectedDateofReturn; Rec.ExpectedDateofReturn)
                 {
@@ -157,7 +177,6 @@ page 50157 "Outward Gate Entry - RGP"
             }
         }
     }
-
     actions
     {
         /*area(navigation)

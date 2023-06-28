@@ -34,9 +34,11 @@ report 50178 "In Transit"
                     Reservationentry.SetRange("Source ID", "Document No.");
                     Reservationentry.SetRange("Source Type", 5741);
                     Reservationentry.SetRange("Source Prod. Order Line", "Line No.");
-                    if Reservationentry.FindFirst() then;
+                    if Reservationentry.FindFirst() then
+                        LotNo := Reservationentry."Lot No.";//B2BSSD28MAR2023
+                    SerialNo := Reservationentry."Serial No.";//B2BSSD28MAR2023
                     //B2BSSD_08Dec2022>>
-
+                    
                     SNo += 1;
                     ExcelBuffer1.NewRow();
                     ExcelBuffer1.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Number);
@@ -51,10 +53,10 @@ report 50178 "In Transit"
                     ExcelBuffer1.AddColumn("Transfer Line"."Item No.", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
                     ExcelBuffer1.AddColumn("Transfer Line".Description, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
                     ExcelBuffer1.AddColumn("Transfer Line"."Unit of Measure Code", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn('', FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn(Reservationentry."Lot No.", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn(Reservationentry."Serial No.", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
-                    ExcelBuffer1.AddColumn("Transfer Line".Quantity, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
+                    ExcelBuffer1.AddColumn("Transfer Line"."Variant Code", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);//B2BSSD28MAR2023
+                    ExcelBuffer1.AddColumn(LotNo, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
+                    ExcelBuffer1.AddColumn(SerialNo, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);//B2BSSD28MAR2023
+                    ExcelBuffer1.AddColumn("Transfer Line".Quantity, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);//B2BSSD28MAR2023
                     ExcelBuffer1.AddColumn("Transfer Line"."Transfer Price", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
                     ExcelBuffer1.AddColumn("Transfer Line".Amount, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer1."Cell Type"::Text);
 
@@ -123,6 +125,8 @@ report 50178 "In Transit"
         SNo: Integer;
         StartDate: Date;
         EndDate: Date;
+        LotNo: Code[30];//B2BSSD28MAR2023
+        SerialNo: Code[30];//B2BSSD28MAR2023
 
     PROCEDURE MakeInTransitHeader()
     begin

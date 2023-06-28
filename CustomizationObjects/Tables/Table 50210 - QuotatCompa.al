@@ -476,6 +476,19 @@ table 50210 "Quotation Comparison Test"
             DataClassification = CustomerContent;
         }
         //B2BSSD21FEB2023
+        field(60033; "Line Discount %"; Decimal)//B2BSSD15MAR2023
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Line Discount %"';
+        }
+        field(60034; Purpose; Text[250])//B2BSSD23MAR2023
+        {
+            DataClassification = CustomerContent;
+        }
+        field(60035; "Programme Name"; Code[250])//B2BSSD23MAR2023
+        {
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

@@ -39,11 +39,7 @@ page 50148 "Gate Entry List"
                 field(Description; Rec.Description)
                 {
                     ApplicationArea = ALL;
-                }
-                field("Item Description"; Rec."Item Description")
-                {
-                    ApplicationArea = ALL;
-                }
+                }          
             }
         }
     }

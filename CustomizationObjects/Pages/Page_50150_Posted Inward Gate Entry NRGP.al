@@ -26,6 +26,10 @@ page 50150 "Posted Inward Gate Entry-NRGP"
                 {
                     ApplicationArea = ALL;
                 }
+                field("To Location"; Rec."To Location")//B2BSSD31MAR2023
+                {
+                    ApplicationArea = All;
+                }
                 field("Station From/To"; Rec."Station From/To")
                 {
                     ApplicationArea = ALL;

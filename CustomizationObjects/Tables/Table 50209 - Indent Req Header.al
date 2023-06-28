@@ -104,7 +104,7 @@ table 50209 "Indent Req Header"
         {
             CaptionClass = '1,2,2';
             Caption = 'Shortcut Dimension 2 Code';
-            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2),Blocked = CONST(false));
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2), Blocked = CONST(false));
         }
         //B2BSSD20Feb2023<<
         field(50003; "Shortcut Dimension 9 Code"; Code[20])
@@ -112,9 +112,22 @@ table 50209 "Indent Req Header"
             DataClassification = CustomerContent;
             CaptionClass = '1,2,9';
             Caption = 'Shortcut Dimension 9 Code';
-            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(9),Blocked = CONST(false));
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(9), Blocked = CONST(false));
         }
         //B2BSSD20Feb2023>>
+
+        field(50004; "programme Name"; Code[50])//B2BSSD20MAR2023
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50005; Purpose; Text[250])//B2BSSD21MAR2023
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50006; "Create Purchase Order"; Boolean)//B2BSSD09MAY2023
+        {
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {

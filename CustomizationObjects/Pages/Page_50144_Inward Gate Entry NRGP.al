@@ -18,6 +18,11 @@ page 50144 "Inward Gate Entry-NRGP"
                 {
                     ApplicationArea = ALL;
                 }
+                field("To Location"; Rec."To Location")//B2BSSD31MAR2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'To Location';
+                }
                 field(Type; Rec.Type)
                 {
                     ApplicationArea = all;
@@ -60,10 +65,6 @@ page 50144 "Inward Gate Entry-NRGP"
                 {
                     ApplicationArea = ALL;
                 }
-                field("Item Description"; Rec."Item Description")
-                {
-                    ApplicationArea = ALL;
-                }
                 field("Document Date"; Rec."Document Date")
                 {
                     ApplicationArea = ALL;
@@ -95,7 +96,9 @@ page 50144 "Inward Gate Entry-NRGP"
                 }
                 //BaluonNov82022>>
                 field(Purpose; rec.Purpose)
-                { }
+                {
+                    Importance = Additional;
+                }
                 field(InstallationFromDate; rec.InstallationFromDate)
                 {
                     ApplicationArea = all;
@@ -119,6 +122,7 @@ page 50144 "Inward Gate Entry-NRGP"
                 field(SubLocation; rec.SubLocation)
                 {
                     ApplicationArea = all;
+                    Importance = Additional;
                 }
                 field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {
@@ -135,10 +139,12 @@ page 50144 "Inward Gate Entry-NRGP"
                 field(Designation; rec.Designation)
                 {
                     ApplicationArea = all;
+                    Importance = Additional;
                 }
                 field(Program; rec.Program)
                 {
                     ApplicationArea = all;
+                    Importance = Additional;
                 }
                 //BaluonNov82022<<
             }

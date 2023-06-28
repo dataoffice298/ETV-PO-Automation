@@ -8,6 +8,7 @@ page 50174 "Transfer Indent Line"
     PageType = ListPart;
     SourceTable = "Indent Line";
     Caption = 'Transfer Indent Line';
+    //RefreshOnActivate = true;//B2BSSD23MAY2023
     SourceTableView = where("Indent Transfer" = const(true));//BaluOn19Oct2022>>
 
 
@@ -38,6 +39,24 @@ page 50174 "Transfer Indent Line"
                 {
                     Caption = 'Location Code';
                     ApplicationArea = All;
+                    //B2BSSD23MAY2023>>
+                    trigger OnValidate()
+                    var
+                        ItemLedgerEntry: Record "Item Ledger Entry";
+                    begin
+                        Rec."Avail.Qty" := 0;
+                        ItemLedgerEntry.RESET;
+                        ItemLedgerEntry.SETRANGE("Item No.", Rec."No.");
+                        ItemLedgerEntry.SETRANGE("Variant Code", Rec."Variant Code");
+                        ItemLedgerEntry.SETRANGE("Location Code", Rec."Delivery Location");
+                        IF ItemLedgerEntry.FINDFIRST THEN
+                            REPEAT
+                                Rec."Avail.Qty" += ItemLedgerEntry."Remaining Quantity";
+                            UNTIL ItemLedgerEntry.NEXT = 0;
+                        CurrPage.Update(true);
+                    end;
+                    //B2BSSD23MAY2023>>
+
                 }
                 field("Avail.Qty"; Rec."Avail.Qty")
                 {
@@ -46,11 +65,28 @@ page 50174 "Transfer Indent Line"
                 field("Req.Quantity"; rec."Req.Quantity")
                 {
                     ApplicationArea = All;
+                    //B2BSSD25APR2023<<
+                    trigger OnValidate()
+                    var
+                        myInt: Integer;
+                    begin
+                        if Rec.Type = Rec.Type::Item then begin
+                            if Rec."Req.Quantity" > Rec."Avail.Qty" then
+                                Error('Required Quantity should not be greater than Available Quantity');
+                        end;
+                    end;
+                    //B2BSSD25APR2023>>
                 }
                 field("Unit of Measure"; rec."Unit of Measure")
                 {
                     ApplicationArea = All;
                 }
+                //B2BSSD02Jan2023<<
+                field("Variant Code"; Rec."Variant Code")
+                {
+                    ApplicationArea = All;
+                }
+                //B2BSSD02Jan2023>>
                 field("Due Date"; rec."Due Date")
                 {
                     ApplicationArea = All;
@@ -71,6 +107,10 @@ page 50174 "Transfer Indent Line"
                 {
                     ApplicationArea = all;
                 }
+                field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")//B2BSSD16MAR2023
+                {
+                    ApplicationArea = All;
+                }
                 field("Qty To Issue"; Rec."Qty To Issue")
                 {
                     ApplicationArea = all;
@@ -89,12 +129,11 @@ page 50174 "Transfer Indent Line"
                     ApplicationArea = all;
                     Editable = false;
                 }
-                //B2BSSD02Jan2023<<
-                field("Variant Code"; Rec."Variant Code")
+                field("Indent No"; Rec."Indent No")//B2BSSD23MAR2023
                 {
                     ApplicationArea = All;
+                    Editable = false;
                 }
-                //B2BSSD02Jan2023>>
             }
         }
     }
@@ -190,6 +229,23 @@ page 50174 "Transfer Indent Line"
         rec."Indent Transfer" := true;
     end;
     //BaluOn19Oct2022<<
+
+    //B2BSSD23MAY2023>>
+    trigger OnAfterGetCurrRecord()
+    var
+        ItemLedgerEntry: Record "Item Ledger Entry";
+    begin
+        Rec."Avail.Qty" := 0;
+        ItemLedgerEntry.RESET;
+        ItemLedgerEntry.SETRANGE("Item No.", Rec."No.");
+        ItemLedgerEntry.SETRANGE("Variant Code", Rec."Variant Code");
+        ItemLedgerEntry.SETRANGE("Location Code", Rec."Delivery Location");
+        IF ItemLedgerEntry.FINDFIRST THEN
+            REPEAT
+                Rec."Avail.Qty" += ItemLedgerEntry."Remaining Quantity";
+            UNTIL ItemLedgerEntry.NEXT = 0;
+    end;
+    //B2BSSD23MAY2023<<
 
     var
         ItemLedgerEntry: Record 32;

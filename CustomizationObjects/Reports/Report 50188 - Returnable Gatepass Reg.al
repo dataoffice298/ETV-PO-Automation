@@ -20,24 +20,31 @@ report 50188 "Returnable Gatepass Reg"
                 var
                     PostedRgpOutWard: Record "Posted Gate Entry Header_B2B";
                     i: Integer;
-                    Quantitypost: Integer;
+                    //Quantitypost: Integer;
+                    postedGateEntryHeader: Record "Posted Gate Entry Header_B2B";
                 begin
-                   
-                            SNo += 1;
-                            ExcelBuffer.NewRow();
-                            ExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
-                            ExcelBuffer.AddColumn("Posted Gate Entry Header_B2B"."No.", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
-                            ExcelBuffer.AddColumn("Posted Gate Entry Header_B2B"."Document Date", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Date);
-                            ExcelBuffer.AddColumn("Posted Gate Entry Line_B2B"."Source No.", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
-                            ExcelBuffer.AddColumn("Posted Gate Entry Line_B2B"."Source Name", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
-                            ExcelBuffer.AddColumn("Posted Gate Entry Line_B2B".Variant, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
-                            ExcelBuffer.AddColumn("Posted Gate Entry Line_B2B"."Unit of Measure", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
-                            ExcelBuffer.AddColumn("Posted Gate Entry Line_B2B".SerialNo, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
-                            ExcelBuffer.AddColumn("Posted Gate Entry Line_B2B".ModelNo, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
-                            ExcelBuffer.AddColumn(Quantitypost, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
-                            ExcelBuffer.AddColumn('', FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
-                            ExcelBuffer.AddColumn("Posted Gate Entry Header_B2B"."Location Code", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
-                            ExcelBuffer.AddColumn("Posted Gate Entry Line_B2B".Status, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);      
+
+                    SNo += 1;
+                    ExcelBuffer.NewRow();
+                    ExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
+                    ExcelBuffer.AddColumn("Posted Gate Entry Header_B2B"."No.", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
+                    ExcelBuffer.AddColumn("Posted Gate Entry Header_B2B"."Document Date", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Date);
+                    ExcelBuffer.AddColumn("Posted Gate Entry Line_B2B"."Source No.", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
+                    ExcelBuffer.AddColumn("Posted Gate Entry Line_B2B"."Source Name", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
+                    ExcelBuffer.AddColumn("Posted Gate Entry Line_B2B".Variant, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
+                    ExcelBuffer.AddColumn("Posted Gate Entry Line_B2B"."Unit of Measure", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
+                    ExcelBuffer.AddColumn("Posted Gate Entry Line_B2B".SerialNo, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
+                    ExcelBuffer.AddColumn("Posted Gate Entry Line_B2B".ModelNo, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
+                    //B2BSSD28MAR2023<<
+                    ExcelBuffer.AddColumn("Posted Gate Entry Line_B2B".Quantity, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
+                    postedGateEntryHeader.Reset();
+                    postedGateEntryHeader.SetRange("No.", "Gate Entry No.");
+                    IF postedGateEntryHeader.FindFirst() then
+                        RETURNDATE := postedGateEntryHeader.ExpectedDateofReturn;
+                    ExcelBuffer.AddColumn(RETURNDATE, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
+                    //B2BSSD28MAR2023>>
+                    ExcelBuffer.AddColumn("Posted Gate Entry Header_B2B"."Location Code", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
+                    ExcelBuffer.AddColumn("Posted Gate Entry Line_B2B".Status, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
                 end;
             }
             trigger OnPreDataItem()
@@ -90,6 +97,7 @@ report 50188 "Returnable Gatepass Reg"
         StartDate: Date;
         EndDate: Date;
         ExcelBuffer: Record "Excel Buffer" temporary;
+        RETURNDATE: Date;//B2BSSD28MAR2023
 
 
     PROCEDURE MakeInTransitHeader()

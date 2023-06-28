@@ -44,6 +44,32 @@ pageextension 50100 PosPurchReceipt extends "Posted Purchase Receipt"
                 Editable = false;
             }
         }
+        addafter("Shortcut Dimension 2 Code")//B2BSSD20APR2023
+        {
+            field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")
+            {
+                ApplicationArea = All;
+                Editable = false;
+            }
+        }
+
+        //B2BSSD23MAR2023<<
+        addafter("Order No.")
+        {
+            field(programmeName; Rec."Programme Name")
+            {
+                ApplicationArea = All;
+                Caption = 'Programme Name';
+                Editable = false;
+            }
+            field(Purpose; Rec.Purpose)
+            {
+                ApplicationArea = All;
+                Caption = 'Purpose';
+                Editable = false;
+            }
+        }
+        //B2BSSD23MAR2023>>
     }
 
     actions
@@ -70,5 +96,6 @@ pageextension 50100 PosPurchReceipt extends "Posted Purchase Receipt"
             }
         }
     }
-
+var
+purline :Record "Purchase Line";
 }

@@ -21,12 +21,13 @@ report 50165 "User Indent Status Report"
                     ApprovalEntry: Record "Approval Entry";
                     CATEGORY: Text[100];//B2BSSD30Dec2022
                     FADepreciationBookOld: Record "FA Depreciation Book";//B2BSSD30Dec2022
+                    IndentorName: Code[30];//B2BSSD27MAR2023
                 begin
-                    SNo += 1;
 
                     Users.Reset();
                     Users.SetRange("User Name", "Indent Header".Indentor);
-                    if Users.FindFirst() then;
+                    if Users.FindFirst() then
+                        IndentorName := Users."User Name";//B2BSSD27MAR2023
 
                     if Item.Get("No.") then;
                     if FixedAsset.Get("No.") then;
@@ -62,11 +63,16 @@ report 50165 "User Indent Status Report"
                     end;
                     //B2BSSD30Dec2022>>
 
+                    //B2BSSD11APR2023<<
+                    if "Indent Line"."Req.Quantity" = 0 then
+                        CurrReport.Skip();
+                    //B2BSSD11APR2023>>
+                    SNo += 1;
                     TempExcelBuffer.NewRow();
                     TempExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn("Document No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("Indent Header"."Document Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
-                    TempExcelBuffer.AddColumn(Users."Full Name", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn(IndentorName, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD27MAR2023
                     TempExcelBuffer.AddColumn("Indent Line".Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("Req.Quantity", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn("Unit of Measure", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
@@ -74,7 +80,6 @@ report 50165 "User Indent Status Report"
                     TempExcelBuffer.AddColumn("Release Status", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     //TempExcelBuffer.AddColumn("Indent Header".Authorized, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("Indent Header"."Approver Name", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text); //B2BSSD21Dec2022
-                    //TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn(CATEGORY, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD30Dec2022
                     TempExcelBuffer.AddColumn("Variant Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn("Indent Line"."Spec Id", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number); //B2BSSD30Dec2022

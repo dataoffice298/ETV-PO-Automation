@@ -72,7 +72,22 @@ pageextension 50073 pageextension70000001 extends "Purchase Quote"
             }
         }
         //B2BSSD25Jan2023>>
-
+        addafter("Approval Status")//B2BSSD20MAR2023
+        {
+            field("Programme Name"; Rec."Programme Name")
+            {
+                ApplicationArea = All;
+                Caption = 'Programme Name';
+            }
+        }
+        addafter("Programme Name")
+        {
+            field(Purpose; Rec.Purpose)
+            {
+                ApplicationArea = All;
+                Caption = 'Purpose';
+            }
+        }
     }
     //B2BSSD017Feb2023<<
     actions

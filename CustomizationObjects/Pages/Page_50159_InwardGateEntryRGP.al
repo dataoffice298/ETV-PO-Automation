@@ -20,6 +20,21 @@ page 50159 "Inward Gate Entry-RGP"
                 field("Location Code"; Rec."Location Code")
                 {
                     ApplicationArea = ALL;
+                    //B2BSSD11APR2023<<
+                    trigger OnValidate()
+                    var
+                        Userwisesetup: Codeunit UserWiseSecuritySetup;
+                    begin
+                        if not Userwisesetup.CheckUserLocation(UserId, Rec."Location Code", 2) then
+                            Error('User %1 dont have permission to location %2', UserId, Rec."Location Code");
+                    end;
+                    //B2BSSD11APR2023>>
+                }
+                field("To Location"; Rec."To Location")//B2BSSD31MAR2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'To Location';
+                    TableRelation = Location;//B2BSSD31MAR2023
                 }
                 field("No."; Rec."No.")
                 {
@@ -57,10 +72,6 @@ page 50159 "Inward Gate Entry-RGP"
                 {
                     ApplicationArea = ALL;
                 }
-                field("Item Description"; Rec."Item Description")
-                {
-                    ApplicationArea = ALL;
-                }
                 field("Document Date"; Rec."Document Date")
                 {
                     ApplicationArea = ALL;
@@ -92,7 +103,9 @@ page 50159 "Inward Gate Entry-RGP"
                 }
                 //BaluonNov82022>>
                 field(Purpose; rec.Purpose)
-                { }
+                {
+                    Importance = Additional;//B2BSSD31MAR2023
+                }
                 field(InstallationFromDate; rec.InstallationFromDate)
                 {
                     ApplicationArea = all;
@@ -116,11 +129,13 @@ page 50159 "Inward Gate Entry-RGP"
                 field(ExpectedDateofReturn; rec.ExpectedDateofReturn)
                 {
                     ApplicationArea = all;
+                    Importance = Additional;
 
                 }
                 field(SubLocation; rec.SubLocation)
                 {
                     ApplicationArea = all;
+                    Importance = Additional;//B2BSSD31MAR2023
                 }
                 field("Shortcut Dimension 1 Code"; rec."Shortcut Dimension 1 Code")
                 {
@@ -137,10 +152,11 @@ page 50159 "Inward Gate Entry-RGP"
                 field(Designation; rec.Designation)
                 {
                     ApplicationArea = all;
+                    Importance = Additional;//B2BSSD31MAR2023
                 }
                 field(Program; rec.Program)
                 {
-
+                    Importance = Additional;//B2BSSD31MAR2023
                 }
                 //BaluonNov82022<<
 
@@ -148,10 +164,12 @@ page 50159 "Inward Gate Entry-RGP"
                 field("Posted RGP Outward NO."; Rec."Posted RGP Outward NO.")
                 {
                     ApplicationArea = All;
+                    Editable = false;//B2BSSD07APR2023
                 }
                 field("Posted RGP Outward Date"; Rec."Posted RGP Outward Date")
                 {
                     ApplicationArea = All;
+                    Editable = false;//B2BSSD07APR2023
                 }
                 field("LR/RR No."; Rec."LR/RR No.")
                 {
@@ -160,6 +178,7 @@ page 50159 "Inward Gate Entry-RGP"
                 field("LR/RR Date"; Rec."LR/RR Date")
                 {
                     ApplicationArea = All;
+                    Importance = Additional;//B2BSSD31MAR2023
                 }
 
                 //B2BSSD16Dec2022>>
@@ -168,6 +187,7 @@ page 50159 "Inward Gate Entry-RGP"
                 field("Receipt Date"; Rec."Receipt Date")
                 {
                     ApplicationArea = All;
+                    Importance = Additional;//B2BSSD31MAR2023
                 }
                 //B2BSSD22Dec2022>>
                 field("Challan No."; Rec."Challan No.")
@@ -179,6 +199,7 @@ page 50159 "Inward Gate Entry-RGP"
                 {
                     ApplicationArea = All;
                     Caption = 'Challan Date';
+                    Importance = Additional;//B2BSSD31MAR2023
                 }
             }
             part(Control1500028; "Inward Gate Entry SubFrm-RGP")
@@ -212,6 +233,8 @@ page 50159 "Inward Gate Entry-RGP"
                         PRGPLineRec: Record "Posted Gate Entry Line_B2B";
                         PostCU: Codeunit "Gate Entry- Post Yes/No";
                     begin
+                        Rec.TestField("Challan No.");//B2BSSD15MAR2023
+                        Rec.TestField("Challan Date");//B2BSSD23MAR2023
                         RGPLineRec.RESET;
                         RGPLineRec.SETRANGE("Entry Type", Rec."Entry Type");
                         RGPLineRec.SETRANGE(Type, Rec.Type);
@@ -322,6 +345,81 @@ page 50159 "Inward Gate Entry-RGP"
                     end;
                 }
             }
+            //B2BSSD23MAR2023<<
+            group("Get Posted Rgp OutWard")
+            {
+                action(GETPostedRgpOutwardLines)
+                {
+                    Image = GetEntries;
+                    Caption = 'Get Posted RGP OutWard Entries';
+                    Promoted = true;
+                    PromotedIsBig = true;
+                    PromotedCategory = Process;
+                    PromotedOnly = true;
+                    trigger OnAction()
+                    var
+                        PostedRGPOutward: Record "Posted Gate Entry Header_B2B";
+                        PostedOutwardGateEntryList: Page "PostedOutwardGateEntryList-RGP";
+                        PostedRGPOutward1: Record "Posted Gate Entry Header_B2B";
+                        InwardGateEntry: Record "Gate Entry Header_B2B";
+                        LineNo: Integer;
+                        PostedGateEntryLIne: Record "Posted Gate Entry Line_B2B";
+                        RgpGateEntryInwardLine: Record "Gate Entry Line_B2B";
+                        RGPGateEntryInward: Record "Gate Entry Header_B2B";
+                    begin
+                        Rec.TestField("Approval Status", Rec."Approval Status"::Open);
+                        //B2BSSD05APR2023<<
+                        PostedRGPOutward.Reset();
+                        if PostedRGPOutward.FindSet() then begin
+                            if page.RunModal(Page::"PostedOutwardGateEntryList-RGP", PostedRGPOutward) = Action::LookupOK then begin
+
+
+                                Rec."Vehicle No." := PostedRGPOutward."Vehicle No.";
+                                Rec.Description := PostedRGPOutward.Description;
+                                Rec."Shortcut Dimension 1 Code" := PostedRGPOutward."Shortcut Dimension 1 Code";
+                                Rec."Shortcut Dimension 2 Code" := PostedRGPOutward."Shortcut Dimension 2 Code";
+                                Rec."Shortcut Dimension 9 Code" := PostedRGPOutward."Shortcut Dimension 9 Code";
+                                Rec."Posted RGP Outward NO." := PostedRGPOutward."No.";
+                                Rec."Posted RGP Outward Date" := PostedRGPOutward."Document Date";
+                                Rec."LR/RR No." := PostedRGPOutward."LR/RR No.";
+                                Rec."LR/RR Date" := PostedRGPOutward."LR/RR Date";
+                                Rec."Challan No." := PostedRGPOutward."Challan No.";
+                                Rec."Challan Date" := PostedRGPOutward."Challan Date";
+                                Rec.Purpose := PostedRGPOutward.Purpose;
+                                Rec.Program := PostedRGPOutward.Program;
+                                Rec.ExpectedDateofReturn := PostedRGPOutward.ExpectedDateofReturn;//B2BSSD07APR2023
+                                Rec.Modify();
+                                LineNo := 10000;
+                                PostedGateEntryLIne.Reset();
+                                PostedGateEntryLIne.SetRange("Gate Entry No.", PostedRGPOutward."No.");
+                                if PostedGateEntryLIne.FindSet() then begin
+                                    repeat
+                                        RgpGateEntryInwardLine.Init();
+                                        RgpGateEntryInwardLine."Entry Type" := rec."Entry Type";
+                                        RgpGateEntryInwardLine."Gate Entry No." := Rec."No.";
+                                        RgpGateEntryInwardLine.Type := Rec.Type;
+                                        RgpGateEntryInwardLine."Line No." := LineNo;
+                                        RgpGateEntryInwardLine.Insert(true);
+                                        RgpGateEntryInwardLine."Source Type" := PostedGateEntryLIne."Source Type";
+                                        RgpGateEntryInwardLine."Source No." := PostedGateEntryLIne."Source No.";
+                                        RgpGateEntryInwardLine."Source Name" := PostedGateEntryLIne."Source No.";
+                                        RgpGateEntryInwardLine.Quantity := PostedGateEntryLIne.Quantity;
+                                        RgpGateEntryInwardLine."Unit of Measure" := PostedGateEntryLIne."Unit of Measure";
+                                        RgpGateEntryInwardLine.Description := PostedGateEntryLIne.Description;
+                                        LineNo += 10000;
+                                        RgpGateEntryInwardLine.ModelNo := PostedGateEntryLIne.ModelNo;
+                                        RgpGateEntryInwardLine.SerialNo := PostedGateEntryLIne.SerialNo;
+                                        RgpGateEntryInwardLine.Make := PostedGateEntryLIne.Variant;
+                                        RgpGateEntryInwardLine.Modify(true);
+                                    until PostedGateEntryLIne.Next() = 0;
+                                end;
+                            end;
+                        end;
+                        //B2BSSD05APR2023>>
+                    end;
+                }
+            }
+            //B2BSSD23MAR2023>>
         }
     }
     trigger OnAfterGetRecord()

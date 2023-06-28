@@ -29,7 +29,8 @@ report 50186 "Return Receipt Gatepass"
                     if PostedGateEntryHeader.FindFirst() then;
                     RecepitDate := PostedGateEntryHeader."Document Date";
 
-
+                    if "Posted Gate Entry Header_B2B"."Posted RGP Outward No" = '' then
+                        CurrReport.Skip();
                     SNo += 1;
                     ExcelBuffer.NewRow();
                     ExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
@@ -44,7 +45,7 @@ report 50186 "Return Receipt Gatepass"
                     ExcelBuffer.AddColumn("Posted Gate Entry Line_B2B".Quantity, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
                     ExcelBuffer.AddColumn("Posted Gate Entry Header_B2B"."Document Date", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Date);
                     ExcelBuffer.AddColumn("Posted Gate Entry Header_B2B"."Location Code", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
-                    ExcelBuffer.AddColumn("Posted Gate Entry Line_B2B"."Posted RGP OUT NO.", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);//B2BSSD29Dec2022
+                    ExcelBuffer.AddColumn("Posted Gate Entry Header_B2B"."Posted RGP Outward No", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);//B2BSSD11APR2023
                     ExcelBuffer.AddColumn("Posted Gate Entry Header_B2B"."Posted RGP Outward Date", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Date);//B2BSSD19Jan2023
                 end;
             }

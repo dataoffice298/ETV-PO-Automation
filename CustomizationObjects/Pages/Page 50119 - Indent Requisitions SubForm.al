@@ -71,6 +71,7 @@ page 50119 "Indent Requisitions SubForm"
                 {
                     Editable = false;
                     ApplicationArea = All;
+                    TableRelation = "Unit of Measure";
                 }
                 field("Manufacturer Code"; Rec."Manufacturer Code")
                 {

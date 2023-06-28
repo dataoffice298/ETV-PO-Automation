@@ -1240,6 +1240,7 @@
                                                   <TextRun>
                                                     <Value>=Fields!SNoCapLbl.Value</Value>
                                                     <Style>
+                                                      <FontSize>9pt</FontSize>
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
@@ -1254,26 +1255,6 @@
                                               <Border>
                                                 <Style>Solid</Style>
                                               </Border>
-                                              <TopBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </TopBorder>
-                                              <BottomBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </BottomBorder>
-                                              <LeftBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </LeftBorder>
-                                              <RightBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
                                               <PaddingRight>2pt</PaddingRight>
                                               <PaddingTop>2pt</PaddingTop>
@@ -1293,6 +1274,7 @@
                                                   <TextRun>
                                                     <Value>=Fields!CategoryCapLbl.Value</Value>
                                                     <Style>
+                                                      <FontSize>9pt</FontSize>
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
@@ -1307,26 +1289,6 @@
                                               <Border>
                                                 <Style>Solid</Style>
                                               </Border>
-                                              <TopBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </TopBorder>
-                                              <BottomBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </BottomBorder>
-                                              <LeftBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </LeftBorder>
-                                              <RightBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
                                               <PaddingRight>2pt</PaddingRight>
                                               <PaddingTop>2pt</PaddingTop>
@@ -1346,6 +1308,7 @@
                                                   <TextRun>
                                                     <Value>=Fields!SubCategoryCapLbl.Value</Value>
                                                     <Style>
+                                                      <FontSize>9pt</FontSize>
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
@@ -1360,26 +1323,6 @@
                                               <Border>
                                                 <Style>Solid</Style>
                                               </Border>
-                                              <TopBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </TopBorder>
-                                              <BottomBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </BottomBorder>
-                                              <LeftBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </LeftBorder>
-                                              <RightBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
                                               <PaddingRight>2pt</PaddingRight>
                                               <PaddingTop>2pt</PaddingTop>
@@ -1399,6 +1342,7 @@
                                                   <TextRun>
                                                     <Value>=Fields!ItemNameCapLbl.Value</Value>
                                                     <Style>
+                                                      <FontSize>9pt</FontSize>
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
@@ -1413,26 +1357,6 @@
                                               <Border>
                                                 <Style>Solid</Style>
                                               </Border>
-                                              <TopBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </TopBorder>
-                                              <BottomBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </BottomBorder>
-                                              <LeftBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </LeftBorder>
-                                              <RightBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
                                               <PaddingRight>2pt</PaddingRight>
                                               <PaddingTop>2pt</PaddingTop>
@@ -1452,6 +1376,7 @@
                                                   <TextRun>
                                                     <Value>=Fields!MakeCapLbl.Value</Value>
                                                     <Style>
+                                                      <FontSize>9pt</FontSize>
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
@@ -1466,26 +1391,6 @@
                                               <Border>
                                                 <Style>Solid</Style>
                                               </Border>
-                                              <TopBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </TopBorder>
-                                              <BottomBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </BottomBorder>
-                                              <LeftBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </LeftBorder>
-                                              <RightBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
                                               <PaddingRight>2pt</PaddingRight>
                                               <PaddingTop>2pt</PaddingTop>
@@ -1505,6 +1410,7 @@
                                                   <TextRun>
                                                     <Value>=Fields!UOMCapLbl.Value</Value>
                                                     <Style>
+                                                      <FontSize>9pt</FontSize>
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
@@ -1519,26 +1425,6 @@
                                               <Border>
                                                 <Style>Solid</Style>
                                               </Border>
-                                              <TopBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </TopBorder>
-                                              <BottomBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </BottomBorder>
-                                              <LeftBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </LeftBorder>
-                                              <RightBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
                                               <PaddingRight>2pt</PaddingRight>
                                               <PaddingTop>2pt</PaddingTop>
@@ -1558,6 +1444,7 @@
                                                   <TextRun>
                                                     <Value>=Fields!ChallanQtyCapLbl.Value</Value>
                                                     <Style>
+                                                      <FontSize>9pt</FontSize>
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
@@ -1572,26 +1459,6 @@
                                               <Border>
                                                 <Style>Solid</Style>
                                               </Border>
-                                              <TopBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </TopBorder>
-                                              <BottomBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </BottomBorder>
-                                              <LeftBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </LeftBorder>
-                                              <RightBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
                                               <PaddingRight>2pt</PaddingRight>
                                               <PaddingTop>2pt</PaddingTop>
@@ -1611,6 +1478,7 @@
                                                   <TextRun>
                                                     <Value>=Fields!ReceivedQtyCapLbl.Value</Value>
                                                     <Style>
+                                                      <FontSize>9pt</FontSize>
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
@@ -1625,26 +1493,6 @@
                                               <Border>
                                                 <Style>Solid</Style>
                                               </Border>
-                                              <TopBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </TopBorder>
-                                              <BottomBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </BottomBorder>
-                                              <LeftBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </LeftBorder>
-                                              <RightBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
                                               <PaddingRight>2pt</PaddingRight>
                                               <PaddingTop>2pt</PaddingTop>
@@ -1664,6 +1512,7 @@
                                                   <TextRun>
                                                     <Value>=Fields!AcceptedQtyCapLbl.Value</Value>
                                                     <Style>
+                                                      <FontSize>9pt</FontSize>
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
@@ -1678,26 +1527,6 @@
                                               <Border>
                                                 <Style>Solid</Style>
                                               </Border>
-                                              <TopBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </TopBorder>
-                                              <BottomBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </BottomBorder>
-                                              <LeftBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </LeftBorder>
-                                              <RightBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
                                               <PaddingRight>2pt</PaddingRight>
                                               <PaddingTop>2pt</PaddingTop>
@@ -1717,6 +1546,7 @@
                                                   <TextRun>
                                                     <Value>=Fields!RejectedQtyCapLbl.Value</Value>
                                                     <Style>
+                                                      <FontSize>9pt</FontSize>
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
@@ -1731,26 +1561,6 @@
                                               <Border>
                                                 <Style>Solid</Style>
                                               </Border>
-                                              <TopBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </TopBorder>
-                                              <BottomBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </BottomBorder>
-                                              <LeftBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </LeftBorder>
-                                              <RightBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
                                               <PaddingRight>2pt</PaddingRight>
                                               <PaddingTop>2pt</PaddingTop>
@@ -1770,6 +1580,7 @@
                                                   <TextRun>
                                                     <Value>=Fields!RateCapLbl.Value</Value>
                                                     <Style>
+                                                      <FontSize>9pt</FontSize>
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
@@ -1784,32 +1595,13 @@
                                               <Border>
                                                 <Style>Solid</Style>
                                               </Border>
-                                              <TopBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </TopBorder>
-                                              <BottomBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </BottomBorder>
-                                              <LeftBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </LeftBorder>
-                                              <RightBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
                                               <PaddingRight>2pt</PaddingRight>
                                               <PaddingTop>2pt</PaddingTop>
                                               <PaddingBottom>2pt</PaddingBottom>
                                             </Style>
                                           </Textbox>
+                                          <rd:Selected>true</rd:Selected>
                                         </CellContents>
                                       </TablixCell>
                                       <TablixCell>
@@ -2092,7 +1884,9 @@
                                                 <TextRuns>
                                                   <TextRun>
                                                     <Value>=RowNumber(NOTHING)</Value>
-                                                    <Style />
+                                                    <Style>
+                                                      <FontSize>9pt</FontSize>
+                                                    </Style>
                                                   </TextRun>
                                                 </TextRuns>
                                                 <Style>
@@ -2105,26 +1899,6 @@
                                               <Border>
                                                 <Style>Solid</Style>
                                               </Border>
-                                              <TopBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </TopBorder>
-                                              <BottomBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </BottomBorder>
-                                              <LeftBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </LeftBorder>
-                                              <RightBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
                                               <PaddingRight>2pt</PaddingRight>
                                               <PaddingTop>2pt</PaddingTop>
@@ -2143,7 +1917,9 @@
                                                 <TextRuns>
                                                   <TextRun>
                                                     <Value>=Fields!Item_Category_Code.Value</Value>
-                                                    <Style />
+                                                    <Style>
+                                                      <FontSize>9pt</FontSize>
+                                                    </Style>
                                                   </TextRun>
                                                 </TextRuns>
                                                 <Style>
@@ -2156,26 +1932,6 @@
                                               <Border>
                                                 <Style>Solid</Style>
                                               </Border>
-                                              <TopBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </TopBorder>
-                                              <BottomBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </BottomBorder>
-                                              <LeftBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </LeftBorder>
-                                              <RightBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
                                               <PaddingRight>2pt</PaddingRight>
                                               <PaddingTop>2pt</PaddingTop>
@@ -2194,7 +1950,9 @@
                                                 <TextRuns>
                                                   <TextRun>
                                                     <Value>=Fields!Item_Category_Code.Value</Value>
-                                                    <Style />
+                                                    <Style>
+                                                      <FontSize>9pt</FontSize>
+                                                    </Style>
                                                   </TextRun>
                                                 </TextRuns>
                                                 <Style>
@@ -2245,7 +2003,9 @@
                                                 <TextRuns>
                                                   <TextRun>
                                                     <Value>=Fields!Description.Value</Value>
-                                                    <Style />
+                                                    <Style>
+                                                      <FontSize>9pt</FontSize>
+                                                    </Style>
                                                   </TextRun>
                                                 </TextRuns>
                                                 <Style>
@@ -2258,26 +2018,6 @@
                                               <Border>
                                                 <Style>Solid</Style>
                                               </Border>
-                                              <TopBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </TopBorder>
-                                              <BottomBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </BottomBorder>
-                                              <LeftBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </LeftBorder>
-                                              <RightBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
                                               <PaddingRight>2pt</PaddingRight>
                                               <PaddingTop>2pt</PaddingTop>
@@ -2347,7 +2087,9 @@
                                                 <TextRuns>
                                                   <TextRun>
                                                     <Value>=Fields!Unit_of_Measure.Value</Value>
-                                                    <Style />
+                                                    <Style>
+                                                      <FontSize>9pt</FontSize>
+                                                    </Style>
                                                   </TextRun>
                                                 </TextRuns>
                                                 <Style>
@@ -2360,26 +2102,6 @@
                                               <Border>
                                                 <Style>Solid</Style>
                                               </Border>
-                                              <TopBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </TopBorder>
-                                              <BottomBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </BottomBorder>
-                                              <LeftBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </LeftBorder>
-                                              <RightBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
                                               <PaddingRight>2pt</PaddingRight>
                                               <PaddingTop>2pt</PaddingTop>
@@ -2398,7 +2120,9 @@
                                                 <TextRuns>
                                                   <TextRun>
                                                     <Value>=Fields!Quantity.Value</Value>
-                                                    <Style />
+                                                    <Style>
+                                                      <FontSize>9pt</FontSize>
+                                                    </Style>
                                                   </TextRun>
                                                 </TextRuns>
                                                 <Style>
@@ -2411,26 +2135,6 @@
                                               <Border>
                                                 <Style>Solid</Style>
                                               </Border>
-                                              <TopBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </TopBorder>
-                                              <BottomBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </BottomBorder>
-                                              <LeftBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </LeftBorder>
-                                              <RightBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
                                               <PaddingRight>2pt</PaddingRight>
                                               <PaddingTop>2pt</PaddingTop>
@@ -2449,7 +2153,9 @@
                                                 <TextRuns>
                                                   <TextRun>
                                                     <Value>=Fields!Quantity.Value</Value>
-                                                    <Style />
+                                                    <Style>
+                                                      <FontSize>9pt</FontSize>
+                                                    </Style>
                                                   </TextRun>
                                                 </TextRuns>
                                                 <Style>
@@ -2462,26 +2168,6 @@
                                               <Border>
                                                 <Style>Solid</Style>
                                               </Border>
-                                              <TopBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </TopBorder>
-                                              <BottomBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </BottomBorder>
-                                              <LeftBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </LeftBorder>
-                                              <RightBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
                                               <PaddingRight>2pt</PaddingRight>
                                               <PaddingTop>2pt</PaddingTop>
@@ -2601,8 +2287,9 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Fields!Rate.Value</Value>
+                                                    <Value>=Fields!Direct_Unit_Cost.Value</Value>
                                                     <Style>
+                                                      <FontSize>9pt</FontSize>
                                                       <Format>0.00;(0.00)</Format>
                                                     </Style>
                                                   </TextRun>
@@ -2636,6 +2323,7 @@
                                                   <TextRun>
                                                     <Value>=Fields!BasicAmount.Value</Value>
                                                     <Style>
+                                                      <FontSize>9pt</FontSize>
                                                       <Format>0.00;(0.00)</Format>
                                                     </Style>
                                                   </TextRun>
@@ -2669,6 +2357,7 @@
                                                   <TextRun>
                                                     <Value>=Fields!InvDiscAmount.Value</Value>
                                                     <Style>
+                                                      <FontSize>9pt</FontSize>
                                                       <Format>0.00;(0.00)</Format>
                                                     </Style>
                                                   </TextRun>
@@ -2702,6 +2391,7 @@
                                                   <TextRun>
                                                     <Value>=Fields!SGSTAmt.Value</Value>
                                                     <Style>
+                                                      <FontSize>9pt</FontSize>
                                                       <Format>0.00;(0.00)</Format>
                                                     </Style>
                                                   </TextRun>
@@ -2735,6 +2425,7 @@
                                                   <TextRun>
                                                     <Value>=Fields!CGSTAmt.Value</Value>
                                                     <Style>
+                                                      <FontSize>9pt</FontSize>
                                                       <Format>0.00;(0.00)</Format>
                                                     </Style>
                                                   </TextRun>
@@ -2768,6 +2459,7 @@
                                                   <TextRun>
                                                     <Value>=Fields!NetTotal.Value</Value>
                                                     <Style>
+                                                      <FontSize>9pt</FontSize>
                                                       <Format>0.00;(0.00)</Format>
                                                     </Style>
                                                   </TextRun>

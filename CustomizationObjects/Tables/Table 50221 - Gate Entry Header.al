@@ -46,8 +46,10 @@ table 50221 "Gate Entry Header_B2B"
             var
                 //InvSetUp: Record "Inventory Setup";
                 Location: Record Location;
-
+                UserWiseLocation: Record "Location Wise User";//B2BSSD30MAR2023
+                Userwisesetup: Codeunit UserWiseSecuritySetup;//B2BSSD30MAR2023
             begin
+
                 Location.Get(Rec."Location Code");
                 case "Entry Type" of
                     "Entry Type"::Inward:
@@ -85,10 +87,10 @@ table 50221 "Gate Entry Header_B2B"
         {
             DataClassification = CustomerContent;
         }
-        field(9; "Item Description"; Text[120])
+        /*field(9; "Item Description"; Text[120])
         {
             DataClassification = CustomerContent;
-        }
+        }*/
 
         field(12; "Vehicle No."; Code[20])
         {
@@ -143,20 +145,16 @@ table 50221 "Gate Entry Header_B2B"
             TableRelation = User."User Name";
             //This property is currently not supported
             //TestTableRelation = false;
-
             trigger OnLookup();
             var
                 UserMgt: Codeunit "User Management";
             begin
                 //UserMgt.LookupUserID("User ID");TEST
             end;
-
         }
         field(53; "User Name"; Code[50])
         {
             DataClassification = CustomerContent;
-            TableRelation = User."Full Name";
-
         }
         field(21; "Approval Status"; enum ApprovalStatus)
         {
@@ -333,7 +331,7 @@ table 50221 "Gate Entry Header_B2B"
         field(50; "Posted RGP Outward NO."; Code[20])
         {
             DataClassification = CustomerContent;
-            TableRelation = "Posted Gate Entry Header_B2B"."No.";
+            TableRelation = "Posted Gate Entry Header_B2B"."No." where("Entry Type" = const(Outward), Type = const(RGP));//B2BSSD21MAR2023
             trigger OnValidate()
 
             var
@@ -359,7 +357,7 @@ table 50221 "Gate Entry Header_B2B"
         {
             DataClassification = CustomerContent;
         }
-        field(55; "Department Code"; Code[20])
+        /*field(55; "Department Code"; Code[20])
         {
             //B2BSSD20Jan2023<<
             CaptionClass = '1,2,1';
@@ -378,7 +376,7 @@ table 50221 "Gate Entry Header_B2B"
             Blocked = CONST(false));
             //B2BSSD20Jan2023>>
             DataClassification = CustomerContent;
-        }
+        }*/
         //B2BSSD16Dec2022>>
 
         //B2BSSD22Dec2022<<
@@ -420,6 +418,11 @@ table 50221 "Gate Entry Header_B2B"
             DataClassification = CustomerContent;
             Caption = 'Indent Line No';
         }
+        field(50006; "To Location"; Text[50])//B2BSSD31MAR2023
+        {
+            DataClassification = CustomerContent;
+            TableRelation = Location;
+        }
     }
 
     keys
@@ -451,12 +454,15 @@ table 50221 "Gate Entry Header_B2B"
     trigger OnInsert();
     var
         Location: Record Location;
+        user: Record User;//B2BSSD25APR2023
+        RgpOutward: Record "Gate Entry Header_B2B";
     begin
         "Document Date" := WORKDATE;
         "Document Time" := TIME;
         "Posting Date" := WORKDATE;
         "Posting Time" := TIME;
         "User ID" := USERID;
+
 
         Location.Get(Rec."Location Code");
         case "Entry Type" of
@@ -488,6 +494,7 @@ table 50221 "Gate Entry Header_B2B"
                 end;
 
         end;
+
 
     end;
 
@@ -559,7 +566,23 @@ table 50221 "Gate Entry Header_B2B"
         else
             IF GAteENtLines.FINDSET then
                 repeat
-                    GAteENtLines.TestField("Source No.");
+                    //B2BSSD23MAR2023<<
+                    if GAteENtLines."Source Type" = GAteENtLines."Source Type"::Item then
+                        GAteENtLines.TestField("Source No.")
+                    else
+                        if GAteENtLines."Source Type" = GAteENtLines."Source Type"::"Fixed Asset" then
+                            GAteENtLines.TestField("Source No.")
+                        else
+                            if GAteENtLines."Source Type" = GAteENtLines."Source Type"::"Purchase Order" then
+                                GAteENtLines.TestField("Source No.")
+                            else
+                                if GAteENtLines."Source Type" = GAteENtLines."Source Type"::"Transfer Receipt" then
+                                    GAteENtLines.TestField("Source No.")
+                                else
+                                    if GAteENtLines."Source Type" = GAteENtLines."Source Type"::Description then
+                                        GAteENtLines."Source No." := '';
+                    //B2BSSD23MAR2023>>
+
                     //GAteENtLines.TestField("Challan No.");
                     //GAteENtLines.TestField("Challan Date");
                     IF GAteENtLines.Type = GAteENtLines.Type::RGP THEN begin

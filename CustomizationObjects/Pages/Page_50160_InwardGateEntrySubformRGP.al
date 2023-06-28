@@ -22,200 +22,200 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
                 field("Source Type"; Rec."Source Type")
                 {
                     ApplicationArea = ALL;
-                    OptionCaption = ' ,Sales Shipment,Sales Return Order,Purchase Order,Purchase Return Shipment,Transfer Receipt,Transfer Shipment,Item,Fixed Asset,Others,Indent';//Baluonoct112022
+                    OptionCaption = ' ,Sales Shipment,Sales Return Order,Purchase Order,Purchase Return Shipment,Transfer Receipt,Transfer Shipment,Item,Fixed Asset,Others,Indent,Description';//Baluonoct112022
 
                 }
                 field("Source No."; Rec."Source No.")
                 {
                     ApplicationArea = ALL;
-                    trigger OnLookup(var Text: Text): Boolean
-                    var
-                        FA: record "Fixed Asset";
-                        ItemLRec: record Item;
-                        IndentHdt: Record "Indent Header";
-                        GateEntryHeader: Record "Gate Entry Header_B2B";
-                        SalesShipHeader: record "Sales Shipment Header";
-                        SalesHeader: Record "Sales Header";
-                        PurchHeader: Record "Purchase Header";
-                        ReturnShipHeader: Record "Return Shipment Header";
-                        TransHeader: Record "Transfer Header";
-                        TransShptHeader: Record "Transfer Shipment Header";
-                        GateEntryLneLRec: Record "Gate Entry Line_B2B";
-                        GateEntLneLRec: Record "Gate Entry Line_B2B";
-                        LineNoLVar: Integer;
-                        Text16500: Label 'Source Type must not be blank in %1 %2.';
-                        //TraVeh: record "Transporter Vehicle";
-                        SourName: text[100];
-                    begin
-                        GateEntryHeader.GET(Rec."Entry Type", Rec."Type", Rec."Gate Entry No.");
-                        case Rec."Source Type" of
-                            Rec."Source Type"::"Sales Shipment":
-                                begin
-                                    SalesShipHeader.RESET;
-                                    SalesShipHeader.FILTERGROUP(2);
-                                    SalesShipHeader.SETRANGE("Location Code", GateEntryHeader."Location Code");
-                                    SalesShipHeader.FILTERGROUP(0);
-                                    if PAGE.RUNMODAL(0, SalesShipHeader) = ACTION::LookupOK then begin
-                                        Rec."Source No." := SalesShipHeader."No.";
-                                        Rec."Source Name" := SalesShipHeader."Bill-to Name";
-                                    end;
-                                end;
+                    //     trigger OnLookup(var Text: Text): Boolean
+                    //     var
+                    //         FA: record "Fixed Asset";
+                    //         ItemLRec: record Item;
+                    //         IndentHdt: Record "Indent Header";
+                    //         GateEntryHeader: Record "Gate Entry Header_B2B";
+                    //         SalesShipHeader: record "Sales Shipment Header";
+                    //         SalesHeader: Record "Sales Header";
+                    //         PurchHeader: Record "Purchase Header";
+                    //         ReturnShipHeader: Record "Return Shipment Header";
+                    //         TransHeader: Record "Transfer Header";
+                    //         TransShptHeader: Record "Transfer Shipment Header";
+                    //         GateEntryLneLRec: Record "Gate Entry Line_B2B";
+                    //         GateEntLneLRec: Record "Gate Entry Line_B2B";
+                    //         LineNoLVar: Integer;
+                    //         Text16500: Label 'Source Type must not be blank in %1 %2.';
+                    //         //TraVeh: record "Transporter Vehicle";
+                    //         SourName: text[100];
+                    //     begin
+                    //         GateEntryHeader.GET(Rec."Entry Type", Rec."Type", Rec."Gate Entry No.");
+                    //         case Rec."Source Type" of
+                    //             Rec."Source Type"::"Sales Shipment":
+                    //                 begin
+                    //                     SalesShipHeader.RESET;
+                    //                     SalesShipHeader.FILTERGROUP(2);
+                    //                     SalesShipHeader.SETRANGE("Location Code", GateEntryHeader."Location Code");
+                    //                     SalesShipHeader.FILTERGROUP(0);
+                    //                     if PAGE.RUNMODAL(0, SalesShipHeader) = ACTION::LookupOK then begin
+                    //                         Rec."Source No." := SalesShipHeader."No.";
+                    //                         Rec."Source Name" := SalesShipHeader."Bill-to Name";
+                    //                     end;
+                    //                 end;
 
-                            Rec."Source Type"::"Sales Return Order":
-                                begin
-                                    SalesHeader.RESET;
-                                    SalesHeader.FILTERGROUP(2);
-                                    SalesHeader.SETRANGE("Document Type", SalesHeader."Document Type"::"Return Order");
-                                    SalesHeader.SETRANGE("Location Code", GateEntryHeader."Location Code");
-                                    SalesHeader.FILTERGROUP(0);
-                                    if PAGE.RUNMODAL(0, SalesHeader) = ACTION::LookupOK then
-                                        Rec.VALIDATE("Source No.", SalesHeader."No.");
-                                end;
+                    //             Rec."Source Type"::"Sales Return Order":
+                    //                 begin
+                    //                     SalesHeader.RESET;
+                    //                     SalesHeader.FILTERGROUP(2);
+                    //                     SalesHeader.SETRANGE("Document Type", SalesHeader."Document Type"::"Return Order");
+                    //                     SalesHeader.SETRANGE("Location Code", GateEntryHeader."Location Code");
+                    //                     SalesHeader.FILTERGROUP(0);
+                    //                     if PAGE.RUNMODAL(0, SalesHeader) = ACTION::LookupOK then
+                    //                         Rec.VALIDATE("Source No.", SalesHeader."No.");
+                    //                 end;
 
-                            Rec."Source Type"::"Purchase Order":
-                                begin
-                                    PurchHeader.RESET;
-                                    PurchHeader.FILTERGROUP(2);
-                                    PurchHeader.SETRANGE("Document Type", PurchHeader."Document Type"::Order);
-                                    PurchHeader.SETRANGE("Location Code", GateEntryHeader."Location Code");
-                                    PurchHeader.FILTERGROUP(0);
-                                    if PAGE.RUNMODAL(0, PurchHeader) = ACTION::LookupOK then
-                                        Rec.VALIDATE("Source No.", PurchHeader."No.");
-                                end;
-                            Rec."Source Type"::"Purchase Return Shipment":
-                                begin
-                                    ReturnShipHeader.RESET;
-                                    ReturnShipHeader.FILTERGROUP(2);
-                                    ReturnShipHeader.SETRANGE("Location Code", GateEntryHeader."Location Code");
-                                    ReturnShipHeader.FILTERGROUP(0);
-                                    if PAGE.RUNMODAL(0, ReturnShipHeader) = ACTION::LookupOK then begin
-                                        Rec."Source No." := ReturnShipHeader."No.";
-                                        Rec."Source Name" := ReturnShipHeader."Pay-to Name";
-                                    end;
-                                end;
+                    //             Rec."Source Type"::"Purchase Order":
+                    //                 begin
+                    //                     PurchHeader.RESET;
+                    //                     PurchHeader.FILTERGROUP(2);
+                    //                     PurchHeader.SETRANGE("Document Type", PurchHeader."Document Type"::Order);
+                    //                     PurchHeader.SETRANGE("Location Code", GateEntryHeader."Location Code");
+                    //                     PurchHeader.FILTERGROUP(0);
+                    //                     if PAGE.RUNMODAL(0, PurchHeader) = ACTION::LookupOK then
+                    //                         Rec.VALIDATE("Source No.", PurchHeader."No.");
+                    //                 end;
+                    //             Rec."Source Type"::"Purchase Return Shipment":
+                    //                 begin
+                    //                     ReturnShipHeader.RESET;
+                    //                     ReturnShipHeader.FILTERGROUP(2);
+                    //                     ReturnShipHeader.SETRANGE("Location Code", GateEntryHeader."Location Code");
+                    //                     ReturnShipHeader.FILTERGROUP(0);
+                    //                     if PAGE.RUNMODAL(0, ReturnShipHeader) = ACTION::LookupOK then begin
+                    //                         Rec."Source No." := ReturnShipHeader."No.";
+                    //                         Rec."Source Name" := ReturnShipHeader."Pay-to Name";
+                    //                     end;
+                    //                 end;
 
-                            Rec."Source Type"::"Transfer Receipt":
-                                begin
-                                    TransHeader.RESET;
-                                    TransHeader.FILTERGROUP(2);
-                                    TransHeader.SETRANGE("Transfer-to Code", GateEntryHeader."Location Code");
-                                    TransHeader.FILTERGROUP(0);
-                                    if PAGE.RUNMODAL(0, TransHeader) = ACTION::LookupOK then
-                                        Rec.VALIDATE("Source No.", TransHeader."No.");
-                                end;
-                            Rec."Source Type"::"Transfer Shipment":
-                                begin
-                                    TransShptHeader.RESET;
-                                    TransShptHeader.FILTERGROUP(2);
-                                    TransShptHeader.SETRANGE("Transfer-from Code", GateEntryHeader."Location Code");
-                                    TransShptHeader.FILTERGROUP(0);
-                                    if PAGE.RUNMODAL(0, TransShptHeader) = ACTION::LookupOK then begin
-                                        Rec."Source No." := TransShptHeader."No.";
-                                        Rec."Source Name" := TransShptHeader."Transfer-to Name";
-                                    end;
-                                end;
-                            Rec."Source Type"::"Fixed Asset":
-                                begin
-                                    FA.Reset();
-                                    FA.SetRange(Blocked, false);
-                                    FA.FilterGroup(0);
-                                    if PAGE.RUNMODAL(0, FA) = ACTION::LookupOK then begin
-                                        Rec."Source No." := FA."No.";
-                                        Rec."Source Name" := FA.Description;
-                                        Rec.Description := FA.Description;
-                                    end;
-                                end;
-                            Rec."Source Type"::Item:
-                                begin
-                                    ItemLRec.Reset();
-                                    ItemLRec.SetRange(Blocked, false);
-                                    ItemLRec.FilterGroup(0);
-                                    if PAGE.RUNMODAL(0, ItemLRec) = ACTION::LookupOK then begin
-                                        Rec."Source No." := ItemLRec."No.";
-                                        Rec."Source Name" := ItemLRec.Description;
-                                        Rec.Description := ItemLRec.Description;
-                                        Rec."Unit of Measure" := ItemLRec."Base Unit of Measure";
-                                    end;
-                                end;
-                            Rec."Source Type"::Indent:
-                                begin
-                                    IndentHdt.Reset();
-                                    IndentHdt.SetRange("Released Status", IndentHdt."Released Status"::"Pending Approval");
-                                    IndentHdt.FilterGroup(0);
-                                    if PAGE.RUNMODAL(0, ItemLRec) = ACTION::LookupOK then begin
-                                        Rec."Source No." := IndentHdt."No.";
-                                        Rec."Source Name" := IndentHdt.Description;
-                                    end;
-                                end;
-                        end;
-                    end;
+                    //             Rec."Source Type"::"Transfer Receipt":
+                    //                 begin
+                    //                     TransHeader.RESET;
+                    //                     TransHeader.FILTERGROUP(2);
+                    //                     TransHeader.SETRANGE("Transfer-to Code", GateEntryHeader."Location Code");
+                    //                     TransHeader.FILTERGROUP(0);
+                    //                     if PAGE.RUNMODAL(0, TransHeader) = ACTION::LookupOK then
+                    //                         Rec.VALIDATE("Source No.", TransHeader."No.");
+                    //                 end;
+                    //             Rec."Source Type"::"Transfer Shipment":
+                    //                 begin
+                    //                     TransShptHeader.RESET;
+                    //                     TransShptHeader.FILTERGROUP(2);
+                    //                     TransShptHeader.SETRANGE("Transfer-from Code", GateEntryHeader."Location Code");
+                    //                     TransShptHeader.FILTERGROUP(0);
+                    //                     if PAGE.RUNMODAL(0, TransShptHeader) = ACTION::LookupOK then begin
+                    //                         Rec."Source No." := TransShptHeader."No.";
+                    //                         Rec."Source Name" := TransShptHeader."Transfer-to Name";
+                    //                     end;
+                    //                 end;
+                    //             Rec."Source Type"::"Fixed Asset":
+                    //                 begin
+                    //                     FA.Reset();
+                    //                     FA.SetRange(Blocked, false);
+                    //                     FA.FilterGroup(0);
+                    //                     if PAGE.RUNMODAL(0, FA) = ACTION::LookupOK then begin
+                    //                         Rec."Source No." := FA."No.";
+                    //                         Rec."Source Name" := FA.Description;
+                    //                         Rec.Description := FA.Description;
+                    //                     end;
+                    //                 end;
+                    //             Rec."Source Type"::Item:
+                    //                 begin
+                    //                     ItemLRec.Reset();
+                    //                     ItemLRec.SetRange(Blocked, false);
+                    //                     ItemLRec.FilterGroup(0);
+                    //                     if PAGE.RUNMODAL(0, ItemLRec) = ACTION::LookupOK then begin
+                    //                         Rec."Source No." := ItemLRec."No.";
+                    //                         Rec."Source Name" := ItemLRec.Description;
+                    //                         Rec.Description := ItemLRec.Description;
+                    //                         Rec."Unit of Measure" := ItemLRec."Base Unit of Measure";
+                    //                     end;
+                    //                 end;
+                    //             Rec."Source Type"::Indent:
+                    //                 begin
+                    //                     IndentHdt.Reset();
+                    //                     IndentHdt.SetRange("Released Status", IndentHdt."Released Status"::"Pending Approval");
+                    //                     IndentHdt.FilterGroup(0);
+                    //                     if PAGE.RUNMODAL(0, ItemLRec) = ACTION::LookupOK then begin
+                    //                         Rec."Source No." := IndentHdt."No.";
+                    //                         Rec."Source Name" := IndentHdt.Description;
+                    //                     end;
+                    //                 end;
+                    //         end;
+                    //     end;
 
-                    trigger OnValidate()
-                    var
-                        SalesShipHeader: Record "Sales Shipment Header";
-                        SalesHeader: Record "Sales Header";
-                        PurchHeader: Record "Purchase Header";
-                        ReturnShipHeader: Record "Return Shipment Header";
-                        TransHeader: Record "Transfer Header";
-                        TransShptHeader: Record "Transfer Shipment Header";
-                        Text16500: Label 'Source Type must not be blank in %1 %2.';
+                    //     trigger OnValidate()
+                    //     var
+                    //         SalesShipHeader: Record "Sales Shipment Header";
+                    //         SalesHeader: Record "Sales Header";
+                    //         PurchHeader: Record "Purchase Header";
+                    //         ReturnShipHeader: Record "Return Shipment Header";
+                    //         TransHeader: Record "Transfer Header";
+                    //         TransShptHeader: Record "Transfer Shipment Header";
+                    //         Text16500: Label 'Source Type must not be blank in %1 %2.';
 
-                    begin
+                    //     begin
 
-                        if Rec."Source Type" = 0 then
-                            ERROR(Text16500, Rec.FIELDCAPTION("Line No."), Rec."Line No.");
+                    //         if Rec."Source Type" = 0 then
+                    //             ERROR(Text16500, Rec.FIELDCAPTION("Line No."), Rec."Line No.");
 
-                        if Rec."Source No." <> xRec."Source No." then
-                            Rec."Source Name" := '';
-                        if Rec."Source No." = '' then begin
-                            Rec."Source Name" := '';
-                            exit;
-                        end;
-                        case Rec."Source Type" of
-                            Rec."Source Type"::"Purchase Order":
-                                begin
-                                    PurchHeader.GET(PurchHeader."Document Type"::Order, Rec."Source No.");
-                                    Rec."Source Name" := PurchHeader."Pay-to Name";
-                                end;
-                            Rec."Source Type"::"Purchase Return Shipment":
-                                begin
-                                    ReturnShipHeader.GET(Rec."Source No.");
-                                    Rec."Source Name" := ReturnShipHeader."Pay-to Name";
-                                end;
-                            Rec."Source Type"::"Transfer Shipment":
-                                begin
-                                    TransShptHeader.GET(Rec."Source No.");
-                                    Rec."Source Name" := TransShptHeader."Transfer-to Name";
-                                end;
-                        end;
+                    //         if Rec."Source No." <> xRec."Source No." then
+                    //             Rec."Source Name" := '';
+                    //         if Rec."Source No." = '' then begin
+                    //             Rec."Source Name" := '';
+                    //             exit;
+                    //         end;
+                    //         case Rec."Source Type" of
+                    //             Rec."Source Type"::"Purchase Order":
+                    //                 begin
+                    //                     PurchHeader.GET(PurchHeader."Document Type"::Order, Rec."Source No.");
+                    //                     Rec."Source Name" := PurchHeader."Pay-to Name";
+                    //                 end;
+                    //             Rec."Source Type"::"Purchase Return Shipment":
+                    //                 begin
+                    //                     ReturnShipHeader.GET(Rec."Source No.");
+                    //                     Rec."Source Name" := ReturnShipHeader."Pay-to Name";
+                    //                 end;
+                    //             Rec."Source Type"::"Transfer Shipment":
+                    //                 begin
+                    //                     TransShptHeader.GET(Rec."Source No.");
+                    //                     Rec."Source Name" := TransShptHeader."Transfer-to Name";
+                    //                 end;
+                    //         end;
 
-                    end;
+                    //     end;
                 }
                 field("Source Name"; Rec."Source Name")
                 {
                     ApplicationArea = ALL;
                     Editable = false;
                 }
-                field("Posted RGP OUT NO."; Rec."Posted RGP OUT NO.")
-                {
-                    ApplicationArea = all;
-                    trigger OnLookup(var Text: Text): Boolean
-                    var
-                        PRGPLineRec: Record "Posted Gate Entry Line_B2B";
-                    begin
-                        PRGPLineRec.Reset();
-                        PRGPLineRec.SetRange("Entry Type", PRGPLineRec."Entry Type"::Outward);
-                        PRGPLineRec.SetRange(Type, PRGPLineRec.Type::RGP);
-                        PRGPLineRec.SetRange("Source Type", Rec."Source Type");
-                        PRGPLineRec.SetRange("Source No.", Rec."Source No.");
-                        IF PRGPLineRec.FINDFIRST THEN
-                            if PAGE.RUNMODAL(0, PRGPLineRec) = ACTION::LookupOK then begin
-                                Rec."Posted RGP OUT NO." := PRGPLineRec."Gate Entry No.";
-                                Rec."Posted RGP OUT NO. Line" := PRGPLineRec."Line No.";
-                            end;
+                // field("Posted RGP OUT NO."; Rec."Posted RGP OUT NO.")
+                // {
+                //     ApplicationArea = all;
+                //     trigger OnLookup(var Text: Text): Boolean
+                //     var
+                //         PRGPLineRec: Record "Posted Gate Entry Line_B2B";
+                //     begin
+                //         PRGPLineRec.Reset();
+                //         PRGPLineRec.SetRange("Entry Type", PRGPLineRec."Entry Type"::Outward);
+                //         PRGPLineRec.SetRange(Type, PRGPLineRec.Type::RGP);
+                //         PRGPLineRec.SetRange("Source Type", Rec."Source Type");
+                //         PRGPLineRec.SetRange("Source No.", Rec."Source No.");
+                //         IF PRGPLineRec.FINDFIRST THEN
+                //             if PAGE.RUNMODAL(0, PRGPLineRec) = ACTION::LookupOK then begin
+                //                 Rec."Posted RGP OUT NO." := PRGPLineRec."Gate Entry No.";
+                //                 Rec."Posted RGP OUT NO. Line" := PRGPLineRec."Line No.";
+                //             end;
 
-                    end;
-                }
+                //     end;
+                // }
                 field(Quantity; Rec.Quantity)
                 {
                     ApplicationArea = all;
@@ -241,7 +241,6 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
                 field("Unit of Measure"; Rec."Unit of Measure")
                 {
                     ApplicationArea = all;
-
                 }
                 field(Description; Rec.Description)
                 {
@@ -262,12 +261,10 @@ page 50160 "Inward Gate Entry SubFrm-RGP"
                 field(ModelNo; rec.ModelNo)
                 {
                     ApplicationArea = all;
-                    Editable = false; //B2B@SSDon12Dec2022
                 }
                 field(SerialNo; rec.SerialNo)
                 {
                     ApplicationArea = all;
-                    Editable = false; //B2B@SSDon12Dec2022
                 }
                 //BaluonNov82022<<
                 field(Make; Rec.Make)//B2BSSD23FEB2023

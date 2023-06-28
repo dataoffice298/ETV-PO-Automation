@@ -125,6 +125,16 @@ page 50126 "Quotation Comparision Doc"
                     Editable = false;
                 }
                 //B2BMSOn04Nov2022<<
+                field(Purpose; Rec.Purpose)//B2BSSD23MAR2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'Purpose';
+                }
+                field(ProgrammeName; Rec."Programme Name")//B2BSSD23MAR2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'Programme Name';
+                }
             }
 
 
@@ -215,11 +225,12 @@ page 50126 "Quotation Comparision Doc"
                     //POCreationReport.GetValues(Rec.RFQNumber);
                     //POCreationReport.RUN();
                     //B2BMSOn18Oct2022>>
-                    if Confirm('Regularization Activity?', true) then
-                        Rec.Regularization := true
-                    else
-                        Rec.Regularization := false;
-                    Rec.Modify();
+
+                    // if Confirm('Regularization Activity?', true) then//B2BSS04MAY2023
+                    //     Rec.Regularization := true
+                    // else
+                    //     Rec.Regularization := false;
+                    // Rec.Modify();
 
                     //B2BMSOn18Oct2022<<
                     POCreation.GetValues(Rec.RFQNumber);
@@ -305,7 +316,6 @@ page 50126 "Quotation Comparision Doc"
 
                     IF allinoneCU.CheckQuoteComparisionCusApprovalsWorkflowEnabled(Rec) then
                         allinoneCU.OnSendQuoteComparisionCusForApproval(Rec);
-
                 end;
             }
             action("Cancel Approval Request")

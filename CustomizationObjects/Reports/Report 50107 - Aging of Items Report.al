@@ -31,6 +31,8 @@ report 50107 "Aging of Items Report"
 
                 if ItemLedgerEntry.Quantity = 0 then
                     CurrReport.Skip();
+                if Item.Inventory = 0 then
+                    CurrReport.Skip();
 
                 SNo += 1;
                 WindPa.Update(1, "No.");
@@ -55,7 +57,6 @@ report 50107 "Aging of Items Report"
                     Error('Start Date must have a value.');
                 Clear(SNo);
                 MakeExcelHeaders();
-                //ItemLedgerEntry.SetFilter(Quantity, '>0');
             end;
         }
     }

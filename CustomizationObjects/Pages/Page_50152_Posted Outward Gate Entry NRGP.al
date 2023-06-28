@@ -32,6 +32,11 @@ page 50152 "Posted Outward Gate Entry-NRGP"
                 {
                     ApplicationArea = ALL;
                 }
+                field("To Location"; Rec."To Location")
+                {
+                    ApplicationArea = All;
+                    Caption = 'To Location';
+                }
                 field("Station From/To"; Rec."Station From/To")
                 {
                     ApplicationArea = ALL;
@@ -97,6 +102,21 @@ page 50152 "Posted Outward Gate Entry-NRGP"
                     ApplicationArea = All;
                 }
                 //B2BSSD02MAR2023>>
+
+                //B2BSSD23MAR2023<<
+                field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
+                {
+                    ApplicationArea = All;
+                }
+                field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
+                {
+                    ApplicationArea = All;
+                }
+                field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")
+                {
+                    ApplicationArea = All;
+                }
+                //B2BSSD23MAR2023>>
 
             }
             part(Control1500028; "Posted Outward Gate SubFm-NRGP")

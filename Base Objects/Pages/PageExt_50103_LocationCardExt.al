@@ -53,13 +53,45 @@ pageextension 50103 LocationExt_B2B extends "Location Card"
                 }
             }
         }
+        addafter(Name)//B2BSSD29MAR2023
+        {
+            field("Location Type"; Rec."Location Type")
+            {
+                ApplicationArea = All;
+                Caption = 'Location Type';
+                ShowMandatory = true;
+            }
+        }
     }
-
+    //B2BSSD29MAR2023<<
     actions
     {
-        // Add changes to page actions here
+        addafter("Online Map")
+        {
+            action("Location Wise Users")
+            {
+                ApplicationArea = All;
+                Caption = 'Location Wise Users';
+                Image = OpenWorksheet;
+                trigger OnAction()
+                var
+                    locationwise: Record "Location Wise User";
+                    Locationwisepage: Page "Location Wise Users";
+                    ShtErr: Label 'Shooting Location can not be assigned to a User';
+                begin
+                    //B2BSSD31MAR2023<<
+                    if Rec."Location Type" = Rec."Location Type"::Shooting then
+                        Error(ShtErr);
+                    //B2BSSD31MAR2023>>
+                    locationwise.Reset();
+                    locationwise.SetRange("Location Code", Rec.Code);
+                    Locationwisepage.SetTableView(locationwise);
+                    Locationwisepage.Run();
+                end;
+            }
+        }
     }
+    //B2BSSD29MAR2023>>
 
     var
-        myInt: Integer;
 }

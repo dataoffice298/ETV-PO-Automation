@@ -44,7 +44,7 @@ report 50184 "Return Gatepass Return Rcpt"
             { }
             column(User_ID; "User ID")
             { }
-            column(GatepassDt; "Document Date")
+            column(PostedRGPOutwardDate; "Posted RGP Outward Date")//B2BSSD27MAR2023
             { }
             column(Location_Code; "Location Code")
             { }
@@ -126,6 +126,12 @@ report 50184 "Return Gatepass Return Rcpt"
             { }
             column(ReturntoCapLbl; ReturntoCapLbl)
             { }
+            column(UserName; UserName)//B2BSSD27MAR2023
+            { }
+            column(PostedRGPOutwardNo; "Posted RGP Outward No")//B2BSSD27MAR2023
+            { }
+            column(Document_Date; "Document Date")//B2BSSD28MAR2023
+            { }
 
             dataitem("Posted Gate Entry Line_B2B"; "Posted Gate Entry Line_B2B")
             {
@@ -154,13 +160,20 @@ report 50184 "Return Gatepass Return Rcpt"
                 begin
                     Users.Reset();
                     Users.SetRange("User Name", "Posted Gate Entry Header_B2B"."User ID");
-                    if Users.FindFirst() then;
+                    if Users.FindFirst() then
+                        UserName := Users."Full Name";//B2BSSD27MAR2023
                 end;
             }
 
             trigger OnAfterGetRecord()
+            var
+                postedRgpoutward: Record "Posted Gate Entry Header_B2B";
             begin
-
+                postedRgpoutward.Reset();
+                postedRgpoutward.SetRange("No.", "Posted RGP Outward No");
+                postedRgpoutward.SetRange(Type, Type);
+                if postedRgpoutward.FindFirst() then
+                    PostedRgpReturnRcptNo := postedRgpoutward."Posted RGP Outward No";
             end;
 
             trigger OnPreDataItem()
@@ -254,5 +267,7 @@ report 50184 "Return Gatepass Return Rcpt"
         IncomingVerCapLbl: Label 'Incoming Verification';
         ReturntoCapLbl: Label 'Returned to back on___________________________Time____________and Entered in R/I Register by SI/SS________________________';
         PostedGateEntryNo: Code[30];//B2BSSD20Jan2023
-
+        UserName: Text[50]; //B2BSSD27MAR2023
+        PostedRgpReturnRcptNo: Code[50]; //B2BSSD27MAR2023
+        GatepassDt: Date;//B2BSSD28MAR2023
 }

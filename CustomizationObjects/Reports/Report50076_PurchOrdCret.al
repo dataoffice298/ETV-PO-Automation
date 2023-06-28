@@ -78,6 +78,8 @@ report 50076 "Purchase Order Creation New"
                         PurchaseHeaderOrder.Validate("Shortcut Dimension 2 Code", "Quotation Comparison1"."Shortcut Dimension 2 Code");//B2BPAV
                         PurchaseHeaderOrder.Validate("Shortcut Dimension 9 Code", "Quotation Comparison1"."Shortcut Dimension 9 Code");//B2BSSD21FEB2023
                         PurchaseHeaderOrder.Validate("Payment Terms Code", "Quotation Comparison1"."Payment Term Code");
+                        PurchaseHeaderOrder."Programme Name" := "Quotation Comparison1"."Programme Name";//B2BSSD23MAR2023
+                        PurchaseHeaderOrder.Purpose := "Quotation Comparison1".Purpose;//B2BSSD23MAR2023
                         //B2BSSD16FEB2023<<
                         PurchaseHeaderOrder.Validate("Transaction Specification", "Quotation Comparison1"."Transaction Specification");
                         PurchaseHeaderOrder.Validate("Transaction Type", "Quotation Comparison1"."Transactio Type");
@@ -85,6 +87,7 @@ report 50076 "Purchase Order Creation New"
                         PurchaseHeaderOrder.Validate("Payment Method Code", "Quotation Comparison1"."Payment Method Code");
                         PurchaseHeaderOrder.Validate("Transport Method", "Quotation Comparison1"."Transport Method");
                         //B2BSSD16FEB2023
+                        PurchaseHeader.Purpose := "Quotation Comparison1".Purpose;//B2BSSD23MAR2023
                         //B2BMSOn18Oct2022>>
                         if QuotCompHdr.Get("Quotation Comparison1"."Quot Comp No.") then
                             PurchaseHeaderOrder.Regularization := QuotCompHdr.Regularization;
@@ -123,13 +126,11 @@ report 50076 "Purchase Order Creation New"
                                 PurchaseLineOrder."Buy-from Vendor No." := PurchaseHeaderOrder."Buy-from Vendor No.";
                                 PurchaseLineOrder.VALIDATE("Buy-from Vendor No.");
                                 PurchaseLineOrder.Type := PurchaseLine.Type;
-                                //PurchaseLineOrder."No." := "Quotation Comparison1"."Item No.";
                                 PurchaseLineOrder.VALIDATE("No.", PurchaseLine."No.");
                                 PurchaseLineOrder."Description 2" := "Quotation Comparison1".Description2;
                                 PurchaseLineOrder.VALIDATE(Quantity, "Quotation Comparison1".Quantity);
-                                PurchaseLineOrder."Direct Unit Cost" := "Quotation Comparison1".Rate;
-                                PurchaseLineOrder.VALIDATE("Direct Unit Cost");
-                                PurchaseLineOrder.VALIDATE("Variant Code", "Quotation Comparison1"."Variant Code");
+                                PurchaseLineOrder.Validate("Direct Unit Cost", "Quotation Comparison1".Rate);
+                                PurchaseLineOrder."Variant Code" := "Quotation Comparison1"."Variant Code";
                                 PurchaseLineOrder."Location Code" := "Quotation Comparison1"."Location Code";
                                 PurchaseLineOrder."Sub Location Code" := "Quotation Comparison1"."Sub Location Code";
                                 PurchaseLineOrder."Shortcut Dimension 1 Code" := "Quotation Comparison1"."Shortcut Dimension 1 Code";//B2BPAV
@@ -155,6 +156,8 @@ report 50076 "Purchase Order Creation New"
                                 PurchaseLineOrder."Indent Req No" := "Quotation Comparison1"."Indent Req. No.";
                                 PurchaseLineOrder."Indent Req Line No" := "Quotation Comparison1"."Indent Req. Line No.";
                                 //B2BMSOn21Sep2022<<
+                                //PurchaseLineOrder."Line Discount %" := "Quotation Comparison1"."Line Discount %";//B2BSSD15MAR2023
+                                PurchaseLineOrder.Validate("Line Discount %", "Quotation Comparison1"."Line Discount %");
                                 PurchaseLineOrder.Modify();
                                 LneLVar += 10000;
                             end;

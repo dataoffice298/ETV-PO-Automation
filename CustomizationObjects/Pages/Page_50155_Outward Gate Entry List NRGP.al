@@ -47,10 +47,6 @@ page 50155 "Outward Gate Entry List-NRGP"
                 {
                     ApplicationArea = ALL;
                 }
-                field("Item Description"; Rec."Item Description")
-                {
-                    ApplicationArea = ALL;
-                }
 
             }
         }

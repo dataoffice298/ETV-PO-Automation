@@ -100,6 +100,10 @@ page 50175 "Transfer Indent Header"
                     ApplicationArea = all;
                     Caption = 'Shortcut Dimension 2 Code';
                 }
+                field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")//B2BSSD16MAR2023
+                {
+                    ApplicationArea = All;
+                }
                 field("Transfer-from Code"; Rec."Transfer-from Code")
                 {
                     ApplicationArea = Location;
@@ -110,11 +114,17 @@ page 50175 "Transfer Indent Header"
 
                     //B2BMSOn27Oct2022>>
                     trigger OnValidate()
+                    var
+                        Userwisesetup: Codeunit UserWiseSecuritySetup;
                     begin
                         if (Rec."Transfer-from Code" <> '') and (Rec."Transfer-to Code" <> '') then begin
                             if Rec."Transfer-from Code" = Rec."Transfer-to Code" then
                                 Error('Transfer-From and Transfer-To Codes must not be the same.');
                         end;
+                        //B2BSSD11APR2023<<
+                        if not Userwisesetup.CheckUserLocation(UserId, Rec."Transfer-from Code", 1) then
+                            Error('User %1 dont have permission to location %2', UserId, Rec."Transfer-from Code");
+                        //B2BSSD11APR2023>>
                     end;
                     //B2BMSOn27Oct2022<<
 
@@ -146,6 +156,16 @@ page 50175 "Transfer Indent Header"
                     ToolTip = 'Specifies the in-transit code for the transfer order, such as a shipping agent.';
                     // Editable = PageEditable;//B2BVCOn28Sep22
 
+                }
+                field("programme Name"; Rec."programme Name")//B2BSSD20MAR2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'programme Name';
+                }
+                field(Purpose; Rec.Purpose)//B2BSSD23MAR2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'Purpose';
                 }
             }
             //B2BPAV<<
@@ -273,6 +293,7 @@ page 50175 "Transfer Indent Header"
                     Rec.TESTFIELD(Indentor);
                     Rec.TestField("Shortcut Dimension 1 Code");
                     Rec.TestField("Shortcut Dimension 2 Code");
+                    Rec.TestField("Shortcut Dimension 9 Code");//B2BSSD23MAR2023
                     Rec.LOCKTABLE;
                     IndentLine.RESET;
                     IndentLine.SETRANGE("Document No.", Rec."No.");
@@ -480,7 +501,7 @@ page 50175 "Transfer Indent Header"
                     var
 
                     begin
-                        Rec.CopyIndent();
+                        Rec.CopyTransforIndent();
                     end;
                 }
                 separator("Approvals")

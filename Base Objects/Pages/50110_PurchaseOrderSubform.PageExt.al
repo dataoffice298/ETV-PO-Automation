@@ -24,21 +24,21 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             }
         }
         //B2BSSD16FEB2023<<
-        addafter("Item Reference No.")
-        {
-            field("Depreciation Book Code"; Rec."Depreciation Book Code")
-            {
-                ApplicationArea = All;
-            }
-        }
-        addafter("Depreciation Book Code")
-        {
-            field("Posting Group"; Rec."Posting Group")
-            {
-                ApplicationArea = All;
-                Editable = true;
-            }
-        }
+        // addafter("Item Reference No.")
+        // {
+        //     field("Depreciation Book Code"; Rec."Depreciation Book Code")
+        //     {
+        //         ApplicationArea = All;
+        //     }
+        // }
+        // addafter("Depreciation Book Code")
+        // {
+        //     field("Posting Group"; Rec."Posting Group")
+        //     {
+        //         ApplicationArea = All;
+        //         Editable = true;
+        //     }
+        // }
         //B2BSSD16FEB2023>>
         addafter("No.")//B2BSSD15FEB2023
         {
@@ -147,6 +147,51 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 ApplicationArea = All;
             }
         }
+        //B2BSSD14MAR2023<<
+        addafter("Spec Id")
+        {
+            field("Variant Code1"; Rec."Variant Code")
+            {
+                ApplicationArea = All;
+                Caption = 'Variant Code';
+            }
+        }
+        addafter("Direct Unit Cost")
+        {
+            field("LineDiscount %"; Rec."Line Discount %")
+            {
+                ApplicationArea = All;
+                Caption = 'Line Discount %';
+            }
+        }
+        //B2BSSD14MAR2023>>
+        addafter("Reserved Quantity")//B2BSSD15MAY2023
+        {
+            field("Qty to Inward_B2B"; Rec."Qty to Inward_B2B")
+            {
+                ApplicationArea = All;
+                caption = 'Qty to Inward';
+            }
+        }
+
+        //B2BSSD16MAY2023>>
+        addafter("Quantity Rejected B2B")
+        {
+            field("Qty Rejected OutWard_B2B"; Rec."Qty Rejected OutWard_B2B")
+            {
+                ApplicationArea = All;
+                caption = 'Qty Rejected OutWard';
+            }
+        }
+        addafter("Qty Rejected OutWard_B2B")
+        {
+            field("NRGP OutWard Qty B2B"; Rec."NRGP OutWard Qty B2B")
+            {
+                ApplicationArea = All;
+                caption = 'NRGP OutWard Qty';
+            }
+        }
+        //B2BSSD16MAY2023<<
 
     }
 
@@ -193,11 +238,18 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         var
                             PurChaseHeader: Record "Purchase Header";//B2BSSDJan2023
                         begin
+                            //B2BSSD15MAY2023>>
+                            if Rec.Quantity = Rec."Quantity Accepted B2B" then
+                                Error('Rgp Inward Already Created');
+                            Rec.TestField("Qty to Inward_B2B");
+                            //B2BSSD15MAY2023<<
+
                             //B2BSSDJan2023<<
                             PurChaseHeader.Reset();
                             PurChaseHeader.SetRange("No.", Rec."Document No.");
                             if PurChaseHeader.FindFirst() then begin
                                 PurChaseHeader.TestField("Import Type");
+                                PurChaseHeader.TestField("EPCG Scheme");//B2BSSD20MAR2023
                             end;
                             //B2BSSDJan2023>>
                             CreateGateEntries(GateEntryType::Inward, GateEntryDocType::RGP)
@@ -227,6 +279,8 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
 
                         trigger OnAction()
                         begin
+                            Rec.TestField("Quantity Rejected B2B");//B2BSSD16MAY2023
+                            Rec.TestField("Qty Rejected OutWard_B2B");//B2BSSD16MAY2023
                             CreateGateEntries(GateEntryType::Outward, GateEntryDocType::RGP)
                         end;
                     }
@@ -285,7 +339,8 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             }
             //B2BMSOn03Nov2022<<
         }
-        //B2BSSD07Feb2023<<
+
+        //B2BSSD07Feb2023 Fixed Assets functionality Start<<
         addlast("O&rder")
         {
             group("Fixed Assets")
@@ -303,43 +358,59 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         PurchaseLine1: Record "Purchase Line";
                         RGPError: TextConst ENU = 'RGP Inward No. Must Have an Value.';
                         FixedAssets: Record "Fixed Asset";
+                        PurchHeader1: Record "Purchase Header";
+                        purchHeader2: Record "Purchase Header";
+                        postedRgpInwardno: Record "Posted Gate Entry Header_B2B";//B2BSSD04APR2023
                     begin
-                        /*PurchaseLine1.Reset();
-                        PurchaseLine1.SetRange("Document No.", Rec."Document No.");
-                        PurchaseLine1.SetRange("Line No.", Rec."Line No.");
-                        if PurchaseLine1.FindSet() then begin
-                            RGPInward.Reset();
-                            RGPInward.SetRange("Purchase Order No.", PurchaseLine1."Document No.");
-                            if not RGPInward.FindFirst() then
-                                Error(RGPError);
-                        end;*/
-                        //Rec.TestField("Qty. to Accept B2B");//B2BSSD23FEB2023
-                        PurchaseLine1.Reset();
-                        PurchaseLine1.SetRange("Document No.", Rec."Document No.");
-                        PurchaseLine1.SetRange("Document Type", Rec."Document Type");
-                        if PurchaseLine1.FindFirst() then begin
-                            IndentNo := PurchaseLine1."Indent No.";
-                            IndetReqNo := PurchaseLine1."Indent Req No";
-                            ShortcutDimension1 := PurchaseLine1."Shortcut Dimension 1 Code";
-                            ShortCutDimension2 := PurchaseLine1."Shortcut Dimension 2 Code";
-                            ShortCutDimention9 := PurchaseLine1."Shortcut Dimension 9 Code";
-                            DirectUnitCost := PurchaseLine1."Direct Unit Cost";
-                            IndentorDescription := PurchaseLine1."Indentor Description";
-                            SpecID := PurchaseLine1."Spec Id";
+
+
+                        //B2BSSD13MAR2023<< 
+                        PurchHeader1.Reset();
+                        PurchHeader1.SetRange("No.", Rec."Document No.");
+                        if PurchHeader1.FindFirst() then begin
+                            //B2BSSD21MAR2023<<
+                            if PurchHeader1.Status = PurchHeader1.Status::Released then
+                                PurchHeader1.Status := PurchHeader1.Status::Open;
+                            PurchHeader1.Modify();
+                            //B2BSSD21MAR2023>>
                         end;
+                        //B2BSSD13MAR2023>>
+
+                        postedRgpInwardno.Reset();
+                        postedRgpInwardno.SetRange("Purchase Order No.", rec."Document No.");
+                        if not postedRgpInwardno.FindFirst() then
+                            Error(RGPError);
+
                         PurchaseLine1.Reset();
-                        PurchaseLine1.SetRange("Document No.", Rec."Document No.");
                         PurchaseLine1.SetRange("Document Type", Rec."Document Type");
-                        PurchaseLine1.SetFilter("No.", '%1', '');
-                        PurchaseLine1.DeleteAll();
-                        //Rec.DeleteAll();
+                        PurchaseLine1.SetRange("Document No.", Rec."Document No.");
+                        PurchaseLine1.SetRange(Select, true);
+                        if not PurchaseLine1.FindFirst() then begin
+                            Error('Please Select the Line to Import');
+                        end;
+                        // PurchaseLine1.Reset();
+                        // PurchaseLine1.SetRange("Document Type", Rec."Document Type");
+                        // PurchaseLine1.SetRange("Document No.", Rec."Document No.");
+                        // PurchaseLine1.SetRange(Select, true);
+                        // PurchaseLine1.SetFilter("No.", '%1', '');
+                        //PurchaseLine1.DeleteAll();
                         FixedAssetsReadExcelSheet();
                         FixedAssetsImportExcelData();
+
+                        //B2BSSD21MAR2023<<
+                        purchHeader2.Reset();
+                        purchHeader2.SetRange("No.", Rec."Document No.");
+                        if purchHeader2.FindFirst() then begin
+                            if purchHeader2.Status = purchHeader2.Status::Open then
+                                purchHeader2.Status := PurchHeader1.Status::Released;
+                            purchHeader2.Modify();
+                        end;
+                        //B2BSSD21MAR2023>>
                     end;
                 }
             }
         }
-        //B2BSSD07Feb2023>>
+        //B2BSSD07Feb2023 Fixed Assets functionality End>>
 
         //B2BSSD10Feb2023<<
         addlast("O&rder")
@@ -392,7 +463,6 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             }
         }
         //B2BSSD10Feb2023>>
-
     }
 
     procedure CreateGateEntries(EntryType: Option Inward,Outward; DocType: Option RGP,NRGP)
@@ -407,7 +477,14 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         ReservationEntry: Record "Reservation Entry";
         LineNo: Integer;
         PurchHeader: Record "Purchase Header";
+        purchaseline1: Record "Purchase Line";
+        Inwardqty: Decimal;
     begin
+        //B2BSSD27APR2023>>
+        if PurchHeader.get(Rec."Document Type", Rec."Document No.") then
+            PurchHeader.TestField(Status, PurchHeader.status::Released);
+        //B2BSSD27APR2023<<
+
         //Clear(ReservationEntry);
         LineNo := 10000;
         PurchLine.Reset();
@@ -435,6 +512,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             else
                 if EntryType = EntryType::Outward then
                     GateEntryHeader."Entry Type" := GateEntryHeader."Entry Type"::Outward;
+
 
             if DocType = DocType::RGP then
                 GateEntryHeader.Type := GateEntryHeader.Type::RGP
@@ -476,19 +554,26 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                     GateEntryLine."Source Name" := ItemLRec.Description;
                     GateEntryLine.Description := ItemLRec.Description;
                     GateEntryLine.Variant := PurchLine."Variant Code";//B2BSSDOn13Dec2022
-                    GateEntryLine."Unit of Measure" := PurchLine."Unit of Measure Code";
+                    GateEntryLine."Unit of Measure" := Rec."Unit of Measure Code";
                     //GateEntryLine.Validate(Quantity, ReservationEntry.Quantity);
                     //B2BSSD24Feb2023<<
                     GateEntryLine.Quantity := PurchLine.Quantity;
                     GateEntryLine.Make := PurchLine.Make_B2B;
                     GateEntryLine.ModelNo := PurchLine."Model No.";
                     GateEntryLine.SerialNo := PurchLine."Serial No.";
+                    Inwardqty := (PurchLine."Qty to Inward_B2B" + PurchLine."Qty Accepted Inward_B2B");//B2BSSD15MAY2023
                     //B2BSSD24Feb2023>>
                     //GateEntryLine.ModelNo := ReservationEntry."Lot No.";
                     //GateEntryLine.SerialNo := ReservationEntry."Serial No.";
                     //GateEntryLine.Make := ReservationEntry."Variant Code";
                     GateEntryLine.Insert(true);
                     LineNo += 10000;
+                    //B2BSSD15MAY2023>>
+                    PurchLine."Qty Accepted Inward_B2B" := Inwardqty;
+                    GateEntryLine.Quantity := PurchLine."Qty to Inward_B2B";//B2BSSD30MAY2023
+                    PurchLine."Qty to Inward_B2B" := 0;
+                    GateEntryLine.Modify();//B2BSSD30MAY2023
+                    //B2BSSD15MAY2023<<
                     //until ReservationEntry.Next() = 0;
                 end else
                     if PurchLine.Type = PurchLine.Type::"Fixed Asset" then begin
@@ -503,16 +588,18 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         GateEntryLine."Source Name" := FALRec.Description;
                         GateEntryLine.Description := FALRec.Description;
                         GateEntryLine."Unit of Measure" := Rec."Unit of Measure Code";
-                        if EntryType = EntryType::Inward then
-                            GateEntryLine.Validate(Quantity, PurchLine."Qty. to Accept B2B")
-                        else
-                            if EntryType = EntryType::Outward then
-                                GateEntryLine.Validate(Quantity, Rec."Qty. to Reject B2B");
                         GateEntryLine.ModelNo := FALRec."Model No.";
                         GateEntryLine.SerialNo := FALRec."Serial No.";
                         GateEntryLine.Make := FALRec.Make_B2B;
+                        Inwardqty := (PurchLine."Qty to Inward_B2B" + PurchLine."Qty Accepted Inward_B2B");//B2BSSD25MAY2023
                         GateEntryLine.Insert(true);
-                        LineNo += 10000
+                        LineNo += 10000;
+                        //B2BSSD25MAY2023>>
+                        PurchLine."Qty Accepted Inward_B2B" := Inwardqty;
+                        GateEntryLine.Quantity := PurchLine."Qty to Inward_B2B";//B2BSSD30MAY2023
+                        PurchLine."Qty to Inward_B2B" := 0;
+                        GateEntryLine.Modify();//B2BSSD30MAY2023
+                        //B2BSSD25MAY2023<<
                     end else
                         //B2BSSD20FEB2023<<
                         if PurchLine.Type = PurchLine.Type::Description then begin
@@ -521,28 +608,33 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                             GateEntryLine.Type := GateEntryHeader.Type;
                             GateEntryLine."Gate Entry No." := GateEntryHeader."No.";
                             GateEntryLine."Line No." := LineNo;
-                            GateEntryLine."Source Type" := GateEntryLine."Source Type"::Item;
-                            GateEntryLine.Validate("Source No.", PurchLine."No.");
-                            ItemLRec.Get(PurchLine."No.");
-                            GateEntryLine."Source Name" := ItemLRec.Description;
-                            GateEntryLine.Description := ItemLRec.Description;
-                            GateEntryLine.Variant := PurchLine."Variant Code";
-                            GateEntryLine."Unit of Measure" := Rec."Unit of Measure Code";
-                            GateEntryLine.Quantity := PurchLine.Quantity;
+                            GateEntryLine."Source Type" := GateEntryLine."Source Type"::Description;
+                            GateEntryLine."Source No." := PurchLine."No.";
+                            GateEntryLine."Unit of Measure" := Rec."Unit of Measure Code";//B2BSSD27APR2023
+                            GateEntryLine.Description := PurchLine.Description;
+                            GateEntryLine."Source Name" := PurchLine."Spec Id";//B2BSSD18APR2023   
+                            Inwardqty := (PurchLine."Qty to Inward_B2B" + PurchLine."Qty Accepted Inward_B2B");//B2BSSD25MAY2023            
                             GateEntryLine.Insert(true);
                             LineNo += 10000;
+                            //B2BSSD25MAY2023>>
+                            PurchLine."Qty Accepted Inward_B2B" := Inwardqty;
+                            GateEntryLine.Quantity := PurchLine."Qty to Inward_B2B";//B2BSSD30MAY2023
+                            PurchLine."Qty to Inward_B2B" := 0;
+                            GateEntryLine.Modify();//B2BSSD30MAY2023
+                            //B2BSSD25MAY2023<<
                         end;
-                //B2BSSD20FEB2023>>
-                PurchLine.Select := false;
-                if EntryType = EntryType::Outward then begin
-                    PurchLine."Quantity Rejected B2B" += PurchLine."Qty. to Reject B2B";
-                    PurchLine."Qty. to Reject B2B" := 0;
-                end else
-                    if EntryType = EntryType::Inward then begin
-                        PurchLine."Quantity Accepted B2B" += PurchLine."Qty. to Accept B2B";
-                        PurchLine."Qty. to Accept B2B" := 0;
-                    end;
-                PurchLine.Modify();
+            //B2BSSD20FEB2023>>
+
+            /* PurchLine.Select := false; //B2BSSD06JUN132023
+            if EntryType = EntryType::Outward then begin
+                PurchLine."Quantity Rejected B2B" += PurchLine."Qty. to Reject B2B";
+                PurchLine."Qty. to Reject B2B" := 0;
+            end else
+                if EntryType = EntryType::Inward then begin
+                    PurchLine."Quantity Accepted B2B" += PurchLine."Qty. to Accept B2B";
+                    PurchLine."Qty. to Accept B2B" := 0;
+                end;
+            PurchLine.Modify();*/
             until PurchLine.Next() = 0;
 
             if Confirm(OpenText, false, GateEntryHeader."No.") then
@@ -579,7 +671,21 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         DirectUnitCost: Decimal;
         IndentorDescription: Code[250];
         SpecID: Code[250];
-    //B2BSS07Feb2023>>
+        QtyToAcp: Integer;//B2BSSD21MAR2023
+        QtyToRecj: Integer;//B2BSSD21MAR2023
+        qtyAcp: Integer;//B2BSSD21MAR2023
+        qtyRec: Integer;//B2BSSD21MAR2023
+        warrantyRec: Code[30];//B2BSSD04APR2023
+        IndentLineNo: Integer;//B2BSSD04APR2023
+        indentReqLineNo: Integer; //B2BSSD04APR2023
+        subLocation: Code[30];
+        LineDiscount: Decimal;
+        UnitofMeasure: Code[20];//B2BSSD27APR2023
+        LineNo: Integer;
+        CountGvar: Integer;//B2BSSD26MAY2023
+        FALineNo: Integer;//B2BSSD26MAY2023
+        //B2BSS07Feb2023>>
+        purchaseline2: Record "Purchase Line";//B2BSSD26MAY2023
 
     //B2BSSD07Feb2023 Import Start >>
     local procedure FixedAssetsReadExcelSheet()
@@ -615,7 +721,6 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         purChaseLine1: Record "Purchase Line";
         RowNo: Integer;
         ColNo: Integer;
-        LineNo: Integer;
         MaxRow: Integer;
         No: code[20];
         //Quantity: Integer;
@@ -633,72 +738,136 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         FAPostingType: Option ,"Acquisition Cost",Maintenance,Appreciation;
         location: Text[50];
         GenBusPostingGroup: Code[30];
-
+        purchaseHeader: Record "Purchase Header";
+        DocumentNo: Code[20];
+        Error1: Label 'Quantity to Accept B2B is less than the excel rows %1';
     begin
         RowNo := 0;
         ColNo := 0;
         LineNo := 0;
         MaxRow := 0;
-        PurchaseLine.Reset();
-        PurchaseLine.SetRange("Document Type", Rec."Document Type");
-        PurchaseLine.SetRange("Document No.", Rec."Document No.");
-        if PurchaseLine.FindLast() then
-            LineNo := PurchaseLine."Line No."
-        else
-            //LineNo := 10000;
-            TempExcelBuffer.Reset();
+        TempExcelBuffer.Reset();
         if TempExcelBuffer.FindLast() then begin
             MaxRow := TempExcelBuffer."Row No.";
         end;
-        for RowNo := 2 to MaxRow Do begin
-            Evaluate(SourceType, GetCellValue(RowNo, 1));
-            Evaluate(No, GetCellValue(RowNo, 2));
-            //Evaluate(Quantity, GetCellValue(RowNo, 3));
-            //Evaluate(DirectUnitCost, GetCellValue(RowNo, 3));
-            Evaluate(SerialNo, GetCellValue(RowNo, 3));
-            Evaluate(ModelNo, GetCellValue(RowNo, 4));
-            Evaluate(Make, GetCellValue(RowNo, 5));
-            Evaluate(GSTGroupCode, GetCellValue(RowNo, 6));
-            Evaluate(HSNSACCode, GetCellValue(RowNo, 7));
-            Evaluate(GSTCredit, GetCellValue(RowNo, 8));
-            Evaluate(location, GetCellValue(RowNo, 9));
 
-            PurchaseLine.Init();
-            LineNo += 10000;
-            PurchaseLine."Document No." := Rec."Document No.";
-            PurchaseLine."Document Type" := Rec."Document Type";
-            PurchaseLine."Line No." := LineNo;
-            PurchaseLine.Insert();
-            Evaluate(PurchaseLine.Type, SourceType);
-            PurchaseLine.Validate("No.", No);
-            PurchaseLine.Validate(Quantity, 1);
-            PurchaseLine.Validate("Unit of Measure", 'Pieces');
-            //PurchaseLine."Unit of Measure" := 'Pieces';
-            PurchaseLine."Serial No." := SerialNo;
-            PurchaseLine."Model No." := ModelNo;
-            PurchaseLine.Make_B2B := Make;
-            PurchaseLine."GST Group Code" := GSTGroupCode;
-            PurchaseLine."HSN/SAC Code" := HSNSACCode;
-            PurchaseLine."GST Credit" := GSTCredit;
-            PurchaseLine."Location Code" := location;
+        //B2BSSD25MAY2023>>
+        PurchaseLine.Reset();
+        PurchaseLine.SetRange("Document No.", Rec."Document No.");
+        PurchaseLine.SetRange("Document Type", PurchaseLine."Document Type"::Order);
+        PurchaseLine.SetRange(Select, true);
+        if PurchaseLine.Findset() then begin
+            //B2BSSD26MAY2023>>
+            repeat
+                Clear(FALineNo);
+                Clear(CountGvar);
+                for RowNo := 2 to MaxRow Do begin
+                    evaluate(FALineNo, GetCellValue(RowNo, 10));
+                    if PurchaseLine."Line No." = FALineNo then
+                        CountGvar += 1;
+                end;
+                //if PurchaseLine."Qty. to Accept B2B" <> CountGvar then
+                if PurchaseLine."Quantity Accepted B2B" <> CountGvar then //B2BSSD08JUN2023
+                    Error(Error1, PurchaseLine."Line No.");
+            until PurchaseLine.Next() = 0;
+            //PurchaseLine.DeleteAll();
+            //B2BSSD26MAY2023<<
+        end;
+        //B2BSSD25MAY2023>>
 
-            if PurchaseLine."Indent No." = '' then
-                PurchaseLine."Indent No." := IndentNo;
-            if PurchaseLine."Indent Req No" = '' then
-                PurchaseLine."Indent Req No" := IndetReqNo;
-            if PurchaseLine."Shortcut Dimension 1 Code" = '' then
-                PurchaseLine.Validate("Shortcut Dimension 1 Code", ShortcutDimension1);
-            if PurchaseLine."Shortcut Dimension 2 Code" = '' then
-                PurchaseLine.Validate("Shortcut Dimension 2 Code", ShortCutDimension2);
-            if PurchaseLine."Shortcut Dimension 9 Code" = '' then
-                PurchaseLine.Validate("Shortcut Dimension 9 Code", ShortCutDimention9);
-            if PurchaseLine."Direct Unit Cost" = PurchaseLine."Direct Unit Cost" then
-                PurchaseLine.Validate("Direct Unit Cost", DirectUnitCost);
-            if PurchaseLine."Indentor Description" = '' then
-                PurchaseLine."Indentor Description" := IndentorDescription;
-            if PurchaseLine."Spec Id" = '' then
-                PurchaseLine."Spec Id" := SpecID;
-            PurchaseLine.Modify(true);
+
+        purChaseLine1.Reset();
+        purChaseLine1.SetRange("Document Type", Rec."Document Type");
+        purChaseLine1.SetRange("Document No.", Rec."Document No.");
+        purChaseLine1.SetRange(Select, true);
+        purChaseLine1.SetFilter("No.", '%1', '');
+        //purChaseLine1.SetRange("Line No.", Rec."FA Line No.");//B2BSSD08JUN2023
+        if purChaseLine1.FindSet() then begin
+            repeat
+                for RowNo := 2 to MaxRow Do begin
+
+                    purchaseline2.SetRange("Document Type", purChaseLine1."Document Type");
+                    purchaseline2.SetRange("Document No.", purChaseLine1."Document No.");
+                    if purchaseline2.FindLast() then
+                        LineNo := purchaseline2."Line No." + 10000
+                    else
+                        LineNo := 10000;
+
+                    Evaluate(SourceType, GetCellValue(RowNo, 1));
+                    Evaluate(No, GetCellValue(RowNo, 2));
+                    Evaluate(SerialNo, GetCellValue(RowNo, 3));
+                    Evaluate(ModelNo, GetCellValue(RowNo, 4));
+                    Evaluate(Make, GetCellValue(RowNo, 5));
+                    Evaluate(GSTGroupCode, GetCellValue(RowNo, 6));
+                    Evaluate(HSNSACCode, GetCellValue(RowNo, 7));
+                    Evaluate(GSTCredit, GetCellValue(RowNo, 8));
+                    Evaluate(location, GetCellValue(RowNo, 9));
+                    Evaluate(FALineNo, GetCellValue(RowNo, 10));//B2BSSD26MAY2023
+
+                    if FALineNo = purChaseLine1."Line No." then begin
+                        PurchaseLine.Init();
+                        PurchaseLine."Document No." := Rec."Document No.";
+                        PurchaseLine."Document Type" := PurchaseLine."Document Type"::Order;
+                        PurchaseLine."Line No." := LineNo;
+                        PurchaseLine.Insert(true);
+                        Evaluate(PurchaseLine.Type, SourceType);
+                        PurchaseLine.Validate(Type);
+                        PurchaseLine.Validate("No.", No);
+                        PurchaseLine.Validate(Quantity, 1);
+                        PurchaseLine.Validate("Qty. to Accept B2B", 1);//B2BSSD27APR2023
+                        PurchaseLine.Validate("Qty. to Reject B2B", 0);//B2BSSD27APR2023
+                        PurchaseLine."Serial No." := SerialNo;
+                        PurchaseLine."Model No." := ModelNo;
+                        PurchaseLine.Make_B2B := Make;
+                        PurchaseLine."GST Group Code" := GSTGroupCode;
+                        PurchaseLine."HSN/SAC Code" := HSNSACCode;
+                        PurchaseLine."GST Credit" := GSTCredit;
+                        PurchaseLine."Location Code" := location;
+                        PurchaseLine."FA Line No." := FALineNo;//B2BSSD26MAY2023
+
+                        if PurchaseLine."Indent No." = '' then
+                            PurchaseLine."Indent No." := purChaseLine1."Indent No.";
+                        if PurchaseLine."Indent Req No" = '' then
+                            PurchaseLine."Indent Req No" := purChaseLine1."Indent Req No";
+                        if ShortcutDimension1 <> '' then
+                            PurchaseLine.Validate("Shortcut Dimension 1 Code", purChaseLine1."Shortcut Dimension 1 Code");
+                        if ShortCutDimension2 <> '' then
+                            PurchaseLine.Validate("Shortcut Dimension 2 Code", purChaseLine1."Shortcut Dimension 2 Code");
+                        if ShortCutDimention9 <> '' then
+                            PurchaseLine.Validate("Shortcut Dimension 9 Code", purChaseLine1."Shortcut Dimension 9 Code");
+                        if PurchaseLine."Direct Unit Cost" = 0 then
+                            PurchaseLine.Validate("Direct Unit Cost", purChaseLine1."Direct Unit Cost");
+
+                        if PurchaseLine."Line Discount %" = 0 then
+                            PurchaseLine.Validate("Line Discount %", purChaseLine1."Line Discount %");//B2BSSD30MAY2023
+
+                        if PurchaseLine."Indentor Description" = '' then
+                            PurchaseLine."Indentor Description" := purChaseLine1."Indentor Description";
+                        if PurchaseLine."Spec Id" = '' then
+                            PurchaseLine."Spec Id" := purChaseLine1."Spec Id";
+                        if PurchaseLine."Unit of Measure Code" = '' then//B2BSSD27APR2023
+                            purchaseLine."Unit of Measure Code" := purChaseLine1."Unit of Measure Code";
+                        //B2BSSD21MAR2023<<
+                        if PurchaseLine."Quantity Accepted B2B" = 0 then
+                            PurchaseLine."Quantity Accepted B2B" := purChaseLine1."Quantity Accepted B2B";
+                        if PurchaseLine."Quantity Rejected B2B" = 0 then
+                            PurchaseLine."Quantity Rejected B2B" := purChaseLine1."Quantity Rejected B2B";
+                        //B2BSSD21MAR2023<<
+
+                        //B2BSSD04APR2023<<
+                        if purChaseLine.warranty = '' then
+                            PurchaseLine.warranty := purChaseLine1.warranty;
+                        if purChaseLine."Indent Line No." = 0 then
+                            purChaseLine."Indent Line No." := purChaseLine1."Indent Line No.";
+                        if purChaseLine."Indent Req Line No" = 0 then
+                            purChaseLine."Indent Req Line No" := purChaseLine1."Indent Req Line No";
+                        //B2BSSD04APR2023>>
+                        PurchaseLine.Modify(true);
+
+                    end;
+                end;
+                purChaseLine1.Delete();
+            until purChaseLine1.Next() = 0;
         end;
         Message(ExcelImportSuccess);
     end;

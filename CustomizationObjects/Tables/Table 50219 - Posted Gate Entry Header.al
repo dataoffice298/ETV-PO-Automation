@@ -187,6 +187,7 @@ table 50219 "Posted Gate Entry Header_B2B"
         {
             DataClassification = CustomerContent;
             Caption = 'Sub Location';
+            TableRelation = Location;//B2BSSD27MAR2023
         }
         field(44; "Shortcut Dimension 1 Code"; Code[20])
         {
@@ -244,7 +245,7 @@ table 50219 "Posted Gate Entry Header_B2B"
         //B2BSSD02Jan2023>>
 
         //B2BSSD22FEB2023<<
-        field(54; "Shortcut Dimension 9 Code"; Code[20])
+        field(50003; "Shortcut Dimension 9 Code"; Code[20])
         {
             CaptionClass = '1,2,9';
             Caption = 'Shortcut Dimension 9 Code';
@@ -263,6 +264,29 @@ table 50219 "Posted Gate Entry Header_B2B"
             DataClassification = CustomerContent;
         }
         //B2BSSD02MAR2023>>
+
+        //B2BSSD14MAR2023<<
+        field(50004; "Indent Document No"; Code[30])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Indent Document No';
+            Editable = false;
+        }
+        field(50005; "Indent Line No"; Integer)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Indent Line No';
+        }
+        //B2BSSD14MAR2023>>
+        field(57; "Receipt Date"; Date)//B2BSSD23MAR2023
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50006; "To Location"; Text[50])//B2BSSD31MAR2023
+        {
+            DataClassification = CustomerContent;
+            TableRelation = Location;
+        }
     }
 
     keys

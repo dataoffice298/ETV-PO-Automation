@@ -76,7 +76,6 @@ page 50127 QuotationComparSubForm
                 {
                     BlankZero = true;
                     ApplicationArea = all;
-
                 }
                 //B2BMSOn06Oct21>>
                 field("Currency Code"; Rec."Currency Code")
@@ -91,12 +90,17 @@ page 50127 QuotationComparSubForm
                     Editable = false;
                     ApplicationArea = all;
                 }
+                field("Line Discount %"; Rec."Line Discount %")//B2BSSD15MAR2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'Line Discount %';
+                    Editable = false;
+                }
                 field(Amount; Rec.Amount)
                 {
                     Editable = false;
                     ApplicationArea = all;
                 }
-
                 field("Amt. including Tax"; Rec."Amt. including Tax")
                 {
                     ToolTip = 'Specifies the value of the Amt. including Tax field.';

@@ -33,7 +33,7 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
                 {
                     ApplicationArea = ALL;
 
-                    trigger OnLookup(var Text: Text): Boolean
+                    /*trigger OnLookup(var Text: Text): Boolean
                     var
                         GateEntryHeader: Record "Gate Entry Header_B2B";
                         SalesShipHeader: record "Sales Shipment Header";
@@ -64,7 +64,7 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
                                         Rec."Source Name" := SalesShipHeader."Bill-to Name";
                                     end;
                                 end;
-                            /*
+                            
                         "Source Types"::"Sales Return Order":
                             begin
                                 SalesHeader.RESET;
@@ -74,8 +74,8 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
                                 SalesHeader.FILTERGROUP(0);
                                 if PAGE.RUNMODAL(0, SalesHeader) = ACTION::LookupOK then
                                     VALIDATE("Source No.", SalesHeader."No.");
-                            end;*/
-                            /*
+                            end;
+                            
                         "Source Types"::"Purchase Order":
                             begin
                                 PurchHeader.RESET;
@@ -85,7 +85,7 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
                                 PurchHeader.FILTERGROUP(0);
                                 if PAGE.RUNMODAL(0, PurchHeader) = ACTION::LookupOK then
                                     VALIDATE("Source No.", PurchHeader."No.");
-                            end;*/
+                            end;
                             Rec."Source Type"::"Purchase Return Shipment":
                                 begin
                                     ReturnShipHeader.RESET;
@@ -97,7 +97,7 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
                                         Rec."Source Name" := ReturnShipHeader."Pay-to Name";
                                     end;
                                 end;
-                            /*   
+                             
                            "Source Types"::"Transfer Receipt":
                                begin
                                    TransHeader.RESET;
@@ -107,7 +107,7 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
                                    if PAGE.RUNMODAL(0, TransHeader) = ACTION::LookupOK then
                                        VALIDATE("Source No.", TransHeader."No.");
                                end;
-                               */
+                               
                             Rec."Source Type"::"Transfer Shipment":
                                 begin
                                     TransShptHeader.RESET;
@@ -184,7 +184,7 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
                                 end;
                         end;
 
-                    end;
+                    end;*/
                 }
                 field("Source Name"; Rec."Source Name")
                 {

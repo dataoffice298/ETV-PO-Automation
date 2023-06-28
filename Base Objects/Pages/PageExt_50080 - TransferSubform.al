@@ -16,6 +16,14 @@ pageextension 50080 TransferSubform extends "Transfer Order Subform"
                 ApplicationArea = All;
             }
         }
+        addafter("Shortcut Dimension 2 Code")//B2BSSD21MAR2023
+        {
+            field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")
+            {
+                ApplicationArea = All;
+                Caption = 'Shortcut Dimension 9 Code';
+            }
+        }
     }
 
 

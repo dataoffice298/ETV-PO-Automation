@@ -75,7 +75,17 @@ page 50025 "Purchase Enquiry"
                 {
                     ApplicationArea = All;
                 }
-                
+                field("Programme Name"; Rec."Programme Name")//B2BSSD20MAR2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'Programme Name';
+                }
+                field(Purpose; Rec.Purpose)//B2BSSD21MAR2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'Purpose';
+                }
+
             }
             part(PurchLines; "Purchase Enquiry Subform")
             {
@@ -168,6 +178,7 @@ page 50025 "Purchase Enquiry"
                 {
                     ApplicationArea = All;
                 }
+               
                 field("Shipment Method Code"; Rec."Shipment Method Code")
                 {
                     ApplicationArea = All;

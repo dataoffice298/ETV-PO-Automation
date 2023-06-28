@@ -188,9 +188,14 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
+                //B2BSSD13JUN2023>>
+                Rec."Quantity Accepted B2B" := Rec."Qty. to Accept B2B";
+                Rec."Qty. to Accept B2B" := 0;
+                Rec.Modify();
+                //B2BSSD13JUN2023<<
                 if "Qty. to Accept B2B" <> 0 then
                     CheckTracking(Rec);
-                if ("Qty. to Accept B2B" + "Quantity Accepted B2B") > Quantity then
+                if ("Qty. to Accept B2B" + "Quantity Accepted B2B") > "Qty. to Receive (Base)" then//B2BSSD28JUN2023
                     Error(Err0001);
                 if "Qty. to Accept B2B" <> 0 then
                     Validate("Qty. to Receive", "Qty. to Accept B2B");
@@ -204,23 +209,29 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             var
                 RejErr: Label 'You cannot reject the quantity as total quantity is received.';
             begin
+
                 if "Qty. to Reject B2B" <> 0 then
                     CheckTracking(Rec);
                 if Quantity = "Quantity Received" then
                     Error(RejErr);
-                if ("Qty. to Reject B2B" + "Quantity Rejected B2B") > Quantity then
+                if ("Qty. to Reject B2B" + "Quantity Accepted B2B") > "Qty. to Receive (Base)" then //B2BSSD28JUN2023
                     Error(Err0002);
+                //B2BSSD13JUN2023>>
+                Rec."Quantity Rejected B2B" := Rec."Qty. to Reject B2B";
+                Rec."Qty. to Reject B2B" := 0;
+                Rec.Modify();
+                //B2BSSD13JUN2023<<
             end;
         }
         field(60014; "Quantity Accepted B2B"; Decimal)
         {
-            Editable = false;
+            //Editable = false;
             Caption = 'Quantity Accepted';
             DataClassification = CustomerContent;
         }
         field(60015; "Quantity Rejected B2B"; Decimal)
         {
-            Editable = false;
+            //Editable = false;
             Caption = 'Quantity Rejected';
             DataClassification = CustomerContent;
         }
@@ -244,13 +255,21 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
                 FaLedGer: Record "FA Ledger Entry";
                 PurchaseLine: Record "Purchase Line";
             begin
-                if ItemLRec.Get("No.") then
-                    Rec."QC Enabled B2B" := ItemLRec."QC Enabled B2B";
-                if Rec.Type = Rec.Type::"Fixed Asset" then
-                    if FALRec.Get(Rec."No.") then
-                        Rec.Make_B2B := FALRec.Make_B2B;
+                //B2BSSD29MAY2023>>
+                if Rec.Type = Type::Item then begin
+                    if ItemLRec.Get("No.") then
+                        //     //PurchaseLine."QC Enabled B2B" := ItemLRec."QC Enabled B2B";
+                        Rec.Validate("QC Enabled B2B", ItemLRec."QC Enabled B2B");
+                end
+                //B2BSSD29MAY2023<<
+                else
+                    if Rec.Type = Rec.Type::"Fixed Asset" then
+                        if FALRec.Get(Rec."No.") then
+                            Rec.Make_B2B := FALRec.Make_B2B;
                 Rec."Model No." := FALRec."Model No.";
                 Rec."Serial No." := FALRec."Serial No.";
+                "FA Class Code" := FALRec."FA Class Code";//B2BSSD16JUN2023
+                "FA SubClass Code" := FALRec."FA Subclass Code";
             end;
         }
 
@@ -285,6 +304,92 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         {
             DataClassification = CustomerContent;
         }
+        //B2BSSD15MAY2023>>
+        field(60026; "Qty to Inward_B2B"; Integer)
+        {
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            var
+                InwardError: TextConst ENN = 'FULL QTY HAS BEEN INWARD AS PER PO QTY';//B2BSSD22MAY2023
+                InwardError1: TextConst ENN = 'Qty to Inward should not be greater than Quantity.';////B2BSSD22MAY2023
+            begin
+                if Rec.Type = Rec.Type::"Item" then begin
+                    if "Qty to Inward_B2B" > Quantity then
+                        Error(InwardError1)
+                    else
+                        if ("Qty Accepted Inward_B2B" + "Qty to Inward_B2B") > Quantity then
+                            Error(InwardError);
+                end
+                //B2BSSD16MAY2023>>
+                else
+                    if Rec.Type = Rec.Type::Description then begin
+                        if "Qty to Inward_B2B" > Quantity then
+                            Error(InwardError1)
+                        else
+                            if ("Qty Accepted Inward_B2B" + "Qty to Inward_B2B") > Quantity then
+                                Error(InwardError);
+                    end;
+                //B2BSSD16MAY2023<<
+            end;
+        }
+        field(60027; "Qty Accepted Inward_B2B"; Decimal)
+        {
+            DataClassification = CustomerContent;
+        }
+        //B2BSSD15MAY2023<<
+
+        //B2BSSD16MAY2023>>
+        field(60028; "Qty Rejected OutWard_B2B"; Decimal)
+        {
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            var
+                //B2BSSD22MAY2023
+                RejectOutErrorItem: TextConst ENN = 'Qty Rejected OutWard should not be greater than Quantity Rejected.';
+                RejectOutErrorDes: TextConst ENN = 'Qty Rejected OutWard should not be greater than Quantity Rejected.';
+            begin
+                if Rec.Type = Rec.Type::"Item" then begin
+                    if "Qty Rejected OutWard_B2B" > "Quantity Rejected B2B" then
+                        Error(RejectOutErrorItem);
+                end else
+                    if Rec.Type = Rec.Type::Description then begin
+                        if "Qty Rejected OutWard_B2B" > "Quantity Rejected B2B" then
+                            Error(RejectOutErrorDes);
+                    end;
+            end;
+        }
+        field(60029; "NRGP OutWard Qty B2B"; Integer)
+        {
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            var
+                NRGPRejErroritem: TextConst ENN = 'NRGP OutWard Qty & Qty Rejected OutWard should not be greater than Quantity Rejected.';
+            begin
+                if rec.Type = rec.Type::"Item" then begin
+                    if ("Qty Rejected OutWard_B2B" + "NRGP OutWard Qty B2B") > "Quantity Rejected B2B" then
+                        Error(NRGPRejErroritem);
+                end else
+                    if Rec.Type = Rec.Type::Description then begin
+                        if ("Qty Rejected OutWard_B2B" + "NRGP OutWard Qty B2B") > "Quantity Rejected B2B" then
+                            Error('NRGP OutWard Qty & Qty Rejected OutWard should not be greater than Quantity Rejected.');
+                    end;
+            end;
+        }
+        //B2BSSD16MAY2023<<
+        field(60030; "FA Line No."; Integer)//B2BSSD26MAY2023
+        {
+            DataClassification = CustomerContent;
+        }
+        //B2BSSD16JUN2023>>
+        field(60031; "FA Class Code"; Code[10])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(60032; "FA SubClass Code"; Code[10])
+        {
+            DataClassification = CustomerContent;
+        }
+        //B2BSSD16JUN2023<<
     }
 
 

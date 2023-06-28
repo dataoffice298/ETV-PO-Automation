@@ -84,7 +84,10 @@ report 50063 "Material Issue Slip"
             { }
             column(Delivery_Location; "Delivery Location")
             { }
-
+            column(programme_Name; "programme Name")//B2BSSD28MAR2023
+            { }
+            column(Purpose; Purpose)//B2BSSD28MAR2023
+            { }
             dataitem("Indent Line"; "Indent Line")
             {
                 DataItemLink = "Document No." = field("No.");
@@ -122,19 +125,23 @@ report 50063 "Material Issue Slip"
                 { }
                 column(QtyIssue; QtyIssue)
                 { }
+                column(ILEQuantity; ILEQuantity)//B2BSSD24APR2023
+                { }
 
                 trigger OnAfterGetRecord()
                 begin
                     CalcFields("Qty Issued");
                     SNo += 1;
                     ItemLedgerEntry.Reset();
+                    ItemLedgerEntry.SetCurrentKey("Document No.");//B2BSSD24APR2023
                     ItemLedgerEntry.SetRange("Indent No.", "Document No.");
                     ItemLedgerEntry.SetRange("Indent Line No.", "Line No.");
                     ItemLedgerEntry.SetFilter(Quantity, '<%1', 0);
-                    if ItemLedgerEntry.FindFirst() then begin
+                    if ItemLedgerEntry.FindLast() then begin //B2BSSD24APR2023
                         ISSNo1 := ItemLedgerEntry."Document No.";
                         ISSDate1 := ItemLedgerEntry."Posting Date";
                         ItemCategoryCode := ItemLedgerEntry."Item Category Code";
+                        ILEQuantity := ItemLedgerEntry.Quantity;//B2BSSD24APR2023
                     end;
                 end;
             }
@@ -184,4 +191,5 @@ report 50063 "Material Issue Slip"
         QtyIssue: Decimal;
         SNo: Integer;
         ItemLedgerEntry: Record "Item Ledger Entry";
+        ILEQuantity: Integer;//B2BSSD24APR2023
 }

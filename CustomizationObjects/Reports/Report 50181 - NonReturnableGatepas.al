@@ -112,6 +112,8 @@ report 50181 "Non Returnable Gatepass"
             { }
             column(Location_Code; "Location Code")
             { }
+            column(UserName; UserName)//B2BSSD27MAR2023
+            { }
             dataitem("Posted Gate Entry Line_B2B"; "Posted Gate Entry Line_B2B")
             {
                 DataItemLink = "Entry Type" = FIELD("Entry Type"),
@@ -143,7 +145,8 @@ report 50181 "Non Returnable Gatepass"
                 begin
                     Users.Reset();
                     Users.SetRange("User Name", "Posted Gate Entry Header_B2B"."User ID");
-                    if Users.FindFirst() then;
+                    if Users.FindFirst() then
+                        UserName := Users."Full Name";//B2BSSD27MAR2023
                 end;
 
             }
@@ -247,6 +250,5 @@ report 50181 "Non Returnable Gatepass"
         ItematerialCapLbl: Label '1)Item/Material checked and entered in Returnable Items Register on________________Time_____________Signature of SI/SS___________________';
         CheckedCapLbl: Label '2)Checked and allowed at the gate on_____________________Time____________________';
         PostedNrgpOutwardNo: Code[30];//B2BSSD20Jan2023
-
-
+        UserName: Text[50]; //B2BSSD27MAR2023
 }

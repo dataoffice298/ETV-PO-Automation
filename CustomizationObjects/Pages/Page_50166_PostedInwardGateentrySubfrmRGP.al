@@ -15,7 +15,7 @@ page 50166 "Posted Inward Gate SubFm-RGP"
                 field("Source Type"; Rec."Source Type")
                 {
                     ApplicationArea = ALL;
-
+                    OptionCaption = ' ,Sales Shipment,Sales Return Order,Purchase Order,Purchase Return Shipment,Transfer Receipt,Transfer Shipment,Item,Fixed Asset,Others,Indent,Description';
                 }
                 field("Source No."; Rec."Source No.")
                 {
@@ -51,15 +51,15 @@ page 50166 "Posted Inward Gate SubFm-RGP"
                     ApplicationArea = all;
                 }
                 //B2BSSD30Dec2022<<
-                field(Variant; Variant)
+                field(Variant; Rec.Variant)
                 {
                     ApplicationArea = All;
                 }
-                field(ModelNo; ModelNo)
+                field(ModelNo; Rec.ModelNo)
                 {
                     ApplicationArea = All;
                 }
-                field(SerialNo; SerialNo)
+                field(SerialNo; Rec.SerialNo)
                 {
                     ApplicationArea = All;
                 }

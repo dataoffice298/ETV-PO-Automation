@@ -28,6 +28,11 @@ page 50163 "Posted Inward Gate Entry-RGP"
                 {
                     ApplicationArea = ALL;
                 }
+                field("To Location"; Rec."To Location")//B2BSSD31MAR2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'To Location';
+                }
                 field("Station From/To"; Rec."Station From/To")
                 {
                     ApplicationArea = ALL;
@@ -39,11 +44,11 @@ page 50163 "Posted Inward Gate Entry-RGP"
                     Visible = false;
 
                 }
-                field("Item Description"; Rec."Item Description")
+                /*field("Item Description"; Rec."Item Description")
                 {
                     ApplicationArea = ALL;
                     Visible = false;
-                }
+                }*/
                 field("Posting Date"; Rec."Posting Date")
                 {
                     ApplicationArea = ALL;
@@ -122,6 +127,11 @@ page 50163 "Posted Inward Gate Entry-RGP"
                 field("Challan Date"; Rec."Challan Date")//B2BSSD02MAR2023
                 {
                     ApplicationArea = All;
+                }
+                field(ReceiptDate; Rec."Receipt Date")//B2BSSD23MAR2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'Receipt Date';
                 }
             }
             part(Control1500028; "Posted Inward Gate SubFm-RGP")

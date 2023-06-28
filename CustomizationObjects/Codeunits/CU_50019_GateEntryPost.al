@@ -9,6 +9,8 @@ codeunit 50019 "Gate Entry- Post"
     var
         InvSetUp: Record "Inventory Setup";
         Location: Record Location;
+        FixedAsset: Record "Fixed Asset";
+        ERRORmsg1: Label 'Fixed Assets is Not Available for Transfer';
     begin
         GateEntryHeader := Rec;
         GateEntryHeader.TESTFIELD("Posting Date");
@@ -20,13 +22,52 @@ codeunit 50019 "Gate Entry- Post"
         GateEntryLine.SETRANGE("Gate Entry No.", GateEntryHeader."No.");
         if not GateEntryLine.FIND('-') then
             ERROR(Text16500);
-
         if GateEntryLine.FINDSET then
             repeat
-                if GateEntryLine."Source Type" <> 0 then
-                    GateEntryLine.TESTFIELD("Source No.");
-                if GateEntryLine."Source Type" = 0 then
-                    GateEntryLine.TESTFIELD(Description);
+
+                //B2BSSD07JUN2023>>
+                GateEntryLine.Reset();
+                GateEntryLine.SetRange("Gate Entry No.", GateEntryHeader."No.");
+                if GateEntryLine.FindSet() then
+                    if GateEntryLine."Avail/UnAvail" = true then begin
+                        Error(ERRORmsg1);
+                    end;
+                //B2BSSD07JUN2023<<
+
+                //B2BSSD07JUN2023>>
+                if GateEntryLine."Entry Type" = GateEntryLine."Entry Type"::Outward then begin
+                    if GateEntryLine."Source Type" = GateEntryLine."Source Type"::"Fixed Asset" then begin
+                        FixedAsset.Reset();
+                        FixedAsset.SetRange("No.", GateEntryLine."Source No.");
+                        if FixedAsset.FindSet() then begin
+                            FixedAsset."available/Unavailable" := true;
+                            FixedAsset.Modify();
+                        end;
+                    end;
+                end;
+                //B2BSSD07JUN2023<<
+
+                //B2BSSD17APR2023>>
+                if GateEntryLine."Entry Type" = GateEntryLine."Entry Type"::Inward then begin
+                    if GateEntryLine."Source Type" = GateEntryLine."Source Type"::"Fixed Asset" then begin
+                        FixedAsset.Reset();
+                        FixedAsset.SetRange("No.", GateEntryLine."Source No.");
+                        if FixedAsset.FindFirst() then begin
+                            FixedAsset."available/Unavailable" := false;
+                            FixedAsset.Modify();
+                        end;
+                    end;
+                end;
+                //B2BSSD17APR2023<<
+
+                /*if GateEntryLine."Source Type" = GateEntryLine."Source Type"::Description then
+                    GateEntryLine."Source Type" := GateEntryLine."Source Type"::Description;*/
+                if GateEntryLine."Source Type" = GateEntryLine."Source Type"::Item then begin
+                    if GateEntryLine."Source Type" <> 0 then
+                        GateEntryLine.TESTFIELD("Source No.");
+                    if GateEntryLine."Source Type" = 0 then
+                        GateEntryLine.TESTFIELD(Description);
+                end;
             until GateEntryLine.NEXT = 0;
 
         if GUIALLOWED then
@@ -113,7 +154,6 @@ codeunit 50019 "Gate Entry- Post"
                 PostedGateEntryLine.Type := PostedGateEntryHeader.Type;
                 PostedGateEntryLine."Gate Entry No." := PostedGateEntryHeader."No.";
                 PostedGateEntryLine.INSERT;
-
             until GateEntryLine.NEXT = 0;
 
         //B2BMSOn04Nov2022>>
@@ -143,6 +183,7 @@ codeunit 50019 "Gate Entry- Post"
         GateEntType: integer;
         GateEntryHeader: Record "Gate Entry Header_B2B";
         GateEntryLine: Record "Gate Entry Line_B2B";
+        GateEntryLineGvar: Record "Gate Entry Line_B2B";
         PostedGateEntryHeader: Record "Posted Gate Entry Header_B2B";
         PostedGateEntryLine: Record "Posted Gate Entry Line_B2B";
         Text16500: Label 'There is nothing to post.';
@@ -158,6 +199,9 @@ codeunit 50019 "Gate Entry- Post"
         LineCount: Integer;
         Mailmng: Codeunit "Mail Management";
         PurchLine: Record "Purchase Line"; //B2BMSOn04Nov2022
+        indentLine: Record "Indent Line";
+        indentHeader: Record "Indent Header";
+        FixedAsset: Record "Fixed Asset";
 
     procedure CopyCommentLines(FromEntryType: Integer; ToEntryType: Integer; FromNumber: Code[20]; ToNumber: Code[20]);
     begin

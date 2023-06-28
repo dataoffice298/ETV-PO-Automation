@@ -28,6 +28,16 @@ page 50165 "Posted Outward Gate Entry-RGP"
                 {
                     ApplicationArea = ALL;
                 }
+                field("To Location"; Rec."To Location")
+                {
+                    ApplicationArea = All;
+                    Caption = 'To Location';
+                }
+                field(SubLocation; Rec.SubLocation)//B2BSSD27MAR2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'Sub Location';
+                }
                 field("Station From/To"; Rec."Station From/To")
                 {
                     ApplicationArea = ALL;
@@ -183,6 +193,17 @@ page 50165 "Posted Outward Gate Entry-RGP"
                     Image = OpportunitiesList;
                     RunObject = Page "Posted Outward Gate Entry List";
                     ShortCutKey = 'Shift+Ctrl+L';
+                }
+                action(delete)
+                {
+                    Image = Delete;
+                    trigger OnAction()
+                    var
+                        PostedRGPOutward: Record "Posted Gate Entry Line_B2B";
+                    begin
+                        PostedRGPOutward.Get(PostedRGPOutward."Entry Type"::Outward, PostedRGPOutward.Type::RGP, 'RGPO-0086', '10000');
+                        PostedRGPOutward.Delete();
+                    end;
                 }
                 /*action("Print Returnable Gate Pass")
                 {

@@ -10,7 +10,7 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
 
             //Unsupported feature: Change OptionString on ""Document Type"(Field 1)". Please convert manually.
         }
-        field(51000; Subject; Text[200])
+        field(51000; Subject; Text[500])//B2BSSD28MAR2023
         {
             Caption = 'Subject';
         }
@@ -42,14 +42,14 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
         }
         field(50113; "EPCG Scheme"; Option)
         {
-            OptionMembers = "Under EPCG","Non EPCG";
-            OptionCaption = 'Under EPCG,Non EPCG';
+            OptionMembers = " ","Under EPCG","Non EPCG";
+            OptionCaption = ' ,Under EPCG,Non EPCG';
         }
         field(50114; "Import Type"; Option)
         {
             OptionMembers = " ",Import,Indigenous;
             OptionCaption = ' ,Import,Indigenous';
-            NotBlank = true;//B2BSSD02Jan2023
+            //NotBlank = true;//B2BSSD02Jan2023
         }
         //B2BMSOn18Oct2022>>
         Field(50115; "Regularization"; Boolean)
@@ -62,7 +62,14 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
             DataClassification = CustomerContent;
         }
         //B2BMSOn18Oct2022<<
-
+        field(50117; "Programme Name"; Code[50])//B2BSSD20MAR2023
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50118; Purpose; Text[250])//B2BSSD21MAR2023
+        {
+            DataClassification = CustomerContent;
+        }
         field(33002900; "RFQ No."; Code[20])
         {
             NotBlank = true;//B2BSSD08Feb2023
@@ -107,7 +114,6 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
 
 
     //Unsupported feature: CodeModification on "OnDelete". Please convert manually.
-
     //trigger OnDelete();
     //Parameters and return type have not been exported.
     //>>>> ORIGINAL CODE:

@@ -17,6 +17,25 @@ page 50146 "Outward Gate Entry - NRGP"
                 field("Location Code"; Rec."Location Code")
                 {
                     ApplicationArea = ALL;
+                    //B2BSSD11APR2023<<
+                    trigger OnValidate()
+                    var
+                        Userwisesetup: Codeunit UserWiseSecuritySetup;
+                    begin
+                        if not Userwisesetup.CheckUserLocation(UserId, Rec."Location Code", 4) then
+                            Error('User %1 dont have permission to location %2', UserId, Rec."Location Code");
+                    end;
+                    //B2BSSD11APR2023>>
+                }
+                field(SubLocation; Rec.SubLocation)//B2BSSD27MAR2023
+                {
+                    ApplicationArea = All;
+                    TableRelation = Location;
+                    Caption = 'Sub Location';
+                }
+                field("To Location"; Rec."To Location")//B2BSSD31MAR2023
+                {
+                    ApplicationArea = All;
                 }
                 field(Type; Rec.Type)
                 {
@@ -44,10 +63,6 @@ page 50146 "Outward Gate Entry - NRGP"
                 {
                     ApplicationArea = ALL;
                 }
-                field("Item Description"; Rec."Item Description")
-                {
-                    ApplicationArea = ALL;
-                }
                 field("Document Date"; Rec."Document Date")
                 {
                     ApplicationArea = ALL;
@@ -55,6 +70,7 @@ page 50146 "Outward Gate Entry - NRGP"
                 field("Document Time"; Rec."Document Time")
                 {
                     ApplicationArea = ALL;
+                    Importance = Additional;
                 }
                 field("Posting Date"; Rec."Posting Date")
                 {
@@ -63,6 +79,7 @@ page 50146 "Outward Gate Entry - NRGP"
                 field("Posting Time"; Rec."Posting Time")
                 {
                     ApplicationArea = ALL;
+                    Importance = Additional;
                 }
                 field("Vehicle No."; Rec."Vehicle No.")
                 {
@@ -77,21 +94,31 @@ page 50146 "Outward Gate Entry - NRGP"
                     ApplicationArea = ALL;
                 }
                 //B2BSSD20Dec2022<<
-                field("Department Code"; Rec."Department Code")
+                field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {
                     ApplicationArea = All;
                 }
-                field("Channel  Code"; Rec."Channel  Code")
+                field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = All;
                 }
-                field(SubLocation; Rec.SubLocation)
+                field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")//B2BSSD23MAR2023
                 {
                     ApplicationArea = All;
-                    TableRelation = Location;
                 }
                 //B2BSSD20Dec2022>>
-
+                field(Designation; Rec.Designation)//B2BSSD27MAR2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'Designation';
+                    Importance = Additional;
+                }
+                field(Purpose; Rec.Purpose) //B2BSSD27MAR2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'Purpose';
+                    Importance = Additional;
+                }
             }
             part(Control1500028; "Outward Gate Entry SubFrm-NRGP")
             {

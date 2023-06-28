@@ -2,6 +2,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
 {
     layout
     {
+
         //B2BSSD28FEB2023<<
         addafter("Include GST in TDS Base")
         {
@@ -10,6 +11,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 ApplicationArea = all;
             }
         }
+
         //B2BSSD28FEB2023>>
         addlast("Invoice Details")
         {
@@ -27,18 +29,34 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             }
             field("EPCG Scheme"; Rec."EPCG Scheme")
             {
+                ShowMandatory = true;
                 ApplicationArea = all;
             }
             field("Import Type"; Rec."Import Type")
             {
+                ShowMandatory = true;
                 ApplicationArea = all;
             }
-            //B2BSSD02Jan2023<<
+            field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")
+            {
+                ApplicationArea = All;
+            }
+        }
+
+        addafter("Vendor Invoice No.")//B2BSSD20MAR2023
+        {
             field("Vendor Invoice Date"; Rec."Vendor Invoice Date")
             {
                 ApplicationArea = All;
             }
-            //B2BSSD02Jan2023>>
+        }
+        addafter("Vendor Invoice Date")//B2BSSD20MAR2023
+        {
+            field("Programme Name"; Rec."Programme Name")
+            {
+                ApplicationArea = All;
+                Caption = 'Programme Name';
+            }
         }
         //B2BSSD25Jan2023<<
         addafter(PurchLines)
@@ -58,6 +76,14 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         {
             Visible = false;
         }
+        modify("Ship-to Name")//B2BSSD27MAR2023
+        {
+            Editable = true;
+        }
+        modify("Ship-to Address 2")//B2BSSD27MAR2023
+        {
+            Editable = true;
+        }
         addafter("Attached Documents")
         {
             part(AttachmentDocPurOrd; "Document Attachment Factbox")
@@ -70,6 +96,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             }
         }
         //B2BSSD14FEB2023>>
+
     }
 
     actions
@@ -103,12 +130,45 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                     until PurchLine.Next = 0;
             end;
         }
+
+        //B2BSSD13MAR2023<<
+        modify(Receipts)
+        {
+            trigger OnAfterAction()
+            var
+                purchaseLine: Record "Purchase Line";
+                POAutomation: Codeunit "PO Automation";
+            begin
+                purchaseLine.Reset();
+                purchaseLine.SetRange("Document No.", Rec."No.");
+                if purchaseLine.FindSet() then begin
+                    if purchaseLine.Type = purchaseLine.Type::Item then
+                        purchaseLine.TestField("Qty. to Accept B2B");
+                end;
+            end;
+        } //B2BSSD13MAR2023<<
+
         //B2BVCOn03Oct2022<<
         //B2BVCOn04Oct2022>>>
         modify(Release)
         {
             trigger OnBeforeAction()
             begin
+                //B2BSSD16JUN2023>>
+                PurchLine.Reset();
+                PurchLine.SetRange("Document No.", Rec."No.");
+                if PurchLine.FindSet() then begin
+                    repeat
+                        if PurchLine.Type = PurchLine.Type::"Fixed Asset" then begin
+                            PurchLine.TestField("FA Class Code");
+                            PurchLine.TestField("FA SubClass Code");
+                            PurchLine.TestField("Serial No.");
+                            PurchLine.TestField(Make_B2B);
+                            PurchLine.TestField("Model No.");
+                        end;
+                    until PurchLine.Next() = 0;
+                end;
+                //B2BSSD16JUN2023<<
                 if (Rec."LC No." = '') then begin
                     LCDetails.Reset();
                     LCDetails.SetRange("Issued To/Received From", Rec."Buy-from Vendor No.");
@@ -149,6 +209,54 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             }
         }
         //B2BSSD14Feb2023<<
+
+        //B2BSSD12APR2023>>
+        addafter(PrintRegularization)
+        {
+            action(POFormat)
+            {
+                ApplicationArea = Suite;
+                Caption = 'Print PO Format Order';
+                Ellipsis = true;
+                Image = PrintReport;
+                Promoted = true;
+                PromotedCategory = Category10;
+                ToolTip = 'Prepare to print the Purchase Order. The report request window for the document opens where you can specify what to include on the print-out.';
+                trigger OnAction()
+                var
+                    PurchaseHeader: Record "Purchase Header";
+                begin
+                    PurchaseHeader.Reset();
+                    PurchaseHeader.SetRange("Document Type", Rec."Document Type");
+                    PurchaseHeader.SetRange("No.", Rec."No.");
+                    Report.RunModal(Report::"PO FORMAT", true, false, PurchaseHeader);
+                end;
+            }
+        }
+        addafter(POFormat)
+        {
+            action(GRNReceipt)
+            {
+                ApplicationArea = Suite;
+                Caption = 'GRN RECEIPT';
+                Ellipsis = true;
+                Image = PrintReport;
+                Promoted = true;
+                PromotedCategory = Category10;
+                ToolTip = 'Prepare to print the GRN Report. The report request window for the document opens where you can specify what to include on the print-out.';
+                trigger OnAction()
+                var
+                    PurchaseHeader: Record "Purchase Header";
+                    PostedPurReceipt: Record "Purch. Rcpt. Header";
+                begin
+                    PostedPurReceipt.Reset();
+                    PostedPurReceipt.SetRange("Order No.", Rec."No.");
+                    Report.RunModal(Report::"GRN RECEIPT", true, false, PostedPurReceipt);
+                end;
+            }
+        }
+        //B2BSSDSSD12APR2023<<
+
         modify(DocAttach)
         {
             Visible = false;
@@ -160,6 +268,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         GateEntry: Record "Posted Gate Entry Line_B2B";
         PurchLine: Record "Purchase Line";
         LCDetails: Record "LC Details";
+        PurchaseHeader: Record "Purchase Header";
     /*   actions
        {
            // Add changes to page actions here

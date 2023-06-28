@@ -23,7 +23,8 @@ table 50220 "Posted Gate Entry Line_B2B"
         field(4; "Source Type"; Option)
         {
             DataClassification = CustomerContent;
-            OptionMembers = " ","Sales Shipment","Sales Return Order","Purchase Order","Purchase Return Shipment","Transfer Receipt","Transfer Shipment","Item","Fixed Asset",Others,Description;
+            OptionMembers = " ","Sales Shipment","Sales Return Order","Purchase Order","Purchase Return Shipment","Transfer Receipt","Transfer Shipment","Item","Fixed Asset",Others,Indent,Description;
+            OptionCaption = ' ,Sales Shipment,Sales Return Order,Purchase Order,Purchase Return Shipment,Transfer Receipt,Transfer Shipment,Item,Fixed Asset,Others,Indent,Description';
         }
         field(5; "Source No."; Code[20])
         {
@@ -99,6 +100,14 @@ table 50220 "Posted Gate Entry Line_B2B"
         {
             DataClassification = CustomerContent;
             Caption = 'Serial No';
+        }
+        field(50000; "Avail Qty"; Integer)//B2BSSD03APR2023
+        {
+            DataClassification = CustomerContent;
+        }
+        field(35; "Avail/UnAvail"; Boolean)//B2BSSD07JUN2023
+        {
+            DataClassification = CustomerContent;
         }
     }
 

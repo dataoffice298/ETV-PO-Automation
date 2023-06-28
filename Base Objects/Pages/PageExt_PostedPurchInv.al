@@ -31,6 +31,21 @@ pageextension 50079 postedPurchInvExt extends "Posted Purchase Invoice"
             }
 
         }
+        //B2BSSD23MAR2023<<
+        addafter("Vendor Order No.")
+        {
+            field(ProgrammeName; Rec."Programme Name")
+            {
+                ApplicationArea = All;
+                Caption = 'Programme Name';
+            }
+            field(Purpose; Rec.Purpose)
+            {
+                ApplicationArea = All;
+                Caption = 'Purpose';
+            }
+        }
+        //B2BSSD23MAR2023>>
     }
 
     actions

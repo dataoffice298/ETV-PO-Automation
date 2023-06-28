@@ -41,11 +41,6 @@ page 50161 "Inward Gate Entry List-RGP"
                 {
                     ApplicationArea = ALL;
                 }
-                field("Item Description"; Rec."Item Description")
-                {
-                    ApplicationArea = ALL;
-                }
-
             }
         }
     }

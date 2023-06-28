@@ -8,7 +8,7 @@ report 50106 "Current Stock Report"
     dataset
     {
 
-        dataitem(Item; Item)
+        dataitem(item; Item)
         {
             DataItemTableView = sorting("Item Category Code");
             RequestFilterFields = "Item Category Code", "No.";
@@ -18,115 +18,242 @@ report 50106 "Current Stock Report"
                 Users: Record User;
                 FixedAsset: Record "Fixed Asset";
                 NewStartDate: Date;
-                ItemLedgerEntry: Record "Item Ledger Entry";
                 Openingstock: Decimal;
                 InwardStock: Decimal;
                 OutwardStock: Decimal;
                 ClosingStock: Decimal;
-                ItemVariant: Record "Item Variant";
+
                 Make: Code[50];
             begin
-                Clear(Openingstock);
-                Clear(InwardStock);
-                Clear(OutwardStock);
-                Clear(ClosingStock);
-                SNo += 1;
 
+                clear(Itemnumber);
                 NewStartDate := CALCDATE('-1D', StartDate);
 
-                ItemLedgerEntry.RESET;
-                ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
-                ItemLedgerEntry.SETFILTER("Posting Date", '..%1', NewStartDate);
-                IF ItemLedgerEntry.FINDSET THEN begin
-                    ItemLedgerEntry.CalcSums(Quantity);
-                    Openingstock += ItemLedgerEntry.Quantity;
-                end;
-                if Openingstock = 0 then
-                    CurrReport.Skip();
+                //B2BSSD23MAY2023>>
 
-                ItemLedgerEntry.RESET;
-                ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
-                ItemLedgerEntry.SETFILTER("Posting Date", '%1..%2', StartDate, EndDate);
-                ItemLedgerEntry.SetFilter("Document Type", '%1|%2|%3|%4|%5', ItemLedgerEntry."Document Type"::"Purchase Invoice",
-                                                                             ItemLedgerEntry."Document Type"::"Purchase Receipt",
-                                                                             ItemLedgerEntry."Document Type"::"Sales Credit Memo",
-                                                                             ItemLedgerEntry."Document Type"::"Sales Return Receipt",
-                                                                             ItemLedgerEntry."Document Type"::"Transfer Receipt");
-                IF ItemLedgerEntry.FINDSET THEN begin
-                    ItemLedgerEntry.CalcSums(Quantity);
-                    InwardStock += ItemLedgerEntry.Quantity;
-                end;
-
-                ItemLedgerEntry.RESET;
-                ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
-                ItemLedgerEntry.SETFILTER("Posting Date", '%1..%2', StartDate, EndDate);
-                ItemLedgerEntry.SetFilter("Entry Type", '%1|%2', ItemLedgerEntry."Entry Type"::"Positive Adjmt.",
-                                                                 ItemLedgerEntry."Entry Type"::Output);
-                IF ItemLedgerEntry.FINDSET THEN begin
-                    ItemLedgerEntry.CalcSums(Quantity);
-                    InwardStock += ItemLedgerEntry.Quantity;
-                end;
-
-                ItemLedgerEntry.RESET;
-                ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
-                ItemLedgerEntry.SETFILTER("Posting Date", '%1..%2', StartDate, EndDate);
-                ItemLedgerEntry.SetFilter("Document Type", '%1|%2|%3|%4|%5', ItemLedgerEntry."Document Type"::"Sales Invoice",
-                                                                             ItemLedgerEntry."Document Type"::"Sales Shipment",
-                                                                             ItemLedgerEntry."Document Type"::"Purchase Return Shipment",
-                                                                             ItemLedgerEntry."Document Type"::"Purchase Credit Memo",
-                                                                             ItemLedgerEntry."Document Type"::"Transfer Shipment");
-                IF ItemLedgerEntry.FINDSET THEN begin
-                    repeat
-                        OutwardStock += ABS(ItemLedgerEntry.Quantity);
-                    until ItemLedgerEntry.Next() = 0;
-                end;
-
-                ItemLedgerEntry.RESET;
-                ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
-                ItemLedgerEntry.SETFILTER("Posting Date", '%1..%2', StartDate, EndDate);
-                ItemLedgerEntry.SetFilter("Entry Type", '%1|%2', ItemLedgerEntry."Entry Type"::"Negative Adjmt.",
-                                                                 ItemLedgerEntry."Entry Type"::Consumption);
-                IF ItemLedgerEntry.FINDSET THEN begin
-                    repeat
-                        OutwardStock += ABS(ItemLedgerEntry.Quantity);
-                    until ItemLedgerEntry.Next() = 0;
-                end;
-
-                //B2BSSD19Jan2023<<
                 ItemVariant.Reset();
-                ItemVariant.SetRange("Item No.", "No.");
-                if ItemVariant.FindFirst() then
-                    Make := ItemVariant.Description;
-                //b2BSSD19Jan2023>>
+                ItemVariant.SetRange("Item No.", Item."No.");
+                if ItemVariant.FindFirst() then begin
+                    repeat
+                        Clear(Openingstock);
+                        Clear(InwardStock);
+                        Clear(OutwardStock);
+                        Clear(ClosingStock);
+                        Clear(Unitrate);
+                        Clear(variantcode);
+                        variantcode := ItemVariant.Code;
+                        Itemnumber := item."No.";
+                        //B2BSSD23MAY2023<<
+                        ItemLedgerEntry.RESET;
+                        ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
+                        ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);
+                        ItemLedgerEntry.SetRange("Variant Code", variantcode);
+                        //ItemLedgerEntry.SETFILTER("Posting Date", '..%1', NewStartDate);
+                        ItemLedgerEntry.SetFilter("Posting Date", '%1..%2', StartDate, EndDate);//B2BSSD08JUN2023
+                        IF ItemLedgerEntry.FINDSET THEN begin
+                            ItemLedgerEntry.CalcSums(Quantity);
+                            Openingstock := ItemLedgerEntry.Quantity;
+                            //B2BSSD15MAY2023
+                            ItemLedgerEntry.CalcFields("Cost Amount (Actual)");
+                            Unitrate := ItemLedgerEntry."Cost Amount (Actual)";
+                        end;
 
-                ClosingStock := (Openingstock + InwardStock) - OutwardStock;
+                        //if Openingstock = 0 then
+                        //    CurrReport.Skip();
 
+                        ItemLedgerEntry.RESET;
+                        ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
+                        ItemLedgerEntry.SetRange("Variant Code", variantcode);
+                        ItemLedgerEntry.SETFILTER("Posting Date", '%1..%2', StartDate, EndDate);
+                        ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);//B2BSSD16MAY2023
+                        ItemLedgerEntry.SetFilter("Document Type", '%1|%2|%3|%4|%5', ItemLedgerEntry."Document Type"::"Purchase Invoice",
+                                                                                     ItemLedgerEntry."Document Type"::"Purchase Receipt",
+                                                                                     ItemLedgerEntry."Document Type"::"Sales Credit Memo",
+                                                                                     ItemLedgerEntry."Document Type"::"Sales Return Receipt",
+                                                                                     ItemLedgerEntry."Document Type"::"Transfer Receipt");
+                        IF ItemLedgerEntry.FINDSET THEN begin
+                            ItemLedgerEntry.CalcSums(Quantity);
+                            InwardStock := ItemLedgerEntry.Quantity;
+                        end;
 
-                WindPa.Update(1, Item."No.");
-                TempExcelBuffer.NewRow();
-                TempExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                TempExcelBuffer.AddColumn(Item."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                TempExcelBuffer.AddColumn(Item.Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                TempExcelBuffer.AddColumn(Make, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSS19Jan2023
-                TempExcelBuffer.AddColumn(Item."Base Unit of Measure", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                TempExcelBuffer.AddColumn(Openingstock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                TempExcelBuffer.AddColumn(Item."Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                TempExcelBuffer.AddColumn(Round(Openingstock * Item."Unit Cost", 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                TempExcelBuffer.AddColumn(InwardStock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                TempExcelBuffer.AddColumn(Item."Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                TempExcelBuffer.AddColumn(Round(InwardStock * Item."Unit Cost", 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                TempExcelBuffer.AddColumn(OutwardStock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                TempExcelBuffer.AddColumn(Item."Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                TempExcelBuffer.AddColumn(Round(OutwardStock * Item."Unit Cost", 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                TempExcelBuffer.AddColumn(ClosingStock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                TempExcelBuffer.AddColumn(Item."Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                TempExcelBuffer.AddColumn(Round(ClosingStock * Item."Unit Cost", 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        ItemLedgerEntry.RESET;
+                        ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
+                        ItemLedgerEntry.SetRange("Variant Code", variantcode);
+                        ItemLedgerEntry.SETFILTER("Posting Date", '%1..%2', StartDate, EndDate);
+                        ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);//B2BSSD16MAY2023
+                        ItemLedgerEntry.SetFilter("Entry Type", '%1|%2', ItemLedgerEntry."Entry Type"::"Positive Adjmt.",
+                                                                         ItemLedgerEntry."Entry Type"::Output);
+                        IF ItemLedgerEntry.FINDSET THEN begin
+                            ItemLedgerEntry.CalcSums(Quantity);
+                            InwardStock := ItemLedgerEntry.Quantity;
+                        end;
 
+                        ItemLedgerEntry.RESET;
+                        ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
+                        ItemLedgerEntry.SetRange("Variant Code", variantcode);
+                        ItemLedgerEntry.SETFILTER("Posting Date", '%1..%2', StartDate, EndDate);
+                        ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);//B2BSSD16MAY2023
+                        ItemLedgerEntry.SetFilter("Document Type", '%1|%2|%3|%4|%5', ItemLedgerEntry."Document Type"::"Sales Invoice",
+                                                                                     ItemLedgerEntry."Document Type"::"Sales Shipment",
+                                                                                     ItemLedgerEntry."Document Type"::"Purchase Return Shipment",
+                                                                                     ItemLedgerEntry."Document Type"::"Purchase Credit Memo",
+                                                                                     ItemLedgerEntry."Document Type"::"Transfer Shipment");
+                        IF ItemLedgerEntry.FINDSET THEN begin
+                            repeat
+                                OutwardStock += ABS(ItemLedgerEntry.Quantity);
+                            until ItemLedgerEntry.Next() = 0;
+                        end;
+
+                        ItemLedgerEntry.RESET;
+                        ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
+                        ItemLedgerEntry.SetRange("Variant Code", variantcode);
+                        ItemLedgerEntry.SETFILTER("Posting Date", '%1..%2', StartDate, EndDate);
+                        ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);//B2BSSD16MAY2023
+                        ItemLedgerEntry.SetFilter("Entry Type", '%1|%2', ItemLedgerEntry."Entry Type"::"Negative Adjmt.",
+                                                                         ItemLedgerEntry."Entry Type"::Consumption);
+                        IF ItemLedgerEntry.FINDSET THEN begin
+                            repeat
+                                OutwardStock += ABS(ItemLedgerEntry.Quantity);
+                            until ItemLedgerEntry.Next() = 0;
+                        end;
+
+                        Make := ItemVariant.Description;
+
+                        ClosingStock := (Openingstock + InwardStock) - OutwardStock;
+
+                        if ((Openingstock = 0) AND (InwardStock = 0) AND (OutwardStock = 0) AND (ClosingStock = 0)) then
+                            CurrReport.Skip()
+                        else
+                            SNo += 1;
+                        WindPa.Update(1, Item."No.");
+                        TempExcelBuffer.NewRow();
+                        TempExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(Item."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(Item.Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(Make, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSS19Jan2023
+                        TempExcelBuffer.AddColumn(Item."Base Unit of Measure", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        TempExcelBuffer.AddColumn(Openingstock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(Unitrate, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD15MAY2023
+                        TempExcelBuffer.AddColumn(Round(Openingstock * Unitrate, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD15MAY2023
+                        TempExcelBuffer.AddColumn(InwardStock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(Unitrate, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD15MAY2023
+                        TempExcelBuffer.AddColumn(Round(InwardStock * Unitrate, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD15MAY2023
+                        TempExcelBuffer.AddColumn(OutwardStock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(Unitrate, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD15MAY2023
+                        TempExcelBuffer.AddColumn(Round(OutwardStock * Unitrate, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD15MAY2023
+                        TempExcelBuffer.AddColumn(ClosingStock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(Unitrate, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD15MAY2023
+                        TempExcelBuffer.AddColumn(Round(ClosingStock * Unitrate, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//b2bSSD15MAY2023
+                        TempExcelBuffer.AddColumn(LocationGvar, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD16MAY2023
+                    until ItemVariant.Next() = 0;
+
+                end else
+                    //B2BSSD23MAY2023>>
+                    if item."No." <> Itemnumber then begin
+                        Clear(Openingstock);
+                        Clear(InwardStock);
+                        Clear(OutwardStock);
+                        Clear(ClosingStock);
+                        Clear(Unitrate);
+                        Clear(variantcode);
+                        ItemLedgerEntry.RESET;
+                        ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
+                        ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);
+                        //ItemLedgerEntry.SETFILTER("Posting Date", '..%1', NewStartDate);
+                        ItemLedgerEntry.SetFilter("Posting Date", '%1..%2', StartDate, EndDate);//B2BSSD08JUN2023
+                        IF ItemLedgerEntry.FINDSET THEN begin
+                            ItemLedgerEntry.CalcSums(Quantity);
+                            Openingstock := ItemLedgerEntry.Quantity;
+                            ItemLedgerEntry.CalcFields("Cost Amount (Actual)");
+                            Unitrate := ItemLedgerEntry."Cost Amount (Actual)";
+                        end;
+                        ItemLedgerEntry.RESET;
+                        ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
+                        ItemLedgerEntry.SETFILTER("Posting Date", '%1..%2', StartDate, EndDate);
+                        ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);
+                        ItemLedgerEntry.SetFilter("Document Type", '%1|%2|%3|%4|%5', ItemLedgerEntry."Document Type"::"Purchase Invoice",
+                                                                                     ItemLedgerEntry."Document Type"::"Purchase Receipt",
+                                                                                     ItemLedgerEntry."Document Type"::"Sales Credit Memo",
+                                                                                     ItemLedgerEntry."Document Type"::"Sales Return Receipt",
+                                                                                     ItemLedgerEntry."Document Type"::"Transfer Receipt");
+                        IF ItemLedgerEntry.FINDSET THEN begin
+                            ItemLedgerEntry.CalcSums(Quantity);
+                            InwardStock += ItemLedgerEntry.Quantity;
+                        end;
+                        ItemLedgerEntry.RESET;
+                        ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
+                        ItemLedgerEntry.SETFILTER("Posting Date", '%1..%2', StartDate, EndDate);
+                        ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);
+                        ItemLedgerEntry.SetFilter("Entry Type", '%1|%2', ItemLedgerEntry."Entry Type"::"Positive Adjmt.",
+                                                                         ItemLedgerEntry."Entry Type"::Output);
+                        IF ItemLedgerEntry.FINDSET THEN begin
+                            ItemLedgerEntry.CalcSums(Quantity);
+                            InwardStock += ItemLedgerEntry.Quantity;
+                        end;
+                        ItemLedgerEntry.RESET;
+                        ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
+                        ItemLedgerEntry.SETFILTER("Posting Date", '%1..%2', StartDate, EndDate);
+                        ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);//B2BSSD16MAY2023
+                        ItemLedgerEntry.SetFilter("Document Type", '%1|%2|%3|%4|%5', ItemLedgerEntry."Document Type"::"Sales Invoice",
+                                                                                     ItemLedgerEntry."Document Type"::"Sales Shipment",
+                                                                                     ItemLedgerEntry."Document Type"::"Purchase Return Shipment",
+                                                                                     ItemLedgerEntry."Document Type"::"Purchase Credit Memo",
+                                                                                     ItemLedgerEntry."Document Type"::"Transfer Shipment");
+                        IF ItemLedgerEntry.FINDSET THEN begin
+                            repeat
+                                OutwardStock += ABS(ItemLedgerEntry.Quantity);
+                            until ItemLedgerEntry.Next() = 0;
+                        end;
+                        ItemLedgerEntry.RESET;
+                        ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
+                        ItemLedgerEntry.SETFILTER("Posting Date", '%1..%2', StartDate, EndDate);
+                        ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);//B2BSSD16MAY2023
+                        ItemLedgerEntry.SetFilter("Entry Type", '%1|%2', ItemLedgerEntry."Entry Type"::"Negative Adjmt.",
+                                                                         ItemLedgerEntry."Entry Type"::Consumption);
+                        IF ItemLedgerEntry.FINDSET THEN begin
+                            repeat
+                                OutwardStock += ABS(ItemLedgerEntry.Quantity);
+                            until ItemLedgerEntry.Next() = 0;
+                        end;
+
+                        Make := ItemVariant.Description;
+
+                        ClosingStock := (Openingstock + InwardStock) - OutwardStock;
+
+                        if ((Openingstock = 0) AND (InwardStock = 0) AND (OutwardStock = 0) AND (ClosingStock = 0)) then
+                            CurrReport.Skip()
+                        else
+                            SNo += 1;
+                        WindPa.Update(1, Item."No.");
+                        TempExcelBuffer.NewRow();
+                        TempExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(Item."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(Item.Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(Make, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(Item."Base Unit of Measure", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        TempExcelBuffer.AddColumn(Openingstock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(Unitrate, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(Round(Openingstock * Unitrate, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(InwardStock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(Unitrate, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(Round(InwardStock * Unitrate, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(OutwardStock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(Unitrate, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(Round(OutwardStock * Unitrate, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(ClosingStock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(Unitrate, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(Round(ClosingStock * Unitrate, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(LocationGvar, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    end;
+                //B2BSSD23MAY2023<<
             end;
 
             trigger OnPreDataItem()
+            var
             begin
                 Clear(SNo);
                 MakeExcelHeaders();
@@ -146,10 +273,18 @@ report 50106 "Current Stock Report"
                     field(StartDate; StartDate)
                     {
                         ApplicationArea = all;
+                        Caption = 'Start Date';
                     }
                     field(EndDate; EndDate)
                     {
                         ApplicationArea = all;
+                        Caption = 'End Date';
+                    }
+                    field(LocationGvar; LocationGvar)
+                    {
+                        ApplicationArea = All;
+                        TableRelation = Location;
+                        Caption = 'Location';
                     }
                 }
             }
@@ -174,6 +309,11 @@ report 50106 "Current Stock Report"
         EndDate: Date;
         WindPa: Dialog;
         SNo: Integer;
+        ItemLedgerEntry: Record "Item Ledger Entry";
+
+        variantcode: code[20];
+        ItemVariant: Record "Item Variant";
+        Itemnumber: Code[20];
 
     procedure MakeExcelHeaders()
     begin
@@ -232,6 +372,11 @@ report 50106 "Current Stock Report"
         TempExcelBuffer.AddColumn('QUANTITY', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('UNIT RATE', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('STOCK VALUE', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        TempExcelBuffer.AddColumn('Location', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD16MAY2023
 
     end;
+
+    var
+        LocationGvar: Code[10];//B2BSSD16MAY2023
+        Unitrate: Decimal;
 }

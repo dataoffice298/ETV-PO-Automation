@@ -70,6 +70,10 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
         {
             DataClassification = CustomerContent;
         }
+        field(50119; "Ammendent Comments"; Code[500])//B2BSSD29JUN2023
+        {
+            DataClassification = CustomerContent;
+        }
         field(33002900; "RFQ No."; Code[20])
         {
             NotBlank = true;//B2BSSD08Feb2023

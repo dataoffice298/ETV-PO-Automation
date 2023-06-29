@@ -14,12 +14,12 @@ page 50116 "Indent Header"
         {
             group(General)
             {
-                Editable = PageEditable; //B2BPGON10OCT2022
+                //Editable = PageEditable; //B2BPGON10OCT2022
                 Caption = 'General';
                 field("No."; rec."No.")
                 {
                     AssistEdit = true;
-                    //Editable = PageEditable;//B2BVCOn28Sep22
+                    Editable = PageEditable;
                     ApplicationArea = All;
                     trigger OnAssistEdit();
                     begin
@@ -30,41 +30,41 @@ page 50116 "Indent Header"
                 field(Description; rec.Description)
                 {
                     ApplicationArea = all;
-                    //Editable = PageEditable;//B2BVCOn28Sep22
+                    Editable = PageEditable;
 
                 }
                 field(Indentor; rec.Indentor)
                 {
                     Caption = 'Indentor';
                     ApplicationArea = all;
-                    // Editable = PageEditable;//B2BVCOn28Sep22
+                    Editable = PageEditable;
 
                 }
                 field(Department; rec.Department)
                 {
                     Visible = false;
                     ApplicationArea = all;
-                    // Editable = PageEditable;//B2BVCOn28Sep22
+                    Editable = PageEditable;
 
                 }
                 field("Document Date"; rec."Document Date")
                 {
                     Caption = 'Order Date';
                     ApplicationArea = all;
-                    //Editable = PageEditable;//B2BVCOn28Sep22
+                    Editable = PageEditable;
 
                 }
                 field("Released Status"; rec."Released Status")
                 {
                     Caption = 'Status';
                     ApplicationArea = all;
-                    //Editable = false;//B2BVCOn28Sep22
+                    Editable = false;
 
                 }
                 field("User Id"; rec."User Id")
                 {
                     ApplicationArea = all;
-                    //Editable = PageEditable;//B2BVCOn28Sep22
+                    Editable = PageEditable;
 
                 }
                 field(Authorized; rec.Authorized)
@@ -77,14 +77,12 @@ page 50116 "Indent Header"
                 field("No. of Archived Versions"; Rec."No. of Archived Versions")
                 {
                     ApplicationArea = All;
-                    // Editable = PageEditable;//B2BVCOn28Sep22
+                    Editable = PageEditable;//B2BVCOn28Sep22
 
                 }
                 field("Ammendent Comments"; Rec."Ammendent Comments")
                 {
                     ApplicationArea = All;
-                    // Editable = PageEditable;//B2BVCOn28Sep22
-
                 }
                 //B2BMSOn13Sep2022<<
 
@@ -93,12 +91,13 @@ page 50116 "Indent Header"
                 {
                     ApplicationArea = all;
                     Caption = 'Shortcut Dimension 1 Code';
-                    //Editable =  PageEditable;
+                    Editable = PageEditable;
                 }
                 field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = all;
                     Caption = 'Shortcut Dimension 2 Code';
+                    Editable = PageEditable;
                 }
 
 
@@ -106,21 +105,25 @@ page 50116 "Indent Header"
                 {
                     ApplicationArea = All;
                     Caption = 'Shortcut Dimension 9 Code';
+                    Editable = PageEditable;
                 }
                 field("programme Name"; Rec."programme Name")//B2BSS20MAR2023
                 {
                     ApplicationArea = All;
                     Caption = 'programme Name';
+                    Editable = PageEditable;
                 }
                 field(Purpose; Rec.Purpose)//B2BSSD21MAR2023
                 {
                     ApplicationArea = All;
                     Caption = 'Purpose';
+                    Editable = PageEditable;
                 }
                 field("Delivery Location"; Rec."Delivery Location")//B2BSSD03MAY2023
                 {
                     ApplicationArea = All;
                     Caption = 'Location Code';
+                    Editable = PageEditable;
                 }
             }
             //B2BPAV<<
@@ -128,7 +131,7 @@ page 50116 "Indent Header"
             {
                 SubPageLink = "Document No." = FIELD("No.");
                 ApplicationArea = All;
-                //Editable = PageEditable;//B2BVCOn28Sep22
+                Editable = PageEditable;
             }
         }
         //B2BSSD30Jan2023<<
@@ -572,7 +575,7 @@ page 50116 "Indent Header"
                     begin
                         //B2BSSD29MAY2023
                         IndentHeader.Reset();
-                        IndentHeader.SetRange("No.", ArchiveIndHdr."No.");
+                        IndentHeader.SetRange("No.", Rec."No.");
                         if IndentHeader.FindFirst() then begin
                             if IndentHeader."Released Status" = IndentHeader."Released Status"::Released then begin
                                 IndentHeader.TestField("Ammendent Comments");
@@ -608,6 +611,7 @@ page 50116 "Indent Header"
                             Message('Document Archived %1', Rec."No.");
                             //B2BMSOn02Nov2022<<
                             Rec.ReopenIndent;
+                            Rec."Ammendent Comments" := '';//B2BSSD28JUN2023
                             CurrPage.UPDATE;
                         END ELSE
                             MESSAGE(text000);

@@ -43,6 +43,11 @@ page 50048 "Archive Indent List"
                 {
                     ApplicationArea = All;
                 }
+                field("Ammendent Comments"; Rec."Ammendent Comments")//B2BSSD28JUN2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'Ammendent Comments';
+                }
             }
         }
     }

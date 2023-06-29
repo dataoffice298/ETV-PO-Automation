@@ -58,6 +58,15 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 Caption = 'Programme Name';
             }
         }
+        addafter(Status)//B2BSSD18JUN2023
+        {
+            field("Ammendent Comments"; Rec."Ammendent Comments")
+            {
+                ApplicationArea = All;
+                Caption = 'Ammendent Comments';
+            }
+        }
+
         //B2BSSD25Jan2023<<
         addafter(PurchLines)
         {
@@ -68,7 +77,6 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 UpdatePropagation = Both;
             }
         }
-
         //B2BSSD25Jan2023>>
 
         //B2BSSD14FEB2023<<
@@ -84,6 +92,12 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         {
             Editable = true;
         }
+
+        modify("No. of Archived Versions")
+        {
+            Importance = Promoted;
+        }
+
         addafter("Attached Documents")
         {
             part(AttachmentDocPurOrd; "Document Attachment Factbox")
@@ -129,6 +143,23 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                             Error(Err001);
                     until PurchLine.Next = 0;
             end;
+            //B2BSSD28JUN2023>>
+            trigger OnAfterAction()
+            var
+                myInt: Integer;
+            begin
+                PurchLine.Reset();
+                PurchLine.SetRange("Document No.", Rec."No.");
+                if PurchLine.FindSet() then
+                    repeat
+                        PurchLine."Qty Accepted Inward_B2B" := 0;
+                        PurchLine."Qty Accepted Inward_B2B" := PurchLine."Quantity Received";
+                        PurchLine."Quantity Accepted B2B" := 0;
+                        PurchLine."Quantity Rejected B2B" := 0;
+                        PurchLine.Modify();
+                    until PurchLine.Next = 0;
+            end;
+            //B2BSSD28JUN2023<<
         }
 
         //B2BSSD13MAR2023<<
@@ -165,7 +196,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                             PurchLine.TestField("Serial No.");
                             PurchLine.TestField(Make_B2B);
                             PurchLine.TestField("Model No.");
-                        end;
+                        end
                     until PurchLine.Next() = 0;
                 end;
                 //B2BSSD16JUN2023<<
@@ -177,9 +208,37 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                     if LCDetails.FindFirst() then
                         Error('There is a Released LC document against this Vendor. To proceed, please provide LC No. in Purchase Order');
                 end;
+                //B2BSSD29JUN2023>>
+                Rec.TestField("Import Type");
+                Rec.TestField("Payment Terms Code");
+                Rec.TestField("Transaction Specification");
+                Rec.TestField("Transaction Type");
+                Rec.TestField("Transport Method");
+                Rec.TestField("EPCG Scheme");
+                //B2BSSD29JUN2023<<
             end;
         }
         //B2BVCOn04Oct2022<<<
+
+        //B2BSSD29JUN2023>>
+        modify(Reopen)
+        {
+            trigger OnBeforeAction()
+            var
+                PurchaseHeadArchive: Record "Purchase Header Archive";
+                ArchiveManagement: Codeunit ArchiveManagement;
+                ReleasePurchDoc: Codeunit "Release Purchase Document";
+
+            begin
+                if Rec.Status = rec.Status::Released then begin
+                    Rec.TestField("Ammendent Comments");
+                end;
+                ArchiveManagement.ArchivePurchDocument(Rec);
+                ReleasePurchDoc.PerformManualReopen(Rec);
+                Rec."Ammendent Comments" := '';
+            end;
+        }
+        //B2BSSD29JUN2023<<
 
         //B2BMSOn11Nov2022>>
         addafter(Print)

@@ -566,13 +566,14 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                     //GateEntryLine.ModelNo := ReservationEntry."Lot No.";
                     //GateEntryLine.SerialNo := ReservationEntry."Serial No.";
                     //GateEntryLine.Make := ReservationEntry."Variant Code";
+                    GateEntryLine.Quantity := PurchLine."Qty to Inward_B2B";
                     GateEntryLine.Insert(true);
                     LineNo += 10000;
-                    //B2BSSD15MAY2023>>
+                    //B2BSSD30MAY2023
+                    //GateEntryLine.Modify();//B2BSSD30MAY2023
                     PurchLine."Qty Accepted Inward_B2B" := Inwardqty;
-                    GateEntryLine.Quantity := PurchLine."Qty to Inward_B2B";//B2BSSD30MAY2023
                     PurchLine."Qty to Inward_B2B" := 0;
-                    GateEntryLine.Modify();//B2BSSD30MAY2023
+                    PurchLine.Modify();
                     //B2BSSD15MAY2023<<
                     //until ReservationEntry.Next() = 0;
                 end else
@@ -623,18 +624,18 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                             GateEntryLine.Modify();//B2BSSD30MAY2023
                             //B2BSSD25MAY2023<<
                         end;
-            //B2BSSD20FEB2023>>
+                //B2BSSD20FEB2023>>
 
-            /* PurchLine.Select := false; //B2BSSD06JUN132023
-            if EntryType = EntryType::Outward then begin
-                PurchLine."Quantity Rejected B2B" += PurchLine."Qty. to Reject B2B";
-                PurchLine."Qty. to Reject B2B" := 0;
-            end else
-                if EntryType = EntryType::Inward then begin
-                    PurchLine."Quantity Accepted B2B" += PurchLine."Qty. to Accept B2B";
-                    PurchLine."Qty. to Accept B2B" := 0;
-                end;
-            PurchLine.Modify();*/
+                //PurchLine.Select := false; //B2BSSD29JUN132023
+                if EntryType = EntryType::Outward then begin
+                    PurchLine."Quantity Rejected B2B" += PurchLine."Qty. to Reject B2B";
+                    PurchLine."Qty. to Reject B2B" := 0;
+                end else
+                    if EntryType = EntryType::Inward then begin
+                        PurchLine."Quantity Accepted B2B" += PurchLine."Qty. to Accept B2B";
+                        PurchLine."Qty. to Accept B2B" := 0;
+                    end;
+                PurchLine.Modify();
             until PurchLine.Next() = 0;
 
             if Confirm(OpenText, false, GateEntryHeader."No.") then

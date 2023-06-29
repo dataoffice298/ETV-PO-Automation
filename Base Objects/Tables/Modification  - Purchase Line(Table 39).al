@@ -187,9 +187,14 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             Caption = 'Qty. to Accept';
             DataClassification = CustomerContent;
             trigger OnValidate()
+            var
+                Error1: TextConst ENN = 'The Qty. to Accept must not be greater than Qty Accepted Inward.';//B2BSSD29JUN2023
             begin
+                if Rec."Qty. to Accept B2B" > Rec."Qty Accepted Inward_B2B" then//B2BSSD29JUN2023
+                    Error(Error1);
                 //B2BSSD13JUN2023>>
                 Rec."Quantity Accepted B2B" := Rec."Qty. to Accept B2B";
+                Validate("Qty. to Receive", "Quantity Accepted B2B");//B2BSSD29JUN2023
                 Rec."Qty. to Accept B2B" := 0;
                 Rec.Modify();
                 //B2BSSD13JUN2023<<
@@ -207,14 +212,15 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             DataClassification = CustomerContent;
             trigger OnValidate()
             var
-                RejErr: Label 'You cannot reject the quantity as total quantity is received.';
+                RejErr: TextConst ENN = 'You cannot reject the quantity as total quantity is received.';
+                Err0002: TextConst ENN = 'The Qty. to Reject must not be greater than Inward Quantity.';//B2BSSD29JUN2023
             begin
 
                 if "Qty. to Reject B2B" <> 0 then
                     CheckTracking(Rec);
                 if Quantity = "Quantity Received" then
                     Error(RejErr);
-                if ("Qty. to Reject B2B" + "Quantity Accepted B2B") > "Qty. to Receive (Base)" then //B2BSSD28JUN2023
+                if ("Qty. to Reject B2B" + "Quantity Accepted B2B") > "Qty Accepted Inward_B2B" then//B2BSSD29JUN2023
                     Error(Err0002);
                 //B2BSSD13JUN2023>>
                 Rec."Quantity Rejected B2B" := Rec."Qty. to Reject B2B";
@@ -314,11 +320,11 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
                 InwardError1: TextConst ENN = 'Qty to Inward should not be greater than Quantity.';////B2BSSD22MAY2023
             begin
                 if Rec.Type = Rec.Type::"Item" then begin
-                    if "Qty to Inward_B2B" > Quantity then
-                        Error(InwardError1)
+                    if "Qty Accepted Inward_B2B" > Quantity then
+                        Error(InwardError)
                     else
                         if ("Qty Accepted Inward_B2B" + "Qty to Inward_B2B") > Quantity then
-                            Error(InwardError);
+                            Error(InwardError1);
                 end
                 //B2BSSD16MAY2023>>
                 else
@@ -404,7 +410,6 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         PurchaseLineLRec: Record 39;
         PurchaseLnGRec: Record 39;
         Err0001: Label 'The Qty. to Accept must not be greater than Quantity.';
-        Err0002: Label 'The Qty. to Reject must not be greater than Quantity.';
         ReservationEntry: Record "Reservation Entry";
 
     procedure CheckTracking(PurchLine: Record "Purchase Line")
@@ -434,7 +439,6 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             end;
         end;
     end;
-
     var
         purcahseorder: Record "Purchase Header";
 }

@@ -288,10 +288,9 @@ report 50192 "FixedAssets&Item LocationWise" //B2BSSD09MAY2023
         FromLocation: Code[10];
         ToLocation: Code[10];
         Status: Option Available,UnAvailable;
-        status1: Text[10];
+        status1: Text[20];
         FixedAsset: Record "Fixed Asset";
         Item: Record Item;
         "Avail&UnAvail": Boolean;
         ItemCategoryCode: Code[20];
-
 }

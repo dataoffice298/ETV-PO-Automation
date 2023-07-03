@@ -21,9 +21,9 @@ report 50071 "GRN RECEIPT"
             { }
             column(DCDate; DCDate)//B2BPGON12OCT2022
             { }
-            column(InvNo; InvNo)//B2BPGON12OCT2022
+            column(VendorInvNo; VendorInvNo)
             { }
-            column(InvDate; InvDate)//B2BPGON12OCT2022
+            column(VendorInvDate; VendorInvDate)
             { }
 
             column(Spot; "Location Code")//B2BPGON12OCT2022
@@ -143,19 +143,24 @@ report 50071 "GRN RECEIPT"
             { }
             column(SGSTAmt; SGSTAmt)
             { }
-
-
+            column(Purpose; Purpose)
+            { }
+            column(IndentDate; IndentDate)
+            { }
             dataitem("Purch. Rcpt. Line"; "Purch. Rcpt. Line")
             {
+                DataItemLinkReference = "Purch. Rcpt. Header";
                 DataItemLink = "Document No." = field("No.");
                 column(Indent_No_; "Indent No.")
                 { }
                 column(POReqNo; "Indent Req No")
                 { }
-                column(InwardNo; "Ref. Posted Gate Entry")
-                { }
+                // column(InwardNo; "Ref. Posted Gate Entry")
+                // { }
                 //B2BMMOn06Oct2022>>
-                column(InwrdDate; InwrdDate)//B2BPGON12OCT2022
+                column(InwardNo; InwardNo)
+                { }
+                column(InwardDate; InwardDate)
                 { }
                 column(Indentor; Indentor)
                 { }//B2BPGON12OCT2022
@@ -173,103 +178,60 @@ report 50071 "GRN RECEIPT"
                 { }
                 column(NetTotal; NetTotal)
                 { }
-                column(InvDiscAmount; InvDiscAmount)
-                { }
                 column(NumberText1; NumberText[1])
                 { }
-
                 column(Rate; Rate)
                 { }
-
+                column(DiscAmount; DiscAmount)
+                { }
 
                 trigger OnAfterGetRecord()
                 begin
-                    PurchInvln.Reset();
-                    PurchInvln.SetRange("Receipt No.", "Document No.");
-                    PurchInvln.SetRange("Receipt Line No.", "Line No.");
-                    if PurchInvln.FindFirst() then begin
-                        InvNo := PurchInvln."Document No.";
-                        InvDate := PurchInvln."Posting Date";
-
-                    end;
-                    IndentHdr.Reset();
-                    IndentHdr.SetRange("No.", "Indent No.");
-                    if IndentHdr.FindFirst() then
-                        IndntDate := IndentHdr."Document Date";
-                    Indentor := IndentHdr.Indentor;
-                    PostGateEnthdrB2B.Reset();
-                    PostGateEnthdrB2B.SetRange("No.", "Document No.");
-                    if PostGateEnthdrB2B.FindFirst() then
-                        InwrdDate := PostGateEnthdrB2B."Document Date";
-                    PurchInvln1.Reset();
-                    PurchInvln1.SetRange("Order No.", "Purch. Rcpt. Line"."Order No.");
-                    if PurchInvln1.FindFirst() then begin
-                        InvDiscAmount := PurchInvln1."Inv. Discount Amount";
-                        Rate := PurchInvln1."Direct Unit Cost";
-                        BasicAmount := (Rate * Quantity);
-                        NetTotal := (BasicAmount + CGSTAmt + SGSTAmt);
-
-
-                    end;
                     Clear(NumberText);
                     CheckGRec.InitTextVariable;
-                    //CheckGRec.FormatNoText(NumberText, NetTotal, '');
                     CheckGRec.FormatNoText(NumberText, Round(NetTotal, 1, '='), "Currency Code");
-                    //CheckRep.FormatNoText(NoText, ROUND(TotalDebitAmt, 0.01, '='), "Currency Code");
                 end;
-
             }
             trigger OnAfterGetRecord()
             begin
-                PostGateEntLinB2B.Reset();
-                PostGateEntLinB2B.SetRange("Source No.", "Order No.");
-                if PostGateEntLinB2B.FindFirst() then begin
-                    //DCNO := PostGateEntLinB2B."Challan No.";
-                    //DCDate := PostGateEntLinB2B."Challan Date";
-
+                PurchaseOrderGRec.Reset();
+                PurchaseOrderGRec.SetRange("No.", "Order No.");
+                if PurchaseOrderGRec.FindFirst() then begin
+                    VendorInvNo := PurchaseOrderGRec."Vendor Invoice No.";
+                    VendorInvDate := PurchaseOrderGRec."Vendor Invoice Date";
+                    Purpose := PurchaseOrderGRec.Purpose;
+                    PurchaseLineGRec.Reset();
+                    PurchaseLineGRec.SetRange("Document No.", PurchaseOrderGRec."No.");
+                    if PurchaseLineGRec.FindSet() then begin
+                        IndentHeaderGRec.Reset();
+                        IndentHeaderGRec.SetRange("No.", PurchaseLineGRec."Indent No.");
+                        if IndentHeaderGRec.FindFirst() then begin
+                            IndentNo := IndentHeaderGRec."No.";
+                            IndentDate := IndentHeaderGRec."Document Date";
+                            Indentor := IndentHeaderGRec.Indentor;
+                        end;
+                        BasicAmount := PurchaseLineGRec."Quantity Received" * PurchaseLineGRec."Direct Unit Cost";
+                        DiscAmount := PurchaseLineGRec."Line Discount Amount";
+                    end;
+                    GateEntryhdrGRecB2B.Reset();
+                    GateEntryhdrGRecB2B.SetRange("Purchase Order No.", "Order No.");
+                    if GateEntryhdrGRecB2B.FindFirst() then begin
+                        InwardNo := GateEntryhdrGRecB2B."No.";
+                        InwardDate := GateEntryhdrGRecB2B."Document Date";
+                        DCNO := GateEntryhdrGRecB2B."Challan No.";
+                        DCDate := GateEntryhdrGRecB2B."Challan Date";
+                    end;
                 end;
-                //B2BMMOn06Oct2022>>
-                CLEAR(NumberText);
-                //CheckGRec.InitTextVariable;
-
-                // CheckGRec.FormatNoText(NumberText, ROUND(NetTotal, 1), "Currency Code");
-                //CheckGRec.FormatNoText(NumberText, ROUND(ABS(NetTotal), 1, '='), '');
-                //B2BMMOn06Oct2022<<
-
-
+                NetTotal := (BasicAmount + CGSTAmt + SGSTAmt);
             end;
 
             trigger OnPreDataItem();
             begin
-
                 CompanyInfo.FIND('-');
                 CompanyInfo.CALCFIELDS(Picture);
             end;
         }
     }
-
-    requestpage
-    {
-        layout
-        {
-
-        }
-
-        actions
-        {
-
-        }
-    }
-
-    /* rendering
-     {
-         layout(LayoutName)
-         {
-             Type = RDLC;
-             LayoutFile = 'mylayout.rdl';
-         }
-     }*/
-    //B2BMMOn07Oct2022>>
     procedure GetGSTRoundingPrecision(ComponentName: Code[30]): Decimal
     var
         TaxComponent: Record "Tax Component";
@@ -327,19 +289,17 @@ report 50071 "GRN RECEIPT"
 
 
     var
-
-        InwrdDate: Date;
+        IndentNo: Code[30];
+        InwardDate: Date;
         Indentor: Text[50];
-
         DCNO: Code[20];
-        IndntDate: Date;
+        IndentDate: Date;
         DCDate: Date;
-        InvNo: Code[20];
-        InvDate: Date;
-        IndentHdr: Record "Indent Header";
-        PurchInvln: Record "Purch. Inv. line";
-        PostGateEntLinB2B: Record "Posted Gate Entry Line_B2B";
-        PostGateEnthdrB2B: record "Posted Gate Entry Header_B2B";
+        VendorInvNo: Code[20];
+        VendorInvDate: Date;
+        IndentHeaderGRec: Record "Indent Header";
+        GateEntLinGRecB2B: Record "Posted Gate Entry Line_B2B";
+        GateEntryhdrGRecB2B: record "Posted Gate Entry Header_B2B";
         CompanyInfo: Record "Company Information";
         StoresReceiptCapLbl: Label 'STORES RECEIPT CUM INSPECTION REPORT';
         TechnicalStoresCapLbl: Label 'TECHNICAL STORES';
@@ -402,12 +362,16 @@ report 50071 "GRN RECEIPT"
         SGSTAmt: Decimal;
         SGSTLbl: Label 'SGST';
         CGSTLbl: Label 'CGST';
-        InvDiscAmount: Decimal;
+        DiscAmount: Decimal;
         Spot: Code[20];//B2BPGON12OCT2022
         GrnNo: Code[20];//B2BPGON12OCT2022
         GrnDate: Date;//B2BPGON12OCT2022
         NetTotal: Decimal;
         BasicAmount: Decimal;
-
+        PurchaseOrderGRec: Record "Purchase Header";
+        PurchaseLineGRec: Record "Purchase Line";
+        SNo: Integer;
+        Purpose: Text[100];
+        InwardNo: Code[30];
     //B2BMMOn06Oct2022<<
 }

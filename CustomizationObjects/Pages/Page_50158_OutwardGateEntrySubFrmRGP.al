@@ -6,6 +6,8 @@ page 50158 "Outward Gate Entry SubFrm-RGP"
     PageType = ListPart;
     SourceTable = "Gate Entry Line_B2B";
 
+
+
     layout
     {
         area(content)
@@ -157,7 +159,116 @@ page 50158 "Outward Gate Entry SubFrm-RGP"
             }
         }
     }
+    //B2BSSD30JUN2023>>
+    actions
+    {
+        area(Processing)
+        {
+            group("Import Excel")
+            {
+                action(Import)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Import';
+                    Image = ImportExcel;
+                    trigger OnAction()
+                    var
+                    begin
+                        FixedAssetsReadExcelSheet();
+                        ImportExcelData();
+                    end;
+                }
+            }
+        }
+    }
+    //Excel Import Start......
+    local procedure FixedAssetsReadExcelSheet()
+    var
+        FileManagement: Codeunit "File Management";
+        Istream: InStream;
+        FromFile: Text[100];
+    begin
+        UploadIntoStream(uplodMsg, '', '', FromFile, Istream);
+        if FromFile <> '' then begin
+            FileName := FileManagement.GetFileName(FromFile);
+            SheetName := ExcecllBuffer.SelectSheetsNameStream(Istream)
+        end else
+            Error(NoFileMsg);
+        ExcecllBuffer.Reset();
+        ExcecllBuffer.DeleteAll();
+        ExcecllBuffer.OpenBookStream(Istream, SheetName);
+        ExcecllBuffer.ReadSheet();
+    end;
+
+    procedure GetCellValue(RowNo: Integer; ColNo: Integer): Text
+    begin
+        ExcecllBuffer.Reset();
+        if ExcecllBuffer.Get(RowNo, ColNo) then
+            exit(ExcecllBuffer."Cell Value As Text")
+        else
+            exit('');
+    end;
+
+    local procedure ImportExcelData()
+    var
+        RGPOutwarExcelImport: Record "Gate Entry Line_B2B";
+        //ExcelImport: Record "Excel Import Buffer";
+        RowNo: Integer;
+        ColNo: Integer;
+        LineNo: Integer;
+        MaxRow: Integer;
+    begin
+        RowNo := 0;
+        ColNo := 0;
+        LineNo := 0;
+        MaxRow := 0;
+
+        RGPOutwarExcelImport.Reset();
+        if RGPOutwarExcelImport.FindLast() then;
+
+
+        ExcecllBuffer.Reset();
+        if ExcecllBuffer.FindLast() then begin
+            MaxRow := ExcecllBuffer."Row No.";
+        end;
+        for RowNo := 2 to MaxRow Do begin
+
+            LineNo += 10000;
+            RgpOutwardEntry.Reset();
+            RgpOutwardEntry.SetRange("No.", Rec."Gate Entry No.");
+            if RgpOutwardEntry.FindFirst() then begin
+                RGPOutNo := RgpOutwardEntry."No.";
+                repeat
+                    RGPOutwarExcelImport.Init();
+                    RGPOutwarExcelImport."Entry Type" := RgpOutwardEntry."Entry Type"::Outward;
+                    RGPOutwarExcelImport.Type := RgpOutwardEntry.Type::RGP;
+                    RGPOutwarExcelImport."Gate Entry No." := RGPOutNo;
+                    RGPOutwarExcelImport."Line No." := LineNo;
+                    Evaluate(RGPOutwarExcelImport."Source Type", GetCellValue(RowNo, 1));
+                    Evaluate(RGPOutwarExcelImport."Source No.", GetCellValue(RowNo, 2));
+                    Evaluate(RGPOutwarExcelImport."Source Name", GetCellValue(RowNo, 3));
+                    Evaluate(RGPOutwarExcelImport.Description, GetCellValue(RowNo, 4));
+                    Evaluate(RGPOutwarExcelImport.Quantity, GetCellValue(RowNo, 5));
+                    Evaluate(RGPOutwarExcelImport."Unit of Measure", GetCellValue(RowNo, 6));
+                    Evaluate(RGPOutwarExcelImport.Variant, GetCellValue(RowNo, 7));
+                    Evaluate(RGPOutwarExcelImport.ModelNo, GetCellValue(RowNo, 8));
+                    Evaluate(RGPOutwarExcelImport.SerialNo, GetCellValue(RowNo, 9));
+                    RGPOutwarExcelImport.Insert();
+                until RGPOutwarExcelImport.Next() = 0;
+            end;
+        end;
+        Message(ExcelImportSuccess);
+    end;
+    //Excel Import End....
     var
         GatEntHdrGRec: Record "Gate Entry Header_B2B";
+        ExcecllBuffer: Record "Excel Buffer" temporary;
+        uplodMsg: Label 'Please Choose The Excel file';
+        FileName: text[100];
+        SheetName: Text[100];
+        NoFileMsg: Label 'No excel File Found';
+        ExcelImportSuccess: TextConst ENN = 'Excel File Imported Successfully';
+        RgpOutwardEntry: Record "Gate Entry Header_B2B";
+        RGPOutNo: Code[20];
 }
 

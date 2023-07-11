@@ -131,7 +131,7 @@ page 50023 "Indent Line"
                 field("Qty To Issue"; Rec."Qty To Issue")
                 {
                     ApplicationArea = all;
-                    Caption = 'Qty. to Issue/Return';
+                    Caption = 'Qty. to Issue';
                 }
                 field("Qty Issued"; Rec."Qty Issued")
                 {
@@ -141,7 +141,7 @@ page 50023 "Indent Line"
                 field("Qty To Return"; Rec."Qty To Return")
                 {
                     ApplicationArea = all;
-                    Visible = false;
+                    Caption = 'Qty To Return';
                 }
                 field("Qty Returned"; Rec."Qty Returned")
                 {
@@ -350,8 +350,8 @@ page 50023 "Indent Line"
                             Rec.TestField("Issue Sub Location");
                             //B2BSSD26APR2023>>
                             Rec.CalcFields("Qty Issued");
-                            if Rec."Qty Issued" = 0 then
-                                error('Quantity Issued is Zero');
+                            if Rec."Qty Returned" = 0 then
+                                error('Quantity Returned is Zero');
                             //B2BSSD26APR2023>>
                         end;
 

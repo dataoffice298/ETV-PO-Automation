@@ -353,7 +353,7 @@ table 50201 "Indent Header"
         IndentLineRec.SETCURRENTKEY("Delivery Location");
         IndentLineRec.SETRANGE(IndentLineRec."Document No.", "No.");
         IndentLineRec.SETRANGE("Delivery Location", Rec."Delivery Location");
-        IndentLineRec.SetFilter("Qty To Issue", '<>%1', 0);
+        IndentLineRec.SetFilter("Qty To Return", '<>%1', 0);
         if IndentLineRec.FindSet() then begin
             repeat
                 LastItemJnlLine.Reset();
@@ -379,7 +379,7 @@ table 50201 "Indent Header"
                 ItemJnlLine.VALIDATE(ItemJnlLine."Shortcut Dimension 1 Code", IndentLineRec."Shortcut Dimension 1 Code");
                 ItemJnlLine.VALIDATE(ItemJnlLine."Shortcut Dimension 2 Code", IndentLineRec."Shortcut Dimension 2 Code");
                 ItemJnlLine.Validate(ItemJnlLine."Shortcut Dimension 9 Code", IndentLineRec."Shortcut Dimension 9 Code");//B2BSSD03MAR2023
-                ItemJnlLine.VALIDATE(ItemJnlLine.Quantity, IndentLineRec."Qty To Issue");
+                ItemJnlLine.VALIDATE(ItemJnlLine.Quantity, IndentLineRec."Qty To Return");
                 ItemJnlLine.VALIDATE("Location Code", IndentLineRec."Delivery Location");
                 ItemJnlLine."Indent No." := IndentLineRec."Document No.";
                 ItemJnlLine."Indent Line No." := IndentLineRec."Line No.";

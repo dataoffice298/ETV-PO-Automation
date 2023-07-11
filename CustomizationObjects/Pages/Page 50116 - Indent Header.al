@@ -395,11 +395,11 @@ page 50116 "Indent Header"
                             if not IndentLineRec.FINDFIRST() then
                                 ERROR('No Line with Qty. to Issue > 0');
 
-                            IndentLineRec.Reset();//B2BSSD10JUL2023
-                            IndentLineRec.SetRange("Document No.", Rec."No.");
-                            IndentLineRec.SetRange(Select, true);
-                            if not IndentLineRec.FindSet() then
-                                Error(IndentError001);
+                            // IndentLineRec.Reset();//B2BSSD10JUL2023
+                            // IndentLineRec.SetRange("Document No.", Rec."No.");
+                            // IndentLineRec.SetRange(Select, true);
+                            // if not IndentLineRec.FindSet() then
+                            //     Error(IndentError001);
 
                             Rec.CreateItemJnlLine();//B2BSSD04JUL2023
                             CurrPage.Update();

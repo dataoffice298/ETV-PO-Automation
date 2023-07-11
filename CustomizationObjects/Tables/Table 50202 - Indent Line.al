@@ -347,11 +347,11 @@ table 50202 "Indent Line"
                     if "Qty To Issue" > "Avail.Qty" then
                         Error('Qty Should not be greater than Available Qty')
                     else
-                        if (Rec."Qty To Issue" - Rec."Qty Issued") > Rec."Req.Quantity" then //B2BSSD03MAY2023
-                            Error('Qty to return should not be greater than %1', (Rec."Req.Quantity" - abs(Rec."Qty Issued")))
+                        if "Qty To Issue" > "Req.Quantity" then
+                            Error('Qty Should not be greater than Req.Quantity')
                         else
-                            if (Rec."Qty To Return" - Rec."Qty Returned") > Rec."Req.Quantity" then
-                                Error('Qty to return should not be greater than %1', (Rec."Req.Quantity" - Rec."Qty Returned"));
+                            if (Rec."Qty To Issue" - rec."Qty Issued") > Rec."Req.Quantity" then //B2BSSD03MAY2023
+                                Error('Qty to Issue should not be greater than Req.Quantity %1', Rec."Req.Quantity");
                 end;
             end;
         }
@@ -367,8 +367,11 @@ table 50202 "Indent Line"
                     if "Qty To Return" > "Avail.Qty" then
                         Error('Qty Should not be greater than Available Qty')
                     else
-                        if (Rec."Qty To Return" - Rec."Qty Returned") > Rec."Req.Quantity" then
-                            Error('Qty to return should not be greater than %1', (Rec."Req.Quantity" - Abs(Rec."Qty Returned")));
+                        if "Qty To Return" > "Qty Issued" then
+                            Error('Nothing To Return because Qty Issued %1', "Qty Issued")
+                        else
+                            if (Rec."Qty To Return" - Rec."Qty Returned") > Abs(Rec."Qty Issued") then
+                                Error('Qty to return should not be greater than Qty Issued %1', Abs((Rec."Qty Issued")));
                 end;
             end;
         }

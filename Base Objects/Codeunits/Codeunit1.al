@@ -333,6 +333,7 @@ codeunit 50016 "MyBaseSubscr"
     begin
         NewItemLedgEntry."Indent No." := ItemJournalLine."Indent No.";
         NewItemLedgEntry."Indent Line No." := ItemJournalLine."Indent Line No.";
+        NewItemLedgEntry."Qty issue&Return" := ItemJournalLine."Qty issue&Return";//B2BSSD10JUL2023
 
         if NewItemLedgEntry."Indent Line No." <> 0 then begin
             IndentLine.Get(NewItemLedgEntry."Indent No.", NewItemLedgEntry."Indent Line No.");
@@ -341,7 +342,6 @@ codeunit 50016 "MyBaseSubscr"
             //B2BSSD03MAY2023>>
             if NewItemLedgEntry."Entry Type" = NewItemLedgEntry."Entry Type"::"Negative Adjmt." then begin
                 IndentLine."Avail.Qty" := IndentLine."Avail.Qty" - ItemJournalLine.Quantity;
-
             end else
                 if NewItemLedgEntry."Entry Type" = NewItemLedgEntry."Entry Type"::"Positive Adjmt." then begin
                     IndentLine."Avail.Qty" := IndentLine."Avail.Qty" + ItemJournalLine.Quantity;
@@ -418,6 +418,13 @@ codeunit 50016 "MyBaseSubscr"
     local procedure OnOnPreReportOnBeforeFA2Insert(var FixedAsset2: Record "Fixed Asset"; var FixedAsset: Record "Fixed Asset")
     begin
         FixedAsset2."available/Unavailable" := false;
+        FixedAsset2."Serial No." := '';
+        FixedAsset2."Model No." := '';
+        FixedAsset2.Make_B2B := '';
+        FixedAsset2."FA Location Code" := '';
+        FixedAsset2."FA Sub Location" := '';
+        FixedAsset2.Acquired := false;
+        FixedAsset2."QC Enabled B2B" := false;
     end;
     //B2BSSD16JUN2023<<
 }

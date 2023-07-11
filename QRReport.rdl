@@ -19,15 +19,15 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>1.70626cm</Width>
+                  <Width>1.89147cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.26188cm</Width>
+                  <Width>2.42063cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>1.15563cm</Height>
+                  <Height>1.52605cm</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -58,8 +58,8 @@
                                 <TextRun>
                                   <Value>=Fields!Serial_No_.Value</Value>
                                   <Style>
-                                    <FontSize>6pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -72,8 +72,8 @@
                                 <TextRun>
                                   <Value>=Fields!Make_B2B.Value</Value>
                                   <Style>
-                                    <FontSize>6pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -86,8 +86,8 @@
                                 <TextRun>
                                   <Value>=Fields!Model_No_.Value</Value>
                                   <Style>
-                                    <FontSize>6pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -111,7 +111,7 @@
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.57354cm</Height>
+                  <Height>0.94396cm</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -124,7 +124,8 @@
                                 <TextRun>
                                   <Value>=Fields!No_.Value</Value>
                                   <Style>
-                                    <FontSize>6pt</FontSize>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -136,8 +137,8 @@
                                 <TextRun>
                                   <Value>=Fields!Description.Value</Value>
                                   <Style>
-                                    <FontSize>6pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -185,8 +186,8 @@
             <DataSetName>DataSet_Result</DataSetName>
             <Top>0cm</Top>
             <Left>0cm</Left>
-            <Height>1.72917cm</Height>
-            <Width>3.96814cm</Width>
+            <Height>2.47001cm</Height>
+            <Width>4.31209cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -199,15 +200,15 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>1.57396cm</Width>
+                  <Width>2.13223cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.26188cm</Width>
+                  <Width>2.82015cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>1.15563cm</Height>
+                  <Height>1.51282cm</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -238,8 +239,8 @@
                                 <TextRun>
                                   <Value>=Fields!Serial_No_.Value</Value>
                                   <Style>
-                                    <FontSize>6pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -252,8 +253,8 @@
                                 <TextRun>
                                   <Value>=Fields!Make_B2B.Value</Value>
                                   <Style>
-                                    <FontSize>6pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -266,8 +267,8 @@
                                 <TextRun>
                                   <Value>=Fields!Model_No_.Value</Value>
                                   <Style>
-                                    <FontSize>6pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -291,7 +292,7 @@
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.57354cm</Height>
+                  <Height>0.93073cm</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -304,7 +305,8 @@
                                 <TextRun>
                                   <Value>=Fields!No_.Value</Value>
                                   <Style>
-                                    <FontSize>6pt</FontSize>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -316,8 +318,8 @@
                                 <TextRun>
                                   <Value>=Fields!Description.Value</Value>
                                   <Style>
-                                    <FontSize>6pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -364,9 +366,9 @@
             </TablixRowHierarchy>
             <DataSetName>DataSet_Result</DataSetName>
             <Top>0.02647cm</Top>
-            <Left>4.01108cm</Left>
-            <Height>1.72917cm</Height>
-            <Width>3.83584cm</Width>
+            <Left>4.32858cm</Left>
+            <Height>2.44355cm</Height>
+            <Width>4.95239cm</Width>
             <ZIndex>1</ZIndex>
             <Style>
               <Border>
@@ -377,13 +379,13 @@
             </Style>
           </Tablix>
         </ReportItems>
-        <Height>1.7821cm</Height>
+        <Height>2.47002cm</Height>
         <Style />
       </Body>
-      <Width>7.84693cm</Width>
+      <Width>9.28097cm</Width>
       <Page>
         <PageHeight>21cm</PageHeight>
-        <PageWidth>9cm</PageWidth>
+        <PageWidth>10cm</PageWidth>
         <LeftMargin>0.4cm</LeftMargin>
         <RightMargin>0.3cm</RightMargin>
         <TopMargin>0cm</TopMargin>

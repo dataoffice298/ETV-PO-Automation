@@ -27,7 +27,7 @@ tableextension 50061 FixedAssetExtPOAuto extends "Fixed Asset"
         field(50054; "available/Unavailable"; Boolean)//B2BSSD13APR2023
         {
             DataClassification = CustomerContent;
-            //Editable = false;//B2BSSD30MAY2023
+            Editable = false;//B2BSSD30MAY2023
         }
         field(50055; "FA Sub Location"; Code[20])//B2BSSD15JUN2023
         {

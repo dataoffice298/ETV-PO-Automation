@@ -106,8 +106,27 @@ pageextension 50102 FixedAssetCard extends "Fixed Asset Card"
                 END;
             }
         }
+        //B2BSSD11JUL2023>>
+        addafter(Details)
+        {
+            action("QR Print")
+            {
+                Image = PrintReport;
+                Promoted = true;
+                PromotedCategory = Report;
+                Caption = 'QR Print';
+                trigger OnAction()
+                var
+                    Fixedasset: Record "Fixed Asset";
+                begin
+                    Fixedasset.Reset();
+                    Fixedasset.SetRange("No.", Rec."No.");
+                    Report.RunModal(Report::QRReport, true, false, Fixedasset);
+                end;
+            }
+        }
+        //B2BSSD11JUL2023<<
     }
-
     var
         myInt: Integer;
 }

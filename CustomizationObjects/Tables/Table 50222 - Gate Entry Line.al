@@ -5,7 +5,7 @@ table 50222 "Gate Entry Line_B2B"
     DataClassification = CustomerContent;
     LookupPageId = "Inward Gate Entry SubFrm-NRGP";
     DrillDownPageId = "Inward Gate Entry SubFrm-NRGP";
-
+    
     fields
     {
         field(1; "Entry Type"; Enum GateEntryInOutWard)

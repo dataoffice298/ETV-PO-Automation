@@ -11,6 +11,9 @@ report 50195 QRReport
         dataitem("Fixed Asset"; "Fixed Asset")
         {
             RequestFilterFields = "No.";
+            DataItemTableView = sorting("No.");
+            column(No_; "No.")
+            { }
             column(Qr_Code; "Qr Code")
             { }
             column(Serial_No_; "Serial No.")
@@ -21,17 +24,11 @@ report 50195 QRReport
             { }
             column(Description; Description)
             { }
-            column(FANoANDDescription; FANoANDDescription)
-            { }
             trigger OnAfterGetRecord()
             begin
-                FANoANDDescription := "Fixed Asset"."No.";
                 "Fixed Asset".CalcFields("Qr Code");
             end;
         }
     }
-    var
-        FixedAssetsNoCapLbl: Label 'Fixed Asset No.';
-        FANoANDDescription: Text[50];
 
 }

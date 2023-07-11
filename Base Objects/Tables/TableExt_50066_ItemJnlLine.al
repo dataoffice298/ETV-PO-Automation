@@ -22,6 +22,10 @@ tableextension 50066 ItemJnlLine extends "Item Journal Line"
             TableRelation = Location.Code;
         }
         //BaluOn19Oct2022>>
+        field(50154; "Qty issue&Return"; Boolean)//B2BSSD10JUL2023
+        {
+            DataClassification = CustomerContent;
+        }
 
     }
 

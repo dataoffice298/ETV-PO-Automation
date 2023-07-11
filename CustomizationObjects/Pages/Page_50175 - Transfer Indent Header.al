@@ -392,8 +392,6 @@ page 50175 "Transfer Indent Header"
                         IndentLineRec.SETRANGE("Document No.", Rec."No.");
                         if not IndentLineRec.FINDFIRST() then
                             ERROR('No Line with Qty. to Issue > 0');
-
-
                         Rec.CreateItemJnlLine();
                         CurrPage.Update();
                     end;
@@ -411,7 +409,7 @@ page 50175 "Transfer Indent Header"
                         IndentLineRec.SETRANGE("Document No.", Rec."No.");
                         IndentLineRec.SETFILTER("Req.Quantity", '<>%1', 0);
                         if IndentLineRec.FIND('-') then
-                            Rec.CreateReturnItemJnlLine()
+                            Rec.CreateReturnItemJnlLine(IndentLineRec)//B2BSSD04JUL2023
                         else
                             Error('Please check value in Qty. to Return field. It should not be empty and atleast have in one line.');
                         CurrPage.Update();

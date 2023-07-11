@@ -345,18 +345,13 @@ table 50202 "Indent Line"
 
                 if IndentLine.Type = IndentLine.Type::Item then begin
                     if "Qty To Issue" > "Avail.Qty" then
-                        Error('Qty Should not be greater than Available Qty');
-
-                    //B2BSSD03MAY2023>>
-                    if "Qty To Return" > abs("Qty Issued") then
-                        Error('Qty Returned should not be greater than Qty Issued %1', Rec."Qty Issued");
-                    // //B2BSSD03MAY2023<<
-
-                    // if "Qty To Issue" > (Rec."Req.Quantity" - abs(Rec."Qty Issued")) then //B2BSSD03MAY2023
-                    //     Error('Qty to return should not be greater than %1', (Rec."Req.Quantity" - abs(Rec."Qty Issued")));
-
-                    if "Qty To Return" > (Rec."Req.Quantity" - Abs(Rec."Qty Returned")) then
-                        Error('Qty to return should not be greater than %1', (Rec."Req.Quantity" - Abs(Rec."Qty Returned")));
+                        Error('Qty Should not be greater than Available Qty')
+                    else
+                        if (Rec."Qty To Issue" - Rec."Qty Issued") > Rec."Req.Quantity" then //B2BSSD03MAY2023
+                            Error('Qty to return should not be greater than %1', (Rec."Req.Quantity" - abs(Rec."Qty Issued")))
+                        else
+                            if (Rec."Qty To Return" - Rec."Qty Returned") > Rec."Req.Quantity" then
+                                Error('Qty to return should not be greater than %1', (Rec."Req.Quantity" - Rec."Qty Returned"));
                 end;
             end;
         }
@@ -366,13 +361,15 @@ table 50202 "Indent Line"
 
             trigger OnValidate()
             var
-                IndenLine: Record "Indent Line";
+                IndentLine: Record "Indent Line";
             begin
-                if "Qty To Return" > "Avail.Qty" then
-                    Error('Qty Should not be greater than Available Qty');
-
-                if "Qty To Return" > (Rec."Req.Quantity" - Abs(Rec."Qty Returned")) then
-                    Error('Qty to return should not be greater than %1', (Rec."Req.Quantity" - Abs(Rec."Qty Returned")));
+                if IndentLine.Type = IndentLine.Type::Item then begin
+                    if "Qty To Return" > "Avail.Qty" then
+                        Error('Qty Should not be greater than Available Qty')
+                    else
+                        if (Rec."Qty To Return" - Rec."Qty Returned") > Rec."Req.Quantity" then
+                            Error('Qty to return should not be greater than %1', (Rec."Req.Quantity" - Abs(Rec."Qty Returned")));
+                end;
             end;
         }
         field(50007; "Qty Issued"; Decimal)

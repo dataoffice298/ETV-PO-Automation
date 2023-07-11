@@ -312,7 +312,7 @@ table 50201 "Indent Header"
         WorkflowManagement: Codeunit "Workflow Management";
 
 
-    procedure CreateReturnItemJnlLine();
+    procedure CreateReturnItemJnlLine(IndentLineRec: Record "Indent Line");
     var
         ItemJnlLine: Record "Item Journal Line";
         LastItemJnlLine: Record "Item Journal Line";
@@ -322,10 +322,17 @@ table 50201 "Indent Header"
         Location: Record Location;
         DocNo: Code[20];
         LineNo: Integer;
+        Item1: Record Item;
         PurchPaySetup: Record "Purchases & Payables Setup";
+        ItemLedgerEntry: Record "Item Ledger Entry";
+        ReservationEntry: Record "Reservation Entry";
+        IndentLine1: Record "Indent Line";
     begin
         PurchPaySetup.Get();
         if ItemJnlTemp.Get(PurchPaySetup."Indent Return Jnl. Template") then;
+
+        Item.Get(IndentLineRec."No.");//B2BSSD04JUL2023
+
 
         ItemJnlBatch.Reset();
         ItemJnlBatch.SetRange(ItemJnlBatch."Journal Template Name", PurchPaySetup."Indent Return Jnl. Template");
@@ -335,6 +342,14 @@ table 50201 "Indent Header"
         DocNo := NoSeriesMgt.GetNextNo(ItemJnlBatch."No. Series", TODAY(), false);
 
         LineNo := 0;
+        //B2BSSD04JUL2023>>
+        ItemJnlLine.Reset();
+        ItemJnlLine.SetRange("Journal Template Name", PurchPaySetup."Indent Return Jnl. Template");
+        ItemJnlLine.SetRange("Journal Batch Name", PurchPaySetup."Indent Return Jnl. Batch");
+        if ItemJnlLine.FindSet() then
+            ItemJnlLine.DeleteAll();
+        //B2BSSD04JUL2023<<
+
         IndentLineRec.SETCURRENTKEY("Delivery Location");
         IndentLineRec.SETRANGE(IndentLineRec."Document No.", "No.");
         IndentLineRec.SETRANGE("Delivery Location", Rec."Delivery Location");
@@ -345,8 +360,8 @@ table 50201 "Indent Header"
                 LastItemJnlLine.SetRange(LastItemJnlLine."Journal Template Name", PurchPaySetup."Indent Return Jnl. Template");
                 LastItemJnlLine.SetRange(LastItemJnlLine."Journal Batch Name", PurchPaySetup."Indent Return Jnl. Batch");
                 if LastItemJnlLine.FindLast() then;
-                LineNo := LastItemJnlLine."Line No." + 10000;
 
+                LineNo := LastItemJnlLine."Line No." + 10000;
                 ItemJnlLine.INIT();
                 ItemJnlLine.VALIDATE("Journal Template Name", PurchPaySetup."Indent Return Jnl. Template");
                 ItemJnlLine.VALIDATE("Journal Batch Name", PurchPaySetup."Indent Return Jnl. Batch");
@@ -354,7 +369,7 @@ table 50201 "Indent Header"
                 ItemJnlLine.INSERT(true);
                 ItemJnlLine."Source Code" := ItemJnlTemp."Source Code";
                 ItemJnlLine."Entry Type" := ItemJnlLine."Entry Type"::"Positive Adjmt.";
-                ItemJnlLine.VALIDATE(ItemJnlLine."Document Type", ItemJnlLine."Document Type"::"Sales Shipment");
+                ItemJnlLine.VALIDATE(ItemJnlLine."Document Type", ItemJnlLine."Document Type"::" ");//B2BSSD04JUL2023
                 ItemJnlLine.VALIDATE(ItemJnlLine."Document No.", DocNo);
                 ItemJnlLine.VALIDATE(ItemJnlLine."Posting Date", WORKDATE());
                 ItemJnlLine."Reason Code" := ItemJnlTemp."Reason Code";
@@ -369,6 +384,10 @@ table 50201 "Indent Header"
                 ItemJnlLine."Indent No." := IndentLineRec."Document No.";
                 ItemJnlLine."Indent Line No." := IndentLineRec."Line No.";
                 ItemJnlLine.MODIFY();
+                //B2BSSD04JUL2023>>
+                if (Item."Item Tracking Code" <> '') then
+                    UpdateReturnReservationEntry(ItemJnlLine, ItemLedgerEntry, IndentLineRec);
+                //B2BSSD04JUL2023<<
                 IndentLineRec.NoHeadStatusCheck(true);
                 IndentLineRec."Qty To Issue" := 0;
                 IndentLineRec.Modify();
@@ -376,10 +395,56 @@ table 50201 "Indent Header"
             Message('Return Journals are created successfully.');
         end else
             Error('Noting to Retrun');
-
-
     end;
 
+    //.....Insert serial No.& Lot No. in Reservation entry (Start) B2BSSD04JUL20233>>
+    procedure UpdateReturnReservationEntry(ItemJournalline: Record "Item Journal Line";
+    ItemLedgerEntry: Record "Item Ledger Entry"; IndentLineVar: Record "Indent Line")//B2BSSD04JUl2023
+    Var
+        ReservationEntry: Record "Reservation Entry";
+        ReservationEntry2: Record "Reservation Entry";
+        ItemLedgerEntries: Record "Item Ledger Entry";
+        Entrynum: Integer;
+        SerialNo: Code[30];
+    begin
+        ItemLedgerEntry.Reset();
+        ItemLedgerEntry.SetRange("Indent No.", rec."No.");
+        ItemLedgerEntry.SetRange("Item No.", IndentLineVar."No.");
+        ItemLedgerEntry.SetRange("Indent Line No.", IndentLineVar."Line No.");
+        ItemLedgerEntry.SetRange("Qty issue&Return", true);
+        ItemLedgerEntry.SetRange("Entry Type", ItemLedgerEntry."Entry Type"::"Negative Adjmt.");
+        if ItemLedgerEntry.FindSet() then begin
+            repeat
+                IF ReservationEntry2.FINDlast() THEN
+                    EntryNum := ReservationEntry2."Entry No." + 1
+                ELSE
+                    EntryNum := 1;
+                ReservationEntry.INIT();
+                ReservationEntry."Entry No." := EntryNum;
+                ReservationEntry.VALIDATE(Positive, true);
+                ReservationEntry.VALIDATE("Item No.", ItemLedgerEntry."Item No.");
+                ReservationEntry.VALIDATE("Location Code", ItemLedgerEntry."Location Code");
+                ReservationEntry.VALIDATE("Quantity (Base)", -ItemLedgerEntry.Quantity);
+                ReservationEntry.VALIDATE("Reservation Status", ReservationEntry."Reservation Status"::Prospect);
+                ReservationEntry.VALIDATE("Creation Date", Today);
+                ReservationEntry.VALIDATE("Source Type", DATABASE::"Item Journal Line");
+                ReservationEntry.VALIDATE("Source Subtype", 2);
+                ReservationEntry.VALIDATE("Source ID", ItemJournalline."Journal Template Name");
+                ReservationEntry.VALIDATE("Source Batch Name", ItemJournalline."Journal Batch Name");
+                ReservationEntry.VALIDATE("Source Ref. No.", ItemJournalline."Line No.");
+                ReservationEntry.VALIDATE("Shipment Date", ItemJournalline."Posting Date");
+                ReservationEntry.VALIDATE("Serial No.", ItemLedgerEntry."Serial No.");
+                ReservationEntry.VALIDATE("Suppressed Action Msg.", FALSE);
+                ReservationEntry.VALIDATE("Planning Flexibility", ReservationEntry."Planning Flexibility"::Unlimited);
+                ReservationEntry.VALIDATE("Lot No.", ItemLedgerEntry."Lot No.");
+                ReservationEntry.VALIDATE(Correction, FALSE);
+                ReservationEntry.INSERT();
+                ItemLedgerEntry."Qty issue&Return" := false;
+                ItemLedgerEntry.Modify();
+            until ItemLedgerEntry.Next() = 0;
+        end;
+    end;
+    //.....Insert serial No.& Lot No. in Reservation entry (EnD) B2BSSD04JUL20233<<
     procedure CreateItemJnlLine();
     var
         ItemJnlLine: Record "Item Journal Line";
@@ -389,6 +454,7 @@ table 50201 "Indent Header"
         Bincontent: Record "Bin Content";
         PurchPaySetup: Record "Purchases & Payables Setup";
         DocNo: Code[20];
+        ItemLedgerEntry1: Record "Item Ledger Entry";
         LineNo: Integer;
     begin
 
@@ -407,7 +473,13 @@ table 50201 "Indent Header"
         if ItemJnlBatch.FindFirst() then;
 
         DocNo := NoSeriesMgt.GetNextNo(ItemJnlBatch."No. Series", TODAY(), false);
-
+        //B2BSSD04JUL2023>>
+        ItemJnlLine.Reset();
+        ItemJnlLine.SetRange("Journal Template Name", PurchPaySetup."Indent Return Jnl. Template");
+        ItemJnlLine.SetRange("Journal Batch Name", PurchPaySetup."Indent Return Jnl. Batch");
+        if ItemJnlLine.FindSet() then
+            ItemJnlLine.DeleteAll();
+        //B2BSSD04JUL2023<<
         IndentLineRec.Reset();
         IndentLineRec.SETCURRENTKEY("Delivery Location");
         IndentLineRec.SETRANGE(IndentLineRec."Document No.", "No.");
@@ -449,6 +521,7 @@ table 50201 "Indent Header"
                 ItemJnlLine."External Document No." := "No.";
                 ItemJnlLine."Indent No." := Rec."No.";
                 ItemJnlLine."Indent Line No." := IndentLineRec."Line No.";
+                ItemJnlLine."Qty issue&Return" := true;//B2BSSD10JUL2023
 
                 Bincontent.RESET();
                 Bincontent.SETRANGE("Item No.", IndentLineRec."No.");
@@ -458,14 +531,12 @@ table 50201 "Indent Header"
                     ItemJnlLine.VALIDATE("Bin Code", Bincontent."Bin Code");
 
                 ItemJnlLine.MODIFY();
-
                 IndentLineRec."Qty To issue" := 0;
                 IndentLineRec.Modify();
             until IndentLineRec.NEXT() = 0;
             MESSAGE('Issue journals are created successfully.');
         end else
             Error('Nothing to Issue');
-
     end;
 
     Procedure CheckIndentHeaderApprovalsWorkflowEnabled(var IndentHeader: Record "Indent Header"): Boolean

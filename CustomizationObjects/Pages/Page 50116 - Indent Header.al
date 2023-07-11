@@ -385,6 +385,8 @@ page 50116 "Indent Header"
                         //PromotedIsBig = true;
                         PromotedCategory = Process;
                         trigger OnAction();
+                        var
+                            IndentError001: TextConst ENN = 'Select Must Have a Value';
                         begin
                             Rec.TestField("Released Status", Rec."Released Status"::Released);
                             IndentLineRec.SETCURRENTKEY("Document No.", "Line No.");
@@ -393,7 +395,13 @@ page 50116 "Indent Header"
                             if not IndentLineRec.FINDFIRST() then
                                 ERROR('No Line with Qty. to Issue > 0');
 
-                            Rec.CreateItemJnlLine();
+                            IndentLineRec.Reset();//B2BSSD10JUL2023
+                            IndentLineRec.SetRange("Document No.", Rec."No.");
+                            IndentLineRec.SetRange(Select, true);
+                            if not IndentLineRec.FindSet() then
+                                Error(IndentError001);
+
+                            Rec.CreateItemJnlLine();//B2BSSD04JUL2023
                             CurrPage.Update();
                         end;
                     }
@@ -412,7 +420,7 @@ page 50116 "Indent Header"
                             IndentLineRec.SETRANGE("Document No.", Rec."No.");
                             IndentLineRec.SETFILTER("Req.Quantity", '<>%1', 0);
                             if IndentLineRec.FIND('-') then
-                                Rec.CreateReturnItemJnlLine()
+                                Rec.CreateReturnItemJnlLine(IndentLineRec)//B2BSSD04JUL2023
                             else
                                 Error('Please check value in Qty. to Return field. It should not be empty and atleast have in one line.');
                             CurrPage.Update();

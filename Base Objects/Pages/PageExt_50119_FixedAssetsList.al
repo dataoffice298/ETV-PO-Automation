@@ -11,7 +11,7 @@ pageextension 50119 FixedAssetListExt extends "Fixed Asset List"
                 Image = PrintReport;
                 Promoted = true;
                 PromotedCategory = Report;
-                Caption = 'generate QR codes';
+                Caption = 'Print QR codes';
                 trigger OnAction()
                 var
                     Fixedasset: Record "Fixed Asset";

@@ -179,5 +179,6 @@ permissionset 50000 GeneratedPermission //B2BSSD16MAR2023
         table "FA Sub Location" = X,
         report "GRN Register" = X,
         report QRReport = X,
-        page "FA Sub Locations" = X;
+        page "FA Sub Locations" = X,
+        report "Fixed Assets Register New" = X;
 }

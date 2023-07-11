@@ -1,0 +1,329 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DataSource">
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString />
+      </ConnectionProperties>
+      <rd:SecurityType>None</rd:SecurityType>
+    </DataSource>
+  </DataSources>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <Height>2in</Height>
+        <Style />
+      </Body>
+      <Width>6.5in</Width>
+      <Page>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <Code>Public Function BlankZero(ByVal Value As Decimal)
+    if Value = 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankPos(ByVal Value As Decimal)
+    if Value &gt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankZeroAndPos(ByVal Value As Decimal)
+    if Value &gt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNeg(ByVal Value As Decimal)
+    if Value &lt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNegAndZero(ByVal Value As Decimal)
+    if Value &lt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+</Code>
+  <Language>=User!Language</Language>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="StartDateEndDate">
+          <DataField>StartDateEndDate</DataField>
+        </Field>
+        <Field Name="grecCompInfo_Name">
+          <DataField>grecCompInfo_Name</DataField>
+        </Field>
+        <Field Name="TodayDate">
+          <DataField>TodayDate</DataField>
+        </Field>
+        <Field Name="USERID">
+          <DataField>USERID</DataField>
+        </Field>
+        <Field Name="PageNo">
+          <DataField>PageNo</DataField>
+        </Field>
+        <Field Name="StartDate">
+          <DataField>StartDate</DataField>
+        </Field>
+        <Field Name="EndDate">
+          <DataField>EndDate</DataField>
+        </Field>
+        <Field Name="ABS_TotalGrossValueUptoYear">
+          <DataField>ABS_TotalGrossValueUptoYear</DataField>
+        </Field>
+        <Field Name="ABS_TotalGrossValueUptoYearFormat">
+          <DataField>ABS_TotalGrossValueUptoYearFormat</DataField>
+        </Field>
+        <Field Name="ABS_TotalAditionDuringYear">
+          <DataField>ABS_TotalAditionDuringYear</DataField>
+        </Field>
+        <Field Name="ABS_TotalAditionDuringYearFormat">
+          <DataField>ABS_TotalAditionDuringYearFormat</DataField>
+        </Field>
+        <Field Name="ABS_TotalGrossValueatYearEnd">
+          <DataField>ABS_TotalGrossValueatYearEnd</DataField>
+        </Field>
+        <Field Name="ABS_TotalGrossValueatYearEndFormat">
+          <DataField>ABS_TotalGrossValueatYearEndFormat</DataField>
+        </Field>
+        <Field Name="ABS_TotalAcctdDepratPeriodBegin">
+          <DataField>ABS_TotalAcctdDepratPeriodBegin</DataField>
+        </Field>
+        <Field Name="ABS_TotalAcctdDepratPeriodBeginFormat">
+          <DataField>ABS_TotalAcctdDepratPeriodBeginFormat</DataField>
+        </Field>
+        <Field Name="ABS_TotalDeprForPeriod">
+          <DataField>ABS_TotalDeprForPeriod</DataField>
+        </Field>
+        <Field Name="ABS_TotalDeprForPeriodFormat">
+          <DataField>ABS_TotalDeprForPeriodFormat</DataField>
+        </Field>
+        <Field Name="ABS_TotalAcctdDepratPeriodEnd">
+          <DataField>ABS_TotalAcctdDepratPeriodEnd</DataField>
+        </Field>
+        <Field Name="ABS_TotalAcctdDepratPeriodEndFormat">
+          <DataField>ABS_TotalAcctdDepratPeriodEndFormat</DataField>
+        </Field>
+        <Field Name="TotalNetClassAsOnEndDate">
+          <DataField>TotalNetClassAsOnEndDate</DataField>
+        </Field>
+        <Field Name="TotalNetClassAsOnEndDateFormat">
+          <DataField>TotalNetClassAsOnEndDateFormat</DataField>
+        </Field>
+        <Field Name="ABS_TotalDeletionDuringYear">
+          <DataField>ABS_TotalDeletionDuringYear</DataField>
+        </Field>
+        <Field Name="ABS_TotalDeletionDuringYearFormat">
+          <DataField>ABS_TotalDeletionDuringYearFormat</DataField>
+        </Field>
+        <Field Name="TotalNetClassUptoStartDate">
+          <DataField>TotalNetClassUptoStartDate</DataField>
+        </Field>
+        <Field Name="TotalNetClassUptoStartDateFormat">
+          <DataField>TotalNetClassUptoStartDateFormat</DataField>
+        </Field>
+        <Field Name="ABS_TotalDeprForPeriod2">
+          <DataField>ABS_TotalDeprForPeriod2</DataField>
+        </Field>
+        <Field Name="ABS_TotalDeprForPeriod2Format">
+          <DataField>ABS_TotalDeprForPeriod2Format</DataField>
+        </Field>
+        <Field Name="ResponsibleCaption">
+          <DataField>ResponsibleCaption</DataField>
+        </Field>
+        <Field Name="DescriptionCaption">
+          <DataField>DescriptionCaption</DataField>
+        </Field>
+        <Field Name="SNoCaption">
+          <DataField>SNoCaption</DataField>
+        </Field>
+        <Field Name="AdditionCaption">
+          <DataField>AdditionCaption</DataField>
+        </Field>
+        <Field Name="AccumulatedBeginCaption">
+          <DataField>AccumulatedBeginCaption</DataField>
+        </Field>
+        <Field Name="AccumulatedEndCaption">
+          <DataField>AccumulatedEndCaption</DataField>
+        </Field>
+        <Field Name="DepreCaption">
+          <DataField>DepreCaption</DataField>
+        </Field>
+        <Field Name="GrossValueEndCaption">
+          <DataField>GrossValueEndCaption</DataField>
+        </Field>
+        <Field Name="GrossValueBeginCaption">
+          <DataField>GrossValueBeginCaption</DataField>
+        </Field>
+        <Field Name="AssetClassCaption">
+          <DataField>AssetClassCaption</DataField>
+        </Field>
+        <Field Name="GrossCalssCaption">
+          <DataField>GrossCalssCaption</DataField>
+        </Field>
+        <Field Name="DepreciationCaption">
+          <DataField>DepreciationCaption</DataField>
+        </Field>
+        <Field Name="FixedAsstCaption">
+          <DataField>FixedAsstCaption</DataField>
+        </Field>
+        <Field Name="CurrReportCaption">
+          <DataField>CurrReportCaption</DataField>
+        </Field>
+        <Field Name="AsserSubClassCaption">
+          <DataField>AsserSubClassCaption</DataField>
+        </Field>
+        <Field Name="DeletnCaption">
+          <DataField>DeletnCaption</DataField>
+        </Field>
+        <Field Name="RsCaption">
+          <DataField>RsCaption</DataField>
+        </Field>
+        <Field Name="RsControlCaption">
+          <DataField>RsControlCaption</DataField>
+        </Field>
+        <Field Name="AssetCodeCaption">
+          <DataField>AssetCodeCaption</DataField>
+        </Field>
+        <Field Name="CapitalizationDateCaption">
+          <DataField>CapitalizationDateCaption</DataField>
+        </Field>
+        <Field Name="FALocationCaption">
+          <DataField>FALocationCaption</DataField>
+        </Field>
+        <Field Name="SerialNoCaption">
+          <DataField>SerialNoCaption</DataField>
+        </Field>
+        <Field Name="AcquisitionDateCaption">
+          <DataField>AcquisitionDateCaption</DataField>
+        </Field>
+        <Field Name="AccDepreciationCaption">
+          <DataField>AccDepreciationCaption</DataField>
+        </Field>
+        <Field Name="GrandTotalCaption">
+          <DataField>GrandTotalCaption</DataField>
+        </Field>
+        <Field Name="Fixed_Asset_No_">
+          <DataField>Fixed_Asset_No_</DataField>
+        </Field>
+        <Field Name="SrNum">
+          <DataField>SrNum</DataField>
+        </Field>
+        <Field Name="FixedAsset_FAClassCode">
+          <DataField>FixedAsset_FAClassCode</DataField>
+        </Field>
+        <Field Name="ABS_GrossValueUptoYear">
+          <DataField>ABS_GrossValueUptoYear</DataField>
+        </Field>
+        <Field Name="ABS_GrossValueUptoYearFormat">
+          <DataField>ABS_GrossValueUptoYearFormat</DataField>
+        </Field>
+        <Field Name="ABS_AditionDuringYear">
+          <DataField>ABS_AditionDuringYear</DataField>
+        </Field>
+        <Field Name="ABS_AditionDuringYearFormat">
+          <DataField>ABS_AditionDuringYearFormat</DataField>
+        </Field>
+        <Field Name="ABS_GrossValueatYearEnd">
+          <DataField>ABS_GrossValueatYearEnd</DataField>
+        </Field>
+        <Field Name="ABS_GrossValueatYearEndFormat">
+          <DataField>ABS_GrossValueatYearEndFormat</DataField>
+        </Field>
+        <Field Name="ABS_AcctdDepratPeriodBegin">
+          <DataField>ABS_AcctdDepratPeriodBegin</DataField>
+        </Field>
+        <Field Name="ABS_AcctdDepratPeriodBeginFormat">
+          <DataField>ABS_AcctdDepratPeriodBeginFormat</DataField>
+        </Field>
+        <Field Name="ABS_DeprForPeriod">
+          <DataField>ABS_DeprForPeriod</DataField>
+        </Field>
+        <Field Name="ABS_DeprForPeriodFormat">
+          <DataField>ABS_DeprForPeriodFormat</DataField>
+        </Field>
+        <Field Name="ABS_AcctdDepratPeriodEnd">
+          <DataField>ABS_AcctdDepratPeriodEnd</DataField>
+        </Field>
+        <Field Name="ABS_AcctdDepratPeriodEndFormat">
+          <DataField>ABS_AcctdDepratPeriodEndFormat</DataField>
+        </Field>
+        <Field Name="NetClassAsOnEndDate">
+          <DataField>NetClassAsOnEndDate</DataField>
+        </Field>
+        <Field Name="NetClassAsOnEndDateFormat">
+          <DataField>NetClassAsOnEndDateFormat</DataField>
+        </Field>
+        <Field Name="FixedAsset_FASubclassCode">
+          <DataField>FixedAsset_FASubclassCode</DataField>
+        </Field>
+        <Field Name="ABS_DeletionDuringYear">
+          <DataField>ABS_DeletionDuringYear</DataField>
+        </Field>
+        <Field Name="ABS_DeletionDuringYearFormat">
+          <DataField>ABS_DeletionDuringYearFormat</DataField>
+        </Field>
+        <Field Name="NetClassUptoStartDate">
+          <DataField>NetClassUptoStartDate</DataField>
+        </Field>
+        <Field Name="NetClassUptoStartDateFormat">
+          <DataField>NetClassUptoStartDateFormat</DataField>
+        </Field>
+        <Field Name="FixedAsset_Description">
+          <DataField>FixedAsset_Description</DataField>
+        </Field>
+        <Field Name="FixedAsset_No">
+          <DataField>FixedAsset_No</DataField>
+        </Field>
+        <Field Name="grecFADeprBook_AcquisitionDate">
+          <DataField>grecFADeprBook_AcquisitionDate</DataField>
+        </Field>
+        <Field Name="grecFADeprBook_DepreciationStartingDate">
+          <DataField>grecFADeprBook_DepreciationStartingDate</DataField>
+        </Field>
+        <Field Name="gtxtEmployeeName">
+          <DataField>gtxtEmployeeName</DataField>
+        </Field>
+        <Field Name="FixedAsset_SerialNo">
+          <DataField>FixedAsset_SerialNo</DataField>
+        </Field>
+        <Field Name="grecFALocation_Name">
+          <DataField>grecFALocation_Name</DataField>
+        </Field>
+        <Field Name="ABS_DeprDisposedAssests">
+          <DataField>ABS_DeprDisposedAssests</DataField>
+        </Field>
+        <Field Name="ABS_DeprDisposedAssestsFormat">
+          <DataField>ABS_DeprDisposedAssestsFormat</DataField>
+        </Field>
+        <Field Name="FALedgerEntry_EntryNo">
+          <DataField>FALedgerEntry_EntryNo</DataField>
+        </Field>
+        <Field Name="FALedgerEntry_FANo">
+          <DataField>FALedgerEntry_FANo</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
+</Report>

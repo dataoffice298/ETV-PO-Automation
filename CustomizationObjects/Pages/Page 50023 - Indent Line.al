@@ -306,7 +306,6 @@ page 50023 "Indent Line"
                     begin
                         if Rec.Select = false then
                             Error(SelectErr);
-
                         RecRef.GetTable(Rec);
                         DocumentAttachmentDetails.OpenForRecRef(RecRef);
                         DocumentAttachmentDetails.RunModal();

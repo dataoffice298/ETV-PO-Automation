@@ -210,7 +210,7 @@ table 50203 "Indent Requisitions"
             end;
         }
         field(50004; "Qty. To Order"; Decimal)
-        {
+        {      
         }
         field(50005; "Qty. Ordered"; Decimal)
         {

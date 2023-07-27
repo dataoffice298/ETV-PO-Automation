@@ -51,7 +51,6 @@ page 50023 "Indent Line"
                 field(Acquired; Rec.Acquired)//B2BSSD01MAR2023
                 {
                     ApplicationArea = All;
-                    Editable = FieldEditable;
                 }
                 field("Variant Code"; Rec."Variant Code")
                 {

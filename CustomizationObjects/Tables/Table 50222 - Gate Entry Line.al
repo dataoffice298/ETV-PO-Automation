@@ -5,7 +5,7 @@ table 50222 "Gate Entry Line_B2B"
     DataClassification = CustomerContent;
     LookupPageId = "Inward Gate Entry SubFrm-NRGP";
     DrillDownPageId = "Inward Gate Entry SubFrm-NRGP";
-    
+
     fields
     {
         field(1; "Entry Type"; Enum GateEntryInOutWard)
@@ -52,39 +52,43 @@ table 50222 "Gate Entry Line_B2B"
                 //B2BSSD06APR2023<<
                 case "Source Type" of
                     Rec."Source Type"::"Fixed Asset":
-                        IF FALRec.GET("Source No.") THEN BEGIN
-                            "Source No." := FALRec."No.";
-                            Description := FALRec.Description;
-                            Variant := FALRec.Make_B2B;
-                            "Source Name" := FALRec.Description;
-                            Description := FALRec."Description";
-                            ModelNo := FALRec."Model No.";
-                            SerialNo := FALRec."Serial No.";
-                            "Avail/UnAvail" := FALRec."available/Unavailable";//B2BSSD07JUN2023
-                        END;
+                        begin
+                            IF FALRec.GET("Source No.") THEN BEGIN
+                                "Source No." := FALRec."No.";
+                                Description := FALRec.Description;
+                                Variant := FALRec.Make_B2B;
+                                "Source Name" := FALRec.Description;
+                                Description := FALRec."Description";
+                                ModelNo := FALRec."Model No.";
+                                SerialNo := FALRec."Serial No.";
+                                "Avail/UnAvail" := FALRec."available/Unavailable";//B2BSSD07JUN2023
+                            END;
+                        end;
                     Rec."Source Type"::Item:
-                        if Item.Get("Source No.") then begin
-                            "Source No." := Item."No.";
-                            "Source Name" := Item.Description;
-                            Description := Item.Description;
-                            "Unit of Measure" := Item."Base Unit of Measure";
+                        begin
+                            if Item.Get("Source No.") then begin
+                                "Source No." := Item."No.";
+                                "Source Name" := Item.Description;
+                                Description := Item.Description;
+                                "Unit of Measure" := Item."Base Unit of Measure";
+                            end;
                         end;
                 end;
+
                 if (StrPos("Source No.", ',')) > 1 then begin
-                    if SelectStr(2, Rec."Source No.") = 'FIXED ASSET' then
-                        Rec."Source Type" := Rec."Source Type"::"Fixed Asset"
-                    else
-                        Rec."Source Type" := Rec."Source Type"::Item;
                     IF SelectStr(1, Rec."Source No.") <> '' then begin
                         Rec."Source No." := SelectStr(1, Rec."Source No.");
-                        if Rec."Source Type" = Rec."Source Type"::"Fixed Asset" then
+                        if FALRec.Get("Source No.") then begin
+                            Rec."Source Type" := Rec."Source Type"::"Fixed Asset";
+                            //if Rec."Source Type" = Rec."Source Type"::"Fixed Asset" then
                             Validate(Quantity, 1);
-                        if FALRec.Get(Rec."Source No.") then
-                            Rec.ModelNo := FALRec."Model No.";
-                        Rec.SerialNo := FALRec."Serial No.";
-                        Rec."Source Name" := FALRec."Description";
-                        Rec.Description := FALRec."Description";
-                        Rec.Variant := FALRec.Make_B2B;
+                            if FALRec.Get(Rec."Source No.") then
+                                Rec.ModelNo := FALRec."Model No.";
+                            Rec.SerialNo := FALRec."Serial No.";
+                            Rec."Source Name" := FALRec."Description";
+                            Rec.Description := FALRec."Description";
+                            Rec.Variant := FALRec.Make_B2B;
+                        end;
                     END;
                 end;
                 //B2BSSD06APR2023>>

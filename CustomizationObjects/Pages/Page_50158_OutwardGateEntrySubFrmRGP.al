@@ -246,9 +246,15 @@ page 50158 "Outward Gate Entry SubFrm-RGP"
                     RGPOutwarExcelImport."Line No." := LineNo;
                     Evaluate(RGPOutwarExcelImport."Source Type", GetCellValue(RowNo, 1));
                     Evaluate(RGPOutwarExcelImport."Source No.", GetCellValue(RowNo, 2));
+                    RGPOutwarExcelImport.Validate("Source No.");
                     Evaluate(RGPOutwarExcelImport."Source Name", GetCellValue(RowNo, 3));
                     Evaluate(RGPOutwarExcelImport.Description, GetCellValue(RowNo, 4));
-                    Evaluate(RGPOutwarExcelImport.Quantity, GetCellValue(RowNo, 5));
+                    if RGPOutwarExcelImport."Source Type" = RGPOutwarExcelImport."Source Type"::"Fixed Asset" then begin
+                        //Evaluate(RGPOutwarExcelImport.Quantity, GetCellValue(RowNo, 5));
+                        RGPOutwarExcelImport.Validate(Quantity, 1);
+                    end else
+                        if RGPOutwarExcelImport."Source Type" = RGPOutwarExcelImport."Source Type"::Item then
+                            Evaluate(RGPOutwarExcelImport.Quantity, GetCellValue(RowNo, 5));
                     Evaluate(RGPOutwarExcelImport."Unit of Measure", GetCellValue(RowNo, 6));
                     Evaluate(RGPOutwarExcelImport.Variant, GetCellValue(RowNo, 7));
                     Evaluate(RGPOutwarExcelImport.ModelNo, GetCellValue(RowNo, 8));

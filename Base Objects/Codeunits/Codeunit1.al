@@ -342,13 +342,12 @@ codeunit 50016 "MyBaseSubscr"
             //B2BSSD03MAY2023>>
             if NewItemLedgEntry."Entry Type" = NewItemLedgEntry."Entry Type"::"Negative Adjmt." then begin
                 IndentLine."Avail.Qty" := IndentLine."Avail.Qty" - ItemJournalLine.Quantity;
+                IndentLine."Qty To Issue" := 0; //B2BMSOn07Nov2022
             end else
                 if NewItemLedgEntry."Entry Type" = NewItemLedgEntry."Entry Type"::"Positive Adjmt." then begin
                     IndentLine."Avail.Qty" := IndentLine."Avail.Qty" + ItemJournalLine.Quantity;
-                end
-                //B2BSSD03MAY2023<<
-                else
-                    IndentLine."Qty To Issue" := 0; //B2BMSOn07Nov2022
+                    IndentLine."Qty To Return" := 0; //B2BSSD25JUL2023
+                end;
             IndentLine.Modify();
         end;
     end;

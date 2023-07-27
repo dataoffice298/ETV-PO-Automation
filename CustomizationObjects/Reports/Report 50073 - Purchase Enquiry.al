@@ -244,7 +244,7 @@ report 50073 "Purchase Enquiry B2B"
         CompanyInfo: Record "Company Information";
         PaymentTerms: Record "Payment Terms";
         RespCenter: Record "Responsibility Center";
-        Language: Codeunit Language;
+        //Language: Codeunit Language;
         FormatAddr: Codeunit "Format Address";
         VendAddr: array[8] of Text[50];
         CompanyAddr: array[8] of Text[50];

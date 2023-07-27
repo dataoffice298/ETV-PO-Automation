@@ -351,7 +351,10 @@ table 50202 "Indent Line"
                             Error('Qty Should not be greater than Req.Quantity')
                         else
                             if (Rec."Qty To Issue" - rec."Qty Issued") > Rec."Req.Quantity" then //B2BSSD03MAY2023
-                                Error('Qty to Issue should not be greater than Req.Quantity %1', Rec."Req.Quantity");
+                                Error('Qty to Issue should not be greater than Req.Quantity %1', Rec."Req.Quantity")
+                            else
+                                if "Qty To Issue" < 0 then
+                                    Error('Quantity issue Must Not be negative value');
                 end;
             end;
         }
@@ -367,11 +370,14 @@ table 50202 "Indent Line"
                     if "Qty To Return" > "Avail.Qty" then
                         Error('Qty Should not be greater than Available Qty')
                     else
-                        if "Qty To Return" > "Qty Issued" then
+                        if "Qty To Return" > Abs("Qty Issued") then
                             Error('Nothing To Return because Qty Issued %1', "Qty Issued")
                         else
-                            if (Rec."Qty To Return" - Rec."Qty Returned") > Abs(Rec."Qty Issued") then
-                                Error('Qty to return should not be greater than Qty Issued %1', Abs((Rec."Qty Issued")));
+                            if (Rec."Qty To Return" + Rec."Qty Returned") > Abs(Rec."Qty Issued") then
+                                Error('Qty to return should not be greater than Qty Issued %1', Abs((Rec."Qty Issued")))
+                            else
+                                if "Qty To Return" < 0 then
+                                    Error('Quantity Return Must Not be negative value');
                 end;
             end;
         }
@@ -440,6 +446,7 @@ table 50202 "Indent Line"
         {
             DataClassification = CustomerContent;
             Caption = 'Acquired';
+            Editable = false;
         }
         field(50021; "Indent No"; Code[50])//B2BSSD23MAR2023
         {

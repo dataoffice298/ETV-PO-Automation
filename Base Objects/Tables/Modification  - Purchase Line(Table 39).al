@@ -190,13 +190,15 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             var
                 Error1: TextConst ENN = 'The Qty. to Accept must not be greater than Qty Accepted Inward.';//B2BSSD29JUN2023
             begin
-                if Rec."Qty. to Accept B2B" > Rec."Qty Accepted Inward_B2B" then//B2BSSD29JUN2023
-                    Error(Error1);
-                //B2BSSD13JUN2023>>
-                Rec."Quantity Accepted B2B" := Rec."Qty. to Accept B2B";
-                Validate("Qty. to Receive", "Quantity Accepted B2B");//B2BSSD29JUN2023
-                Rec."Qty. to Accept B2B" := 0;
-                Rec.Modify();
+                if Rec.Type = Rec.Type::Item then begin
+                    if Rec."Qty. to Accept B2B" > Rec."Qty Accepted Inward_B2B" then//B2BSSD29JUN2023
+                        Error(Error1);
+                    //B2BSSD13JUN2023>>
+                    Rec."Quantity Accepted B2B" := Rec."Qty. to Accept B2B";
+                    Validate("Qty. to Receive", "Quantity Accepted B2B");//B2BSSD29JUN2023
+                    Rec."Qty. to Accept B2B" := 0;
+                    Rec.Modify();
+                end;
                 //B2BSSD13JUN2023<<
                 if "Qty. to Accept B2B" <> 0 then
                     CheckTracking(Rec);
@@ -439,6 +441,7 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             end;
         end;
     end;
+
     var
         purcahseorder: Record "Purchase Header";
 }

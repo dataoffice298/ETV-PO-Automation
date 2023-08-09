@@ -68,7 +68,7 @@ table 50202 "Indent Line"
                             Description := Fixedasset.Description;
                             "Description 2" := Fixedasset."Description 2";
                             "Variant Code" := Fixedasset.Make_B2B;//B2BVOn20Dec22
-
+                            Validate("Req.Quantity", 1);
                             //B2BSS01MAR2023<<
                             Fixedasset.CalcFields(Acquired);
                             Acquired := Fixedasset.Acquired;
@@ -119,6 +119,8 @@ table 50202 "Indent Line"
             trigger OnValidate();
             var
                 indentLine: Record "Indent Line";
+                ErrorReqQty: TextConst ENN = 'Qty must not less then Qty issued';
+                ErrorReqQty1: TextConst ENN = 'Qty must not less then Qty issue';
             begin
                 //TestStatusOpen;
                 Amount := "Req.Quantity" * "Unit Cost";
@@ -130,6 +132,16 @@ table 50202 "Indent Line"
                         "Prev Quantity" := xRec."Req.Quantity";
                 end;
                 //B2BMSOn13Sep2022<<
+
+                if Abs("Qty Issued") <> 0 then begin
+                    if "Req.Quantity" < Abs("Qty Issued") then
+                        error(ErrorReqQty)
+                end
+                else
+                    if "Qty To Issue" <> 0 then begin
+                        if "Req.Quantity" < "Qty To Issue" then
+                            error(ErrorReqQty1)
+                    end;
             end;
         }
         field(6; "Available Stock"; Decimal)
@@ -314,6 +326,7 @@ table 50202 "Indent Line"
             Caption = 'Shortcut Dimension 1 Code';
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1),
             Blocked = CONST(false));
+            Editable = false;
         }
 
         field(50002; "Shortcut Dimension 2 Code"; Code[20])
@@ -322,6 +335,7 @@ table 50202 "Indent Line"
             Caption = 'Shortcut Dimension 2 Code';
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2),
             Blocked = CONST(false));
+            Editable = false;
         }
         //B2BMSOn13Sep2022>>
         field(50003; "Prev Quantity"; Decimal)
@@ -440,6 +454,7 @@ table 50202 "Indent Line"
             Caption = 'Shortcut Dimension 9 Code';
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(9),
             Blocked = CONST(false));
+            Editable = false;
         }
         //B2BSS20FEB2023>>
         field(50020; Acquired; Boolean)//B2BSSD01MAR2023
@@ -457,6 +472,11 @@ table 50202 "Indent Line"
             DataClassification = CustomerContent;
 
         }
+        field(50023; QTyToIssueEditable; Boolean)//B2BSSD03AUG2023
+        {
+            DataClassification = CustomerContent;
+        }
+
 
     }
 
@@ -472,9 +492,13 @@ table 50202 "Indent Line"
     }
 
     trigger OnDelete();
+    var
+        ErrorQty: TextConst ENN = 'You Can not delete the Line ';
     begin
         TESTFIELD("Indent Status", "Indent Status"::Indent);
         TESTFIELD("Release Status", "Release Status"::Open);
+        if "Qty Issued" <> 0 then//B2BSSD03AUG2023
+            error(ErrorQty, Rec."Line No.");
     end;
 
     trigger OnInsert();
@@ -499,6 +523,8 @@ table 50202 "Indent Line"
                 "Avail.Qty" := ItemLedgerEntry.Quantity;
             end;
             //B2BSSD06JUN2023<<
+            // if rec."Qty To Issue" = 0 then
+            //     QTyToIssueEditable := true;
         End;
     end;
 
@@ -524,6 +550,7 @@ table 50202 "Indent Line"
         NoStatusCheck: Boolean;
         Resource: Record Resource;//B2BSSD09Feb2023
         Translation: Codeunit Translation;
+        IndentLineGvar: Record "Indent Line";
 
     procedure NoHeadStatusCheck(StatusCheck: Boolean)
     begin
@@ -562,5 +589,6 @@ table 50202 "Indent Line"
             "Quantity (Base)" := "Req.Quantity";
         end;
     end;
+
 }
 

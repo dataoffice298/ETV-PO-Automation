@@ -27,7 +27,7 @@ report 50106 "Current Stock Report"
             begin
 
                 clear(Itemnumber);
-                NewStartDate := CALCDATE('-1D', StartDate);
+                //NewStartDate := CALCDATE('-1D', StartDate);
 
                 //B2BSSD23MAY2023>>
 
@@ -48,8 +48,8 @@ report 50106 "Current Stock Report"
                         ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
                         ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);
                         ItemLedgerEntry.SetRange("Variant Code", variantcode);
-                        //ItemLedgerEntry.SETFILTER("Posting Date", '..%1', NewStartDate);
-                        ItemLedgerEntry.SetFilter("Posting Date", '%1..%2', StartDate, EndDate);//B2BSSD08JUN2023
+                        ItemLedgerEntry.SETFILTER("Posting Date", '..%1', NewStartDate);
+                        //ItemLedgerEntry.SetFilter("Posting Date", '%1..%2', StartDate, EndDate);//B2BSSD08JUN2023
                         IF ItemLedgerEntry.FINDSET THEN begin
                             ItemLedgerEntry.CalcSums(Quantity);
                             Openingstock := ItemLedgerEntry.Quantity;
@@ -161,8 +161,8 @@ report 50106 "Current Stock Report"
                         ItemLedgerEntry.RESET;
                         ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
                         ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);
-                        //ItemLedgerEntry.SETFILTER("Posting Date", '..%1', NewStartDate);
-                        ItemLedgerEntry.SetFilter("Posting Date", '%1..%2', StartDate, EndDate);//B2BSSD08JUN2023
+                        ItemLedgerEntry.SetFilter("Posting Date", '<%1', StartDate);
+                        //ItemLedgerEntry.SetFilter("Posting Date", '%1..%2', StartDate, EndDate);//B2BSSD08JUN2023
                         IF ItemLedgerEntry.FINDSET THEN begin
                             ItemLedgerEntry.CalcSums(Quantity);
                             Openingstock := ItemLedgerEntry.Quantity;

@@ -1,5 +1,6 @@
 pageextension 50113 ItemJournalsB2B extends "Item Journal"
 {
+    Editable = false;//B2BSSD02AUG2023
     layout
     {
         addafter("Document No.")

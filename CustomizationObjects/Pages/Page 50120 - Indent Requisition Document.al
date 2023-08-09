@@ -34,7 +34,7 @@ page 50120 "Indent Requisition Document"
                 field(Status; Rec.Status)
                 {
                     ApplicationArea = All;
-                    Editable = FieldEditable;
+                    //Editable = FieldEditable;
                 }
                 field(Type; Rec.Type)
                 {

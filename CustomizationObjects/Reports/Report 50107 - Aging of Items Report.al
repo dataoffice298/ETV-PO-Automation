@@ -37,6 +37,7 @@ report 50107 "Aging of Items Report"
                 SNo += 1;
                 WindPa.Update(1, "No.");
                 TempExcelBuffer.NewRow();
+                TempExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD04AUG2023
                 TempExcelBuffer.AddColumn("Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                 TempExcelBuffer.AddColumn("No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                 TempExcelBuffer.AddColumn(Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
@@ -115,6 +116,7 @@ report 50107 "Aging of Items Report"
         IF (StartDate <> 0D) or (EndDate <> 0D) THEN
             TempExcelBuffer.AddColumn('Aging Report on' + Format(StartDate), FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.NewRow();
+        TempExcelBuffer.AddColumn('S.No.', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD04AUG2023
         TempExcelBuffer.AddColumn('ITEM CATG', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('ITEM CODE', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('ITEM NAME', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);

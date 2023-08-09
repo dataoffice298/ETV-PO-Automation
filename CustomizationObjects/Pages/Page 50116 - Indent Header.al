@@ -395,14 +395,9 @@ page 50116 "Indent Header"
                             if not IndentLineRec.FINDFIRST() then
                                 ERROR('No Line with Qty. to Issue > 0');
 
-                            // IndentLineRec.Reset();//B2BSSD10JUL2023
-                            // IndentLineRec.SetRange("Document No.", Rec."No.");
-                            // IndentLineRec.SetRange(Select, true);
-                            // if not IndentLineRec.FindSet() then
-                            //     Error(IndentError001);
-
                             Rec.CreateItemJnlLine();//B2BSSD04JUL2023
                             CurrPage.Update();
+                            CurrPage.indentLine.Page.QTyToIssueNonEditable();
                         end;
                     }
                     action("Create Return Jnl. Batch")
@@ -534,11 +529,22 @@ page 50116 "Indent Header"
                         IndentLine: Record "Indent Line";
                         Techspec: Record "Technical Specifications";
                     begin
+                        Rec.TestField("Shortcut Dimension 1 Code");
+                        Rec.TestField("Shortcut Dimension 2 Code");
+                        Rec.TestField("Shortcut Dimension 9 Code");
                         //B2BMSOn13Sep2022>>
                         IF allinoneCU.ISIndentDocworkflowenabled(Rec) then
                             Error(RelError);
                         //B2BMSOn13Sep2022<<
                         Rec.TESTFIELD("Document Date");
+
+                        IndentLine.Reset();//B2BSSD02AUG2023
+                        IndentLine.SetRange("Document No.", Rec."No.");
+                        if IndentLine.FindSet() then begin
+                            repeat
+                                IndentLine.TestField("Unit of Measure");
+                            until IndentLine.Next() = 0;
+                        end;
 
                         IndentLine.Reset();
                         IndentLine.SETRANGE("Document No.", Rec."No.");
@@ -701,6 +707,7 @@ page 50116 "Indent Header"
             PageEditable := false
         else
             PageEditable := true;
+        //CurrPage.indentLine.Page.QTyToIssueNonEditable();
     end;
     //B2BVCOn28Sep22>>>
     trigger OnOpenPage()
@@ -782,6 +789,6 @@ page 50116 "Indent Header"
         CanrequestApprovForFlow: Boolean;
         //Approval Actions Variables - B2BMSOn09Sep2022<<
         PageEditable: Boolean;//B2BVCOn28Sep22
-
+        IndentLineGvar: Record "Indent Line";
 }
 

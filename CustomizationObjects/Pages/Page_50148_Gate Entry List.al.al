@@ -5,6 +5,7 @@ page 50148 "Gate Entry List"
     SourceTable = "Gate Entry Header_B2B";
     UsageCategory = Lists;
     ApplicationArea = ALL;
+    DeleteAllowed = false;//B2BSSD02Aug2023
     layout
     {
         area(content)
@@ -39,7 +40,7 @@ page 50148 "Gate Entry List"
                 field(Description; Rec.Description)
                 {
                     ApplicationArea = ALL;
-                }          
+                }
             }
         }
     }

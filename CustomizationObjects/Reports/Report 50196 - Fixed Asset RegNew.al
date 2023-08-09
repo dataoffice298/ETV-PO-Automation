@@ -314,6 +314,18 @@ report 50196 "Fixed Assets Register New"
                 NetAssetValuebeforeDepreciaton := FALedgerEntry1.Amount;
                 //B2BSSD05JUN2023<<
 
+
+                // NewStartDate := CalcDate('-1D', StartDate);
+                // FALedgerEntry1.Reset();
+                // FALedgerEntry1.SetRange("FA No.", "Fixed Asset"."No.");
+                // FALedgerEntry1.SetRange("FA Posting Type", FALedgerEntry."FA Posting Type"::Depreciation);
+                // FALedgerEntry1.SetFilter("Posting Date", '..1%', StartDate);
+                // if FALedgerEntry1.FindSet() then begin
+                //     repeat
+                //         TotalNetClassUptoStartDate := FALedgerEntry1."Credit Amount";
+                //     until FALedgerEntry1.next() = 0;
+                // end;
+
                 PostedPurchaseInvGrec.Reset();
                 PostedPurchaseInvGrec.SetRange("No.", FALedgerEntry1."Document No.");
                 if PostedPurchaseInvGrec.FindFirst() then begin
@@ -451,8 +463,8 @@ report 50196 "Fixed Assets Register New"
         grecExcelBuffer.AddColumn('Gross Value at the end of year (Rs.)', false, '', true, false, true, '', grecExcelBuffer."Cell Type");
         grecExcelBuffer.AddColumn('Accumulated Depreciation as on the beginning of the Year (Rs.)', false, '', true, false, true, '', grecExcelBuffer."Cell Type");
         grecExcelBuffer.AddColumn('Depreciation for the period (Rs.)', false, '', true, false, true, '', grecExcelBuffer."Cell Type");
-        grecExcelBuffer.AddColumn('Accummulated Depreciation as on', false, '', true, false, true, '', grecExcelBuffer."Cell Type");//B2BSSD05JUL2023
-        grecExcelBuffer.AddColumn('Acc. Depreciation on disposed assets', false, '', true, false, true, '', grecExcelBuffer."Cell Type");
+        grecExcelBuffer.AddColumn('Acc. Depreciation on disposed assets', false, '', true, false, true, '', grecExcelBuffer."Cell Type");//B2BSSD05JUL2023
+        grecExcelBuffer.AddColumn('Accummulated Depreciation as on', false, '', true, false, true, '', grecExcelBuffer."Cell Type");
         grecExcelBuffer.AddColumn('Accumulated Depreciation as on the end of the year (Rs.)', false, '', true, false, true, '', grecExcelBuffer."Cell Type");
         grecExcelBuffer.AddColumn('Net Class as on ' + Format(EndDate), false, '', true, false, true, '', grecExcelBuffer."Cell Type");
         grecExcelBuffer.AddColumn('Net Class as on ' + Format(CalcDate('-1D', StartDate)), false, '', true, false, true, '', grecExcelBuffer."Cell Type");
@@ -502,6 +514,7 @@ report 50196 "Fixed Assets Register New"
     procedure MakeExcelDataFooter()
     begin
         grecExcelBuffer.NewRow;
+        grecExcelBuffer.AddColumn('', false, '', true, false, false, '', grecExcelBuffer."Cell Type");
         grecExcelBuffer.AddColumn('', false, '', true, false, false, '', grecExcelBuffer."Cell Type");
         grecExcelBuffer.AddColumn('', false, '', true, false, false, '', grecExcelBuffer."Cell Type");
         grecExcelBuffer.AddColumn('', false, '', true, false, false, '', grecExcelBuffer."Cell Type");
@@ -641,4 +654,5 @@ report 50196 "Fixed Assets Register New"
         GRNDateGvar: Date;
         OrderNoGVar: Code[30];
         v: Report "Fixed Asset Register Report";
+        NewStartDate: Date;
 }

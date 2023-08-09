@@ -121,6 +121,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             trigger OnBeforeAction()
             var
                 Err001: Label 'Qty. to Accept and Qty. to Reject must not be greater than Quantity.';
+                Error002: TextConst ENN = 'Quantity Receive can not be Grater then QC Accepted Quantity';
             begin
 
                 GateEntry.Reset();
@@ -142,7 +143,31 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                             + PurchLine."Quantity Accepted B2B") > PurchLine.Quantity then
                             Error(Err001);
                     until PurchLine.Next = 0;
+
+
+                //B2BSSD09AUG2023>>
+                purchaseLinevar.Reset();
+                purchaseLinevar.SetRange("Document No.", Rec."No.");
+                if purchaseLinevar.FindSet() then begin
+                    repeat
+                        purchaseLinevar.TestField("Qty Accepted Inward_B2B");
+                    until purchaseLinevar.Next() = 0;
+                end;
+                //B2BSSD09AUG2023<<
+
+                //B2BSSD09AUG2023>>
+                purchaseLinevar.Reset();
+                purchaseLinevar.SetRange("Document No.", Rec."No.");
+                if purchaseLinevar.FindSet() then begin
+                    repeat
+                        if purchaseLinevar."Qty. to Receive" > purchaseLinevar."Quantity Accepted B2B" then
+                            Error(Error002);
+                    until PurchLine.Next() = 0;
+                end;
+                //B2BSSD09AUG2023<<
+
             end;
+
             //B2BSSD28JUN2023>>
             trigger OnAfterAction()
             var
@@ -165,16 +190,16 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         //B2BSSD13MAR2023<<
         modify(Receipts)
         {
+
+
             trigger OnAfterAction()
             var
-                purchaseLine: Record "Purchase Line";
-                POAutomation: Codeunit "PO Automation";
             begin
-                purchaseLine.Reset();
-                purchaseLine.SetRange("Document No.", Rec."No.");
-                if purchaseLine.FindSet() then begin
-                    if purchaseLine.Type = purchaseLine.Type::Item then
-                        purchaseLine.TestField("Qty. to Accept B2B");
+                purchaseLinevar.Reset();
+                purchaseLinevar.SetRange("Document No.", Rec."No.");
+                if purchaseLinevar.FindSet() then begin
+                    if purchaseLinevar.Type = purchaseLinevar.Type::Item then
+                        purchaseLinevar.TestField("Qty. to Accept B2B");
                 end;
             end;
         } //B2BSSD13MAR2023<<
@@ -209,7 +234,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                         Error('There is a Released LC document against this Vendor. To proceed, please provide LC No. in Purchase Order');
                 end;
                 //B2BSSD29JUN2023>>
-                Rec.TestField("Import Type");
+                Rec.TestField("Import Type", ErrorInfo.Create());
                 Rec.TestField("Payment Terms Code");
                 Rec.TestField("Transaction Specification");
                 Rec.TestField("Transaction Type");
@@ -328,6 +353,11 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         PurchLine: Record "Purchase Line";
         LCDetails: Record "LC Details";
         PurchaseHeader: Record "Purchase Header";
+        purchaseLinevar: Record "Purchase Line";
+        POAutomation: Codeunit "PO Automation";
+        ErrorTxt: TextConst ENN = 'RGP Inward Must Be Post';
+        ErrorTxt1: TextConst ENN = 'Quantity cannot Received More Then Accepted Inward Quantity';
+
     /*   actions
        {
            // Add changes to page actions here

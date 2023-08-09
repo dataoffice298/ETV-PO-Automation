@@ -39,7 +39,7 @@ page 50126 "Quotation Comparision Doc"
                 {
                     ToolTip = 'Specifies the value of the Orders Created field.';
                     ApplicationArea = All;
-                    Editable = False;
+                    //Editable = False;
                 }
                 field("Purch. Req. Ref. No."; Rec."Purch. Req. Ref. No.")
                 {

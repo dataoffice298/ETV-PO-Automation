@@ -1,7 +1,22 @@
 pageextension 50119 FixedAssetListExt extends "Fixed Asset List"
 {
 
-
+    layout
+    {
+        addafter(Description)//B2BSSD02AUG2023
+        {
+            field("available/Unavailable"; Rec."available/Unavailable")
+            {
+                ApplicationArea = All;
+                Caption = 'Available/Unavailable';
+            }
+            field(Acquired1; Rec.Acquired)
+            {
+                ApplicationArea = All;
+                Caption = 'Acquired';
+            }
+        }
+    }
     actions
     {
         addafter(Details)

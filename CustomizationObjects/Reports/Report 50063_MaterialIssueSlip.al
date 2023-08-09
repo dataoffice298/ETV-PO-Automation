@@ -137,11 +137,12 @@ report 50063 "Material Issue Slip"
                     ItemLedgerEntry.SetRange("Indent No.", "Document No.");
                     ItemLedgerEntry.SetRange("Indent Line No.", "Line No.");
                     ItemLedgerEntry.SetFilter(Quantity, '<%1', 0);
-                    if ItemLedgerEntry.FindLast() then begin //B2BSSD24APR2023
+                    if ItemLedgerEntry.FindSet() then begin //B2BSSD24APR2023
                         ISSNo1 := ItemLedgerEntry."Document No.";
                         ISSDate1 := ItemLedgerEntry."Posting Date";
                         ItemCategoryCode := ItemLedgerEntry."Item Category Code";
-                        ILEQuantity := ItemLedgerEntry.Quantity;//B2BSSD24APR2023
+                        ItemLedgerEntry.CalcSums(Quantity);
+                        ILEQuantity := Abs(ItemLedgerEntry.Quantity);
                     end;
                 end;
             }

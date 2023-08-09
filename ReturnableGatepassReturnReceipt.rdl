@@ -26,7 +26,8 @@
                       <TextRun>
                         <Value>=First(Fields!ReturnRcptNo.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
+                          <FontFamily>Segoe UI</FontFamily>
+                          <FontSize>8pt</FontSize>
                           <FontWeight>Bold</FontWeight>
                         </Style>
                       </TextRun>
@@ -35,7 +36,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>0.14111cm</Top>
+                <Top>3.30758cm</Top>
                 <Left>0.44662cm</Left>
                 <Height>0.6cm</Height>
                 <Width>3.65535cm</Width>
@@ -58,7 +59,8 @@
                       <TextRun>
                         <Value>=First(Fields!GatepassCapLbl.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
+                          <FontFamily>Segoe UI</FontFamily>
+                          <FontSize>8pt</FontSize>
                           <FontWeight>Bold</FontWeight>
                         </Style>
                       </TextRun>
@@ -67,8 +69,8 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>0.77639cm</Top>
-                <Left>0.44662cm</Left>
+                <Top>3.94286cm</Top>
+                <Left>0.41134cm</Left>
                 <Height>0.6cm</Height>
                 <Width>3.34667cm</Width>
                 <ZIndex>1</ZIndex>
@@ -91,7 +93,8 @@
                       <TextRun>
                         <Value>=First(Fields!NameCapLbl.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
+                          <FontFamily>Segoe UI</FontFamily>
+                          <FontSize>8pt</FontSize>
                           <FontWeight>Bold</FontWeight>
                         </Style>
                       </TextRun>
@@ -100,7 +103,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>1.41167cm</Top>
+                <Top>4.57814cm</Top>
                 <Left>0.44662cm</Left>
                 <Height>0.6cm</Height>
                 <Width>3.34667cm</Width>
@@ -124,7 +127,8 @@
                       <TextRun>
                         <Value>=First(Fields!UseridCapLbl.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
+                          <FontFamily>Segoe UI</FontFamily>
+                          <FontSize>8pt</FontSize>
                           <FontWeight>Bold</FontWeight>
                         </Style>
                       </TextRun>
@@ -133,7 +137,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>2.04694cm</Top>
+                <Top>5.21341cm</Top>
                 <Left>0.44662cm</Left>
                 <Height>0.6cm</Height>
                 <Width>3.34667cm</Width>
@@ -157,7 +161,8 @@
                       <TextRun>
                         <Value>=First(Fields!DepartmentCapLbl.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
+                          <FontFamily>Segoe UI</FontFamily>
+                          <FontSize>8pt</FontSize>
                           <FontWeight>Bold</FontWeight>
                         </Style>
                       </TextRun>
@@ -166,7 +171,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>2.68222cm</Top>
+                <Top>5.84869cm</Top>
                 <Left>0.44662cm</Left>
                 <Height>0.6cm</Height>
                 <Width>3.34667cm</Width>
@@ -190,7 +195,8 @@
                       <TextRun>
                         <Value>=First(Fields!ChannelCapLbl.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
+                          <FontFamily>Segoe UI</FontFamily>
+                          <FontSize>8pt</FontSize>
                           <FontWeight>Bold</FontWeight>
                         </Style>
                       </TextRun>
@@ -199,7 +205,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>3.3175cm</Top>
+                <Top>6.48397cm</Top>
                 <Left>0.44662cm</Left>
                 <Height>0.6cm</Height>
                 <Width>3.34667cm</Width>
@@ -223,7 +229,8 @@
                       <TextRun>
                         <Value>=First(Fields!PostedRGPOutwardNo.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
+                          <FontFamily>Segoe UI</FontFamily>
+                          <FontSize>8pt</FontSize>
                         </Style>
                       </TextRun>
                     </TextRuns>
@@ -233,7 +240,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>0.14111cm</Top>
+                <Top>3.30758cm</Top>
                 <Left>4.2078cm</Left>
                 <Height>0.6cm</Height>
                 <Width>3.87584cm</Width>
@@ -257,6 +264,7 @@
                       <TextRun>
                         <Value>=First(Fields!No_.Value, "DataSet_Result")</Value>
                         <Style>
+                          <FontFamily>Segoe UI</FontFamily>
                           <FontSize>8pt</FontSize>
                           <FontWeight>Normal</FontWeight>
                         </Style>
@@ -266,8 +274,8 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>0.81167cm</Top>
-                <Left>3.86384cm</Left>
+                <Top>0cm</Top>
+                <Left>13.97128cm</Left>
                 <Height>0.6cm</Height>
                 <Width>4.21979cm</Width>
                 <ZIndex>7</ZIndex>
@@ -290,6 +298,7 @@
                       <TextRun>
                         <Value>=First(Fields!Users.Value, "DataSet_Result")</Value>
                         <Style>
+                          <FontFamily>Segoe UI</FontFamily>
                           <FontSize>8pt</FontSize>
                           <FontWeight>Normal</FontWeight>
                         </Style>
@@ -299,7 +308,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>1.48222cm</Top>
+                <Top>4.64869cm</Top>
                 <Left>3.86384cm</Left>
                 <Height>0.6cm</Height>
                 <Width>4.21979cm</Width>
@@ -323,6 +332,7 @@
                       <TextRun>
                         <Value>=First(Fields!User_ID.Value, "DataSet_Result")</Value>
                         <Style>
+                          <FontFamily>Segoe UI</FontFamily>
                           <FontSize>8pt</FontSize>
                           <FontWeight>Normal</FontWeight>
                         </Style>
@@ -332,7 +342,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>2.1175cm</Top>
+                <Top>5.28397cm</Top>
                 <Left>3.86384cm</Left>
                 <Height>0.6cm</Height>
                 <Width>4.21979cm</Width>
@@ -356,6 +366,7 @@
                       <TextRun>
                         <Value>=First(Fields!Shortcut_Dimension_2_Code.Value, "DataSet_Result")</Value>
                         <Style>
+                          <FontFamily>Segoe UI</FontFamily>
                           <FontSize>8pt</FontSize>
                           <FontWeight>Normal</FontWeight>
                         </Style>
@@ -365,7 +376,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>2.78806cm</Top>
+                <Top>5.95453cm</Top>
                 <Left>3.86384cm</Left>
                 <Height>0.49417cm</Height>
                 <Width>4.2198cm</Width>
@@ -389,6 +400,7 @@
                       <TextRun>
                         <Value>=First(Fields!Shortcut_Dimension_1_Code.Value, "DataSet_Result")</Value>
                         <Style>
+                          <FontFamily>Segoe UI</FontFamily>
                           <FontSize>8pt</FontSize>
                           <FontWeight>Normal</FontWeight>
                         </Style>
@@ -398,7 +410,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>3.38806cm</Top>
+                <Top>6.55453cm</Top>
                 <Left>3.86384cm</Left>
                 <Height>0.52944cm</Height>
                 <Width>4.21979cm</Width>
@@ -420,18 +432,21 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>Receipt Date</Value>
+                        <Value>Receipt Date : </Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
+                          <FontFamily>Segoe UI</FontFamily>
+                          <FontSize>8pt</FontSize>
                           <FontWeight>Bold</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Left</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>0.18378cm</Top>
+                <Top>3.35025cm</Top>
                 <Left>8.39159cm</Left>
                 <Height>0.6cm</Height>
                 <Width>4.49319cm</Width>
@@ -440,6 +455,7 @@
                   <Border>
                     <Style>None</Style>
                   </Border>
+                  <VerticalAlign>Middle</VerticalAlign>
                   <PaddingLeft>2pt</PaddingLeft>
                   <PaddingRight>2pt</PaddingRight>
                   <PaddingTop>2pt</PaddingTop>
@@ -455,16 +471,19 @@
                       <TextRun>
                         <Value>=First(Fields!GatepassDate.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
+                          <FontFamily>Segoe UI</FontFamily>
+                          <FontSize>8pt</FontSize>
                           <FontWeight>Bold</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Left</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>0.81906cm</Top>
+                <Top>3.98553cm</Top>
                 <Left>8.39159cm</Left>
                 <Height>0.6cm</Height>
                 <Width>4.49319cm</Width>
@@ -473,6 +492,7 @@
                   <Border>
                     <Style>None</Style>
                   </Border>
+                  <VerticalAlign>Middle</VerticalAlign>
                   <PaddingLeft>2pt</PaddingLeft>
                   <PaddingRight>2pt</PaddingRight>
                   <PaddingTop>2pt</PaddingTop>
@@ -488,16 +508,19 @@
                       <TextRun>
                         <Value>=First(Fields!DesigCapLbl.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
+                          <FontFamily>Segoe UI</FontFamily>
+                          <FontSize>8pt</FontSize>
                           <FontWeight>Bold</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Left</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>1.45434cm</Top>
+                <Top>4.62081cm</Top>
                 <Left>8.39159cm</Left>
                 <Height>0.6cm</Height>
                 <Width>4.52847cm</Width>
@@ -506,6 +529,7 @@
                   <Border>
                     <Style>None</Style>
                   </Border>
+                  <VerticalAlign>Middle</VerticalAlign>
                   <PaddingLeft>2pt</PaddingLeft>
                   <PaddingRight>2pt</PaddingRight>
                   <PaddingTop>2pt</PaddingTop>
@@ -521,16 +545,19 @@
                       <TextRun>
                         <Value>=First(Fields!ExpecteddateCapLbl.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
+                          <FontFamily>Segoe UI</FontFamily>
+                          <FontSize>8pt</FontSize>
                           <FontWeight>Bold</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Left</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>2.75636cm</Top>
+                <Top>5.92283cm</Top>
                 <Left>8.39159cm</Left>
                 <Height>0.6cm</Height>
                 <Width>4.81464cm</Width>
@@ -539,6 +566,7 @@
                   <Border>
                     <Style>None</Style>
                   </Border>
+                  <VerticalAlign>Middle</VerticalAlign>
                   <PaddingLeft>2pt</PaddingLeft>
                   <PaddingRight>2pt</PaddingRight>
                   <PaddingTop>2pt</PaddingTop>
@@ -554,16 +582,19 @@
                       <TextRun>
                         <Value>=First(Fields!LocationCapLbl.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
+                          <FontFamily>Segoe UI</FontFamily>
+                          <FontSize>8pt</FontSize>
                           <FontWeight>Bold</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Left</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>3.39164cm</Top>
+                <Top>6.55811cm</Top>
                 <Left>8.39159cm</Left>
                 <Height>0.6cm</Height>
                 <Width>4.49319cm</Width>
@@ -572,6 +603,7 @@
                   <Border>
                     <Style>None</Style>
                   </Border>
+                  <VerticalAlign>Middle</VerticalAlign>
                   <PaddingLeft>2pt</PaddingLeft>
                   <PaddingRight>2pt</PaddingRight>
                   <PaddingTop>2pt</PaddingTop>
@@ -587,16 +619,19 @@
                       <TextRun>
                         <Value>=First(Fields!SUbLocCapLbl.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
+                          <FontFamily>Segoe UI</FontFamily>
+                          <FontSize>8pt</FontSize>
                           <FontWeight>Bold</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Left</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>4.02692cm</Top>
+                <Top>7.19339cm</Top>
                 <Left>8.39159cm</Left>
                 <Height>0.6cm</Height>
                 <Width>4.45791cm</Width>
@@ -605,6 +640,7 @@
                   <Border>
                     <Style>None</Style>
                   </Border>
+                  <VerticalAlign>Middle</VerticalAlign>
                   <PaddingLeft>2pt</PaddingLeft>
                   <PaddingRight>2pt</PaddingRight>
                   <PaddingTop>2pt</PaddingTop>
@@ -620,7 +656,8 @@
                       <TextRun>
                         <Value>=First(Fields!PostedRGPOutwardDate.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
+                          <FontFamily>Segoe UI</FontFamily>
+                          <FontSize>8pt</FontSize>
                           <FontWeight>Normal</FontWeight>
                           <Format>MM/dd/yyyy</Format>
                         </Style>
@@ -632,7 +669,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>0.18378cm</Top>
+                <Top>3.35025cm</Top>
                 <Left>12.92006cm</Left>
                 <Height>0.6cm</Height>
                 <Width>5.63696cm</Width>
@@ -641,6 +678,7 @@
                   <Border>
                     <Style>None</Style>
                   </Border>
+                  <VerticalAlign>Middle</VerticalAlign>
                   <PaddingLeft>2pt</PaddingLeft>
                   <PaddingRight>2pt</PaddingRight>
                   <PaddingTop>2pt</PaddingTop>
@@ -656,7 +694,8 @@
                       <TextRun>
                         <Value>=First(Fields!Document_Date.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
+                          <FontFamily>Segoe UI</FontFamily>
+                          <FontSize>8pt</FontSize>
                           <FontWeight>Normal</FontWeight>
                           <Format>MM/dd/yyyy</Format>
                         </Style>
@@ -668,7 +707,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>0.85434cm</Top>
+                <Top>4.02081cm</Top>
                 <Left>12.95534cm</Left>
                 <Height>0.6cm</Height>
                 <Width>5.63696cm</Width>
@@ -677,6 +716,7 @@
                   <Border>
                     <Style>None</Style>
                   </Border>
+                  <VerticalAlign>Middle</VerticalAlign>
                   <PaddingLeft>2pt</PaddingLeft>
                   <PaddingRight>2pt</PaddingRight>
                   <PaddingTop>2pt</PaddingTop>
@@ -692,6 +732,7 @@
                       <TextRun>
                         <Value>=First(Fields!Designation.Value, "DataSet_Result")</Value>
                         <Style>
+                          <FontFamily>Segoe UI</FontFamily>
                           <FontSize>8pt</FontSize>
                           <FontWeight>Normal</FontWeight>
                         </Style>
@@ -703,7 +744,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>1.52489cm</Top>
+                <Top>4.69136cm</Top>
                 <Left>12.95534cm</Left>
                 <Height>0.6cm</Height>
                 <Width>5.60168cm</Width>
@@ -712,6 +753,7 @@
                   <Border>
                     <Style>None</Style>
                   </Border>
+                  <VerticalAlign>Middle</VerticalAlign>
                   <PaddingLeft>2pt</PaddingLeft>
                   <PaddingRight>2pt</PaddingRight>
                   <PaddingTop>2pt</PaddingTop>
@@ -727,6 +769,7 @@
                       <TextRun>
                         <Value>=First(Fields!ExpectedDateofReturn.Value, "DataSet_Result")</Value>
                         <Style>
+                          <FontFamily>Segoe UI</FontFamily>
                           <FontSize>8pt</FontSize>
                           <FontWeight>Normal</FontWeight>
                           <Format>M/d/yyyy</Format>
@@ -739,7 +782,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>2.82692cm</Top>
+                <Top>5.99339cm</Top>
                 <Left>13.38262cm</Left>
                 <Height>0.6cm</Height>
                 <Width>5.1744cm</Width>
@@ -748,6 +791,7 @@
                   <Border>
                     <Style>None</Style>
                   </Border>
+                  <VerticalAlign>Middle</VerticalAlign>
                   <PaddingLeft>2pt</PaddingLeft>
                   <PaddingRight>2pt</PaddingRight>
                   <PaddingTop>2pt</PaddingTop>
@@ -763,6 +807,7 @@
                       <TextRun>
                         <Value>=First(Fields!Location_Code.Value, "DataSet_Result")</Value>
                         <Style>
+                          <FontFamily>Segoe UI</FontFamily>
                           <FontSize>8pt</FontSize>
                           <FontWeight>Normal</FontWeight>
                         </Style>
@@ -774,7 +819,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>3.49748cm</Top>
+                <Top>6.66395cm</Top>
                 <Left>12.92006cm</Left>
                 <Height>0.49417cm</Height>
                 <Width>5.67224cm</Width>
@@ -783,6 +828,7 @@
                   <Border>
                     <Style>None</Style>
                   </Border>
+                  <VerticalAlign>Middle</VerticalAlign>
                   <PaddingLeft>2pt</PaddingLeft>
                   <PaddingRight>2pt</PaddingRight>
                   <PaddingTop>2pt</PaddingTop>
@@ -798,6 +844,7 @@
                       <TextRun>
                         <Value>=First(Fields!SubLocation.Value, "DataSet_Result")</Value>
                         <Style>
+                          <FontFamily>Segoe UI</FontFamily>
                           <FontSize>8pt</FontSize>
                           <FontWeight>Normal</FontWeight>
                         </Style>
@@ -809,7 +856,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>4.09748cm</Top>
+                <Top>7.26395cm</Top>
                 <Left>12.95534cm</Left>
                 <Height>0.52944cm</Height>
                 <Width>5.60168cm</Width>
@@ -818,6 +865,7 @@
                   <Border>
                     <Style>None</Style>
                   </Border>
+                  <VerticalAlign>Middle</VerticalAlign>
                   <PaddingLeft>2pt</PaddingLeft>
                   <PaddingRight>2pt</PaddingRight>
                   <PaddingTop>2pt</PaddingTop>
@@ -833,7 +881,8 @@
                       <TextRun>
                         <Value>=First(Fields!ProgramCapLbl.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
+                          <FontFamily>Segoe UI</FontFamily>
+                          <FontSize>8pt</FontSize>
                           <FontWeight>Bold</FontWeight>
                         </Style>
                       </TextRun>
@@ -842,7 +891,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>3.98805cm</Top>
+                <Top>7.11925cm</Top>
                 <Left>0.44662cm</Left>
                 <Height>0.6cm</Height>
                 <Width>3.34667cm</Width>
@@ -866,6 +915,7 @@
                       <TextRun>
                         <Value>=First(Fields!Program.Value, "DataSet_Result")</Value>
                         <Style>
+                          <FontFamily>Segoe UI</FontFamily>
                           <FontSize>8pt</FontSize>
                           <FontWeight>Normal</FontWeight>
                         </Style>
@@ -875,7 +925,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>4.05861cm</Top>
+                <Top>7.22508cm</Top>
                 <Left>3.86384cm</Left>
                 <Height>0.52944cm</Height>
                 <Width>4.21979cm</Width>
@@ -899,16 +949,19 @@
                       <TextRun>
                         <Value>=First(Fields!PurposeCapLbl.Value, "DataSet_Result")</Value>
                         <Style>
-                          <FontSize>9pt</FontSize>
+                          <FontFamily>Segoe UI</FontFamily>
+                          <FontSize>8pt</FontSize>
                           <FontWeight>Bold</FontWeight>
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Left</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>2.08962cm</Top>
+                <Top>5.25609cm</Top>
                 <Left>8.39161cm</Left>
                 <Height>0.6cm</Height>
                 <Width>4.52847cm</Width>
@@ -917,6 +970,7 @@
                   <Border>
                     <Style>None</Style>
                   </Border>
+                  <VerticalAlign>Middle</VerticalAlign>
                   <PaddingLeft>2pt</PaddingLeft>
                   <PaddingRight>2pt</PaddingRight>
                   <PaddingTop>2pt</PaddingTop>
@@ -932,6 +986,7 @@
                       <TextRun>
                         <Value>=First(Fields!Purpose.Value, "DataSet_Result")</Value>
                         <Style>
+                          <FontFamily>Segoe UI</FontFamily>
                           <FontSize>8pt</FontSize>
                           <FontWeight>Normal</FontWeight>
                         </Style>
@@ -943,7 +998,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>2.16017cm</Top>
+                <Top>5.32664cm</Top>
                 <Left>12.95536cm</Left>
                 <Height>0.6cm</Height>
                 <Width>5.60168cm</Width>
@@ -952,6 +1007,7 @@
                   <Border>
                     <Style>None</Style>
                   </Border>
+                  <VerticalAlign>Middle</VerticalAlign>
                   <PaddingLeft>2pt</PaddingLeft>
                   <PaddingRight>2pt</PaddingRight>
                   <PaddingTop>2pt</PaddingTop>
@@ -960,9 +1016,9 @@
               </Textbox>
             </ReportItems>
             <KeepTogether>true</KeepTogether>
-            <Top>0.01764cm</Top>
+            <Top>0cm</Top>
             <Left>0cm</Left>
-            <Height>5.12819cm</Height>
+            <Height>8.29466cm</Height>
             <Width>18.5923cm</Width>
             <Style>
               <Border>
@@ -1008,7 +1064,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>5.44569cm</Top>
+            <Top>8.59452cm</Top>
             <Left>0.22437cm</Left>
             <Height>0.6cm</Height>
             <Width>9.485cm</Width>
@@ -1041,7 +1097,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>6.08097cm</Top>
+            <Top>9.2298cm</Top>
             <Left>0.22437cm</Left>
             <Height>0.6cm</Height>
             <Width>9.485cm</Width>
@@ -1074,7 +1130,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>6.71625cm</Top>
+            <Top>9.86508cm</Top>
             <Left>0.22437cm</Left>
             <Height>0.6cm</Height>
             <Width>9.485cm</Width>
@@ -1107,7 +1163,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>7.35153cm</Top>
+            <Top>10.50036cm</Top>
             <Left>0.22437cm</Left>
             <Height>0.6cm</Height>
             <Width>17.95061cm</Width>
@@ -1126,25 +1182,25 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>2.5872cm</Width>
+                  <Width>2.66355cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.5872cm</Width>
+                  <Width>2.66355cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.5872cm</Width>
+                  <Width>2.66355cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.5872cm</Width>
+                  <Width>2.66355cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.5872cm</Width>
+                  <Width>2.66355cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.5872cm</Width>
+                  <Width>2.66355cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.5872cm</Width>
+                  <Width>2.66355cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -1162,7 +1218,8 @@
                                 <TextRun>
                                   <Value>=First(Fields!SNOCapLbl.Value, "DataSet_Result")</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -1177,6 +1234,7 @@
                             <Border>
                               <Style>Solid</Style>
                             </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1196,12 +1254,15 @@
                                 <TextRun>
                                   <Value>=First(Fields!ItemcodeCapLbl.Value, "DataSet_Result")</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox36</rd:DefaultName>
@@ -1229,6 +1290,7 @@
                               <Style>Solid</Style>
                               <Width>1pt</Width>
                             </RightBorder>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1248,12 +1310,15 @@
                                 <TextRun>
                                   <Value>=First(Fields!ItemNameCapLbl.Value, "DataSet_Result")</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox38</rd:DefaultName>
@@ -1281,6 +1346,7 @@
                               <Style>Solid</Style>
                               <Width>1pt</Width>
                             </RightBorder>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1300,7 +1366,8 @@
                                 <TextRun>
                                   <Value>=First(Fields!QtyCapLbl.Value, "DataSet_Result")</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -1315,13 +1382,13 @@
                             <Border>
                               <Style>Solid</Style>
                             </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -1335,12 +1402,15 @@
                                 <TextRun>
                                   <Value>=First(Fields!MakeCapLbl.Value, "DataSet_Result")</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox42</rd:DefaultName>
@@ -1368,6 +1438,7 @@
                               <Style>Solid</Style>
                               <Width>1pt</Width>
                             </RightBorder>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1387,12 +1458,15 @@
                                 <TextRun>
                                   <Value>=First(Fields!ModelNoCapLbl.Value, "DataSet_Result")</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox44</rd:DefaultName>
@@ -1420,6 +1494,7 @@
                               <Style>Solid</Style>
                               <Width>1pt</Width>
                             </RightBorder>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1439,12 +1514,15 @@
                                 <TextRun>
                                   <Value>=First(Fields!SerialCapLbl.Value, "DataSet_Result")</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
+                                    <FontFamily>Segoe UI</FontFamily>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox46</rd:DefaultName>
@@ -1472,6 +1550,7 @@
                               <Style>Solid</Style>
                               <Width>1pt</Width>
                             </RightBorder>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1496,6 +1575,7 @@
                                 <TextRun>
                                   <Value>=RowNumber(Nothing)</Value>
                                   <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -1510,6 +1590,7 @@
                             <Border>
                               <Style>Solid</Style>
                             </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1529,11 +1610,14 @@
                                 <TextRun>
                                   <Value>=Fields!Source_No_.Value</Value>
                                   <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox37</rd:DefaultName>
@@ -1561,6 +1645,7 @@
                               <Style>Solid</Style>
                               <Width>1pt</Width>
                             </RightBorder>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1580,12 +1665,15 @@
                                 <TextRun>
                                   <Value>=Fields!Source_Name.Value</Value>
                                   <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox39</rd:DefaultName>
@@ -1613,6 +1701,7 @@
                               <Style>Solid</Style>
                               <Width>1pt</Width>
                             </RightBorder>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1632,6 +1721,7 @@
                                 <TextRun>
                                   <Value>=Fields!Quantity.Value</Value>
                                   <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
@@ -1647,6 +1737,7 @@
                             <Border>
                               <Style>Solid</Style>
                             </Border>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1666,12 +1757,15 @@
                                 <TextRun>
                                   <Value>=Fields!Make.Value</Value>
                                   <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox43</rd:DefaultName>
@@ -1699,6 +1793,7 @@
                               <Style>Solid</Style>
                               <Width>1pt</Width>
                             </RightBorder>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1718,12 +1813,15 @@
                                 <TextRun>
                                   <Value>=Fields!ModelNo.Value</Value>
                                   <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox45</rd:DefaultName>
@@ -1751,6 +1849,7 @@
                               <Style>Solid</Style>
                               <Width>1pt</Width>
                             </RightBorder>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1770,12 +1869,15 @@
                                 <TextRun>
                                   <Value>=Fields!SerialNo.Value</Value>
                                   <Style>
+                                    <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox47</rd:DefaultName>
@@ -1803,6 +1905,7 @@
                               <Style>Solid</Style>
                               <Width>1pt</Width>
                             </RightBorder>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1837,10 +1940,10 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet_Result</DataSetName>
-            <Top>8.36604cm</Top>
-            <Left>0.44662cm</Left>
+            <Top>11.51487cm</Top>
+            <Left>0cm</Left>
             <Height>1.2cm</Height>
-            <Width>18.1104cm</Width>
+            <Width>18.64486cm</Width>
             <ZIndex>5</ZIndex>
             <Style>
               <Border>
@@ -1877,7 +1980,8 @@
                   <TextRun>
                     <Value>=First(Fields!AuthCapLbl.Value, "DataSet_Result")</Value>
                     <Style>
-                      <FontSize>9pt</FontSize>
+                      <FontFamily>Segoe UI</FontFamily>
+                      <FontSize>8pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
@@ -1886,7 +1990,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>10.23042cm</Top>
+            <Top>13.37925cm</Top>
             <Left>2.21932cm</Left>
             <Height>0.6cm</Height>
             <Width>3.34667cm</Width>
@@ -1895,6 +1999,7 @@
               <Border>
                 <Style>None</Style>
               </Border>
+              <VerticalAlign>Middle</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -1910,7 +2015,8 @@
                   <TextRun>
                     <Value>=First(Fields!ISSEdCapLbl.Value, "DataSet_Result")</Value>
                     <Style>
-                      <FontSize>9pt</FontSize>
+                      <FontFamily>Segoe UI</FontFamily>
+                      <FontSize>8pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
@@ -1919,7 +2025,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>10.23042cm</Top>
+            <Top>13.37925cm</Top>
             <Left>7.6581cm</Left>
             <Height>0.6cm</Height>
             <Width>3.34667cm</Width>
@@ -1928,6 +2034,7 @@
               <Border>
                 <Style>None</Style>
               </Border>
+              <VerticalAlign>Middle</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -1943,7 +2050,8 @@
                   <TextRun>
                     <Value>=First(Fields!ReceiedCapLbl.Value, "DataSet_Result")</Value>
                     <Style>
-                      <FontSize>9pt</FontSize>
+                      <FontFamily>Segoe UI</FontFamily>
+                      <FontSize>8pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
@@ -1952,7 +2060,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>10.23042cm</Top>
+            <Top>13.37925cm</Top>
             <Left>14.40497cm</Left>
             <Height>0.6cm</Height>
             <Width>3.34667cm</Width>
@@ -1961,6 +2069,7 @@
               <Border>
                 <Style>None</Style>
               </Border>
+              <VerticalAlign>Middle</VerticalAlign>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -1976,7 +2085,8 @@
                   <TextRun>
                     <Value>=First(Fields!Securitysepcaplbl.Value, "DataSet_Result")</Value>
                     <Style>
-                      <FontSize>9pt</FontSize>
+                      <FontFamily>Segoe UI</FontFamily>
+                      <FontSize>8pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
@@ -1987,7 +2097,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>11.39458cm</Top>
+            <Top>14.54341cm</Top>
             <Left>7.3406cm</Left>
             <Height>0.6cm</Height>
             <Width>4.7225cm</Width>
@@ -2011,7 +2121,8 @@
                   <TextRun>
                     <Value>=First(Fields!IncomingVerCapLbl.Value, "DataSet_Result")</Value>
                     <Style>
-                      <FontSize>9pt</FontSize>
+                      <FontFamily>Segoe UI</FontFamily>
+                      <FontSize>8pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>Underline</TextDecoration>
                     </Style>
@@ -2021,8 +2132,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>12.42581cm</Top>
-            <Left>0.48789cm</Left>
+            <Top>15.57464cm</Top>
+            <Left>0.51435cm</Left>
             <Height>0.6cm</Height>
             <Width>6.57459cm</Width>
             <ZIndex>10</ZIndex>
@@ -2045,7 +2156,8 @@
                   <TextRun>
                     <Value>=First(Fields!ReturntoCapLbl.Value, "DataSet_Result")</Value>
                     <Style>
-                      <FontSize>9pt</FontSize>
+                      <FontFamily>Segoe UI</FontFamily>
+                      <FontSize>8pt</FontSize>
                       <FontWeight>Bold</FontWeight>
                       <TextDecoration>Underline</TextDecoration>
                     </Style>
@@ -2055,8 +2167,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>13.09637cm</Top>
-            <Left>0.48789cm</Left>
+            <Top>16.2452cm</Top>
+            <Left>0.51435cm</Left>
             <Height>0.6cm</Height>
             <Width>17.67672cm</Width>
             <ZIndex>11</ZIndex>
@@ -2071,10 +2183,10 @@
             </Style>
           </Textbox>
         </ReportItems>
-        <Height>14.10229cm</Height>
+        <Height>17.25112cm</Height>
         <Style />
       </Body>
-      <Width>18.66285cm</Width>
+      <Width>18.64486cm</Width>
       <Page>
         <PageHeader>
           <Height>2.77496cm</Height>
@@ -2092,6 +2204,7 @@
                         <TextRun>
                           <Value>=First(Fields!CompanyInfoName.Value, "DataSet_Result")</Value>
                           <Style>
+                            <FontFamily>Segoe UI</FontFamily>
                             <FontWeight>Bold</FontWeight>
                           </Style>
                         </TextRun>
@@ -2103,7 +2216,7 @@
                   </Paragraphs>
                   <rd:DefaultName>Textbox1</rd:DefaultName>
                   <Top>0.26141cm</Top>
-                  <Left>2.21932cm</Left>
+                  <Left>1.83832cm</Left>
                   <Height>0.67938cm</Height>
                   <Width>15.53232cm</Width>
                   <Style>
@@ -2126,6 +2239,7 @@
                         <TextRun>
                           <Value>=First(Fields!CompanyInfoAdd.Value, "DataSet_Result")</Value>
                           <Style>
+                            <FontFamily>Segoe UI</FontFamily>
                             <FontWeight>Bold</FontWeight>
                           </Style>
                         </TextRun>
@@ -2137,7 +2251,7 @@
                   </Paragraphs>
                   <rd:DefaultName>Textbox1</rd:DefaultName>
                   <Top>1.01134cm</Top>
-                  <Left>2.21932cm</Left>
+                  <Left>1.83832cm</Left>
                   <Height>0.67938cm</Height>
                   <Width>15.53232cm</Width>
                   <ZIndex>1</ZIndex>
@@ -2161,6 +2275,7 @@
                         <TextRun>
                           <Value>=First(Fields!NonReturnCapLbl.Value, "DataSet_Result")</Value>
                           <Style>
+                            <FontFamily>Segoe UI</FontFamily>
                             <FontWeight>Bold</FontWeight>
                           </Style>
                         </TextRun>
@@ -2172,7 +2287,7 @@
                   </Paragraphs>
                   <rd:DefaultName>Textbox1</rd:DefaultName>
                   <Top>1.726cm</Top>
-                  <Left>2.21932cm</Left>
+                  <Left>1.83832cm</Left>
                   <Height>0.67938cm</Height>
                   <Width>15.53232cm</Width>
                   <ZIndex>2</ZIndex>
@@ -2190,7 +2305,7 @@
               </ReportItems>
               <KeepTogether>true</KeepTogether>
               <Height>1.02306in</Height>
-              <Width>7.34758in</Width>
+              <Width>7.3198in</Width>
               <Style>
                 <Border>
                   <Style>Solid</Style>
@@ -2226,7 +2341,7 @@
         </PageHeader>
         <PageHeight>29.7cm</PageHeight>
         <PageWidth>21cm</PageWidth>
-        <LeftMargin>0.5cm</LeftMargin>
+        <LeftMargin>1cm</LeftMargin>
         <RightMargin>0.5cm</RightMargin>
         <TopMargin>0cm</TopMargin>
         <BottomMargin>0cm</BottomMargin>

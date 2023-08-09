@@ -75,6 +75,12 @@ page 50023 "Indent Line"
                     ApplicationArea = all;
                     Editable = FieldEditable;
                 }
+                field("Avail/UnAvail"; Rec."Avail/UnAvail")//B2BSSD02AUG2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'Avail/UnAvail';
+                    Editable = false;
+                }
                 field("Req.Quantity"; rec."Req.Quantity")
                 {
                     ApplicationArea = All;
@@ -114,23 +120,24 @@ page 50023 "Indent Line"
                 field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {
                     ApplicationArea = all;
-                    Editable = FieldEditable;
+                    //Editable = FieldEditable;
                 }
                 field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = all;
-                    Editable = FieldEditable;
+                    //Editable = FieldEditable;
                 }
                 field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")//B2BSSD20Feb2023
                 {
                     ApplicationArea = All;
                     Caption = 'Shortcut Dimension 9 Code';
-                    Editable = FieldEditable;
+                    //Editable = FieldEditable;
                 }
                 field("Qty To Issue"; Rec."Qty To Issue")
                 {
                     ApplicationArea = all;
                     Caption = 'Qty. to Issue';
+                    Editable = Rec.QTyToIssueEditable;
                 }
                 field("Qty Issued"; Rec."Qty Issued")
                 {
@@ -322,12 +329,40 @@ page 50023 "Indent Line"
                     Image = CreateDocument;
                     trigger OnAction()
                     var
+                        Errorinward: TextConst ENN = 'Type must Be Item Or Fixed Asset';
+                        Errorinward1: TextConst ENN = 'You cant create Inward More then qty Issued';
                     begin
                         if Rec.Type = Rec.Type::Item then
                             Rec.TestField(Select, true);
                         if Rec.Type = Rec.Type::"Fixed Assets" then
                             Rec.TestField(Acquired, true);
                         Rec.TestField(Select, true);//B2BSSD13APR2023
+
+                        IndentLine.Reset();//B2BSSD02AUG2023
+                        IndentLine.SetRange("Document No.", Rec."Document No.");
+                        if IndentLine.FindSet() then begin
+                            repeat
+                                IndentLine.TestField("Qty Returned");
+                            until IndentLine.Next() = 0;
+                        end;
+
+                        indentLine.Reset();//B2BSSD03AUG2023
+                        indentLine.SetRange("Document No.", Rec."Document No.");
+                        if indentLine.FindSet() then begin
+                            repeat
+                                indentLine.CalcFields("Qty Returned", "Qty Issued");
+                                if Abs(indentLine."Qty Issued") = IndentLine."Qty Returned" then
+                                    Error(Errorinward1);
+                            until indentLine.Next() = 0;
+                        end;
+
+                        IndentLine.Reset();//B2BSSD02AUG2023
+                        IndentLine.SetRange("Document No.", Rec."Document No.");
+                        IndentLine.SetRange(Select, true);
+                        IndentLine.SetRange(Type, Rec.Type::Description);
+                        if IndentLine.FindSet() then
+                            Error(Errorinward);
+
                         CreateRGPfromIndent(GateEntryType::Inward, GateEntryDocType::RGP);
                     end;
                 }
@@ -342,15 +377,53 @@ page 50023 "Indent Line"
                         indentLine: Record "Indent Line";
                         FixedAsset: Record "Fixed Asset";
                         ERRORmsg: Label 'Fixed Assets is Not Available for Transfer';
+                        ErrorOutward: TextConst ENN = 'Type must Be Item Or Fixed Asset';
+                        ErrorOutward1: TextConst ENN = 'Quantity Issed Must Have a Values';
+                        ErrorOutward2: TextConst ENN = 'You cant create Outward More then qty Issued';
                     begin
+
+                        Rec.TestField("Qty To Issue");
+                        IndentLine.Reset();//B2BSSD02AUG2023
+                        IndentLine.SetRange("Document No.", Rec."Document No.");
+                        if IndentLine.FindSet() then begin
+                            repeat
+                                indentLine.CalcFields("Qty Issued");
+                                IndentLine.TestField("Qty Issued");
+                            until IndentLine.Next() = 0;
+                        end;
+
+                        IndentLine.Reset();//B2BSSD02AUG2023
+                        IndentLine.SetRange("Document No.", Rec."Document No.");
+                        IndentLine.SetRange(Select, true);
+                        IndentLine.SetRange(Type, Rec.Type::Description);
+                        if IndentLine.FindSet() then
+                            Error(ErrorOutward);
+
+                        indentLine.Reset();//B2BSSD03AUG2023
+                        indentLine.SetRange("Document No.", Rec."Document No.");
+                        if indentLine.FindSet() then begin
+                            repeat
+                                indentLine.CalcFields("Qty Issued");
+                                if indentLine."Req.Quantity" < Abs(indentLine."Qty Issued") then
+                                    Error(ErrorOutward2);
+                            until indentLine.Next() = 0;
+                        end;
+
+                        GateEntryHeaderOutwardGvar.Reset();//B2BSSD03AUG2023
+                        GateEntryHeaderOutwardGvar.SetRange("Indent Document No", Rec."Document No.");
+                        if GateEntryHeaderOutwardGvar.FindFirst() then
+                            Error('Rgp Outward Already Created');
+
+
+
                         if Rec.Type = Rec.Type::Item then begin
                             Rec.TestField(Select, true);
                             Rec.TestField("Issue Location");
                             Rec.TestField("Issue Sub Location");
                             //B2BSSD26APR2023>>
                             Rec.CalcFields("Qty Issued");
-                            if Rec."Qty Returned" = 0 then
-                                error('Quantity Returned is Zero');
+                            if Rec."Qty Issued" = 0 then
+                                Error(ErrorOutward1);
                             //B2BSSD26APR2023>>
                         end;
 
@@ -379,7 +452,16 @@ page 50023 "Indent Line"
                     trigger OnAction()
                     var
                         ERRORmsg: Label 'Fixed Assets is Not Available for Transfer';
+                        ErrorNRGPOutward: TextConst ENN = 'Type must Be Item Or Fixed Asset';
                     begin
+
+                        IndentLine.Reset();//B2BSSD02AUG2023
+                        IndentLine.SetRange("Document No.", Rec."Document No.");
+                        IndentLine.SetRange(Select, true);
+                        IndentLine.SetRange(Type, Rec.Type::Description);
+                        if IndentLine.FindSet() then
+                            Error(ErrorNRGPOutward);
+
                         if Rec.Type = Rec.Type::Item then
                             Rec.TestField(Select, true);
                         Rec.TestField("Qty Issued");
@@ -536,7 +618,8 @@ page 50023 "Indent Line"
 
                 GateEntryLine.Variant := IndentLine."Variant Code";
                 indentLine.CalcFields("Qty Issued");//B2BSSD28APR2023
-                GateEntryLine.Quantity := abs(IndentLine."Qty Issued");//B2BSSD07APR2023
+                //GateEntryLine.Quantity := abs(IndentLine."Qty Issued");//B2BSSD07APR2023
+                GateEntryLine.Quantity := indentLine."Qty To Issue";
                 GateEntryLine."Source Name" := IndentLine.Description;
                 GateEntryLine.Description := IndentLine.Description;
                 LineNo += 10000;
@@ -547,6 +630,15 @@ page 50023 "Indent Line"
                 GateEntryLine.SerialNo := FA."Serial No.";
                 GateEntryLine.Variant := FA.Make_B2B;
                 GateEntryLine.Modify();
+
+                indentLine.Reset();
+                indentLine.SetRange("Document No.", Rec."Document No.");
+                if indentLine.FindSet() then begin
+                    repeat
+                        indentLine."Qty To Issue" := 0;
+                        indentLine.Modify();
+                    until indentLine.Next() = 0;
+                end;
 
             until IndentLine.Next() = 0;
             if Confirm(OpenText, false, GateEntryHeader."No.") then
@@ -597,8 +689,11 @@ page 50023 "Indent Line"
             ItemLedgerEntry.CalcSums(Quantity);
             Rec."Avail.Qty" := ItemLedgerEntry.Quantity;
         end;
+        if rec."Qty To Issue" = 0 then
+            Rec.QTyToIssueEditable := true;
     end;
     //B2BSSD22MAY2023<<
+
 
     var
         ItemLedgerEntry: Record 32;
@@ -610,4 +705,24 @@ page 50023 "Indent Line"
         GateEntryType: Option Inward,Outward;
         GateEntryDocType: Option RGP,NRGP;
         FixedAsset: Record "Fixed Asset";
+
+        GateEntryHeaderOutwardGvar: Record "Gate Entry Header_B2B";
+    //B2BSSD03AUG2023>>
+    procedure QTyToIssueNonEditable()
+    begin
+        IndentLine.Reset();
+        IndentLine.SetRange("Document No.", Rec."Document No.");
+        if IndentLine.FindSet() then begin
+            repeat
+                if IndentLine."Qty To Issue" = 0 then
+                    IndentLine.QTyToIssueEditable := true
+                else
+                    IndentLine.QTyToIssueEditable := false;
+                IndentLine.Modify();
+            until IndentLine.Next() = 0;
+        end;
+    end;
+
+
+    //SSD03AUG2023<<
 }

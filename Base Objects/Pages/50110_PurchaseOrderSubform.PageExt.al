@@ -192,6 +192,13 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             }
         }
         //B2BSSD16MAY2023<<
+        addafter("Gen. Prod. Posting Group")
+        {
+            field("Depreciation Book Code"; Rec."Depreciation Book Code")
+            {
+                ApplicationArea = All;
+            }
+        }
 
     }
 
@@ -572,6 +579,10 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                     //B2BSSD30MAY2023
                     //GateEntryLine.Modify();//B2BSSD30MAY2023
                     PurchLine."Qty Accepted Inward_B2B" := Inwardqty;
+                    PurchLine."Qty. to Receive (Base)" := 0;
+                    PurchLine."Qty. to Invoice (Base)" := 0;
+                    PurchLine."Qty. to Receive" := PurchLine."Qty to Inward_B2B";//B2BSSD09AUG2023
+                    PurchLine."Qty. to Invoice" := PurchLine."Qty to Inward_B2B";
                     PurchLine."Qty to Inward_B2B" := 0;
                     PurchLine.Modify();
                     //B2BSSD15MAY2023<<
@@ -619,6 +630,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                             LineNo += 10000;
                             //B2BSSD25MAY2023>>
                             PurchLine."Qty Accepted Inward_B2B" := Inwardqty;
+                            PurchLine."Qty. to Receive (Base)" := PurchLine."Qty to Inward_B2B";
                             GateEntryLine.Quantity := PurchLine."Qty to Inward_B2B";//B2BSSD30MAY2023
                             PurchLine."Qty to Inward_B2B" := 0;
                             GateEntryLine.Modify();//B2BSSD30MAY2023
@@ -767,8 +779,8 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                     if PurchaseLine."Line No." = FALineNo then
                         CountGvar += 1;
                 end;
-                //if PurchaseLine."Qty. to Accept B2B" <> CountGvar then
-                if PurchaseLine."Quantity Accepted B2B" <> CountGvar then //B2BSSD08JUN2023
+                if PurchaseLine."Qty. to Accept B2B" <> CountGvar then
+                    //if PurchaseLine."Quantity Accepted B2B" <> CountGvar then //B2BSSD08JUN2023
                     Error(Error1, PurchaseLine."Line No.");
             until PurchaseLine.Next() = 0;
             //PurchaseLine.DeleteAll();
@@ -815,7 +827,8 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         PurchaseLine.Validate(Type);
                         PurchaseLine.Validate("No.", No);
                         PurchaseLine.Validate(Quantity, 1);
-                        PurchaseLine.Validate("Qty. to Accept B2B", 1);//B2BSSD27APR2023
+                        PurchaseLine.Validate("Quantity Accepted B2B", 1);
+                        PurchaseLine.Validate("Qty Accepted Inward_B2B", 1);//B2BSSD27APR2023
                         PurchaseLine.Validate("Qty. to Reject B2B", 0);//B2BSSD27APR2023
                         PurchaseLine."Serial No." := SerialNo;
                         PurchaseLine."Model No." := ModelNo;
@@ -849,8 +862,8 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         if PurchaseLine."Unit of Measure Code" = '' then//B2BSSD27APR2023
                             purchaseLine."Unit of Measure Code" := purChaseLine1."Unit of Measure Code";
                         //B2BSSD21MAR2023<<
-                        if PurchaseLine."Quantity Accepted B2B" = 0 then
-                            PurchaseLine."Quantity Accepted B2B" := purChaseLine1."Quantity Accepted B2B";
+                        // if PurchaseLine."Quantity Accepted B2B" = 0 then
+                        //     PurchaseLine."Quantity Accepted B2B" := purChaseLine1."Quantity Accepted B2B";
                         if PurchaseLine."Quantity Rejected B2B" = 0 then
                             PurchaseLine."Quantity Rejected B2B" := purChaseLine1."Quantity Rejected B2B";
                         //B2BSSD21MAR2023<<
@@ -863,6 +876,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         if purChaseLine."Indent Req Line No" = 0 then
                             purChaseLine."Indent Req Line No" := purChaseLine1."Indent Req Line No";
                         //B2BSSD04APR2023>>
+                        PurchaseLine."Qty. to Accept B2B" := 0;
                         PurchaseLine.Modify(true);
 
                     end;

@@ -233,13 +233,13 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         }
         field(60014; "Quantity Accepted B2B"; Decimal)
         {
-            //Editable = false;
+            Editable = false;
             Caption = 'Quantity Accepted';
             DataClassification = CustomerContent;
         }
         field(60015; "Quantity Rejected B2B"; Decimal)
         {
-            //Editable = false;
+            Editable = false;
             Caption = 'Quantity Rejected';
             DataClassification = CustomerContent;
         }

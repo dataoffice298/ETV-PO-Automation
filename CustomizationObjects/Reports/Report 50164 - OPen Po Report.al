@@ -102,7 +102,8 @@ report 50164 "OPen Po Report"//>>CH15SEP2022
         PurchaseOrderLine.Reset();
         PurchaseOrderLine.SetRange("Document Type", PurchaseOrderLine."Document Type"::Order);
         PurchaseOrderLine.SetFilter("Qty. to Receive", '>%1', 0);//B2BSSD29MAR2023
-        //PurchaseOrderLine.SetFilter("Indent No.", '<>%1', '');//B2BSSD29APR2023
+        PurchaseOrderLine.SetFilter("Qty Accepted Inward_B2B", '<>%1', 0);
+        PurchaseOrderLine.SetFilter("Indent No.", '<>%1', '');//B2BSSD29APR2023
         if PurchaseOrderLine.FindSet() then
             repeat
                 PurchaseHeader.get(PurchaseOrderLine."Document Type", PurchaseOrderLine."Document No.");
@@ -120,7 +121,7 @@ report 50164 "OPen Po Report"//>>CH15SEP2022
                         ExcelBuffer1.AddColumn(PurchaseOrderLine."No.", FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
                         ExcelBuffer1.AddColumn(PurchaseOrderLine.Description, FALSE, '', false, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
                         ExcelBuffer1.AddColumn(PurchaseOrderLine."Unit of Measure Code", FALSE, '', false, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);//B2BSSD22MAY2023
-                        ExcelBuffer1.AddColumn(PurchaseOrderLine."Qty. to Receive", FALSE, '', false, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);//B2BSSD29Dec2022
+                        ExcelBuffer1.AddColumn(PurchaseOrderLine.Quantity - PurchaseOrderLine."Qty Accepted Inward_B2B", FALSE, '', false, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);//B2BSSD29Dec2022
                         ExcelBuffer1.AddColumn(Abs(PurchaseOrderLine."Unit Cost"), FALSE, '', false, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
                         ExcelBuffer1.AddColumn(Round(Abs(PurchaseOrderLine."Unit Cost" * PurchaseOrderLine."Qty. to Receive (Base)")), FALSE, '', false, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);
                         ExcelBuffer1.AddColumn(PurchaseHeader.Status, FALSE, '', false, FALSE, TRUE, '', ExcelBuffer1."Cell Type"::Text);//B2BSSD26APR2023

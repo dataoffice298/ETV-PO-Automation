@@ -456,6 +456,7 @@ table 50201 "Indent Header"
         DocNo: Code[20];
         ItemLedgerEntry1: Record "Item Ledger Entry";
         LineNo: Integer;
+        QTYVar: Integer;
     begin
 
         PurchPaySetup.Get();
@@ -473,6 +474,12 @@ table 50201 "Indent Header"
         if ItemJnlBatch.FindFirst() then;
 
         DocNo := NoSeriesMgt.GetNextNo(ItemJnlBatch."No. Series", TODAY(), false);
+
+        ItemJnlLine.Reset();//B2BSS09AUG2023
+        ItemJnlLine.SetRange("Indent No.", Rec."No.");
+        if ItemJnlLine.FindFirst() then
+            Error('Already Issued journals');
+
         //B2BSSD04JUL2023>>
         ItemJnlLine.Reset();
         ItemJnlLine.SetRange("Journal Template Name", PurchPaySetup."Indent Return Jnl. Template");
@@ -487,6 +494,8 @@ table 50201 "Indent Header"
         IndentLineRec.SetFilter("Qty To Issue", '<>%1', 0);
         if IndentLineRec.FindSet() then begin
             repeat
+                // if QTYVar <> IndentLineRec."Qty To Issue" then begin
+                //     QTYVar := IndentLineRec."Qty To Issue";
                 LastItemJnlLine.Reset();
                 LastItemJnlLine.SetRange(LastItemJnlLine."Journal Template Name", PurchPaySetup."Indent Issue Jnl. Template");
                 LastItemJnlLine.SetRange(LastItemJnlLine."Journal Batch Name", PurchPaySetup."Indent Issue Jnl. Batch");
@@ -531,11 +540,14 @@ table 50201 "Indent Header"
                     ItemJnlLine.VALIDATE("Bin Code", Bincontent."Bin Code");
 
                 ItemJnlLine.MODIFY();
-                IndentLineRec."Qty To issue" := 0;
-                IndentLineRec.Modify();
+            // end;
+            // Error('Already Issued journals');
+            // IndentLineRec."Qty To issue" := 0;//B2BSSD02AUG2023
+            // IndentLineRec.Modify();
             until IndentLineRec.NEXT() = 0;
             MESSAGE('Issue journals are created successfully.');
-        end else
+        end
+        else
             Error('Nothing to Issue');
     end;
 

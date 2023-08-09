@@ -24,9 +24,6 @@ report 50167 "QC Pending GRN Pending Report"
                     PostGateEntryLine: Record "Posted Gate Entry Line_B2B";
 
                 begin
-                    Clear(PurchLine);
-                    Clear(Item);
-                    Clear(PurchHdr);
                     Clear(SNo);//B2BSSD10APR2023
 
                     SNo += 1;
@@ -36,45 +33,50 @@ report 50167 "QC Pending GRN Pending Report"
                     if Users.FindFirst() then;
 
                     if Item.Get("No.") then;
-                    Clear(PurchHdr);
                     PurchLine.Reset;
                     PurchLine.SetRange("Indent No.", "Indent Line"."Document No.");
                     PurchLine.SetRange("Indent Line No.", "Indent Line"."Line No.");
-                    if PurchLine.FindFirst() then
-                        if PurchHdr.get(PurchHdr."Document Type"::Order, PurchLine."Document No.") then;
-                    //B2BSSD21Dec2022<<
-                    PostGateEntryHdr.Reset();
-                    PostGateEntryHdr.SetRange("Purchase Order No.", PurchLine."Document No.");
-                    if PostGateEntryHdr.FindFirst() then begin
-                        PostGateEntryLine.Reset();
-                        PostGateEntryLine.SetRange("Gate Entry No.", PostGateEntryHdr."No.");
-                        if PostGateEntryLine.FindSet() then;
-                    end;
-                    //B2BSSD21Dec2022>>
-                    //B2BSSD21Dec2022<<
-                    if (PostGateEntryHdr."No." = '') or (PurchHdr."No." = '') then
-                        CurrReport.Skip();
-                    //B2BSSD21Dec2022>>
+                    PurchLine.SetFilter("Qty. to Receive", '<>%1', 0);
+                    PurchLine.SetRange("Quantity Accepted B2B", 0);
+                    if PurchLine.FindSet() then begin
+                        repeat
+                            if PurchHdr.get(PurchHdr."Document Type"::Order, PurchLine."Document No.") then;
+                            // //B2BSSD21Dec2022<<
+                            PostGateEntryHdr.Reset();
+                            PostGateEntryHdr.SetRange("Purchase Order No.", PurchLine."Document No.");
+                            if PostGateEntryHdr.FindFirst() then begin
+                                PostGateEntryLine.Reset();
+                                PostGateEntryLine.SetRange("Gate Entry No.", PostGateEntryHdr."No.");
+                                if PostGateEntryLine.FindSet() then;
+                            end;
+                            // //B2BSSD21Dec2022>>
 
-                    WindPa.Update(1, "Document No.");
-                    TempExcelBuffer.NewRow();
-                    TempExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn("Document No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn(IndentHeader."Document Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
-                    TempExcelBuffer.AddColumn(PostGateEntryHdr."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD21Dec2022
-                    TempExcelBuffer.AddColumn(PostGateEntryHdr."Document Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
-                    TempExcelBuffer.AddColumn(PurchHdr."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn(PurchHdr."Document Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
-                    TempExcelBuffer.AddColumn(PurchHdr."Buy-from Vendor Name", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn(PostGateEntryHdr."Challan No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD28MAR2023
-                    TempExcelBuffer.AddColumn(PostGateEntryHdr."Challan Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);//B2BSSD28MAR2023
-                    TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn(Item."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn(Item.Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn("Unit of Measure", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn(PostGateEntryLine.Quantity, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//B2BSSD28MAR2023
-                    TempExcelBuffer.AddColumn(PurchLine."Direct Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn(Round(PostGateEntryLine.Quantity * PurchLine."Direct Unit Cost"), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//B2BSSD28MAR2023
+                            // //B2BSSD21Dec2022<<
+                            if (PostGateEntryHdr."No." = '') or (PurchHdr."No." = '') then
+                                CurrReport.Skip();
+                            //B2BSSD21Dec2022>>
+
+                            WindPa.Update(1, "Document No.");
+                            TempExcelBuffer.NewRow();
+                            TempExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                            TempExcelBuffer.AddColumn("Document No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn(IndentHeader."Document Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
+                            TempExcelBuffer.AddColumn(PostGateEntryHdr."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD21Dec2022
+                            TempExcelBuffer.AddColumn(PostGateEntryHdr."Document Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
+                            TempExcelBuffer.AddColumn(PurchHdr."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn(PurchHdr."Document Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
+                            TempExcelBuffer.AddColumn(PurchHdr."Buy-from Vendor Name", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn(PostGateEntryHdr."Challan No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD28MAR2023
+                            TempExcelBuffer.AddColumn(PostGateEntryHdr."Challan Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);//B2BSSD28MAR2023
+                            TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn(Item."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn(Item.Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn("Unit of Measure", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn(PostGateEntryLine.Quantity, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//B2BSSD28MAR2023
+                            TempExcelBuffer.AddColumn(PurchLine."Direct Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                            TempExcelBuffer.AddColumn(Round(PostGateEntryLine.Quantity * PurchLine."Direct Unit Cost"), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//B2BSSD28MAR2023
+                        until PurchLine.Next() = 0;                                                                                                                                                                 //until PurchLine.Next() = 0;
+                    end;
                 end;
             }
 

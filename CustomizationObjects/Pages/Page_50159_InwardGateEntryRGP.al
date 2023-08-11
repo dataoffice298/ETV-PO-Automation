@@ -366,6 +366,9 @@ page 50159 "Inward Gate Entry-RGP"
                         PostedGateEntryLIne: Record "Posted Gate Entry Line_B2B";
                         RgpGateEntryInwardLine: Record "Gate Entry Line_B2B";
                         RGPGateEntryInward: Record "Gate Entry Header_B2B";
+                        PPSetup: Record 312;
+                        NoSeriesMgt: Codeunit 396;
+                        Noseries: Code[20];
                     begin
                         Rec.TestField("Approval Status", Rec."Approval Status"::Open);
                         //B2BSSD05APR2023<<
@@ -374,6 +377,10 @@ page 50159 "Inward Gate Entry-RGP"
                             if page.RunModal(Page::"PostedOutwardGateEntryList-RGP", PostedRGPOutward) = Action::LookupOK then begin
 
 
+                                Rec."Location Code" := PostedRGPOutward.SubLocation;//B2BSSD10AUG2023
+                                Rec."To Location" := PostedRGPOutward."To Location";//B2BSSD10AUG2023
+                                // PPSetup.GET;
+                                // Rec."No." := NoSeriesMgt.GetNextNo(Noseries, WORKDATE, TRUE);
                                 Rec."Vehicle No." := PostedRGPOutward."Vehicle No.";
                                 Rec.Description := PostedRGPOutward.Description;
                                 Rec."Shortcut Dimension 1 Code" := PostedRGPOutward."Shortcut Dimension 1 Code";

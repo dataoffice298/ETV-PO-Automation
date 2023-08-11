@@ -17,9 +17,9 @@ report 50192 "FixedAssets&Item LocationWise" //B2BSSD09MAY2023
                 if DocumentType = DocumentType::FixedAsset then begin
                     //Clear(PostedRGPNo);
                     FixedAsset.Reset();
-                    FixedAsset.SetRange("FA Location Code", LocationCode);
+                    FixedAsset.SetRange("FA Location Code", FAlocationcode);//B2BSSD10AUG2023
                     FixedAsset.SetRange("available/Unavailable", "Avail&UnAvail");
-                    if FixedAsset.FindFirst() then begin
+                    if FixedAsset.FindSet() then begin
                         repeat
                             Clear(PostedRGPNo);
                             Clear(expectedReturnDate);
@@ -166,6 +166,12 @@ report 50192 "FixedAssets&Item LocationWise" //B2BSSD09MAY2023
                         ApplicationArea = All;
                         Caption = 'Document Type';
                     }
+                    field(FAlocationcode; FAlocationcode)
+                    {
+                        ApplicationArea = All;
+                        Caption = 'FA Location';
+                        TableRelation = "FA Location".Code;
+                    }
                     field(LocationCode; LocationCode)
                     {
                         ApplicationArea = All;
@@ -227,12 +233,12 @@ report 50192 "FixedAssets&Item LocationWise" //B2BSSD09MAY2023
             TempExcelBuffer.AddColumn('SNo.', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
             TempExcelBuffer.AddColumn('No.', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
             TempExcelBuffer.AddColumn('Description', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-            TempExcelBuffer.AddColumn('LOcation', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+            TempExcelBuffer.AddColumn('Location', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
             TempExcelBuffer.AddColumn('Serial No.', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
             TempExcelBuffer.AddColumn('Make', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
             TempExcelBuffer.AddColumn('Model No.', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
             TempExcelBuffer.AddColumn('Status', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-            TempExcelBuffer.AddColumn('RGP OutWard No.', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+            TempExcelBuffer.AddColumn('NRGP/RGP OutWard No.', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
             TempExcelBuffer.AddColumn('Expected Date of Return', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
             TempExcelBuffer.AddColumn('From Location', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
             TempExcelBuffer.AddColumn('To Location', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
@@ -293,4 +299,5 @@ report 50192 "FixedAssets&Item LocationWise" //B2BSSD09MAY2023
         Item: Record Item;
         "Avail&UnAvail": Boolean;
         ItemCategoryCode: Code[20];
+        FAlocationcode: Text[30];
 }

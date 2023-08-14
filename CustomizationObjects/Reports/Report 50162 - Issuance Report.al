@@ -57,6 +57,7 @@ report 50162 "Issuance Report"
 
 
                                     PostedGateEntryHed.Reset();
+                                    //PostedGateEntryHed.SetRange("Entry Type", PostedGateEntryHed."Entry Type"::Outward);
                                     PostedGateEntryHed.SetRange("Indent Document No", "Indent Line"."Document No.");
                                     PostedGateEntryHed.SetRange("Indent Line No", "Indent Line"."Line No.");
                                     if PostedGateEntryHed.FindSet() then begin

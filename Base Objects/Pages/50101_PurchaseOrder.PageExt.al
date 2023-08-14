@@ -209,6 +209,8 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         modify(Release)
         {
             trigger OnBeforeAction()
+            var
+                ImportTypeError: TextConst ENN = 'Import type Must have value in Invoice details Tab';
             begin
                 //B2BSSD16JUN2023>>
                 PurchLine.Reset();
@@ -234,7 +236,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                         Error('There is a Released LC document against this Vendor. To proceed, please provide LC No. in Purchase Order');
                 end;
                 //B2BSSD29JUN2023>>
-                Rec.TestField("Import Type", ErrorInfo.Create());
+                Rec.TestField("Import Type", ErrorInfo.Create(ImportTypeError, true, PurchaseHeader));
                 Rec.TestField("Payment Terms Code");
                 Rec.TestField("Transaction Specification");
                 Rec.TestField("Transaction Type");

@@ -321,8 +321,9 @@ page 50023 "Indent Line"
                 //B2BSSD31Jan2023>>
             }
             //B2BSSD02MAR2023<<
-            group(RGP)
+            group("NRGP/RGP")
             {
+                Caption = 'NRGP/RGP';
                 action(CreateRPGInward)
                 {
                     Caption = 'Create RGP Inward';
@@ -340,6 +341,7 @@ page 50023 "Indent Line"
 
                         IndentLine.Reset();//B2BSSD02AUG2023
                         IndentLine.SetRange("Document No.", Rec."Document No.");
+                        IndentLine.SetRange(Type, Rec.Type::Item);
                         if IndentLine.FindSet() then begin
                             repeat
                                 IndentLine.TestField("Qty Returned");
@@ -348,6 +350,7 @@ page 50023 "Indent Line"
 
                         indentLine.Reset();//B2BSSD03AUG2023
                         indentLine.SetRange("Document No.", Rec."Document No.");
+                        IndentLine.SetRange(Type, Rec.Type::Item);
                         if indentLine.FindSet() then begin
                             repeat
                                 indentLine.CalcFields("Qty Returned", "Qty Issued");
@@ -381,15 +384,16 @@ page 50023 "Indent Line"
                         ErrorOutward1: TextConst ENN = 'Quantity Issed Must Have a Values';
                         ErrorOutward2: TextConst ENN = 'You cant create Outward More then qty Issued';
                     begin
-
-                        Rec.TestField("Qty To Issue");
-                        IndentLine.Reset();//B2BSSD02AUG2023
-                        IndentLine.SetRange("Document No.", Rec."Document No.");
-                        if IndentLine.FindSet() then begin
+                        indentLine.Reset();//B2BSSD10AUG2023
+                        indentLine.SetRange("Document No.", Rec."Document No.");
+                        indentLine.SetRange(Select, true);
+                        indentLine.SetRange(Type, Rec.Type::Item);
+                        if indentLine.FindSet() then begin
                             repeat
+                                indentLine.TestField("Qty To Issue");
                                 indentLine.CalcFields("Qty Issued");
-                                IndentLine.TestField("Qty Issued");
-                            until IndentLine.Next() = 0;
+                                indentLine.TestField("Qty Issued");
+                            until indentLine.Next() = 0;
                         end;
 
                         IndentLine.Reset();//B2BSSD02AUG2023
@@ -462,20 +466,23 @@ page 50023 "Indent Line"
                         if IndentLine.FindSet() then
                             Error(ErrorNRGPOutward);
 
-                        if Rec.Type = Rec.Type::Item then
+                        if Rec.Type = Rec.Type::Item then begin
                             Rec.TestField(Select, true);
-                        Rec.TestField("Qty Issued");
+                            Rec.TestField("Qty Issued");
+                        end;
+
                         if Rec.Type = Rec.Type::"Fixed Assets" then begin
-                            Rec.TestField(Acquired, true);
                             //B2BSSD21APR2023>>
                             indentLine.Reset();
                             indentLine.SetRange("Document No.", Rec."Document No.");
                             indentLine.SetRange("Line No.", Rec."Line No.");
                             if indentLine.FindSet() then begin
-                                //repeat
-                                if indentLine."Avail/UnAvail" = true then
-                                    Error(ERRORmsg);
-                                //until indentLine.Next() = 0;
+                                repeat
+                                    IndentLine.TestField(Acquired, true);
+                                    IndentLine.TestField(Select, true);
+                                    if indentLine."Avail/UnAvail" = true then
+                                        Error(ERRORmsg);
+                                until indentLine.Next() = 0;
                             end;
                             //B2BSSD21APR2023<<
                         end;
@@ -487,11 +494,11 @@ page 50023 "Indent Line"
                 //B2BSSD02MAR2023>>
 
                 //B2BSSD14MAR2023<<
-                action(FromIndOpenGateEntries)
+                action(FromIndOpenRGPGateEntries)
                 {
                     ApplicationArea = All;
                     Image = Open;
-                    Caption = 'Inward/Outward Entries';
+                    Caption = 'RGP Inward/Outward Entries';
                     trigger OnAction()
                     var
                         GateEntryHdr: Record "Gate Entry Header_B2B";
@@ -500,15 +507,35 @@ page 50023 "Indent Line"
                         GateEntryHdr.FilterGroup(2);
                         GateEntryHdr.SetRange("Indent Document No", Rec."Document No.");
                         GateEntryHdr.SetRange("Indent Line No", Rec."Line No.");
+                        GateEntryHdr.SetRange(Type, GateEntryHdr.Type::RGP);//B2BSSD10AUG2023
                         GateEntryHdr.FilterGroup(0);
                         Page.RunModal(Page::"Gate Entry List", GateEntryHdr);
                     end;
                 }
-                action(FromIndOpenPostedGateEntries)
+                action(FromIndOpenNRGPGateEntries)//B2BSSD10AUG2023
+                {
+                    ApplicationArea = All;
+                    Image = Open;
+                    Caption = 'NRGP Inward/Outward Entries';
+                    trigger OnAction()
+                    var
+                        GateEntryHdr: Record "Gate Entry Header_B2B";
+                    begin
+                        GateEntryHdr.Reset();
+                        GateEntryHdr.FilterGroup(2);
+                        GateEntryHdr.SetRange("Indent Document No", Rec."Document No.");
+                        GateEntryHdr.SetRange("Indent Line No", Rec."Line No.");
+                        GateEntryHdr.SetRange(Type, GateEntryHdr.Type::NRGP);
+                        GateEntryHdr.FilterGroup(0);
+                        Page.RunModal(Page::"Gate Entry List", GateEntryHdr);
+                    end;
+                }
+
+                action(FromIndOpenPostedRGPGateEntries)
                 {
                     ApplicationArea = All;
                     Image = History;
-                    Caption = 'Posted Inward/Outward Entries';
+                    Caption = 'Posted RGP Inward/Outward Entries';
                     trigger OnAction()
                     var
                         PostedGateEntryHdr: Record "Posted Gate Entry Header_B2B";
@@ -517,6 +544,26 @@ page 50023 "Indent Line"
                         PostedGateEntryHdr.FilterGroup(2);
                         PostedGateEntryHdr.SetRange("Indent Document No", Rec."Document No.");
                         PostedGateEntryHdr.SetRange("Indent Line No", Rec."Line No.");
+                        PostedGateEntryHdr.SetRange(Type, PostedGateEntryHdr.Type::RGP);
+                        PostedGateEntryHdr.FilterGroup(0);
+                        Page.RunModal(Page::"Posted Gate Entries List", PostedGateEntryHdr);
+                    end;
+                }
+
+                action(FromIndOpenPostedNRGPGateEntries)//B2BSSD10AUG2023
+                {
+                    ApplicationArea = All;
+                    Image = History;
+                    Caption = 'Posted NRGP Inward/Outward Entries';
+                    trigger OnAction()
+                    var
+                        PostedGateEntryHdr: Record "Posted Gate Entry Header_B2B";
+                    begin
+                        PostedGateEntryHdr.Reset();
+                        PostedGateEntryHdr.FilterGroup(2);
+                        PostedGateEntryHdr.SetRange("Indent Document No", Rec."Document No.");
+                        PostedGateEntryHdr.SetRange("Indent Line No", Rec."Line No.");
+                        PostedGateEntryHdr.SetRange(Type, PostedGateEntryHdr.Type::NRGP);
                         PostedGateEntryHdr.FilterGroup(0);
                         Page.RunModal(Page::"Posted Gate Entries List", PostedGateEntryHdr);
                     end;
@@ -618,8 +665,10 @@ page 50023 "Indent Line"
 
                 GateEntryLine.Variant := IndentLine."Variant Code";
                 indentLine.CalcFields("Qty Issued");//B2BSSD28APR2023
-                //GateEntryLine.Quantity := abs(IndentLine."Qty Issued");//B2BSSD07APR2023
                 GateEntryLine.Quantity := indentLine."Qty To Issue";
+                if indentLine.Type = indentLine.Type::"Fixed Assets" then begin//B2BSSD10AUG2023
+                    GateEntryLine.Quantity := indentLine."Req.Quantity";
+                end;
                 GateEntryLine."Source Name" := IndentLine.Description;
                 GateEntryLine.Description := IndentLine.Description;
                 LineNo += 10000;

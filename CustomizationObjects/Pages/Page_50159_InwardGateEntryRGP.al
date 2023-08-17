@@ -390,6 +390,8 @@ page 50159 "Inward Gate Entry-RGP"
                                 Rec.Purpose := PostedRGPOutward.Purpose;
                                 Rec.Program := PostedRGPOutward.Program;
                                 Rec.ExpectedDateofReturn := PostedRGPOutward.ExpectedDateofReturn;//B2BSSD07APR2023
+                                Rec."Indent Document No" := PostedRGPOutward."Indent Document No";
+                                Rec."Indent Line No" := PostedRGPOutward."Indent Line No";
                                 Rec.Modify();
                                 LineNo := 10000;
                                 PostedGateEntryLIne.Reset();

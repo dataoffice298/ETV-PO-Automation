@@ -101,7 +101,7 @@ table 50220 "Posted Gate Entry Line_B2B"
             DataClassification = CustomerContent;
             Caption = 'Serial No';
         }
-        field(50000; "Avail Qty"; Integer)//B2BSSD03APR2023
+        field(50000; "Avail Qty"; Decimal)//B2BSSD03APR2023
         {
             DataClassification = CustomerContent;
         }

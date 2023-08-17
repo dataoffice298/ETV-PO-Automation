@@ -98,6 +98,7 @@ table 50211 QuotCompHdr
         field(21; "Orders Created"; Boolean)
         {
             DataClassification = CustomerContent;
+            Editable = false;
         }
         field(22; "Purch. Req. Ref. No."; Code[20])
         {

@@ -344,6 +344,7 @@ page 50023 "Indent Line"
                         IndentLine.SetRange(Type, Rec.Type::Item);
                         if IndentLine.FindSet() then begin
                             repeat
+                                IndentLine.CalcFields("Qty Returned");
                                 IndentLine.TestField("Qty Returned");
                             until IndentLine.Next() = 0;
                         end;
@@ -354,7 +355,7 @@ page 50023 "Indent Line"
                         if indentLine.FindSet() then begin
                             repeat
                                 indentLine.CalcFields("Qty Returned", "Qty Issued");
-                                if Abs(indentLine."Qty Issued") = IndentLine."Qty Returned" then
+                                if Abs(indentLine."Qty Issued") > IndentLine."Qty Returned" then
                                     Error(Errorinward1);
                             until indentLine.Next() = 0;
                         end;
@@ -367,6 +368,7 @@ page 50023 "Indent Line"
                             Error(Errorinward);
 
                         CreateRGPfromIndent(GateEntryType::Inward, GateEntryDocType::RGP);
+                        IndentLine."Avail/UnAvail" := false;
                     end;
                 }
                 action(CreateRGPOutward)
@@ -664,8 +666,15 @@ page 50023 "Indent Line"
                 //B2BSSD17APR2023<<
 
                 GateEntryLine.Variant := IndentLine."Variant Code";
-                indentLine.CalcFields("Qty Issued");//B2BSSD28APR2023
-                GateEntryLine.Quantity := indentLine."Qty To Issue";
+                if GateEntryLine."Entry Type" = GateEntryLine."Entry Type"::Outward then begin
+                    indentLine.CalcFields("Qty Issued");//B2BSSD28APR2023
+                    GateEntryLine.Quantity := Abs(indentLine."Qty Issued");
+                end else
+                    if GateEntryLine."Entry Type" = GateEntryLine."Entry Type"::Inward then begin
+                        indentLine.CalcFields("Qty Returned");
+                        GateEntryLine.Quantity := Abs(indentLine."Qty Returned");
+                    end;
+
                 if indentLine.Type = indentLine.Type::"Fixed Assets" then begin//B2BSSD10AUG2023
                     GateEntryLine.Quantity := indentLine."Req.Quantity";
                 end;
@@ -683,10 +692,21 @@ page 50023 "Indent Line"
                 indentLine.Reset();
                 indentLine.SetRange("Document No.", Rec."Document No.");
                 if indentLine.FindSet() then begin
-                    repeat
-                        indentLine."Qty To Issue" := 0;
-                        indentLine.Modify();
-                    until indentLine.Next() = 0;
+                    indentLine."Qty To Issue" := 0;
+                    indentLine."Qty To Return" := 0;
+                    indentLine.Modify();
+                end;
+
+                indentLine.Reset();//B2BSSD17AUG2023
+                indentLine.SetRange("No.", GateEntryLine."Source No.");
+                indentLine.SetRange(Type, Rec.Type::"Fixed Assets");
+                if indentLine.FindFirst() then begin
+                    if GateEntryLine."Entry Type" = GateEntryLine."Entry Type"::Outward then
+                        indentLine."Avail/UnAvail" := true
+                    else
+                        if GateEntryLine."Entry Type" = GateEntryLine."Entry Type"::Inward then
+                            indentLine."Avail/UnAvail" := false;
+                    indentLine.Modify();
                 end;
 
             until IndentLine.Next() = 0;

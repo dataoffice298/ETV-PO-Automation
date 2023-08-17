@@ -1,4 +1,4 @@
-pageextension 50116 UserSetUpExt extends "User Setup"
+pageextension 50116 UserSetUpExt_B2B extends "User Setup"
 {
     layout
     {

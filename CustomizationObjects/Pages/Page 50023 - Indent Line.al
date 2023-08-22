@@ -641,8 +641,6 @@ page 50023 "Indent Line"
             GateEntryHeader.Modify();
             LineNo := 10000;
             repeat
-
-
                 GateEntryLine.Init();
                 GateEntryLine."Entry Type" := GateEntryHeader."Entry Type";
                 GateEntryLine.Type := GateEntryHeader.Type;
@@ -692,12 +690,12 @@ page 50023 "Indent Line"
                 indentLine.Reset();
                 indentLine.SetRange("Document No.", Rec."Document No.");
                 if indentLine.FindSet() then begin
-                    indentLine."Qty To Issue" := 0;
+                    if indentLine.Type = indentLine.Type::Item then
+                        indentLine."Qty To Issue" := 0;
                     indentLine."Qty To Return" := 0;
                     indentLine.Modify();
                 end;
 
-                indentLine.Reset();//B2BSSD17AUG2023
                 indentLine.SetRange("No.", GateEntryLine."Source No.");
                 indentLine.SetRange(Type, Rec.Type::"Fixed Assets");
                 if indentLine.FindFirst() then begin

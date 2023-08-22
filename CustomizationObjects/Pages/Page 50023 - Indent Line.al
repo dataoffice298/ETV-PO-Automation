@@ -36,10 +36,12 @@ page 50023 "Indent Line"
                 field(Select; Rec.Select)//B2BSSD30Jan2023
                 {
                     ApplicationArea = All;
+                    Editable = FieldEditable;
                 }
                 field("Spec Id"; rec."Spec Id")
                 {
                     ApplicationArea = all;
+                    Editable = FieldEditable;
                 }
                 field(Description; rec.Description)
                 {
@@ -51,12 +53,21 @@ page 50023 "Indent Line"
                 field(Acquired; Rec.Acquired)//B2BSSD01MAR2023
                 {
                     ApplicationArea = All;
+                    Editable = FieldEditable;
                 }
                 field("Variant Code"; Rec."Variant Code")
                 {
                     //Caption = 'Make';
                     ApplicationArea = All;
-                    Editable = FieldEditable;
+                    // Editable = FieldEditable;
+                    Editable = false;
+                }
+                //B2B
+                field("Variant Description"; "Variant Description")
+                {
+                    Caption = 'Variant Description';
+                    ApplicationArea = All;
+                    Editable = FieldEditable; //B2B22AUG2023
                 }
                 field(Department; rec.Department)
                 {
@@ -100,44 +111,44 @@ page 50023 "Indent Line"
                 field("Unit of Measure"; rec."Unit of Measure")
                 {
                     ApplicationArea = All;
-                    Editable = FieldEditable;
+                    Editable = FieldEditable; //B2BSCM21AUG2023
                 }
                 field("Due Date"; rec."Due Date")
                 {
                     ApplicationArea = All;
-                    Editable = FieldEditable;
+                    Editable = FieldEditable; //B2BSCM21AUG2023
                 }
                 field("Indent Status"; rec."Indent Status")
                 {
                     ApplicationArea = All;
-                    Editable = FieldEditable;
+                    Editable = FieldEditable; //B2BSCM21AUG2023
                 }
                 field(Remarks; rec.Remarks)
                 {
                     ApplicationArea = All;
-                    Editable = FieldEditable;
+                    Editable = FieldEditable; //B2BSCM21AUG2023
                 }
                 field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {
                     ApplicationArea = all;
-                    //Editable = FieldEditable;
+                    Editable = FieldEditable; //B2BSCM21AUG2023
                 }
                 field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = all;
-                    //Editable = FieldEditable;
+                    Editable = FieldEditable; //B2BSCM21AUG2023
                 }
                 field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")//B2BSSD20Feb2023
                 {
                     ApplicationArea = All;
                     Caption = 'Shortcut Dimension 9 Code';
-                    //Editable = FieldEditable;
+                    Editable = FieldEditable; //B2BSCM21AUG2023
                 }
                 field("Qty To Issue"; Rec."Qty To Issue")
                 {
                     ApplicationArea = all;
                     Caption = 'Qty. to Issue';
-                    Editable = Rec.QTyToIssueEditable;
+                    //Editable = FieldEditable; //B2BSCM21AUG2023
                 }
                 field("Qty Issued"; Rec."Qty Issued")
                 {
@@ -173,6 +184,7 @@ page 50023 "Indent Line"
                 {
                     ApplicationArea = all;
                     Caption = 'To Location';//B2BSSD05APR2023
+                    Editable = FieldEditable; //B2BSCM21AUG2023
                 }
             }
         }
@@ -735,11 +747,15 @@ page 50023 "Indent Line"
         IndentHdr: Record "Indent Header";
     begin
         if IndentHdr.Get(Rec."Document No.") then;
-        if (IndentHdr."Released Status" = IndentHdr."Released Status"::Released) then
-            FieldEditable := false
-        else
+        if (IndentHdr."Released Status" = IndentHdr."Released Status"::Released) then begin
+            FieldEditable := false;
+        end
+        else begin
             FieldEditable := true;
+        end;
+
     end;
+
     //B2BMSOn04Nov2022<<
 
     //B2BSSD22MAY2023>>

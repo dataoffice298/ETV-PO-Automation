@@ -131,7 +131,7 @@ page 50116 "Indent Header"
             {
                 SubPageLink = "Document No." = FIELD("No.");
                 ApplicationArea = All;
-                Editable = PageEditable;
+                // Editable = PageEditable; //B2BSCM21AUG2023
             }
         }
         //B2BSSD30Jan2023<<

@@ -278,13 +278,13 @@ table 50202 "Indent Line"
         {
             Caption = 'Variant Code';
             TableRelation = IF (Type = CONST(Item)) "Item Variant".Code WHERE("Item No." = FIELD("No."));
-
             trigger OnValidate();
             begin
+
                 TestStatusOpen;
                 TESTFIELD(Type, Type::Item);
-                IF "Variant Code" = '' THEN
-                    IF Type = Type::Item THEN BEGIN
+                if "Variant Code" = '' THEN
+                    if Type = Type::Item THEN BEGIN
                         Item.GET("No.");
                         Description := Item.Description;
                         "Description 2" := Item."Description 2";
@@ -476,6 +476,28 @@ table 50202 "Indent Line"
         {
             DataClassification = CustomerContent;
         }
+        //B2BSCM21AUG2023>>
+        field(50024; "Variant Description"; Text[100])
+        {
+            Caption = 'Variant Description';
+            TableRelation = "Item Variant".Description WHERE("Item No." = FIELD("No."));
+            TestTableRelation = false;
+            ValidateTableRelation = false;
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            var
+                itemvariant: Record "Item Variant";
+                Vendor: Record "Purchase Header";
+            begin
+                itemvariant.Reset();
+                itemvariant.SetRange(Description, "Variant Description");
+                itemvariant.SetRange("Item No.", Rec."No.");//B2BSCM22AUG2023
+                if itemvariant.FindFirst() then
+                    "Variant Code" := itemvariant.Code;
+
+            end;
+
+        } //B2BSCM21AUG2023<<
 
 
     }

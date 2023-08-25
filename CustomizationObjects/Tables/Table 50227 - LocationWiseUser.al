@@ -39,6 +39,22 @@ table 50227 "Location Wise User" //B2BSSD29MAR2023
         {
             DataClassification = CustomerContent;
         }
+        field(50009; "Item issue"; Boolean)//B2BSCM23AUG2023
+        {
+            Caption = 'Item Issue';
+            DataClassification = CustomerContent;
+        }
+        field(50010; "Item Return"; Boolean)//B2BSCM23AUG2023
+        {
+            Caption = 'Item Return';
+            DataClassification = CustomerContent;
+        }
+        field(50011; "PO Posting"; Boolean)//B2BSCM24AUG2023
+        {
+            Caption = 'PO Posting';
+            DataClassification = CustomerContent;
+            
+        }
     }
 
     keys

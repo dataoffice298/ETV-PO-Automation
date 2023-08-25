@@ -62,5 +62,21 @@ page 50024 "Indent List"
             }
         }
     }
+    //B2BSCM23AUG2023>>
+    trigger OnOpenPage()
+    var
+        LocationWiseUser: Record "Location Wise User";
+        CompanyInfo: Record "Company Information";
+        Error001: Label 'User doesnot have permissions to accesss indent page';
+
+    begin
+        CompanyInfo.get();
+        if LocationWiseUser.Get(CompanyInfo."Location Code", UserId) then begin
+            if not LocationWiseUser.Indent then
+                Error(Error001);
+        end
+
+    end;
+    //B2BSCM23AUG2023<<
 }
 

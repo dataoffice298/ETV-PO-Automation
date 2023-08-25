@@ -388,10 +388,12 @@ page 50116 "Indent Header"
                         var
                             IndentError001: TextConst ENN = 'Select Must Have a Value';
                         begin
+                            MaterialIssue();//B2BSCM23AUG2023
                             Rec.TestField("Released Status", Rec."Released Status"::Released);
                             IndentLineRec.SETCURRENTKEY("Document No.", "Line No.");
                             IndentLineRec.RESET();
                             IndentLineRec.SETRANGE("Document No.", Rec."No.");
+                           // IndentLineRec.SetRange(Select, true);//B2BSCM23AUG2023
                             if not IndentLineRec.FINDFIRST() then
                                 ERROR('No Line with Qty. to Issue > 0');
 
@@ -410,6 +412,7 @@ page 50116 "Indent Header"
                         image = Return;
                         trigger OnAction();
                         begin
+                            MaterialIssueReturn();//B2BSCM23AUG202
                             Rec.TestField("Released Status", Rec."Released Status"::Released);
                             IndentLineRec.Reset();
                             IndentLineRec.SETRANGE("Document No.", Rec."No.");
@@ -790,5 +793,6 @@ page 50116 "Indent Header"
         //Approval Actions Variables - B2BMSOn09Sep2022<<
         PageEditable: Boolean;//B2BVCOn28Sep22
         IndentLineGvar: Record "Indent Line";
+
 }
 

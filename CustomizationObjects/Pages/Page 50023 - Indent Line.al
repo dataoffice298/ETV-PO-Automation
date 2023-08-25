@@ -36,7 +36,7 @@ page 50023 "Indent Line"
                 field(Select; Rec.Select)//B2BSSD30Jan2023
                 {
                     ApplicationArea = All;
-                    Editable = FieldEditable;
+                    Editable = true;
                 }
                 field("Spec Id"; rec."Spec Id")
                 {
@@ -344,16 +344,44 @@ page 50023 "Indent Line"
                     var
                         Errorinward: TextConst ENN = 'Type must Be Item Or Fixed Asset';
                         Errorinward1: TextConst ENN = 'You cant create Inward More then qty Issued';
+                        PostedRGPOutEntries: Record "Posted Gate Entry Header_B2B";
+                        PostedRGPOutEntriesLine: Record "Posted Gate Entry Line_B2B";
+                        IndentLIne: record "Indent Line";
                     begin
+                        permissionRGPInward();
                         if Rec.Type = Rec.Type::Item then
                             Rec.TestField(Select, true);
-                        if Rec.Type = Rec.Type::"Fixed Assets" then
+                        if Rec.Type = Rec.Type::"Fixed Assets" then begin
                             Rec.TestField(Acquired, true);
+                            Rec.TestField("Avail/UnAvail", true);
+                        end;
+
                         Rec.TestField(Select, true);//B2BSSD13APR2023
+                        //B2BSCM25AUGug2023>>
+                        IndentLIne.Reset();
+                        IndentLIne.SetRange("Document No.", Rec."Document No.");
+                        IndentLIne.SetRange(Type, IndentLIne.Type::"Fixed Assets");
+                        if IndentLIne.FindFirst() then
+                            repeat
+                                PostedRGPOutEntriesLine.Reset();
+                                PostedRGPOutEntriesLine.SetRange("Source No.", IndentLIne."No.");
+                                PostedRGPOutEntriesLine.SetRange("Source Type", PostedRGPOutEntriesLine."Source Type"::"Fixed Asset");
+                                if PostedRGPOutEntriesLine.FindLast() then begin
+                                    PostedRGPOutEntries.Reset();
+                                    PostedRGPOutEntries.SetRange("No.", PostedRGPOutEntriesLine."Gate Entry No.");
+                                    if PostedRGPOutEntries.FindFirst() then
+                                        if PostedRGPOutEntries."Indent Document No" <> Rec."Document No." then
+                                            Error('You cannot create RGP In from this indent');
+                                end;
+                            until IndentLIne.Next() = 0;
+                        //B2BSCM25AUG2023<<
+                        // PostedRGPOutEntriesLine.SetRange(s);
+                        //  PostedRGPOutEntries.SetRange();
 
                         IndentLine.Reset();//B2BSSD02AUG2023
                         IndentLine.SetRange("Document No.", Rec."Document No.");
                         IndentLine.SetRange(Type, Rec.Type::Item);
+                        IndentLine.SetRange(Select, true);//B2BSCM23AUG2023
                         if IndentLine.FindSet() then begin
                             repeat
                                 IndentLine.CalcFields("Qty Returned");
@@ -364,6 +392,7 @@ page 50023 "Indent Line"
                         indentLine.Reset();//B2BSSD03AUG2023
                         indentLine.SetRange("Document No.", Rec."Document No.");
                         IndentLine.SetRange(Type, Rec.Type::Item);
+                        IndentLine.SetRange(Select, true);//B2B23AUG2023
                         if indentLine.FindSet() then begin
                             repeat
                                 indentLine.CalcFields("Qty Returned", "Qty Issued");
@@ -398,6 +427,7 @@ page 50023 "Indent Line"
                         ErrorOutward1: TextConst ENN = 'Quantity Issed Must Have a Values';
                         ErrorOutward2: TextConst ENN = 'You cant create Outward More then qty Issued';
                     begin
+                        permissionRGPOutward();
                         indentLine.Reset();//B2BSSD10AUG2023
                         indentLine.SetRange("Document No.", Rec."Document No.");
                         indentLine.SetRange(Select, true);
@@ -429,6 +459,7 @@ page 50023 "Indent Line"
 
                         GateEntryHeaderOutwardGvar.Reset();//B2BSSD03AUG2023
                         GateEntryHeaderOutwardGvar.SetRange("Indent Document No", Rec."Document No.");
+                        GateEntryHeaderOutwardGvar.SetRange("Indent Line No", Rec."Line No.");//B2BSCM23AUG2023
                         if GateEntryHeaderOutwardGvar.FindFirst() then
                             Error('Rgp Outward Already Created');
 
@@ -472,7 +503,7 @@ page 50023 "Indent Line"
                         ERRORmsg: Label 'Fixed Assets is Not Available for Transfer';
                         ErrorNRGPOutward: TextConst ENN = 'Type must Be Item Or Fixed Asset';
                     begin
-
+                        PermissionOfNRGP();//B2BSCM23AUG2023
                         IndentLine.Reset();//B2BSSD02AUG2023
                         IndentLine.SetRange("Document No.", Rec."Document No.");
                         IndentLine.SetRange(Select, true);
@@ -597,6 +628,8 @@ page 50023 "Indent Line"
         item: Record Item;
         FA: Record "Fixed Asset";
         indentLine: Record "Indent Line";
+        PostedGEH: Record "Posted Gate Entry Header_B2B";
+
     begin
         //B2BSSD17APR2023>>
         indentLine.Reset();
@@ -605,7 +638,6 @@ page 50023 "Indent Line"
         if not indentLine.FindSet() then
             Error('Status Must Be equals to Release');
         //B2BSSD17APR2023<<
-        IndentLine.Reset();
         IndentLine.SetRange("Document No.", Rec."Document No.");
         IndentLine.SetRange(Select, true);
         if IndentLine.FindSet() then begin
@@ -746,6 +778,9 @@ page 50023 "Indent Line"
     var
         IndentHdr: Record "Indent Header";
     begin
+
+
+
         if IndentHdr.Get(Rec."Document No.") then;
         if (IndentHdr."Released Status" = IndentHdr."Released Status"::Released) then begin
             FieldEditable := false;

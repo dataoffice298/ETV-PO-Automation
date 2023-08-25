@@ -477,9 +477,11 @@ table 50201 "Indent Header"
 
         ItemJnlLine.Reset();//B2BSS09AUG2023
         ItemJnlLine.SetRange("Indent No.", Rec."No.");
-        if ItemJnlLine.FindFirst() then
-            Error('Already Issued journals');
-
+        //B2BSCM24AUG2023>>
+        if ItemJnlLine.FindSet() then  
+            repeat
+                Error('Already Issued journals');
+            until ItemJnlLine.Next() = 0;//B2BSCM24AUG2023<<
         //B2BSSD04JUL2023>>
         ItemJnlLine.Reset();
         ItemJnlLine.SetRange("Journal Template Name", PurchPaySetup."Indent Return Jnl. Template");
@@ -490,6 +492,7 @@ table 50201 "Indent Header"
         IndentLineRec.Reset();
         IndentLineRec.SETCURRENTKEY("Delivery Location");
         IndentLineRec.SETRANGE(IndentLineRec."Document No.", "No.");
+        //IndentLineRec.SetRange(Select, true);//B2BSCM23AUG2023
         IndentLineRec.SETRANGE("Delivery Location", Rec."Delivery Location");
         IndentLineRec.SetFilter("Qty To Issue", '<>%1', 0);
         if IndentLineRec.FindSet() then begin
@@ -866,6 +869,34 @@ table 50201 "Indent Header"
             EXIT(TRUE);
         END;
     end;
+    //B2BSCM23AUG2023>>
+    procedure MaterialIssue()
+    var
+        LocationWiseUser: Record "Location Wise User";
+        CompanyInfo: Record "Company Information";
+        Error001: Label 'User doesnot have permissions to Material Issue';
+    begin
+        CompanyInfo.get();
+        if LocationWiseUser.Get(CompanyInfo."Location Code", UserId) then begin
+            if not LocationWiseUser."Item issue" then
+                Error(Error001);
+
+        end
+    end;//B2B23AUG2023<<
+        //B2BSCM24AUG2023>>
+    procedure MaterialIssueReturn()
+    var
+        LocationWiseUser: Record "Location Wise User";
+        CompanyInfo: Record "Company Information";
+        Error001: Label 'User doesnot have permissions to Material Return';
+    begin
+        CompanyInfo.get();
+        if LocationWiseUser.Get(CompanyInfo."Location Code", UserId) then begin
+            if not LocationWiseUser."Item Return" then
+                Error(Error001);
+        end;
+    end;//B2B24AUG2023<<
+
 }
 
 

@@ -53,6 +53,21 @@ page 50185 "Location Wise Users" //B2BSSD29MAR2023
                     ApplicationArea = All;
                     Caption = 'NRGP Outward';
                 }
+                field("Item issue"; Rec."Item issue")//B2BSCM23AUG2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'Item Issue';
+                }
+                field("Item Return"; Rec."Item Return")//B2BSCM23AUG2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'Item Return';
+                }
+                field("PO Posting"; Rec."PO Posting")//B2BSCM24AUG2023
+                {
+                    ApplicationArea = All;
+                    Caption = 'PO Posting';
+                }
             }
         }
     }

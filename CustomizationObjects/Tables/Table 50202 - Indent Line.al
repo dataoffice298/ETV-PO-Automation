@@ -404,6 +404,7 @@ table 50202 "Indent Line"
         {
             FieldClass = FlowField;
             CalcFormula = sum("Item Ledger Entry".Quantity where("Indent No." = field("Document No."), "Indent Line No." = field("Line No."), Quantity = filter(> 0)));
+
         }
         field(50009; "Archived Version"; Integer)
         {
@@ -493,7 +494,11 @@ table 50202 "Indent Line"
                 itemvariant.SetRange(Description, "Variant Description");
                 itemvariant.SetRange("Item No.", Rec."No.");//B2BSCM22AUG2023
                 if itemvariant.FindFirst() then
-                    "Variant Code" := itemvariant.Code;
+                    "Variant Code" := itemvariant.Code
+                else
+                    if "Variant Description" = '' then //b
+                        "Variant Code" := '';
+
 
             end;
 
@@ -611,6 +616,45 @@ table 50202 "Indent Line"
             "Quantity (Base)" := "Req.Quantity";
         end;
     end;
+    //B2BSCM23AUG2023>>
+    procedure PermissionOfNRGP()
+    var
+        LocationWiseUser: Record "Location Wise User";
+        CompanyInfo: Record "Company Information";
+        Error001: Label 'User doesnot have permission to create NRGP OutWard';
+    begin
+        CompanyInfo.get();
+        if LocationWiseUser.Get(CompanyInfo."Location Code", UserId) then
+            if not LocationWiseUser.NRGPOutward then
+                Error(Error001);
+    end; //B2BSCM23AUG2023<<
+         //B2BSCM24AUG2023>>
+    procedure permissionRGPInward()
+    var
+        LocationWiseUser: Record "Location Wise User";
+        CompanyInfo: Record "Company Information";
+        Error001: Label 'User doesnot have permissions to RGP Inward';
+    begin
+        CompanyInfo.get();
+        if LocationWiseUser.Get(CompanyInfo."Location Code", UserId) then begin
+            if not LocationWiseUser.RGPInward then
+                Error(Error001);
+
+        end
+    end;
+
+    procedure permissionRGPOutward()
+    var
+        LocationWiseUser: Record "Location Wise User";
+        CompanyInfo: Record "Company Information";
+        Error002: Label 'User doesnot have permissions to RGP Outward';
+    begin
+        CompanyInfo.get();
+        if LocationWiseUser.Get(CompanyInfo."Location Code", UserId) then
+            if not LocationWiseUser.RGPOutward then
+                Error(Error002);
+    end;
+    //B2BSCM24AUG2023<<
 
 }
 

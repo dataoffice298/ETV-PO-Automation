@@ -16,7 +16,7 @@ report 50001 "Indent Requestion Lines"
                 DataItemLink = "Document No." = FIELD("No.");
                 DataItemTableView = SORTING("Document No.", "Line No.")
                                     ORDER(Ascending)
-                                    WHERE("Indent Status" = CONST(Indent),
+                                    WHERE("Indent Status" = CONST(Indent), Select = const(true),//B2BSCM29AUG2023
                                           "Indent Req No" = FILTER(''));
 
                 trigger OnAfterGetRecord();

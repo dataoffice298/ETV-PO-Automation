@@ -344,6 +344,7 @@ page 50023 "Indent Line"
                     var
                         Errorinward: TextConst ENN = 'Type must Be Item Or Fixed Asset';
                         Errorinward1: TextConst ENN = 'You cant create Inward More then qty Issued';
+                        Errorinward2: Label 'You cannot create RGP In from this indent';//B2BSCM25AUG2023
                         PostedRGPOutEntries: Record "Posted Gate Entry Header_B2B";
                         PostedRGPOutEntriesLine: Record "Posted Gate Entry Line_B2B";
                         IndentLIne: record "Indent Line";
@@ -371,13 +372,10 @@ page 50023 "Indent Line"
                                     PostedRGPOutEntries.SetRange("No.", PostedRGPOutEntriesLine."Gate Entry No.");
                                     if PostedRGPOutEntries.FindFirst() then
                                         if PostedRGPOutEntries."Indent Document No" <> Rec."Document No." then
-                                            Error('You cannot create RGP In from this indent');
+                                            Error(Errorinward2);
                                 end;
                             until IndentLIne.Next() = 0;
                         //B2BSCM25AUG2023<<
-                        // PostedRGPOutEntriesLine.SetRange(s);
-                        //  PostedRGPOutEntries.SetRange();
-
                         IndentLine.Reset();//B2BSSD02AUG2023
                         IndentLine.SetRange("Document No.", Rec."Document No.");
                         IndentLine.SetRange(Type, Rec.Type::Item);
@@ -392,7 +390,7 @@ page 50023 "Indent Line"
                         indentLine.Reset();//B2BSSD03AUG2023
                         indentLine.SetRange("Document No.", Rec."Document No.");
                         IndentLine.SetRange(Type, Rec.Type::Item);
-                        IndentLine.SetRange(Select, true);//B2B23AUG2023
+                        IndentLine.SetRange(Select, true);//B2BSCM23AUG2023
                         if indentLine.FindSet() then begin
                             repeat
                                 indentLine.CalcFields("Qty Returned", "Qty Issued");
@@ -455,6 +453,7 @@ page 50023 "Indent Line"
                                 if indentLine."Req.Quantity" < Abs(indentLine."Qty Issued") then
                                     Error(ErrorOutward2);
                             until indentLine.Next() = 0;
+
                         end;
 
                         GateEntryHeaderOutwardGvar.Reset();//B2BSSD03AUG2023
@@ -628,6 +627,7 @@ page 50023 "Indent Line"
         item: Record Item;
         FA: Record "Fixed Asset";
         indentLine: Record "Indent Line";
+        indentLine1: Record "Indent Line"; //B2BSCM29AUG2023
         PostedGEH: Record "Posted Gate Entry Header_B2B";
 
     begin
@@ -641,7 +641,6 @@ page 50023 "Indent Line"
         IndentLine.SetRange("Document No.", Rec."Document No.");
         IndentLine.SetRange(Select, true);
         if IndentLine.FindSet() then begin
-
             GateEntryHeader.Init();
             if DocType = DocType::RGP then
                 GateEntryHeader.Type := GateEntryHeader.Type::RGP
@@ -684,14 +683,14 @@ page 50023 "Indent Line"
             //B2BSSD07APR2023>>
             GateEntryHeader.Modify();
             LineNo := 10000;
-            repeat
+            repeat  //B2BSCM28AUG2023
                 GateEntryLine.Init();
                 GateEntryLine."Entry Type" := GateEntryHeader."Entry Type";
                 GateEntryLine.Type := GateEntryHeader.Type;
                 GateEntryLine."Gate Entry No." := GateEntryHeader."No.";
                 GateEntryLine."Line No." := LineNo;
                 GateEntryLine.Insert(true);
-                if IndentLine.Type = IndentLine.Type::Item then begin
+                if (IndentLine.Type = IndentLine.Type::Item) then begin
                     GateEntryLine."Source Type" := GateEntryLine."Source Type"::Item;
                 end else
                     if IndentLine.Type = IndentLine.Type::"Fixed Assets" then
@@ -731,27 +730,26 @@ page 50023 "Indent Line"
                 GateEntryLine.Variant := FA.Make_B2B;
                 GateEntryLine.Modify();
 
-                indentLine.Reset();
-                indentLine.SetRange("Document No.", Rec."Document No.");
-                if indentLine.FindSet() then begin
-                    if indentLine.Type = indentLine.Type::Item then
-                        indentLine."Qty To Issue" := 0;
-                    indentLine."Qty To Return" := 0;
-                    indentLine.Modify();
-                end;
-
-                indentLine.SetRange("No.", GateEntryLine."Source No.");
-                indentLine.SetRange(Type, Rec.Type::"Fixed Assets");
-                if indentLine.FindFirst() then begin
+                // indentLine.Reset();
+                // indentLine.SetRange("Document No.", Rec."Document No.");
+                // if indentLine.FindSet() then begin
+                if indentLine.Type = indentLine.Type::Item then
+                    indentLine."Qty To Issue" := 0;
+                indentLine."Qty To Return" := 0;
+                indentLine.Modify();
+                /// end;
+//B2BSCM29AUG2023>>
+                indentLine1.SetRange("No.", GateEntryLine."Source No.");
+                indentLine1.SetRange(Type, Rec.Type::"Fixed Assets");
+                if indentLine1.FindFirst() then begin
                     if GateEntryLine."Entry Type" = GateEntryLine."Entry Type"::Outward then
-                        indentLine."Avail/UnAvail" := true
+                        indentLine1."Avail/UnAvail" := true
                     else
                         if GateEntryLine."Entry Type" = GateEntryLine."Entry Type"::Inward then
-                            indentLine."Avail/UnAvail" := false;
-                    indentLine.Modify();
+                            indentLine1."Avail/UnAvail" := false;
+                    indentLine1.Modify(); //B2BSCM29AUG2023<<
                 end;
-
-            until IndentLine.Next() = 0;
+            until indentLine.Next() = 0; //B2BSCM28AUG2023
             if Confirm(OpenText, false, GateEntryHeader."No.") then
                 if (EntryType = EntryType::Inward) and (DocType = DocType::RGP) then
                     Page.Run(Page::"Inward Gate Entry-RGP", GateEntryHeader)

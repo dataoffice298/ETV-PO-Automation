@@ -84,7 +84,8 @@ page 50023 "Indent Line"
                 field("Avail.Qty"; Rec."Avail.Qty")
                 {
                     ApplicationArea = all;
-                    Editable = FieldEditable;
+                    // Editable = FieldEditable;
+                    Editable = false;//B2BSCM30AUG2023
                 }
                 field("Avail/UnAvail"; Rec."Avail/UnAvail")//B2BSSD02AUG2023
                 {
@@ -362,6 +363,7 @@ page 50023 "Indent Line"
                         IndentLIne.Reset();
                         IndentLIne.SetRange("Document No.", Rec."Document No.");
                         IndentLIne.SetRange(Type, IndentLIne.Type::"Fixed Assets");
+                        IndentLIne.SetRange(Select, true); //B2BSCM30AUG2023
                         if IndentLIne.FindFirst() then
                             repeat
                                 PostedRGPOutEntriesLine.Reset();
@@ -684,71 +686,73 @@ page 50023 "Indent Line"
             GateEntryHeader.Modify();
             LineNo := 10000;
             repeat  //B2BSCM28AUG2023
-                GateEntryLine.Init();
-                GateEntryLine."Entry Type" := GateEntryHeader."Entry Type";
-                GateEntryLine.Type := GateEntryHeader.Type;
-                GateEntryLine."Gate Entry No." := GateEntryHeader."No.";
-                GateEntryLine."Line No." := LineNo;
-                GateEntryLine.Insert(true);
-                if (IndentLine.Type = IndentLine.Type::Item) then begin
-                    GateEntryLine."Source Type" := GateEntryLine."Source Type"::Item;
-                end else
-                    if IndentLine.Type = IndentLine.Type::"Fixed Assets" then
-                        GateEntryLine."Source Type" := GateEntryLine."Source Type"::"Fixed Asset";
-                GateEntryLine."Source No." := IndentLine."No.";
+                if indentLine.Select = true then begin //B2BSCM30AUG2023
+                    GateEntryLine.Init();
+                    GateEntryLine."Entry Type" := GateEntryHeader."Entry Type";
+                    GateEntryLine.Type := GateEntryHeader.Type;
+                    GateEntryLine."Gate Entry No." := GateEntryHeader."No.";
+                    GateEntryLine."Line No." := LineNo;
+                    GateEntryLine.Insert(true);
+                    if (IndentLine.Type = IndentLine.Type::Item) then begin
+                        GateEntryLine."Source Type" := GateEntryLine."Source Type"::Item;
+                    end else
+                        if IndentLine.Type = IndentLine.Type::"Fixed Assets" then
+                            GateEntryLine."Source Type" := GateEntryLine."Source Type"::"Fixed Asset";
+                    GateEntryLine."Source No." := IndentLine."No.";
 
-                //B2BSSD17APR2023>>
-                FixedAsset.Reset();
-                FixedAsset.SetRange("No.", GateEntryLine."Source No.");
-                if FixedAsset.FindFirst() then begin
-                    FixedAsset."available/Unavailable" := true;
-                    FixedAsset.Modify();
-                end;
-                //B2BSSD17APR2023<<
-
-                GateEntryLine.Variant := IndentLine."Variant Code";
-                if GateEntryLine."Entry Type" = GateEntryLine."Entry Type"::Outward then begin
-                    indentLine.CalcFields("Qty Issued");//B2BSSD28APR2023
-                    GateEntryLine.Quantity := Abs(indentLine."Qty Issued");
-                end else
-                    if GateEntryLine."Entry Type" = GateEntryLine."Entry Type"::Inward then begin
-                        indentLine.CalcFields("Qty Returned");
-                        GateEntryLine.Quantity := Abs(indentLine."Qty Returned");
+                    //B2BSSD17APR2023>>
+                    FixedAsset.Reset();
+                    FixedAsset.SetRange("No.", GateEntryLine."Source No.");
+                    if FixedAsset.FindFirst() then begin
+                        FixedAsset."available/Unavailable" := true;
+                        FixedAsset.Modify();
                     end;
+                    //B2BSSD17APR2023<<
 
-                if indentLine.Type = indentLine.Type::"Fixed Assets" then begin//B2BSSD10AUG2023
-                    GateEntryLine.Quantity := indentLine."Req.Quantity";
-                end;
-                GateEntryLine."Source Name" := IndentLine.Description;
-                GateEntryLine.Description := IndentLine.Description;
-                LineNo += 10000;
-                GateEntryLine."Avail Qty" := IndentLine."Avail.Qty";//B2BSSD03APR2023
-                GateEntryLine."Unit of Measure" := Rec."Unit of Measure";
-                if FA.Get(GateEntryLine."Source No.") then
-                    GateEntryLine.ModelNo := FA."Model No.";
-                GateEntryLine.SerialNo := FA."Serial No.";
-                GateEntryLine.Variant := FA.Make_B2B;
-                GateEntryLine.Modify();
+                    GateEntryLine.Variant := IndentLine."Variant Code";
+                    if GateEntryLine."Entry Type" = GateEntryLine."Entry Type"::Outward then begin
+                        indentLine.CalcFields("Qty Issued");//B2BSSD28APR2023
+                        GateEntryLine.Quantity := Abs(indentLine."Qty Issued");
+                    end else
+                        if GateEntryLine."Entry Type" = GateEntryLine."Entry Type"::Inward then begin
+                            indentLine.CalcFields("Qty Returned");
+                            GateEntryLine.Quantity := Abs(indentLine."Qty Returned");
+                        end;
 
-                // indentLine.Reset();
-                // indentLine.SetRange("Document No.", Rec."Document No.");
-                // if indentLine.FindSet() then begin
-                if indentLine.Type = indentLine.Type::Item then
-                    indentLine."Qty To Issue" := 0;
-                indentLine."Qty To Return" := 0;
-                indentLine.Modify();
-                /// end;
-//B2BSCM29AUG2023>>
-                indentLine1.SetRange("No.", GateEntryLine."Source No.");
-                indentLine1.SetRange(Type, Rec.Type::"Fixed Assets");
-                if indentLine1.FindFirst() then begin
-                    if GateEntryLine."Entry Type" = GateEntryLine."Entry Type"::Outward then
-                        indentLine1."Avail/UnAvail" := true
-                    else
-                        if GateEntryLine."Entry Type" = GateEntryLine."Entry Type"::Inward then
-                            indentLine1."Avail/UnAvail" := false;
-                    indentLine1.Modify(); //B2BSCM29AUG2023<<
-                end;
+                    if indentLine.Type = indentLine.Type::"Fixed Assets" then begin//B2BSSD10AUG2023
+                        GateEntryLine.Quantity := indentLine."Req.Quantity";
+                    end;
+                    GateEntryLine."Source Name" := IndentLine.Description;
+                    GateEntryLine.Description := IndentLine.Description;
+                    LineNo += 10000;
+                    GateEntryLine."Avail Qty" := IndentLine."Avail.Qty";//B2BSSD03APR2023
+                    GateEntryLine."Unit of Measure" := Rec."Unit of Measure";
+                    if FA.Get(GateEntryLine."Source No.") then
+                        GateEntryLine.ModelNo := FA."Model No.";
+                    GateEntryLine.SerialNo := FA."Serial No.";
+                    GateEntryLine.Variant := FA.Make_B2B;
+                    GateEntryLine.Modify();
+
+                    // indentLine.Reset();
+                    // indentLine.SetRange("Document No.", Rec."Document No.");
+                    // if indentLine.FindSet() then begin
+                    if indentLine.Type = indentLine.Type::Item then
+                        indentLine."Qty To Issue" := 0;
+                    indentLine."Qty To Return" := 0;
+                    indentLine.Modify();
+                    /// end;
+                    //B2BSCM29AUG2023>>
+                    indentLine1.SetRange("No.", GateEntryLine."Source No.");
+                    indentLine1.SetRange(Type, Rec.Type::"Fixed Assets");
+                    if indentLine1.FindFirst() then begin
+                        if GateEntryLine."Entry Type" = GateEntryLine."Entry Type"::Outward then
+                            indentLine1."Avail/UnAvail" := true
+                        else
+                            if GateEntryLine."Entry Type" = GateEntryLine."Entry Type"::Inward then
+                                indentLine1."Avail/UnAvail" := false;
+                        indentLine1.Modify(); //B2BSCM29AUG2023<<
+                    end;
+                end;//B2BSCM30AUG2023
             until indentLine.Next() = 0; //B2BSCM28AUG2023
             if Confirm(OpenText, false, GateEntryHeader."No.") then
                 if (EntryType = EntryType::Inward) and (DocType = DocType::RGP) then

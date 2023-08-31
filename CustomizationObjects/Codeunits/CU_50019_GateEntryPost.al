@@ -11,6 +11,7 @@ codeunit 50019 "Gate Entry- Post"
         Location: Record Location;
         FixedAsset: Record "Fixed Asset";
         ERRORmsg1: Label 'Fixed Assets is Not Available for Transfer';
+        GateEntryLine1: Record "Gate Entry Line_B2B"; //B2BSCM30AUG2023
     begin
         GateEntryHeader := Rec;
         GateEntryHeader.TESTFIELD("Posting Date");
@@ -26,17 +27,17 @@ codeunit 50019 "Gate Entry- Post"
             repeat
 
                 //B2BSSD07JUN2023>>
-                GateEntryLine.Reset();
-                GateEntryLine.SetRange("Gate Entry No.", GateEntryHeader."No.");
-                if GateEntryLine.FindSet() then
-                    if GateEntryLine."Avail/UnAvail" = true then begin
+                GateEntryLine1.Reset(); //B2BSCM30AUG2023
+                GateEntryLine1.SetRange("Gate Entry No.", GateEntryHeader."No."); //B2BSCM30AUG2023
+                if GateEntryLine1.FindSet() then //B2BSCM30AUG2023
+                    if GateEntryLine1."Avail/UnAvail" = true then begin //B2BSCM30AUG2023
                         Error(ERRORmsg1);
                     end;
                 //B2BSSD07JUN2023<<
 
                 //B2BSSD07JUN2023>>
-                if GateEntryLine."Entry Type" = GateEntryLine."Entry Type"::Outward then begin
-                    if GateEntryLine."Source Type" = GateEntryLine."Source Type"::"Fixed Asset" then begin
+                if GateEntryLine1."Entry Type" = GateEntryLine."Entry Type"::Outward then begin//B2BSCM30AUG2023
+                    if GateEntryLine1."Source Type" = GateEntryLine."Source Type"::"Fixed Asset" then begin//B2BSCM30AUG2023
                         FixedAsset.Reset();
                         FixedAsset.SetRange("No.", GateEntryLine."Source No.");
                         if FixedAsset.FindSet() then begin
@@ -48,10 +49,10 @@ codeunit 50019 "Gate Entry- Post"
                 //B2BSSD07JUN2023<<
 
                 //B2BSSD17APR2023>>
-                if GateEntryLine."Entry Type" = GateEntryLine."Entry Type"::Inward then begin
-                    if GateEntryLine."Source Type" = GateEntryLine."Source Type"::"Fixed Asset" then begin
+                if GateEntryLine1."Entry Type" = GateEntryLine1."Entry Type"::Inward then begin //B2BSCM30AUG2023
+                    if GateEntryLine1."Source Type" = GateEntryLine1."Source Type"::"Fixed Asset" then begin //B2BSCM30AUG2023
                         FixedAsset.Reset();
-                        FixedAsset.SetRange("No.", GateEntryLine."Source No.");
+                        FixedAsset.SetRange("No.", GateEntryLine1."Source No."); //B2BSCM30AUG2023
                         if FixedAsset.FindFirst() then begin
                             FixedAsset."available/Unavailable" := false;
                             FixedAsset.Modify();
@@ -62,13 +63,13 @@ codeunit 50019 "Gate Entry- Post"
 
                 /*if GateEntryLine."Source Type" = GateEntryLine."Source Type"::Description then
                     GateEntryLine."Source Type" := GateEntryLine."Source Type"::Description;*/
-                if GateEntryLine."Source Type" = GateEntryLine."Source Type"::Item then begin
-                    if GateEntryLine."Source Type" <> 0 then
-                        GateEntryLine.TESTFIELD("Source No.");
-                    if GateEntryLine."Source Type" = 0 then
-                        GateEntryLine.TESTFIELD(Description);
+                if GateEntryLine1."Source Type" = GateEntryLine1."Source Type"::Item then begin //B2BSCM30AUG2023
+                    if GateEntryLine1."Source Type" <> 0 then //B2BSCM30AUG2023
+                        GateEntryLine1.TESTFIELD("Source No."); //B2BSCM30AUG2023
+                    if GateEntryLine1."Source Type" = 0 then //B2BSCM30AUG2023
+                        GateEntryLine1.TESTFIELD(Description); //B2BSCM30AUG2023
                 end;
-            until GateEntryLine.NEXT = 0;
+            until GateEntryLine.NEXT() = 0;
 
         if GUIALLOWED then
             Window.OPEN(

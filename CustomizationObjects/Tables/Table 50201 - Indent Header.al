@@ -478,7 +478,7 @@ table 50201 "Indent Header"
         ItemJnlLine.Reset();//B2BSS09AUG2023
         ItemJnlLine.SetRange("Indent No.", Rec."No.");
         //B2BSCM24AUG2023>>
-        if ItemJnlLine.FindSet() then  
+        if ItemJnlLine.FindSet() then
             repeat
                 Error('Already Issued journals');
             until ItemJnlLine.Next() = 0;//B2BSCM24AUG2023<<

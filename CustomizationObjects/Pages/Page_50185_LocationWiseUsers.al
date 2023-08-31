@@ -67,6 +67,7 @@ page 50185 "Location Wise Users" //B2BSSD29MAR2023
                 {
                     ApplicationArea = All;
                     Caption = 'PO Posting';
+                    Visible = false;
                 }
             }
         }

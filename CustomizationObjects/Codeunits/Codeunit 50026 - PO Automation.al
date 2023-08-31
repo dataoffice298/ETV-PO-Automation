@@ -240,6 +240,7 @@ codeunit 50026 "PO Automation"
         LineNo: Integer;
         PrevVendor: Code[20];
     begin
+        PPSetup.GET;
         CreateIndents4.COPYFILTERS(CreateIndentsEnquiry);
         InsertIndentItemvendor(CreateIndentsEnquiry, Vendor);
         IndentVendorItems.Reset();
@@ -256,7 +257,6 @@ codeunit 50026 "PO Automation"
                     IF IndentVendorEnquiry.FIND('-') THEN BEGIN
                         PurchaseHeader.INIT;
                         PurchaseHeader."Document Type" := PurchaseHeader."Document Type"::Enquiry;
-                        PPSetup.GET;
                         PurchaseHeader."No." := NoSeriesMgt.GetNextNo(Noseries, WORKDATE, TRUE);
                         PurchaseHeader.Insert(true);
                         PurchaseHeader."Buy-from Vendor No." := IndentVendorEnquiry."Vendor No.";

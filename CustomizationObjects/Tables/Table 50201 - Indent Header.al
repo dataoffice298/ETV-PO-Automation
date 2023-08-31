@@ -331,8 +331,9 @@ table 50201 "Indent Header"
         PurchPaySetup.Get();
         if ItemJnlTemp.Get(PurchPaySetup."Indent Return Jnl. Template") then;
 
-        Item.Get(IndentLineRec."No.");//B2BSSD04JUL2023
-
+        if IndentLineRec.Type = IndentLineRec.Type::Item then begin
+            Item.Get(IndentLineRec."No.");//B2BSSD04JUL2023
+        end;
 
         ItemJnlBatch.Reset();
         ItemJnlBatch.SetRange(ItemJnlBatch."Journal Template Name", PurchPaySetup."Indent Return Jnl. Template");

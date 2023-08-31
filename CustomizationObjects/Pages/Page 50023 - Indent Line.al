@@ -733,15 +733,14 @@ page 50023 "Indent Line"
                     GateEntryLine.Variant := FA.Make_B2B;
                     GateEntryLine.Modify();
 
-                    // indentLine.Reset();
-                    // indentLine.SetRange("Document No.", Rec."Document No.");
-                    // if indentLine.FindSet() then begin
+
                     if indentLine.Type = indentLine.Type::Item then
                         indentLine."Qty To Issue" := 0;
                     indentLine."Qty To Return" := 0;
                     indentLine.Modify();
-                    /// end;
+
                     //B2BSCM29AUG2023>>
+                    indentLine1.Reset();
                     indentLine1.SetRange("No.", GateEntryLine."Source No.");
                     indentLine1.SetRange(Type, Rec.Type::"Fixed Assets");
                     if indentLine1.FindFirst() then begin

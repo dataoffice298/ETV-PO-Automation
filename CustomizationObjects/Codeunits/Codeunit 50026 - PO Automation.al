@@ -954,7 +954,6 @@ codeunit 50026 "PO Automation"
                             QuoCompHdr.Modify();
                             //B2BSSD13APR2023<<
 
-
                             QuoteCompare."Location Code" := PurchaseHeader."Location Code";
                             QuoteCompare."Sub Location Code" := PurchaseLine."Sub Location Code";
                             QuoteCompare."Spec Id" := PurchaseLine."Spec Id";

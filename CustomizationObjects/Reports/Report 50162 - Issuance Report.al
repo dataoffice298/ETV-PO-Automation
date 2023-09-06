@@ -155,7 +155,7 @@ report 50162 "Issuance Report"
         username: Text[50];//B2BSSD28MAR2023
         ILE: Record "Item Ledger Entry";
         DocumentNoVar: Code[50];
-        ItemLedgerQty: Integer;
+        ItemLedgerQty: Decimal;//B2BSCM31AUG2023
 
     procedure MakeExcelHeaders()
     begin

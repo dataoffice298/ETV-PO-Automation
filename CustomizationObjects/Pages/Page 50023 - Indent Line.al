@@ -421,6 +421,7 @@ page 50023 "Indent Line"
                         myInt: Integer;
                         indentHeader: Record "Indent Header";
                         indentLine: Record "Indent Line";
+                        indentLine1: Record "Indent Line";//B2BSCM05SEP2023
                         FixedAsset: Record "Fixed Asset";
                         ERRORmsg: Label 'Fixed Assets is Not Available for Transfer';
                         ErrorOutward: TextConst ENN = 'Type must Be Item Or Fixed Asset';
@@ -432,11 +433,16 @@ page 50023 "Indent Line"
                         indentLine.SetRange("Document No.", Rec."Document No.");
                         indentLine.SetRange(Select, true);
                         indentLine.SetRange(Type, Rec.Type::Item);
-                        if indentLine.FindSet() then begin
+                        if indentLine.FindSet() then begin //B2BSCM05SEP2023
                             repeat
-                                indentLine.TestField("Qty To Issue");
+                                indentLine.TestField("Issue Location");//B2BSCM05SEP2023
+                                indentLine.TestField("Issue Sub Location");//B2BSCM05SEP2023
+                                //B2BSSD26APR2023>>
                                 indentLine.CalcFields("Qty Issued");
-                                indentLine.TestField("Qty Issued");
+                                if indentLine."Qty Issued" = 0 then
+                                    Error(ErrorOutward1);
+
+                                indentLine.TestField("Qty To Issue");//B2BSCM05SEP2023
                             until indentLine.Next() = 0;
                         end;
 
@@ -455,32 +461,18 @@ page 50023 "Indent Line"
                                 if indentLine."Req.Quantity" < Abs(indentLine."Qty Issued") then
                                     Error(ErrorOutward2);
                             until indentLine.Next() = 0;
-
                         end;
-
                         GateEntryHeaderOutwardGvar.Reset();//B2BSSD03AUG2023
                         GateEntryHeaderOutwardGvar.SetRange("Indent Document No", Rec."Document No.");
                         GateEntryHeaderOutwardGvar.SetRange("Indent Line No", Rec."Line No.");//B2BSCM23AUG2023
                         if GateEntryHeaderOutwardGvar.FindFirst() then
                             Error('Rgp Outward Already Created');
 
-
-
-                        if Rec.Type = Rec.Type::Item then begin
-                            Rec.TestField(Select, true);
-                            Rec.TestField("Issue Location");
-                            Rec.TestField("Issue Sub Location");
-                            //B2BSSD26APR2023>>
-                            Rec.CalcFields("Qty Issued");
-                            if Rec."Qty Issued" = 0 then
-                                Error(ErrorOutward1);
-                            //B2BSSD26APR2023>>
-                        end;
-
-                        if Rec.Type = Rec.Type::"Fixed Assets" then begin
-                            Rec.TestField(Acquired, true);
-                            Rec.TestField(Select, true);
-
+                        if indentLine.Type = indentLine.Type::"Fixed Assets" then begin//B2BSCM05SEP2023
+                            repeat
+                                indentLine.TestField(Acquired, true);//B2BSCM05SEP2023
+                            // Rec.TestField(Select, true);
+                            until indentLine.Next() = 0;//B2BSCM05SEP2023
                             //B2BSSD21APR2023>>
                             indentLine.Reset();
                             indentLine.SetRange("Document No.", Rec."Document No.");

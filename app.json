@@ -70,7 +70,7 @@
   "idRanges": [
     {
       "from": 50000,
-      "to": 99999999
+      "to": 99999
     }
   ],
   "resourceExposurePolicy": {

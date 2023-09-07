@@ -53,7 +53,8 @@ page 50023 "Indent Line"
                 field(Acquired; Rec.Acquired)//B2BSSD01MAR2023
                 {
                     ApplicationArea = All;
-                    Editable = FieldEditable;
+                    // Editable = FieldEditable;
+                    Editable = false; //B2BSCM07SEP2023
                 }
                 field("Variant Code"; Rec."Variant Code")
                 {
@@ -349,25 +350,26 @@ page 50023 "Indent Line"
                         PostedRGPOutEntries: Record "Posted Gate Entry Header_B2B";
                         PostedRGPOutEntriesLine: Record "Posted Gate Entry Line_B2B";
                         IndentLIne: record "Indent Line";
+                        IndentLIne1: record "Indent Line";//B2BSCM06SEP2023
                     begin
-                        permissionRGPInward();
-                        if Rec.Type = Rec.Type::Item then
-                            Rec.TestField(Select, true);
-                        if Rec.Type = Rec.Type::"Fixed Assets" then begin
-                            Rec.TestField(Acquired, true);
-                            Rec.TestField("Avail/UnAvail", true);
-                        end;
+                        permissionRGPInward(); //B2BSCM24AUG2023
+                        // if Rec.Type = Rec.Type::Item then
+                        //     Rec.TestField(Select, true);
+                        // if Rec.Type = Rec.Type::"Fixed Assets" then begin
+                        //     Rec.TestField(Acquired, true);
+                        //     Rec.TestField("Avail/UnAvail", true);
+                        // end;
 
-                        Rec.TestField(Select, true);//B2BSSD13APR2023
+                        // Rec.TestField(Select, true);//B2BSSD13APR2023
                         //B2BSCM25AUGug2023>>
                         IndentLIne.Reset();
-                        IndentLIne.SetRange("Document No.", Rec."Document No.");
-                        IndentLIne.SetRange(Type, IndentLIne.Type::"Fixed Assets");
+                        IndentLIne.SetRange("Document No.", IndentLIne1."Document No.");//B2BSCM06SEP2023
+                        IndentLIne.SetRange(Type, IndentLIne.Type::"Fixed Assets");//B2BSCM06SEP2023
                         IndentLIne.SetRange(Select, true); //B2BSCM30AUG2023
                         if IndentLIne.FindFirst() then
                             repeat
                                 PostedRGPOutEntriesLine.Reset();
-                                PostedRGPOutEntriesLine.SetRange("Source No.", IndentLIne."No.");
+                                PostedRGPOutEntriesLine.SetRange("Source No.", IndentLIne."No.");//B2BSCM06SEP2023
                                 PostedRGPOutEntriesLine.SetRange("Source Type", PostedRGPOutEntriesLine."Source Type"::"Fixed Asset");
                                 if PostedRGPOutEntriesLine.FindLast() then begin
                                     PostedRGPOutEntries.Reset();
@@ -379,27 +381,31 @@ page 50023 "Indent Line"
                             until IndentLIne.Next() = 0;
                         //B2BSCM25AUG2023<<
                         IndentLine.Reset();//B2BSSD02AUG2023
-                        IndentLine.SetRange("Document No.", Rec."Document No.");
-                        IndentLine.SetRange(Type, Rec.Type::Item);
+                        IndentLine.SetRange("Document No.", IndentLIne1."Document No.");//B2BSCM06SEP2023
+                        IndentLine.SetRange(Type, IndentLIne1.Type::Item);//B2BSCM06SEP2023
                         IndentLine.SetRange(Select, true);//B2BSCM23AUG2023
                         if IndentLine.FindSet() then begin
                             repeat
-                                IndentLine.CalcFields("Qty Returned");
+                                //IndentLine.CalcFields("Qty Returned");
+                                //IndentLine.TestField("Qty Returned");
+                                indentLine.CalcFields("Qty Returned", "Qty Issued");
                                 IndentLine.TestField("Qty Returned");
+                                if Abs(indentLine."Qty Issued") > IndentLine."Qty Returned" then
+                                    Error(Errorinward1);
                             until IndentLine.Next() = 0;
                         end;
 
-                        indentLine.Reset();//B2BSSD03AUG2023
-                        indentLine.SetRange("Document No.", Rec."Document No.");
-                        IndentLine.SetRange(Type, Rec.Type::Item);
-                        IndentLine.SetRange(Select, true);//B2BSCM23AUG2023
-                        if indentLine.FindSet() then begin
-                            repeat
-                                indentLine.CalcFields("Qty Returned", "Qty Issued");
-                                if Abs(indentLine."Qty Issued") > IndentLine."Qty Returned" then
-                                    Error(Errorinward1);
-                            until indentLine.Next() = 0;
-                        end;
+                        // indentLine.Reset();//B2BSSD03AUG2023
+                        // indentLine.SetRange("Document No.", IndentLIne1."Document No.");//B2BSCM06SEP2023
+                        // IndentLine.SetRange(Type, IndentLIne1.Type::Item);
+                        // IndentLine.SetRange(Select, true);//B2BSCM23AUG2023
+                        // if indentLine.FindSet() then begin
+                        //     repeat
+                        //         indentLine.CalcFields("Qty Returned", "Qty Issued");
+                        //         if Abs(indentLine."Qty Issued") > IndentLine."Qty Returned" then
+                        //             Error(Errorinward1);
+                        //     until indentLine.Next() = 0;
+                        // end;
 
                         IndentLine.Reset();//B2BSSD02AUG2023
                         IndentLine.SetRange("Document No.", Rec."Document No.");
@@ -428,7 +434,7 @@ page 50023 "Indent Line"
                         ErrorOutward1: TextConst ENN = 'Quantity Issed Must Have a Values';
                         ErrorOutward2: TextConst ENN = 'You cant create Outward More then qty Issued';
                     begin
-                        permissionRGPOutward();
+                        permissionRGPOutward(); //B2BSCM24AUG2023
                         indentLine.Reset();//B2BSSD10AUG2023
                         indentLine.SetRange("Document No.", Rec."Document No.");
                         indentLine.SetRange(Select, true);

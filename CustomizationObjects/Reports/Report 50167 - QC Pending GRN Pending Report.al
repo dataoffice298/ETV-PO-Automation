@@ -24,9 +24,9 @@ report 50167 "QC Pending GRN Pending Report"
                     PostGateEntryLine: Record "Posted Gate Entry Line_B2B";
 
                 begin
-                    Clear(SNo);//B2BSSD10APR2023
+                    //Clear(SNo);//B2BSSD10APR2023
 
-                    SNo += 1;
+                    // SNo += 1;
 
                     Users.Reset();
                     Users.SetRange("User Name", IndentHeader.Indentor);
@@ -55,7 +55,7 @@ report 50167 "QC Pending GRN Pending Report"
                             if (PostGateEntryHdr."No." = '') or (PurchHdr."No." = '') then
                                 CurrReport.Skip();
                             //B2BSSD21Dec2022>>
-
+                            SNo += 1; //B2BSCM07SEP2023
                             WindPa.Update(1, "Document No.");
                             TempExcelBuffer.NewRow();
                             TempExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);

@@ -216,7 +216,7 @@ table 50201 "Indent Header"
         }
         //SSD06122022>>
 
-
+         
         //B2BSSD20Feb2023<<
         field(50014; "Shortcut Dimension 9 Code"; Code[20])
         {

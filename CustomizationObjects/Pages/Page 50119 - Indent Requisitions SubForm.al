@@ -127,7 +127,7 @@ page 50119 "Indent Requisitions SubForm"
                 field("Qty. Ordered"; Rec."Qty. Ordered")
                 {
                     ApplicationArea = All;
-                    Editable = FieldEditable;
+                    Editable = false;//B2BSCM19SEP2023
                 }
                 field("Remaining Quantity"; Rec."Remaining Quantity")
                 {
@@ -137,6 +137,7 @@ page 50119 "Indent Requisitions SubForm"
                 field("Qty. To Order"; Rec."Qty. To Order")
                 {
                     ApplicationArea = All;
+                    ShowMandatory = true;//B2BSCM20SEP2023
 
                     trigger OnValidate();
                     begin

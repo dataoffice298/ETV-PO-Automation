@@ -2,7 +2,7 @@ page 50120 "Indent Requisition Document"
 {
     PageType = Document;
     SourceTable = "Indent Req Header";
-    PromotedActionCategories = 'New,Process,Reports,Functions,Navigate';
+
 
     layout
     {
@@ -108,11 +108,8 @@ page 50120 "Indent Requisition Document"
             action("Get Requisition Lines")
             {
                 Caption = 'Get Indent Lines';
-                Promoted = true;
                 ApplicationArea = All;
                 Image = GetLines;
-                PromotedCategory = Category4;
-                PromotedIsBig = true;
 
                 trigger OnAction();
                 var
@@ -131,11 +128,8 @@ page 50120 "Indent Requisition Document"
             action("Create &Enquiry")
             {
                 Caption = 'Create &Enquiry';
-                Promoted = true;
                 ApplicationArea = All;
                 Image = Create;
-                PromotedCategory = Category4;
-                PromotedIsBig = true;
                 Visible = ShowAct;
 
                 trigger OnAction();
@@ -175,11 +169,9 @@ page 50120 "Indent Requisition Document"
             action("Create &Quote")
             {
                 Caption = 'Create &Quote';
-                Promoted = true;
+
                 ApplicationArea = All;
                 Image = NewSalesQuote;
-                PromotedCategory = Category4;
-                PromotedIsBig = true;
                 Visible = ShowAct;
 
                 trigger OnAction();
@@ -219,11 +211,8 @@ page 50120 "Indent Requisition Document"
             action("Create &Purchase Order")
             {
                 Caption = 'Create &Purchase Order';
-                Promoted = true;
                 ApplicationArea = All;
                 Image = MakeOrder;
-                PromotedCategory = Category4;
-                PromotedIsBig = true;
                 Visible = ShowAct;
 
                 trigger OnAction();
@@ -266,10 +255,7 @@ page 50120 "Indent Requisition Document"
             {
                 Caption = 'Re&lease';
                 Image = ReleaseDoc;
-                Promoted = true;
                 ApplicationArea = All;
-                PromotedCategory = Process;
-                PromotedIsBig = true;
 
                 trigger OnAction();
                 var
@@ -277,15 +263,23 @@ page 50120 "Indent Requisition Document"
                     RelText1: Label 'Document released and Moved to Local Indent Requisition List.';
                     RelText2: Label 'Document released and Moved to Central Indent Requisition List.';
                 begin
+
                     Rec.TestField("No.Series");
                     Rec.TestField(Status, Rec.Status::Open);
                     IndentReqLine.Reset();
                     IndentReqLine.SetRange("Document No.", Rec."No.");
                     if not IndentReqLine.FindFirst() then begin
                         Error('No Lines Found');
-                    end;
+                    end; 
+                    //B2BSCM20SEP2023>>
+                    if IndentReqLine.FindSet() then begin
+                        repeat
+                            IndentReqLine.TestField("Qty. To Order");
+                        until IndentReqLine.Next() = 0;
+                    end; //B2BSCM20SEP2023<<
                     Rec.TestField("Resposibility Center");
                     Rec.TESTFIELD("Document Date");
+
 
                     Rec.Status := Rec.Status::Release;
                     Rec.MODIFY;
@@ -300,10 +294,7 @@ page 50120 "Indent Requisition Document"
             {
                 Caption = 'Re&open';
                 Image = ReOpen;
-                Promoted = true;
                 ApplicationArea = All;
-                PromotedCategory = Process;
-                PromotedIsBig = true;
                 Visible = ShowAct;
 
                 trigger OnAction();
@@ -324,11 +315,8 @@ page 50120 "Indent Requisition Document"
                 action("Created &Order")
                 {
                     Caption = 'Open Created Order';
-                    Promoted = true;
                     ApplicationArea = All;
                     Image = Open;
-                    PromotedCategory = Category5;
-                    PromotedIsBig = true;
                     Visible = ShowAct;
 
                     trigger OnAction();
@@ -340,11 +328,8 @@ page 50120 "Indent Requisition Document"
                 action(OpenEnquiries)
                 {
                     Caption = 'Open Created Enquiries';
-                    Promoted = true;
                     ApplicationArea = All;
                     Image = ShowList;
-                    PromotedCategory = Category5;
-                    PromotedIsBig = true;
                     Visible = ShowAct;
 
                     trigger OnAction()
@@ -362,11 +347,8 @@ page 50120 "Indent Requisition Document"
                 action(OpenQuotes)
                 {
                     Caption = 'Open Created Quotes';
-                    Promoted = true;
                     ApplicationArea = All;
                     Image = EntriesList;
-                    PromotedCategory = Category5;
-                    PromotedIsBig = true;
                     Visible = ShowAct;
 
                     trigger OnAction()
@@ -379,6 +361,51 @@ page 50120 "Indent Requisition Document"
                         IF PurchHeader.FINDSET THEN
                             PAGE.RUNMODAL(Page::"Purchase Quotes", PurchHeader);
                     end;
+                }
+            }
+        }
+        area(Promoted)
+        {
+            group(Category_Process)
+            {
+                Caption = 'Process', Comment = 'Generated from the PromotedActionCategories property index 1.';
+
+                actionref("Re&lease_Promoted"; "Re&lease")
+                {
+                }
+                actionref("Re&open_Promoted"; "Re&open")
+                {
+                }
+            }
+            group(Category_Category4)
+            {
+                Caption = 'Functions', Comment = 'Generated from the PromotedActionCategories property index 3.';
+
+                actionref("Get Requisition Lines_Promoted"; "Get Requisition Lines")
+                {
+                }
+                actionref("Create &Enquiry_Promoted"; "Create &Enquiry")
+                {
+                }
+                actionref("Create &Quote_Promoted"; "Create &Quote")
+                {
+                }
+                actionref("Create &Purchase Order_Promoted"; "Create &Purchase Order")
+                {
+                }
+            }
+            group(Category_Category5)
+            {
+                Caption = 'Navigate', Comment = 'Generated from the PromotedActionCategories property index 4.';
+
+                actionref("Created &Order_Promoted"; "Created &Order")
+                {
+                }
+                actionref(OpenEnquiries_Promoted; OpenEnquiries)
+                {
+                }
+                actionref(OpenQuotes_Promoted; OpenQuotes)
+                {
                 }
             }
         }

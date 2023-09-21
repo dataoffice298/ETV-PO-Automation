@@ -18,29 +18,39 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             field("LC No."; Rec."LC No.")
             {
                 ApplicationArea = All;
+                Editable = true;//B2BSCM08SEP2023
+
             }
             field("Bill of Entry No"; Rec."Bill of Entry No")
             {
                 ApplicationArea = All;
+                Editable = true;//B2BSCM08SEP2023
+                ShowMandatory = true; //B2BSCM08SEP2023
             }
             field("EPCG No."; Rec."EPCG No.")
             {
                 ApplicationArea = all;
+                Editable = true;//B2BSCM08SEP2023
+
             }
             field("EPCG Scheme"; Rec."EPCG Scheme")
             {
                 ShowMandatory = true;
                 ApplicationArea = all;
+                //  Editable = true;//B2BSCM08SEP2023
+
             }
             field("Import Type"; Rec."Import Type")
             {
                 ShowMandatory = true;
+                Editable = true;
                 ApplicationArea = all;
             }
             field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")
             {
                 ApplicationArea = All;
             }
+
         }
 
         addafter("Vendor Invoice No.")//B2BSSD20MAR2023
@@ -96,6 +106,21 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         modify("No. of Archived Versions")
         {
             Importance = Promoted;
+        }
+        modify("Transaction Specification")//B2BSCM08SEP2023
+        {
+            Editable = true;
+            ShowMandatory = true;
+        }
+        modify("Transaction Type")//B2BSCM08SEP2023
+        {
+            Editable = true;
+            ShowMandatory = true;
+        }
+        modify("Transport Method")//B2BSCM08SEP2023
+        {
+            Editable = true;
+            ShowMandatory = true;
         }
 
         addafter("Attached Documents")
@@ -165,47 +190,31 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                     until PurchLine.Next() = 0;
                 end;
                 //B2BSSD09AUG2023<<
-
             end;
 
-            //B2BSSD28JUN2023>>
-            trigger OnAfterAction()
-            var
-                myInt: Integer;
-            begin
-                PurchLine.Reset();
-                PurchLine.SetRange("Document No.", Rec."No.");
-                if PurchLine.FindSet() then
-                    repeat
-                        PurchLine."Qty Accepted Inward_B2B" := 0;
-                        PurchLine."Qty Accepted Inward_B2B" := PurchLine."Quantity Received";
-                        PurchLine."Quantity Accepted B2B" := 0;
-                        PurchLine."Quantity Rejected B2B" := 0;
-                        PurchLine.Modify();
-                    until PurchLine.Next = 0;
-            end;
-            //B2BSSD28JUN2023<<
+
         }
 
         //B2BSSD13MAR2023<<
-        modify(Receipts)
-        {
+        /* //B2BSCM20SEP2023
+                modify(Receipts)
+                {
 
 
-            trigger OnAfterAction()
-            var
-            begin
-                purchaseLinevar.Reset();
-                purchaseLinevar.SetRange("Document No.", Rec."No.");
-                if purchaseLinevar.FindSet() then begin
-                    if purchaseLinevar.Type = purchaseLinevar.Type::Item then
-                        purchaseLinevar.TestField("Qty. to Accept B2B");
-                end;
-            end;
-        } //B2BSSD13MAR2023<<
-
+                    trigger OnAfterAction()
+                    var
+                    begin
+                        purchaseLinevar.Reset();
+                        purchaseLinevar.SetRange("Document No.", Rec."No.");
+                        if purchaseLinevar.FindSet() then begin
+                            if purchaseLinevar.Type = purchaseLinevar.Type::Item then
+                                purchaseLinevar.TestField("Qty. to Accept B2B");
+                        end;
+                    end;
+                } //B2BSSD13MAR2023<<
+                  */
         //B2BVCOn03Oct2022<<
-        //B2BVCOn04Oct2022>>>
+        //B2BVCOn04Oct2022>>
         modify(Release)
         {
             trigger OnBeforeAction()
@@ -259,6 +268,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             begin
                 if Rec.Status = rec.Status::Released then begin
                     Rec.TestField("Ammendent Comments");
+
                 end;
                 ArchiveManagement.ArchivePurchDocument(Rec);
                 ReleasePurchDoc.PerformManualReopen(Rec);
@@ -348,6 +358,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             Visible = false;
         }
         //B2BSSD14Feb2023>>
+
     }
     var
         cu90: Codeunit "Purch.-Post";
@@ -359,7 +370,6 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         POAutomation: Codeunit "PO Automation";
         ErrorTxt: TextConst ENN = 'RGP Inward Must Be Post';
         ErrorTxt1: TextConst ENN = 'Quantity cannot Received More Then Accepted Inward Quantity';
-
     /*   actions
        {
            // Add changes to page actions here

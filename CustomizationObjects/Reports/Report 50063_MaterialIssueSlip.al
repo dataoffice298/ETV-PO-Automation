@@ -192,5 +192,5 @@ report 50063 "Material Issue Slip"
         QtyIssue: Decimal;
         SNo: Integer;
         ItemLedgerEntry: Record "Item Ledger Entry";
-        ILEQuantity: Integer;//B2BSSD24APR2023
+        ILEQuantity: Decimal;//B2BSCM11SEP2023
 }

@@ -199,7 +199,16 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 ApplicationArea = All;
             }
         }
-
+        //B2BSCM11SEP2023>>
+        modify("GST Group Code")
+        {
+            ShowMandatory = true;
+        }
+        modify("HSN/SAC Code")
+        {
+            ShowMandatory = true;
+        }
+        //B2BSCM11SEP2023<<
     }
 
 
@@ -319,7 +328,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                             GateEntryHdr.Reset();
                             GateEntryHdr.FilterGroup(2);
                             GateEntryHdr.SetRange("Purchase Order No.", Rec."Document No.");
-                            GateEntryHdr.SetRange("Purchase Order Line No.", Rec."Line No.");
+                            // GateEntryHdr.SetRange("Purchase Order Line No.", Rec."Line No.");
                             GateEntryHdr.FilterGroup(0);
                             Page.RunModal(Page::"Gate Entry List", GateEntryHdr);
                         end;
@@ -337,7 +346,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                             PostedGateEntryHdr.Reset();
                             PostedGateEntryHdr.FilterGroup(2);
                             PostedGateEntryHdr.SetRange("Purchase Order No.", Rec."Document No.");
-                            PostedGateEntryHdr.SetRange("Purchase Order Line No.", Rec."Line No.");
+                            //  PostedGateEntryHdr.SetRange("Purchase Order Line No.", Rec."Line No.");
                             PostedGateEntryHdr.FilterGroup(0);
                             Page.RunModal(Page::"Posted Gate Entries List", PostedGateEntryHdr);
                         end;
@@ -413,7 +422,10 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                             purchHeader2.Modify();
                         end;
                         //B2BSSD21MAR2023>>
+
+
                     end;
+
                 }
             }
         }
@@ -876,7 +888,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         if purChaseLine."Indent Req Line No" = 0 then
                             purChaseLine."Indent Req Line No" := purChaseLine1."Indent Req Line No";
                         //B2BSSD04APR2023>>
-                        PurchaseLine."Qty. to Accept B2B" := 0;
+                        PurchaseLine.validate("Qty. to Accept B2B", 0);
                         PurchaseLine.Modify(true);
 
                     end;

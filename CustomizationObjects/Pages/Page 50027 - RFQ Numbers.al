@@ -24,6 +24,7 @@ page 50027 "RFQ Numbers"
                 field(Completed; Rec.Completed)
                 {
                     ApplicationArea = All;
+                    Editable = false;//B2BSCM19SEP2023
                 }
                 field("Location Code"; Rec."Location Code")
                 {

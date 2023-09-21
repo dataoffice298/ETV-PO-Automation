@@ -299,7 +299,7 @@
                     <Style>
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Normal</FontWeight>
-                      <Format>d</Format>
+                      <Format>dd-MM-yyyy</Format>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -2574,7 +2574,6 @@
               <Source>Embedded</Source>
               <Value>RamojiGroupLogo11</Value>
               <Sizing>FitProportional</Sizing>
-              <Top>0cm</Top>
               <Left>0.4445cm</Left>
               <Height>2.87583cm</Height>
               <Width>2.74354cm</Width>
@@ -2589,7 +2588,6 @@
               <Source>Embedded</Source>
               <Value>ETVLogo</Value>
               <Sizing>FitProportional</Sizing>
-              <Top>0cm</Top>
               <Left>11.89756cm</Left>
               <Height>2.67157cm</Height>
               <Width>7.66573cm</Width>

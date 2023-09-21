@@ -22,6 +22,7 @@ report 50194 "GRN Register"//B2BSSD14JUN2023
                     RgpInwardDate: Date;
                     RgpInwardRecieptDate: Date;
                     TotalAmount: Decimal;
+
                 begin
                     PostedPurchRcptGRec.Reset();
                     PostedPurchRcptGRec.SetRange("Order No.", "Order No.");
@@ -43,6 +44,7 @@ report 50194 "GRN Register"//B2BSSD14JUN2023
                         RgpInwardRecieptDate := PostedRGPInwardGRec."Receipt Date";
                     end;
 
+
                     if Item.Get("No.") then;
                     SNo += 1;
                     TempExcelBuffer.NewRow();
@@ -57,6 +59,8 @@ report 50194 "GRN Register"//B2BSSD14JUN2023
                     TempExcelBuffer.AddColumn("Purch. Inv. Header"."Posting Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
                     TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD03APR2023
                     TempExcelBuffer.AddColumn(Item."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    // TempExcelBuffer.AddColumn("Purch. Inv. Line".Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSCM19SEP2023
+                    // TempExcelBuffer.AddColumn("Purch. Inv. Line"."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSCM19SEP2023
                     TempExcelBuffer.AddColumn(Item.Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("Purch. Inv. Line"."Unit of Measure Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("Purch. Inv. Line".Quantity, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);

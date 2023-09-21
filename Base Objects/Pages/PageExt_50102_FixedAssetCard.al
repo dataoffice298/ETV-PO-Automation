@@ -52,6 +52,12 @@ pageextension 50102 FixedAssetCard extends "Fixed Asset Card"
                 Caption = 'FA Sub Location';
             }
         }
+        modify(FAPostingGroup)
+        {
+            ShowMandatory = true;//B2BSCM11SEP2023
+        }
+
+
     }
 
     actions

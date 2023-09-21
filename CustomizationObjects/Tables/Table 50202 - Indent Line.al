@@ -381,17 +381,17 @@ table 50202 "Indent Line"
                 IndentLine: Record "Indent Line";
             begin
                 if IndentLine.Type = IndentLine.Type::Item then begin
-                    if "Qty To Return" > "Avail.Qty" then
-                        Error('Qty Should not be greater than Available Qty')
+                    // if "Qty To Return" > "Avail.Qty" then
+                    //     Error('Qty Should not be greater than Available Qty')
+                    // else
+                    if "Qty To Return" > Abs("Qty Issued") then
+                        Error('Nothing To Return because Qty Issued %1', "Qty Issued")
                     else
-                        if "Qty To Return" > Abs("Qty Issued") then
-                            Error('Nothing To Return because Qty Issued %1', "Qty Issued")
+                        if (Rec."Qty To Return" + Rec."Qty Returned") > Abs(Rec."Qty Issued") then
+                            Error('Qty to return should not be greater than Qty Issued %1', Abs((Rec."Qty Issued")))
                         else
-                            if (Rec."Qty To Return" + Rec."Qty Returned") > Abs(Rec."Qty Issued") then
-                                Error('Qty to return should not be greater than Qty Issued %1', Abs((Rec."Qty Issued")))
-                            else
-                                if "Qty To Return" < 0 then
-                                    Error('Quantity Return Must Not be negative value');
+                            if "Qty To Return" < 0 then
+                                Error('Quantity Return Must Not be negative value');
                 end;
             end;
         }
@@ -496,7 +496,7 @@ table 50202 "Indent Line"
                 if itemvariant.FindFirst() then
                     "Variant Code" := itemvariant.Code
                 else
-                    if "Variant Description" = '' then //b
+                    if "Variant Description" = '' then
                         "Variant Code" := '';
 
 

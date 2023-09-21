@@ -435,6 +435,7 @@ page 50127 QuotationComparSubForm
                 field("Carry Out Action"; Rec."Carry Out Action")
                 {
                     ApplicationArea = all;
+                    Editable = CarryOutEditable; //B2BSCM19SEP2023
                 }
                 field(Price; Rec.Price)
                 {
@@ -584,7 +585,16 @@ page 50127 QuotationComparSubForm
             error('You can only Modify the lines when approval status is in open.');
 
     end;*/
-
+    //B2BSCM19SEP2023>>
+    trigger OnAfterGetRecord()
+    begin
+        if "Quote No." <> '' then
+            CarryOutEditable := false
+        else
+            CarryOutEditable := true;
+      
+    end;
+    //B2BSCM19SEP2023<<
     procedure InitTempTable();
     begin
         ReqLine.RESET;
@@ -634,6 +644,7 @@ page 50127 QuotationComparSubForm
         PORaiseQty: Decimal;
         Text011Lbl: Label 'Quantity Exceeded than  Order Raised';
         ActualExpansionStatus: Integer;
+        CarryOutEditable: Boolean; //B2BSCM19SEP2023
 
     local procedure IsExpanded(ActualReqLine: Record "Quotation Comparison Test"): Boolean;
     begin

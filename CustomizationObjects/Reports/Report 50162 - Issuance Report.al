@@ -42,6 +42,7 @@ report 50162 "Issuance Report"
                             Clear(ItemLedgerQty);
                             ItemLedgerEntries.Reset();
                             ItemLedgerEntries.SetRange("Document No.", "Item Ledger Entry"."Document No.");
+                            ItemLedgerEntries.SetRange("Entry Type", "Item Ledger Entry"."Entry Type"::"Negative Adjmt.");//B2BSCM14SEP2023
                             if ItemLedgerEntries.FindSet() then
                                 repeat
                                     ItemLedgerQty := "Item Ledger Entry".Quantity;

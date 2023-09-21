@@ -174,11 +174,13 @@ page 50159 "Inward Gate Entry-RGP"
                 field("LR/RR No."; Rec."LR/RR No.")
                 {
                     ApplicationArea = All;
+                    ShowMandatory = true; //B2BSCM11SEP2023
                 }
                 field("LR/RR Date"; Rec."LR/RR Date")
                 {
                     ApplicationArea = All;
                     Importance = Additional;//B2BSSD31MAR2023
+                    ShowMandatory = true; //B2BSCM11SEP2023
                 }
 
                 //B2BSSD16Dec2022>>
@@ -194,12 +196,14 @@ page 50159 "Inward Gate Entry-RGP"
                 {
                     ApplicationArea = All;
                     Caption = 'Challan No.';
+                    ShowMandatory = true; //B2BSCM11SEP2023
                 }
                 field("Challan Date"; Rec."Challan Date")
                 {
                     ApplicationArea = All;
                     Caption = 'Challan Date';
                     Importance = Additional;//B2BSSD31MAR2023
+                    ShowMandatory = true; //B2BSCM11SEP2023
                 }
             }
             part(Control1500028; "Inward Gate Entry SubFrm-RGP")

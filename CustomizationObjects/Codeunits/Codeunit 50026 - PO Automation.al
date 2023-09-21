@@ -150,7 +150,7 @@ codeunit 50026 "PO Automation"
                         IndentVendorItems.INIT;
                         IndentVendorItems."Line Type" := CreateIndents."Line Type"; //ETVPO1.1
                         IndentVendorItems."Item No." := CreateIndents."Item No.";
-                        IndentVendorItems.Quantity := CreateIndents.Quantity;
+                        IndentVendorItems.Quantity := CreateIndents."Qty. To Order";//B2BSCM12SEP2023
                         IndentVendorItems."Variant Code" := CreateIndents."Variant Code";
                         IndentVendorItems."Indent No." := CreateIndents."Indent No.";
                         IndentVendorItems."Indent Line No." := CreateIndents."Indent Line No.";
@@ -1602,7 +1602,7 @@ codeunit 50026 "PO Automation"
                             PurchaseLine.VALIDATE("Direct Unit Cost", CreateIndents5."Unit Cost");
                             //B2BSSD11Jan2023<<
                             PurchaseLine.Validate("Spec Id", CreateIndents5."Spec Id");
-                            PurchaseLine.Validate(Quantity, CreateIndents5.Quantity);
+                            PurchaseLine.Validate(Quantity, IndentVendorEnquiry.Quantity);//B2BSCM12SEP2023
                             PurchaseLine.Validate("Sub Location Code", CreateIndents5."Sub Location Code");
                             PurchaseLine.Validate("Variant Code", CreateIndents5."Variant Code");
                             //B2BSSD11Jan2023>>

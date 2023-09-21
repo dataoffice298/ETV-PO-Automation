@@ -172,6 +172,7 @@ report 50076 "Purchase Order Creation New"
                     QutComLine."Po No." := OrderNo;
                     QutComLine.modify;
                 END;
+                Commit();
                 Message('Order Created %1', PurchaseHeaderOrder."No.");
 
             END;

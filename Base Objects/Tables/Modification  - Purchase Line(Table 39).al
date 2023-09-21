@@ -189,21 +189,33 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             trigger OnValidate()
             var
                 Error1: TextConst ENN = 'The Qty. to Accept must not be greater than Qty Accepted Inward.';//B2BSSD29JUN2023
+                Error2: TextConst ENN = 'The Qty. to Accept plus Qty. Accepted must not be greater than Qty Receive.';//B2BSSD29JUN2023
             begin
                 if Rec.Type = Rec.Type::Item then begin
-                    if Rec."Qty. to Accept B2B" > Rec."Qty Accepted Inward_B2B" then//B2BSSD29JUN2023
+                    if Rec."Qty. to Accept B2B" > Rec."Qty Accepted Inward_B2B" then
                         Error(Error1);
                     //B2BSSD13JUN2023>>
                     Rec."Quantity Accepted B2B" := Rec."Qty. to Accept B2B";
                     Validate("Qty. to Receive", "Quantity Accepted B2B");//B2BSSD29JUN2023
                     Rec."Qty. to Accept B2B" := 0;
-                    Rec.Modify();
+                    //Rec.Modify();
                 end;
-                //B2BSSD13JUN2023<<
+                //B2BSCM13SEP2023>>
+                if Rec.Type = Rec.Type::Description then begin //B2BSCM13SEP2023
+                    if Rec."Qty. to Accept B2B" > Rec."Qty Accepted Inward_B2B" then
+                        Error(Error1);
+
+                    // Rec."Quantity Accepted B2B" := Rec."Qty. to Accept B2B";
+                    // Validate("Qty. to Receive", "Quantity Accepted B2B");
+                    // Validate("Qty. to Invoice", "Quantity Accepted B2B");
+                    // // Rec."Qty. to Accept B2B" := 0;
+                    // Rec.Modify();
+                end;
+                //B2BSCM13SEP2023<<
                 if "Qty. to Accept B2B" <> 0 then
                     CheckTracking(Rec);
-                if ("Qty. to Accept B2B" + "Quantity Accepted B2B") > "Qty. to Receive (Base)" then//B2BSSD28JUN2023
-                    Error(Err0001);
+                // if ("Qty. to Accept B2B" + "Quantity Accepted B2B") > "Qty. to Receive (Base)" then//B2BSSD28JUN2023
+                //     Error(Error2);
                 if "Qty. to Accept B2B" <> 0 then
                     Validate("Qty. to Receive", "Qty. to Accept B2B");
             end;
@@ -313,7 +325,7 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             DataClassification = CustomerContent;
         }
         //B2BSSD15MAY2023>>
-        field(60026; "Qty to Inward_B2B"; Integer)
+        field(60026; "Qty to Inward_B2B"; Decimal) //B2BSCM11SEP2023 INTtoDEC change
         {
             DataClassification = CustomerContent;
             trigger OnValidate()

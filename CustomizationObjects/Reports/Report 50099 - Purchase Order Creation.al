@@ -163,7 +163,7 @@ report 50099 "Purchase Order Creation"
                         END;
                     END;
                 END;
-
+                Commit();
             end;
 
             trigger OnPostDataItem();

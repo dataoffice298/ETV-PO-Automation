@@ -1627,6 +1627,9 @@ End Function
         <Field Name="ILEQuantity">
           <DataField>ILEQuantity</DataField>
         </Field>
+        <Field Name="ILEQuantityFormat">
+          <DataField>ILEQuantityFormat</DataField>
+        </Field>
       </Fields>
       <Query>
         <DataSourceName>DataSource</DataSourceName>

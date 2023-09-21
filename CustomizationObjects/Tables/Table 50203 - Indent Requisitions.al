@@ -78,10 +78,12 @@ table 50203 "Indent Requisitions"
         {
             DecimalPlaces = 0 : 5;
             //B2BESGOn23May2022++
-            trigger OnValidate();
-            begin
-                Amount := "Unit Cost" * Quantity
-            end;
+            // trigger OnValidate();
+            // begin
+
+            //     Amount := "Unit Cost" * Quantity;
+
+            // end;
             //B2BESGOn23May2022--
         }
         field(4; "Indent No."; Code[20])
@@ -210,7 +212,17 @@ table 50203 "Indent Requisitions"
             end;
         }
         field(50004; "Qty. To Order"; Decimal)
-        {      
+        {
+            trigger OnValidate();
+            var
+                ErrorMsg: Label 'Qty.To order is More The Remaining Quantity'; //B2BSCM19SEP2023
+            begin
+                if "Qty. To Order" > "Remaining Quantity" then //B2BSCM19SEP2023
+                    Error(ErrorMsg); //B2BSCM19SEP2023 
+
+                Amount := "Unit Cost" * "Qty. To Order"; //B2BSCM12SEP2023
+
+            end;
         }
         field(50005; "Qty. Ordered"; Decimal)
         {
@@ -235,7 +247,7 @@ table 50203 "Indent Requisitions"
             //B2BESGOn23May2022++
             trigger OnValidate();
             begin
-                Amount := "Unit Cost" * Quantity;
+                Amount := "Unit Cost" * "Qty. To Order"; //B2BSCM12SEP2023
             end;
             //B2BESGOn23May2022--
 

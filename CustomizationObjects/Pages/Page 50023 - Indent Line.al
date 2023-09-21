@@ -381,15 +381,15 @@ page 50023 "Indent Line"
                             until IndentLIne.Next() = 0;
                         //B2BSCM25AUG2023<<
                         IndentLine.Reset();//B2BSSD02AUG2023
-                        IndentLine.SetRange("Document No.", IndentLIne1."Document No.");//B2BSCM06SEP2023
-                        IndentLine.SetRange(Type, IndentLIne1.Type::Item);//B2BSCM06SEP2023
+                        IndentLine.SetRange("Document No.", Rec."Document No.");//B2BSCM06SEP2023
+                        IndentLine.SetRange(Type, IndentLine.Type::Item);//B2BSCM06SEP2023
                         IndentLine.SetRange(Select, true);//B2BSCM23AUG2023
                         if IndentLine.FindSet() then begin
                             repeat
-                                //IndentLine.CalcFields("Qty Returned");
-                                //IndentLine.TestField("Qty Returned");
-                                indentLine.CalcFields("Qty Returned", "Qty Issued");
+                                IndentLine.CalcFields("Qty Returned");
                                 IndentLine.TestField("Qty Returned");
+                                indentLine.CalcFields("Qty Returned", "Qty Issued");
+                                //IndentLine.TestField("Qty Returned");
                                 if Abs(indentLine."Qty Issued") > IndentLine."Qty Returned" then
                                     Error(Errorinward1);
                             until IndentLine.Next() = 0;
@@ -587,7 +587,7 @@ page 50023 "Indent Line"
                         PostedGateEntryHdr.Reset();
                         PostedGateEntryHdr.FilterGroup(2);
                         PostedGateEntryHdr.SetRange("Indent Document No", Rec."Document No.");
-                        PostedGateEntryHdr.SetRange("Indent Line No", Rec."Line No.");
+                        // PostedGateEntryHdr.SetRange("Indent Line No", Rec."Line No.");
                         PostedGateEntryHdr.SetRange(Type, PostedGateEntryHdr.Type::RGP);
                         PostedGateEntryHdr.FilterGroup(0);
                         Page.RunModal(Page::"Posted Gate Entries List", PostedGateEntryHdr);
@@ -777,8 +777,6 @@ page 50023 "Indent Line"
     var
         IndentHdr: Record "Indent Header";
     begin
-
-
 
         if IndentHdr.Get(Rec."Document No.") then;
         if (IndentHdr."Released Status" = IndentHdr."Released Status"::Released) then begin

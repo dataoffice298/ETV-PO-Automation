@@ -30,13 +30,13 @@ report 50167 "QC Pending GRN Pending Report"
 
                     Users.Reset();
                     Users.SetRange("User Name", IndentHeader.Indentor);
-                    if Users.FindFirst() then;
-
-                    if Item.Get("No.") then;
-                    PurchLine.Reset;
+                    if Users.FindFirst() then
+                        if Item.Get("No.") then
+                            PurchLine.Reset;
                     PurchLine.SetRange("Indent No.", "Indent Line"."Document No.");
                     PurchLine.SetRange("Indent Line No.", "Indent Line"."Line No.");
                     PurchLine.SetFilter("Qty. to Receive", '<>%1', 0);
+                    PurchLine.SetRange("Document Type", PurchLine."Document Type"::Order);//B2BSCM13092023
                     PurchLine.SetRange("Quantity Accepted B2B", 0);
                     if PurchLine.FindSet() then begin
                         repeat

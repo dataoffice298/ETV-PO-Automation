@@ -216,7 +216,7 @@
                                                     <Value>=Fields!Buy_from_Vendor_Name.Value</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -423,7 +423,7 @@
                                                     <Value>=Fields!DCDate.Value</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                       <Format>d</Format>
                                                     </Style>
                                                   </TextRun>
@@ -467,7 +467,7 @@
                                                     <Value>=Fields!GrnNo.Value</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -505,7 +505,7 @@
                                                     <Value>=Fields!GrnDate.Value</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                       <Format>MM/dd/yyyy</Format>
                                                     </Style>
                                                   </TextRun>
@@ -655,7 +655,7 @@
                                                     <Value>=Fields!Spot.Value</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -741,7 +741,7 @@
                                                     <Value>=Fields!ReceiptDate.Value</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                       <Format>MM/dd/yyyy</Format>
                                                     </Style>
                                                   </TextRun>
@@ -871,7 +871,7 @@
                                                     <Value>=Fields!Indent_No_.Value</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -964,7 +964,7 @@
                                                     <Value>=Fields!Indentor.Value</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -1056,7 +1056,7 @@
                                                     <Value>=Fields!PONo.Value</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -1104,7 +1104,7 @@
                                                     <Value>=Fields!POReqNo.Value</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -1741,38 +1741,6 @@
                                 </Border>
                               </Style>
                             </Line>
-                            <Textbox Name="EnteredbyCapLbl">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>=Fields!EnteredbyCapLbl.Value</Value>
-                                      <Style>
-                                        <FontSize>11pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style />
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>EnteredbyCapLbl</rd:DefaultName>
-                              <Top>18.22662cm</Top>
-                              <Left>2.65324cm</Left>
-                              <Height>0.94396cm</Height>
-                              <Width>3.73849cm</Width>
-                              <ZIndex>21</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
                             <Textbox Name="SectioninChargeCapLbl">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
@@ -1791,10 +1759,10 @@
                               </Paragraphs>
                               <rd:DefaultName>SectioninChargeCapLbl</rd:DefaultName>
                               <Top>18.22662cm</Top>
-                              <Left>7.17233cm</Left>
+                              <Left>7.22261cm</Left>
                               <Height>0.94396cm</Height>
                               <Width>3.90229cm</Width>
-                              <ZIndex>22</ZIndex>
+                              <ZIndex>21</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -1825,7 +1793,7 @@
                               <Left>11.94752cm</Left>
                               <Height>0.94396cm</Height>
                               <Width>4.01318cm</Width>
-                              <ZIndex>23</ZIndex>
+                              <ZIndex>22</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -1856,7 +1824,7 @@
                               <Left>16.83491cm</Left>
                               <Height>0.94396cm</Height>
                               <Width>3.74354cm</Width>
-                              <ZIndex>24</ZIndex>
+                              <ZIndex>23</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -1887,7 +1855,7 @@
                               <Left>21.50988cm</Left>
                               <Height>0.94396cm</Height>
                               <Width>3.73582cm</Width>
-                              <ZIndex>25</ZIndex>
+                              <ZIndex>24</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -3042,13 +3010,46 @@
                               <Left>0.19948cm</Left>
                               <Height>1.2cm</Height>
                               <Width>26.95606cm</Width>
-                              <ZIndex>26</ZIndex>
+                              <ZIndex>25</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
                                 </Border>
                               </Style>
                             </Tablix>
+                            <Textbox Name="SectioninChargeCapLbl3">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=Fields!EnteredbyCapLbl.Value</Value>
+                                      <Style>
+                                        <FontSize>8pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style>
+                                    <TextAlign>Center</TextAlign>
+                                  </Style>
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>SectioninChargeCapLbl</rd:DefaultName>
+                              <Top>18.22662cm</Top>
+                              <Left>2.11217cm</Left>
+                              <Height>0.94396cm</Height>
+                              <Width>4.11396cm</Width>
+                              <ZIndex>26</ZIndex>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <VerticalAlign>Middle</VerticalAlign>
+                                <PaddingLeft>5pt</PaddingLeft>
+                                <PaddingRight>5pt</PaddingRight>
+                              </Style>
+                            </Textbox>
                           </ReportItems>
                           <KeepTogether>true</KeepTogether>
                           <Style>

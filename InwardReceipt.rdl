@@ -168,6 +168,18 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
+                                                  <TextRun>
+                                                    <Value xml:space="preserve"> </Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!SupplierName.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Normal</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -175,22 +187,18 @@
                                             <rd:DefaultName>SupplierNameCapLbl</rd:DefaultName>
                                             <Style>
                                               <Border>
-                                                <Style>None</Style>
+                                                <Style>Solid</Style>
                                               </Border>
                                               <TopBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </TopBorder>
                                               <LeftBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </LeftBorder>
                                               <RightBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
+                                                <Style>None</Style>
                                               </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
                                               <PaddingRight>2pt</PaddingRight>
@@ -216,6 +224,18 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
+                                                  <TextRun>
+                                                    <Value xml:space="preserve"> </Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!InwardNo.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Normal</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -223,16 +243,18 @@
                                             <rd:DefaultName>InwardNoCapLbl</rd:DefaultName>
                                             <Style>
                                               <Border>
-                                                <Style>None</Style>
+                                                <Style>Solid</Style>
                                               </Border>
                                               <TopBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </TopBorder>
+                                              <LeftBorder>
+                                                <Color>Black</Color>
+                                                <Width>1pt</Width>
+                                              </LeftBorder>
                                               <RightBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
@@ -268,6 +290,10 @@
                                                     <Value> : </Value>
                                                     <Style />
                                                   </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!DCNO.Value</Value>
+                                                    <Style />
+                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -275,11 +301,14 @@
                                             <rd:DefaultName>DCNoCapLbl</rd:DefaultName>
                                             <Style>
                                               <Border>
-                                                <Style>None</Style>
+                                                <Style>Solid</Style>
                                               </Border>
+                                              <TopBorder>
+                                                <Color>Black</Color>
+                                                <Width>1pt</Width>
+                                              </TopBorder>
                                               <LeftBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </LeftBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
@@ -304,6 +333,19 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
+                                                  <TextRun>
+                                                    <Value xml:space="preserve"> </Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!DCDate.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Normal</FontWeight>
+                                                      <Format>M/d/yyyy</Format>
+                                                    </Style>
+                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -311,13 +353,19 @@
                                             <rd:DefaultName>DCDateCapLbl</rd:DefaultName>
                                             <Style>
                                               <Border>
-                                                <Style>None</Style>
-                                              </Border>
-                                              <RightBorder>
-                                                <Color>Black</Color>
                                                 <Style>Solid</Style>
+                                              </Border>
+                                              <TopBorder>
+                                                <Style>None</Style>
+                                              </TopBorder>
+                                              <BottomBorder>
+                                                <Color>Black</Color>
                                                 <Width>1pt</Width>
-                                              </RightBorder>
+                                              </BottomBorder>
+                                              <LeftBorder>
+                                                <Color>Black</Color>
+                                                <Width>1pt</Width>
+                                              </LeftBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
                                               <PaddingRight>2pt</PaddingRight>
                                               <PaddingTop>2pt</PaddingTop>
@@ -340,6 +388,19 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
+                                                  <TextRun>
+                                                    <Value xml:space="preserve"> </Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!InwardDate.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Normal</FontWeight>
+                                                      <Format>M/d/yyyy</Format>
+                                                    </Style>
+                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -347,11 +408,18 @@
                                             <rd:DefaultName>InwardDateCapLbl1</rd:DefaultName>
                                             <Style>
                                               <Border>
-                                                <Style>None</Style>
+                                                <Style>Solid</Style>
                                               </Border>
+                                              <BottomBorder>
+                                                <Color>Black</Color>
+                                                <Width>1pt</Width>
+                                              </BottomBorder>
+                                              <LeftBorder>
+                                                <Color>Black</Color>
+                                                <Width>1pt</Width>
+                                              </LeftBorder>
                                               <RightBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
@@ -383,6 +451,18 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
+                                                  <TextRun>
+                                                    <Value xml:space="preserve"> </Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!VendorInvNo.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Normal</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -390,11 +470,14 @@
                                             <rd:DefaultName>InvNoCapLbl</rd:DefaultName>
                                             <Style>
                                               <Border>
-                                                <Style>None</Style>
+                                                <Style>Solid</Style>
                                               </Border>
+                                              <TopBorder>
+                                                <Color>Black</Color>
+                                                <Width>1pt</Width>
+                                              </TopBorder>
                                               <LeftBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </LeftBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
@@ -419,6 +502,19 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
+                                                  <TextRun>
+                                                    <Value xml:space="preserve"> </Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!VendorInvDate.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Normal</FontWeight>
+                                                      <Format>M/d/yyyy</Format>
+                                                    </Style>
+                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -426,13 +522,16 @@
                                             <rd:DefaultName>InvDateCapLbl</rd:DefaultName>
                                             <Style>
                                               <Border>
-                                                <Style>None</Style>
-                                              </Border>
-                                              <RightBorder>
-                                                <Color>Black</Color>
                                                 <Style>Solid</Style>
+                                              </Border>
+                                              <TopBorder>
+                                                <Color>Black</Color>
                                                 <Width>1pt</Width>
-                                              </RightBorder>
+                                              </TopBorder>
+                                              <LeftBorder>
+                                                <Color>Black</Color>
+                                                <Width>1pt</Width>
+                                              </LeftBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
                                               <PaddingRight>2pt</PaddingRight>
                                               <PaddingTop>2pt</PaddingTop>
@@ -455,6 +554,18 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
+                                                  <TextRun>
+                                                    <Value xml:space="preserve"> </Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!GRNNo.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Normal</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -462,8 +573,16 @@
                                             <rd:DefaultName>GrnNoCapLbl</rd:DefaultName>
                                             <Style>
                                               <Border>
-                                                <Style>None</Style>
+                                                <Style>Solid</Style>
                                               </Border>
+                                              <LeftBorder>
+                                                <Color>Black</Color>
+                                                <Width>1pt</Width>
+                                              </LeftBorder>
+                                              <RightBorder>
+                                                <Color>Black</Color>
+                                                <Width>1pt</Width>
+                                              </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
                                               <PaddingRight>2pt</PaddingRight>
                                               <PaddingTop>2pt</PaddingTop>
@@ -486,6 +605,19 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
+                                                  <TextRun>
+                                                    <Value xml:space="preserve"> </Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!GRNDate.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Normal</FontWeight>
+                                                      <Format>M/d/yyyy</Format>
+                                                    </Style>
+                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -493,11 +625,14 @@
                                             <rd:DefaultName>GRNDateCapLbl</rd:DefaultName>
                                             <Style>
                                               <Border>
-                                                <Style>None</Style>
+                                                <Style>Solid</Style>
                                               </Border>
+                                              <LeftBorder>
+                                                <Color>Black</Color>
+                                                <Width>1pt</Width>
+                                              </LeftBorder>
                                               <RightBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
@@ -527,6 +662,19 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
+                                                  <TextRun>
+                                                    <Value xml:space="preserve"> </Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!ReceiptDate.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Normal</FontWeight>
+                                                      <Format>M/d/yyyy</Format>
+                                                    </Style>
+                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -534,18 +682,16 @@
                                             <rd:DefaultName>ReceiptDateCapLbl</rd:DefaultName>
                                             <Style>
                                               <Border>
-                                                <Style>None</Style>
+                                                <Style>Solid</Style>
                                               </Border>
+                                              <TopBorder>
+                                                <Color>Black</Color>
+                                                <Width>1pt</Width>
+                                              </TopBorder>
                                               <LeftBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </LeftBorder>
-                                              <RightBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
                                               <PaddingRight>2pt</PaddingRight>
                                               <PaddingTop>2pt</PaddingTop>
@@ -570,6 +716,18 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
+                                                  <TextRun>
+                                                    <Value xml:space="preserve"> </Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!Spot.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Normal</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -577,40 +735,18 @@
                                             <rd:DefaultName>SpotCapLbl</rd:DefaultName>
                                             <Style>
                                               <Border>
-                                                <Style>None</Style>
+                                                <Style>Solid</Style>
                                               </Border>
-                                              <PaddingLeft>2pt</PaddingLeft>
-                                              <PaddingRight>2pt</PaddingRight>
-                                              <PaddingTop>2pt</PaddingTop>
-                                              <PaddingBottom>2pt</PaddingBottom>
-                                            </Style>
-                                          </Textbox>
-                                        </CellContents>
-                                      </TablixCell>
-                                      <TablixCell>
-                                        <CellContents>
-                                          <Textbox Name="Textbox23">
-                                            <CanGrow>true</CanGrow>
-                                            <KeepTogether>true</KeepTogether>
-                                            <Paragraphs>
-                                              <Paragraph>
-                                                <TextRuns>
-                                                  <TextRun>
-                                                    <Value />
-                                                    <Style />
-                                                  </TextRun>
-                                                </TextRuns>
-                                                <Style />
-                                              </Paragraph>
-                                            </Paragraphs>
-                                            <rd:DefaultName>Textbox23</rd:DefaultName>
-                                            <Style>
-                                              <Border>
-                                                <Style>None</Style>
-                                              </Border>
+                                              <TopBorder>
+                                                <Color>Black</Color>
+                                                <Width>1pt</Width>
+                                              </TopBorder>
+                                              <LeftBorder>
+                                                <Color>Black</Color>
+                                                <Width>1pt</Width>
+                                              </LeftBorder>
                                               <RightBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
@@ -619,8 +755,10 @@
                                               <PaddingBottom>2pt</PaddingBottom>
                                             </Style>
                                           </Textbox>
+                                          <ColSpan>2</ColSpan>
                                         </CellContents>
                                       </TablixCell>
+                                      <TablixCell />
                                     </TablixCells>
                                   </TablixRow>
                                   <TablixRow>
@@ -640,6 +778,18 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
+                                                  <TextRun>
+                                                    <Value xml:space="preserve"> </Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!VehicleNo.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Normal</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -647,57 +797,24 @@
                                             <rd:DefaultName>VehicleNoCapLbl</rd:DefaultName>
                                             <Style>
                                               <Border>
-                                                <Style>None</Style>
-                                              </Border>
-                                              <LeftBorder>
-                                                <Color>Black</Color>
                                                 <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </LeftBorder>
+                                              </Border>
+                                              <TopBorder>
+                                                <Style>None</Style>
+                                              </TopBorder>
+                                              <BottomBorder>
+                                                <Style>None</Style>
+                                              </BottomBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
                                               <PaddingRight>2pt</PaddingRight>
                                               <PaddingTop>2pt</PaddingTop>
                                               <PaddingBottom>2pt</PaddingBottom>
                                             </Style>
                                           </Textbox>
+                                          <ColSpan>2</ColSpan>
                                         </CellContents>
                                       </TablixCell>
-                                      <TablixCell>
-                                        <CellContents>
-                                          <Textbox Name="IndentDateCapLbl">
-                                            <CanGrow>true</CanGrow>
-                                            <KeepTogether>true</KeepTogether>
-                                            <Paragraphs>
-                                              <Paragraph>
-                                                <TextRuns>
-                                                  <TextRun>
-                                                    <Value />
-                                                    <Style>
-                                                      <FontWeight>Bold</FontWeight>
-                                                    </Style>
-                                                  </TextRun>
-                                                </TextRuns>
-                                                <Style />
-                                              </Paragraph>
-                                            </Paragraphs>
-                                            <rd:DefaultName>IndentDateCapLbl</rd:DefaultName>
-                                            <Style>
-                                              <Border>
-                                                <Style>None</Style>
-                                              </Border>
-                                              <RightBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </RightBorder>
-                                              <PaddingLeft>2pt</PaddingLeft>
-                                              <PaddingRight>2pt</PaddingRight>
-                                              <PaddingTop>2pt</PaddingTop>
-                                              <PaddingBottom>2pt</PaddingBottom>
-                                            </Style>
-                                          </Textbox>
-                                        </CellContents>
-                                      </TablixCell>
+                                      <TablixCell />
                                       <TablixCell>
                                         <CellContents>
                                           <Textbox Name="IndentorNameCapLbl">
@@ -712,6 +829,18 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
+                                                  <TextRun>
+                                                    <Value xml:space="preserve"> </Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!Purpose.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Normal</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -719,11 +848,14 @@
                                             <rd:DefaultName>IndentorNameCapLbl</rd:DefaultName>
                                             <Style>
                                               <Border>
-                                                <Style>None</Style>
+                                                <Style>Solid</Style>
                                               </Border>
+                                              <LeftBorder>
+                                                <Color>Black</Color>
+                                                <Width>1pt</Width>
+                                              </LeftBorder>
                                               <RightBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
@@ -762,16 +894,14 @@
                                             <rd:DefaultName>PONoCapLbl</rd:DefaultName>
                                             <Style>
                                               <Border>
-                                                <Style>None</Style>
-                                              </Border>
-                                              <BottomBorder>
-                                                <Color>Black</Color>
                                                 <Style>Solid</Style>
+                                              </Border>
+                                              <TopBorder>
+                                                <Color>Black</Color>
                                                 <Width>1pt</Width>
-                                              </BottomBorder>
+                                              </TopBorder>
                                               <LeftBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </LeftBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
@@ -780,49 +910,10 @@
                                               <PaddingBottom>2pt</PaddingBottom>
                                             </Style>
                                           </Textbox>
+                                          <ColSpan>2</ColSpan>
                                         </CellContents>
                                       </TablixCell>
-                                      <TablixCell>
-                                        <CellContents>
-                                          <Textbox Name="POReqNoCapLbl">
-                                            <CanGrow>true</CanGrow>
-                                            <KeepTogether>true</KeepTogether>
-                                            <Paragraphs>
-                                              <Paragraph>
-                                                <TextRuns>
-                                                  <TextRun>
-                                                    <Value />
-                                                    <Style>
-                                                      <FontWeight>Bold</FontWeight>
-                                                    </Style>
-                                                  </TextRun>
-                                                </TextRuns>
-                                                <Style />
-                                              </Paragraph>
-                                            </Paragraphs>
-                                            <rd:DefaultName>POReqNoCapLbl</rd:DefaultName>
-                                            <Style>
-                                              <Border>
-                                                <Style>None</Style>
-                                              </Border>
-                                              <BottomBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </BottomBorder>
-                                              <RightBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
-                                              </RightBorder>
-                                              <PaddingLeft>2pt</PaddingLeft>
-                                              <PaddingRight>2pt</PaddingRight>
-                                              <PaddingTop>2pt</PaddingTop>
-                                              <PaddingBottom>2pt</PaddingBottom>
-                                            </Style>
-                                          </Textbox>
-                                        </CellContents>
-                                      </TablixCell>
+                                      <TablixCell />
                                       <TablixCell>
                                         <CellContents>
                                           <Textbox Name="IndentorNameCapLbl1">
@@ -837,6 +928,18 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
+                                                  <TextRun>
+                                                    <Value xml:space="preserve"> </Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Fields!Indentor.Value</Value>
+                                                    <Style>
+                                                      <FontWeight>Normal</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -844,50 +947,18 @@
                                             <rd:DefaultName>IndentorNameCapLbl1</rd:DefaultName>
                                             <Style>
                                               <Border>
-                                                <Style>None</Style>
+                                                <Style>Solid</Style>
                                               </Border>
                                               <BottomBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </BottomBorder>
-                                              <PaddingLeft>2pt</PaddingLeft>
-                                              <PaddingRight>2pt</PaddingRight>
-                                              <PaddingTop>2pt</PaddingTop>
-                                              <PaddingBottom>2pt</PaddingBottom>
-                                            </Style>
-                                          </Textbox>
-                                        </CellContents>
-                                      </TablixCell>
-                                      <TablixCell>
-                                        <CellContents>
-                                          <Textbox Name="Textbox31">
-                                            <CanGrow>true</CanGrow>
-                                            <KeepTogether>true</KeepTogether>
-                                            <Paragraphs>
-                                              <Paragraph>
-                                                <TextRuns>
-                                                  <TextRun>
-                                                    <Value />
-                                                    <Style />
-                                                  </TextRun>
-                                                </TextRuns>
-                                                <Style />
-                                              </Paragraph>
-                                            </Paragraphs>
-                                            <rd:DefaultName>Textbox31</rd:DefaultName>
-                                            <Style>
-                                              <Border>
-                                                <Style>None</Style>
-                                              </Border>
-                                              <BottomBorder>
+                                              <LeftBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
-                                              </BottomBorder>
+                                              </LeftBorder>
                                               <RightBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
@@ -896,8 +967,10 @@
                                               <PaddingBottom>2pt</PaddingBottom>
                                             </Style>
                                           </Textbox>
+                                          <ColSpan>2</ColSpan>
                                         </CellContents>
                                       </TablixCell>
+                                      <TablixCell />
                                     </TablixCells>
                                   </TablixRow>
                                 </TablixRows>
@@ -1897,23 +1970,23 @@
                                     <TablixCells>
                                       <TablixCell>
                                         <CellContents>
-                                          <Textbox Name="Textbox2">
+                                          <Textbox Name="SNo">
                                             <CanGrow>true</CanGrow>
                                             <KeepTogether>true</KeepTogether>
                                             <Paragraphs>
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value />
+                                                    <Value>=ROWNUMBER(NOTHING)</Value>
                                                     <Style>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
                                             </Paragraphs>
-                                            <rd:DefaultName>Textbox2</rd:DefaultName>
+                                            <rd:DefaultName>SNo</rd:DefaultName>
                                             <Style>
                                               <Border>
                                                 <Style>Solid</Style>
@@ -1948,23 +2021,23 @@
                                       </TablixCell>
                                       <TablixCell>
                                         <CellContents>
-                                          <Textbox Name="Textbox3">
+                                          <Textbox Name="desc">
                                             <CanGrow>true</CanGrow>
                                             <KeepTogether>true</KeepTogether>
                                             <Paragraphs>
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value />
+                                                    <Value>=Fields!desc.Value</Value>
                                                     <Style>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
                                             </Paragraphs>
-                                            <rd:DefaultName>Textbox3</rd:DefaultName>
+                                            <rd:DefaultName>desc</rd:DefaultName>
                                             <Style>
                                               <Border>
                                                 <Style>Solid</Style>
@@ -1999,23 +2072,23 @@
                                       </TablixCell>
                                       <TablixCell>
                                         <CellContents>
-                                          <Textbox Name="Textbox4">
+                                          <Textbox Name="UOM">
                                             <CanGrow>true</CanGrow>
                                             <KeepTogether>true</KeepTogether>
                                             <Paragraphs>
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value />
+                                                    <Value>=Fields!UOM.Value</Value>
                                                     <Style>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
                                             </Paragraphs>
-                                            <rd:DefaultName>Textbox4</rd:DefaultName>
+                                            <rd:DefaultName>UOM</rd:DefaultName>
                                             <Style>
                                               <Border>
                                                 <Style>Solid</Style>
@@ -2050,7 +2123,7 @@
                                       </TablixCell>
                                       <TablixCell>
                                         <CellContents>
-                                          <Textbox Name="Textbox5">
+                                          <Textbox Name="QtyRejected">
                                             <CanGrow>true</CanGrow>
                                             <KeepTogether>true</KeepTogether>
                                             <Paragraphs>
@@ -2059,14 +2132,14 @@
                                                   <TextRun>
                                                     <Value />
                                                     <Style>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
                                             </Paragraphs>
-                                            <rd:DefaultName>Textbox5</rd:DefaultName>
+                                            <rd:DefaultName>QtyRejected</rd:DefaultName>
                                             <Style>
                                               <Border>
                                                 <Style>Solid</Style>
@@ -2152,23 +2225,23 @@
                                       </TablixCell>
                                       <TablixCell>
                                         <CellContents>
-                                          <Textbox Name="Textbox7">
+                                          <Textbox Name="PONo">
                                             <CanGrow>true</CanGrow>
                                             <KeepTogether>true</KeepTogether>
                                             <Paragraphs>
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value />
+                                                    <Value>=Fields!PONo.Value</Value>
                                                     <Style>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
                                             </Paragraphs>
-                                            <rd:DefaultName>Textbox7</rd:DefaultName>
+                                            <rd:DefaultName>PONo</rd:DefaultName>
                                             <Style>
                                               <Border>
                                                 <Style>Solid</Style>
@@ -2254,23 +2327,23 @@
                                       </TablixCell>
                                       <TablixCell>
                                         <CellContents>
-                                          <Textbox Name="Textbox9">
+                                          <Textbox Name="Make">
                                             <CanGrow>true</CanGrow>
                                             <KeepTogether>true</KeepTogether>
                                             <Paragraphs>
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value />
+                                                    <Value>=Fields!Make.Value</Value>
                                                     <Style>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
                                             </Paragraphs>
-                                            <rd:DefaultName>Textbox9</rd:DefaultName>
+                                            <rd:DefaultName>Make</rd:DefaultName>
                                             <Style>
                                               <Border>
                                                 <Style>Solid</Style>
@@ -2361,23 +2434,23 @@
                                     <TablixCells>
                                       <TablixCell>
                                         <CellContents>
-                                          <Textbox Name="Textbox11">
+                                          <Textbox Name="Qty1">
                                             <CanGrow>true</CanGrow>
                                             <KeepTogether>true</KeepTogether>
                                             <Paragraphs>
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value />
+                                                    <Value>=Fields!Qty.Value</Value>
                                                     <Style>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
                                             </Paragraphs>
-                                            <rd:DefaultName>Textbox11</rd:DefaultName>
+                                            <rd:DefaultName>Qty1</rd:DefaultName>
                                             <Style>
                                               <Border>
                                                 <Style>Solid</Style>
@@ -2419,9 +2492,9 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value />
+                                                    <Value>=Fields!QtyReceived.Value</Value>
                                                     <Style>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -2470,9 +2543,9 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value />
+                                                    <Value>=Fields!QtyAccepted.Value</Value>
                                                     <Style>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -2521,9 +2594,9 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value />
+                                                    <Value>=Fields!QtyRejected.Value</Value>
                                                     <Style>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -2565,23 +2638,23 @@
                                       </TablixCell>
                                       <TablixCell>
                                         <CellContents>
-                                          <Textbox Name="Textbox15">
+                                          <Textbox Name="Rate">
                                             <CanGrow>true</CanGrow>
                                             <KeepTogether>true</KeepTogether>
                                             <Paragraphs>
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value />
+                                                    <Value>=Fields!Rate.Value</Value>
                                                     <Style>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
                                             </Paragraphs>
-                                            <rd:DefaultName>Textbox15</rd:DefaultName>
+                                            <rd:DefaultName>Rate</rd:DefaultName>
                                             <Style>
                                               <Border>
                                                 <Style>Solid</Style>
@@ -2616,23 +2689,23 @@
                                       </TablixCell>
                                       <TablixCell>
                                         <CellContents>
-                                          <Textbox Name="Textbox16">
+                                          <Textbox Name="BasicAmt">
                                             <CanGrow>true</CanGrow>
                                             <KeepTogether>true</KeepTogether>
                                             <Paragraphs>
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>Total Cap Lbl</Value>
+                                                    <Value>=Fields!BasicAmt.Value</Value>
                                                     <Style>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
                                             </Paragraphs>
-                                            <rd:DefaultName>Textbox16</rd:DefaultName>
+                                            <rd:DefaultName>BasicAmt</rd:DefaultName>
                                             <Style>
                                               <Border>
                                                 <Style>Solid</Style>
@@ -2667,23 +2740,23 @@
                                       </TablixCell>
                                       <TablixCell>
                                         <CellContents>
-                                          <Textbox Name="Textbox30">
+                                          <Textbox Name="Discount">
                                             <CanGrow>true</CanGrow>
                                             <KeepTogether>true</KeepTogether>
                                             <Paragraphs>
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value />
+                                                    <Value>=Fields!Discount.Value</Value>
                                                     <Style>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
                                             </Paragraphs>
-                                            <rd:DefaultName>Textbox30</rd:DefaultName>
+                                            <rd:DefaultName>Discount</rd:DefaultName>
                                             <Style>
                                               <Border>
                                                 <Style>Solid</Style>
@@ -2718,23 +2791,23 @@
                                       </TablixCell>
                                       <TablixCell>
                                         <CellContents>
-                                          <Textbox Name="Textbox18">
+                                          <Textbox Name="Vat">
                                             <CanGrow>true</CanGrow>
                                             <KeepTogether>true</KeepTogether>
                                             <Paragraphs>
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value />
+                                                    <Value>=Fields!Vat.Value</Value>
                                                     <Style>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
                                             </Paragraphs>
-                                            <rd:DefaultName>Textbox18</rd:DefaultName>
+                                            <rd:DefaultName>Vat</rd:DefaultName>
                                             <Style>
                                               <Border>
                                                 <Style>Solid</Style>
@@ -2769,23 +2842,23 @@
                                       </TablixCell>
                                       <TablixCell>
                                         <CellContents>
-                                          <Textbox Name="Textbox19">
+                                          <Textbox Name="Totamt">
                                             <CanGrow>true</CanGrow>
                                             <KeepTogether>true</KeepTogether>
                                             <Paragraphs>
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value />
+                                                    <Value>=Fields!Totamt.Value</Value>
                                                     <Style>
-                                                      <FontWeight>Bold</FontWeight>
+                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
                                             </Paragraphs>
-                                            <rd:DefaultName>Textbox19</rd:DefaultName>
+                                            <rd:DefaultName>Totamt</rd:DefaultName>
                                             <Style>
                                               <Border>
                                                 <Style>Solid</Style>
@@ -2849,23 +2922,18 @@
                                                 <Style>Solid</Style>
                                               </Border>
                                               <TopBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
+                                                <Style>None</Style>
                                               </TopBorder>
                                               <BottomBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </BottomBorder>
                                               <LeftBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </LeftBorder>
                                               <RightBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
@@ -2902,23 +2970,18 @@
                                                 <Style>Solid</Style>
                                               </Border>
                                               <TopBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
+                                                <Style>None</Style>
                                               </TopBorder>
                                               <BottomBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </BottomBorder>
                                               <LeftBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </LeftBorder>
                                               <RightBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
@@ -2953,23 +3016,18 @@
                                                 <Style>Solid</Style>
                                               </Border>
                                               <TopBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
+                                                <Style>None</Style>
                                               </TopBorder>
                                               <BottomBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </BottomBorder>
                                               <LeftBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </LeftBorder>
                                               <RightBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
@@ -3004,23 +3062,18 @@
                                                 <Style>Solid</Style>
                                               </Border>
                                               <TopBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
+                                                <Style>None</Style>
                                               </TopBorder>
                                               <BottomBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </BottomBorder>
                                               <LeftBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </LeftBorder>
                                               <RightBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
@@ -3057,23 +3110,18 @@
                                                 <Style>Solid</Style>
                                               </Border>
                                               <TopBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
+                                                <Style>None</Style>
                                               </TopBorder>
                                               <BottomBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </BottomBorder>
                                               <LeftBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </LeftBorder>
                                               <RightBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
@@ -3110,23 +3158,18 @@
                                                 <Style>Solid</Style>
                                               </Border>
                                               <TopBorder>
-                                                <Color>Black</Color>
-                                                <Style>Solid</Style>
-                                                <Width>1pt</Width>
+                                                <Style>None</Style>
                                               </TopBorder>
                                               <BottomBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </BottomBorder>
                                               <LeftBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </LeftBorder>
                                               <RightBorder>
                                                 <Color>Black</Color>
-                                                <Style>Solid</Style>
                                                 <Width>1pt</Width>
                                               </RightBorder>
                                               <PaddingLeft>2pt</PaddingLeft>
@@ -3136,6 +3179,7 @@
                                             </Style>
                                           </Textbox>
                                           <ColSpan>2</ColSpan>
+                                          <rd:Selected>true</rd:Selected>
                                         </CellContents>
                                       </TablixCell>
                                       <TablixCell />
@@ -3773,7 +3817,6 @@
                             </RightBorder>
                           </Style>
                         </Rectangle>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -4030,6 +4073,117 @@ End Function
         </Field>
         <Field Name="RamojiFCCapLbl">
           <DataField>RamojiFCCapLbl</DataField>
+        </Field>
+        <Field Name="DCNO">
+          <DataField>DCNO</DataField>
+        </Field>
+        <Field Name="DCDate">
+          <DataField>DCDate</DataField>
+        </Field>
+        <Field Name="InwardNo">
+          <DataField>InwardNo</DataField>
+        </Field>
+        <Field Name="InwardDate">
+          <DataField>InwardDate</DataField>
+        </Field>
+        <Field Name="GRNNo">
+          <DataField>GRNNo</DataField>
+        </Field>
+        <Field Name="GRNDate">
+          <DataField>GRNDate</DataField>
+        </Field>
+        <Field Name="SupplierName">
+          <DataField>SupplierName</DataField>
+        </Field>
+        <Field Name="ReceiptDate">
+          <DataField>ReceiptDate</DataField>
+        </Field>
+        <Field Name="VehicleNo">
+          <DataField>VehicleNo</DataField>
+        </Field>
+        <Field Name="VendorInvNo">
+          <DataField>VendorInvNo</DataField>
+        </Field>
+        <Field Name="VendorInvDate">
+          <DataField>VendorInvDate</DataField>
+        </Field>
+        <Field Name="Qty">
+          <DataField>Qty</DataField>
+        </Field>
+        <Field Name="QtyFormat">
+          <DataField>QtyFormat</DataField>
+        </Field>
+        <Field Name="QtyAccepted">
+          <DataField>QtyAccepted</DataField>
+        </Field>
+        <Field Name="QtyAcceptedFormat">
+          <DataField>QtyAcceptedFormat</DataField>
+        </Field>
+        <Field Name="QtyReceived">
+          <DataField>QtyReceived</DataField>
+        </Field>
+        <Field Name="QtyReceivedFormat">
+          <DataField>QtyReceivedFormat</DataField>
+        </Field>
+        <Field Name="QtyRejected">
+          <DataField>QtyRejected</DataField>
+        </Field>
+        <Field Name="QtyRejectedFormat">
+          <DataField>QtyRejectedFormat</DataField>
+        </Field>
+        <Field Name="SNo">
+          <DataField>SNo</DataField>
+        </Field>
+        <Field Name="Rate">
+          <DataField>Rate</DataField>
+        </Field>
+        <Field Name="RateFormat">
+          <DataField>RateFormat</DataField>
+        </Field>
+        <Field Name="PONo">
+          <DataField>PONo</DataField>
+        </Field>
+        <Field Name="BasicAmt">
+          <DataField>BasicAmt</DataField>
+        </Field>
+        <Field Name="BasicAmtFormat">
+          <DataField>BasicAmtFormat</DataField>
+        </Field>
+        <Field Name="Discount">
+          <DataField>Discount</DataField>
+        </Field>
+        <Field Name="DiscountFormat">
+          <DataField>DiscountFormat</DataField>
+        </Field>
+        <Field Name="Make">
+          <DataField>Make</DataField>
+        </Field>
+        <Field Name="Vat">
+          <DataField>Vat</DataField>
+        </Field>
+        <Field Name="VatFormat">
+          <DataField>VatFormat</DataField>
+        </Field>
+        <Field Name="desc">
+          <DataField>desc</DataField>
+        </Field>
+        <Field Name="UOM">
+          <DataField>UOM</DataField>
+        </Field>
+        <Field Name="Totamt">
+          <DataField>Totamt</DataField>
+        </Field>
+        <Field Name="TotamtFormat">
+          <DataField>TotamtFormat</DataField>
+        </Field>
+        <Field Name="Spot">
+          <DataField>Spot</DataField>
+        </Field>
+        <Field Name="Indentor">
+          <DataField>Indentor</DataField>
+        </Field>
+        <Field Name="Purpose">
+          <DataField>Purpose</DataField>
         </Field>
       </Fields>
       <Query>

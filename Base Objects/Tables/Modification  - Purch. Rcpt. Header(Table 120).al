@@ -77,6 +77,7 @@ tableextension 50051 tableextension70000002 extends "Purch. Rcpt. Header"
             OptionMembers = ,Open,"Pending Approval",Released;
             OptionCaption = ' ,Open,Pending Approval,Released';
         }
+
     }
 
 

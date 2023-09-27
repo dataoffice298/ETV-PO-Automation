@@ -2,6 +2,8 @@ table 50216 "LC Details"
 {
     Caption = 'LC Details';
     DataClassification = ToBeClassified;
+    LookupPageId = "LC Detail List";
+    DrillDownPageId = "LC Detail List";
 
     fields
     {

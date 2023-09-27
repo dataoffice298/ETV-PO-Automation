@@ -91,6 +91,7 @@ report 50063 "Material Issue Slip"
             dataitem("Indent Line"; "Indent Line")
             {
                 DataItemLink = "Document No." = field("No.");
+                DataItemTableView = where("Qty Issued" = filter(<> 0)); // B2BSCM27SEP2023
                 column(Variant_Code; "Variant Code")
                 { }
 

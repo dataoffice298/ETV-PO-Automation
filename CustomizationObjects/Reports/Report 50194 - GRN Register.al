@@ -44,7 +44,6 @@ report 50194 "GRN Register"//B2BSSD14JUN2023
                         RgpInwardRecieptDate := PostedRGPInwardGRec."Receipt Date";
                     end;
 
-
                     if Item.Get("No.") then;
                     SNo += 1;
                     TempExcelBuffer.NewRow();

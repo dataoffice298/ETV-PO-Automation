@@ -203,13 +203,15 @@ report 50071 "GRN RECEIPT"
                     PurchaseLineGRec.Reset();
                     PurchaseLineGRec.SetRange("Document No.", PurchaseOrderGRec."No.");
                     if PurchaseLineGRec.FindSet() then begin
-                        IndentHeaderGRec.Reset();
-                        IndentHeaderGRec.SetRange("No.", PurchaseLineGRec."Indent No.");
-                        if IndentHeaderGRec.FindFirst() then begin
-                            IndentNo := IndentHeaderGRec."No.";
-                            IndentDate := IndentHeaderGRec."Document Date";
-                            Indentor := IndentHeaderGRec.Indentor;
-                        end;
+                        if (PurchaseLineGRec.Type = PurchaseLineGRec.Type::Item) or (PurchaseLineGRec.Type = PurchaseLineGRec.Type::"Fixed Asset") or (PurchaseLineGRec.Type = PurchaseLineGRec.Type::Description) then begin
+                            IndentHeaderGRec.Reset();
+                            IndentHeaderGRec.SetRange("No.", PurchaseLineGRec."Indent No.");
+                            if IndentHeaderGRec.FindFirst() then begin
+                                IndentNo := IndentHeaderGRec."No.";
+                                IndentDate := IndentHeaderGRec."Document Date";
+                                Indentor := IndentHeaderGRec.Indentor;
+                            end;
+                        end;//B2BSCM25SEP2023
                         BasicAmount := PurchaseLineGRec."Quantity Received" * PurchaseLineGRec."Direct Unit Cost";
                         DiscAmount := PurchaseLineGRec."Line Discount Amount";
                     end;
@@ -219,8 +221,8 @@ report 50071 "GRN RECEIPT"
                         InwardNo := GateEntryhdrGRecB2B."No.";
                         InwardDate := GateEntryhdrGRecB2B."Document Date";
                         DCNO := GateEntryhdrGRecB2B."Challan No.";
-                        DCDate := GateEntryhdrGRecB2B."Challan Date";
                     end;
+                    DCDate := GateEntryhdrGRecB2B."Challan Date";
                 end;
                 NetTotal := (BasicAmount + CGSTAmt + SGSTAmt);
             end;

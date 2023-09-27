@@ -268,7 +268,7 @@
                                                     </Style>
                                                   </TextRun>
                                                   <TextRun>
-                                                    <Value>=Fields!InwardNo.Value</Value>
+                                                    <Value>=first(Fields!InwardNo.Value)</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
                                                     </Style>
@@ -310,7 +310,7 @@
                                                     </Style>
                                                   </TextRun>
                                                   <TextRun>
-                                                    <Value>=Fields!InwardDate.Value</Value>
+                                                    <Value>=first(Fields!InwardDate.Value)</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
                                                       <Format>M/d/yyyy</Format>
@@ -369,7 +369,7 @@
                                                     </Style>
                                                   </TextRun>
                                                   <TextRun>
-                                                    <Value>=Fields!DCNO.Value</Value>
+                                                    <Value>=first(Fields!DCNO.Value)</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
                                                     </Style>
@@ -420,7 +420,7 @@
                                                     </Style>
                                                   </TextRun>
                                                   <TextRun>
-                                                    <Value>=Fields!DCDate.Value</Value>
+                                                    <Value>=first(Fields!DCDate.Value)</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
                                                       <FontWeight>Bold</FontWeight>
@@ -558,7 +558,7 @@
                                                     </Style>
                                                   </TextRun>
                                                   <TextRun>
-                                                    <Value>=Fields!VendorInvNo.Value</Value>
+                                                    <Value>=first(Fields!VendorInvNo.Value)</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
                                                     </Style>
@@ -608,7 +608,7 @@
                                                     </Style>
                                                   </TextRun>
                                                   <TextRun>
-                                                    <Value>=Fields!VendorInvDate.Value</Value>
+                                                    <Value>=first(Fields!VendorInvDate.Value)</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
                                                       <Format>M/d/yyyy</Format>
@@ -738,7 +738,7 @@
                                                     </Style>
                                                   </TextRun>
                                                   <TextRun>
-                                                    <Value>=Fields!ReceiptDate.Value</Value>
+                                                    <Value>=first(Fields!ReceiptDate.Value)</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
                                                       <FontWeight>Bold</FontWeight>
@@ -868,7 +868,7 @@
                                                     </Style>
                                                   </TextRun>
                                                   <TextRun>
-                                                    <Value>=Fields!Indent_No_.Value</Value>
+                                                    <Value>=first(Fields!Indent_No_.Value)</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
                                                       <FontWeight>Bold</FontWeight>
@@ -918,7 +918,7 @@
                                                     </Style>
                                                   </TextRun>
                                                   <TextRun>
-                                                    <Value>=Fields!IndentDate.Value</Value>
+                                                    <Value>=max(Fields!IndentDate.Value)</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
                                                       <Format>M/d/yyyy</Format>
@@ -1901,52 +1901,52 @@
                               <TablixBody>
                                 <TablixColumns>
                                   <TablixColumn>
-                                    <Width>1.23cm</Width>
+                                    <Width>1.01616cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>1.94437cm</Width>
+                                    <Width>1.73053cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>2.07667cm</Width>
+                                    <Width>1.86283cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>2.10313cm</Width>
+                                    <Width>1.88929cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>1.97083cm</Width>
+                                    <Width>1.75699cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>1.60042cm</Width>
+                                    <Width>1.38658cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>1.46813cm</Width>
+                                    <Width>1.25429cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>1.36229cm</Width>
+                                    <Width>1.14845cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>1.57396cm</Width>
+                                    <Width>1.36012cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>1.46813cm</Width>
+                                    <Width>1.25429cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>1.75917cm</Width>
+                                    <Width>1.54533cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>1.865cm</Width>
+                                    <Width>1.65116cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>1.65333cm</Width>
+                                    <Width>1.43949cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>1.60042cm</Width>
+                                    <Width>1.38658cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>1.44167cm</Width>
+                                    <Width>1.22783cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>1.83854cm</Width>
+                                    <Width>1.6247cm</Width>
                                   </TablixColumn>
                                 </TablixColumns>
                                 <TablixRows>
@@ -3039,9 +3039,9 @@
                                 </TablixMembers>
                               </TablixRowHierarchy>
                               <Top>8.17245cm</Top>
-                              <Left>0.19948cm</Left>
+                              <Left>2.11217cm</Left>
                               <Height>1.2cm</Height>
-                              <Width>26.95606cm</Width>
+                              <Width>23.53462cm</Width>
                               <ZIndex>26</ZIndex>
                               <Style>
                                 <Border>
@@ -3090,10 +3090,6 @@
       <Page>
         <PageHeight>21cm</PageHeight>
         <PageWidth>29.7cm</PageWidth>
-        <LeftMargin>0cm</LeftMargin>
-        <RightMargin>0cm</RightMargin>
-        <TopMargin>0cm</TopMargin>
-        <BottomMargin>0cm</BottomMargin>
         <ColumnSpacing>1.27cm</ColumnSpacing>
         <Style />
       </Page>

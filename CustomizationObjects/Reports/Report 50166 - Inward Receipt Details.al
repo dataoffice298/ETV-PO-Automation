@@ -14,6 +14,7 @@ report 50166 "Inward Receipt Details"
             dataitem("Posted Gate Entry Line_B2B"; "Posted Gate Entry Line_B2B")
             {
                 DataItemLink = "Entry Type" = field("Entry Type"), "Gate Entry No." = field("No.");
+                DataItemTableView = where("Source Type" = filter(<> Description)); //B2BSCM27SEP2023
 
                 trigger OnAfterGetRecord()
                 var
@@ -27,7 +28,11 @@ report 50166 "Inward Receipt Details"
                     INVOICEDate: Date;
                     SUPPLIERNAME: Text[50];
                 begin
-                    // SNo += 1;
+                    // SNo += 1;    //B2BSCM27SEP2023>>               
+                    Clear(CGSTAmt);
+                    Clear(SGSTAmt);
+                    Clear(IGSSTAmt);
+                    Clear(TotalAmount);    //B2BSCM27SEP2023<<
                     WindPa.Update(1, "Gate Entry No.");
                     if SourceNoGvar <> "Source No." then begin
                         SourceNoGvar := "Source No.";
@@ -36,17 +41,17 @@ report 50166 "Inward Receipt Details"
                         PurchaseHdr.SetRange("Document Type", PurchaseHdr."Document Type"::Order);
                         PurchaseHdr.SetRange("No.", "Posted Gate Entry Header_B2B"."Purchase Order No.");
                         if PurchaseHdr.FindFirst() then begin
+                            INVOICENO := PurchaseHdr."Vendor Invoice No.";  //B2BSCM27SEP2023
+                            INVOICEDate := PurchaseHdr."Vendor Invoice Date";  //B2BSCM27SEP2023
+                            SUPPLIERNAME := PurchaseHdr."Buy-from Vendor Name";  //B2BSCM27SEP2023
+                            GSTSetup.get();  //B2BSCM27SEP2023
                             PurchLine.Reset();
                             PurchLine.SetRange("Document No.", PurchaseHdr."No.");
                             PurchLine.SetRange("Document Type", PurchaseHdr."Document Type"::Order);
                             PurchLine.SetFilter("No.", '<>%1', '');
                             if PurchLine.FindSet() then
                                 repeat
-                                    INVOICENO := PurchaseHdr."Vendor Invoice No.";
-                                    INVOICEDate := PurchaseHdr."Vendor Invoice Date";
-                                    SUPPLIERNAME := PurchaseHdr."Buy-from Vendor Name";
                                     //Clear(IGSSTAmt);
-                                    GSTSetup.get();
                                     GetGSTAmounts(TaxTransactionValue, PurchLine, GSTSetup);
                                     TotalAmount := PurchLine."Line Amount" + IGSSTAmt + SGSTAmt + CGSTAmt;//B2BSSD14APR2023
                                 until PurchLine.Next() = 0;
@@ -75,7 +80,7 @@ report 50166 "Inward Receipt Details"
                     //B2BSSD03APR2023>>
                     TempExcelBuffer.AddColumn("Posted Gate Entry Line_B2B"."Unit of Measure", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("Posted Gate Entry Line_B2B".Quantity, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn(PurchLine."Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    TempExcelBuffer.AddColumn(PurchLine."Direct Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn(PurchLine."Line Discount %", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn(CGSTAmt, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn(SGSTAmt, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
@@ -182,9 +187,6 @@ report 50166 "Inward Receipt Details"
     var
         ComponentName: Code[30];
     begin
-        Clear(CGSTAmt);
-        Clear(SGSTAmt);
-        Clear(IGSSTAmt);
         GSTSetup.Get();
         ComponentName := GetComponentName(PurchaseLine, GSTSetup);
 

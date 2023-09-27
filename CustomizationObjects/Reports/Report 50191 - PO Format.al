@@ -275,7 +275,7 @@ report 50191 "PO FORMAT"
         }
 
     }
-    
+
     var
         transactionspecificTxt: Text[100];
         Transactionspecifcation: Record "Transaction Specification";

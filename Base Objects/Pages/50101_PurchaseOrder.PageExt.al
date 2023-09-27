@@ -25,7 +25,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             {
                 ApplicationArea = All;
                 Editable = true;//B2BSCM08SEP2023
-                ShowMandatory = true; //B2BSCM08SEP2023
+                                // ShowMandatory = true; //B2BSCM08SEP2023
             }
             field("EPCG No."; Rec."EPCG No.")
             {
@@ -37,7 +37,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             {
                 ShowMandatory = true;
                 ApplicationArea = all;
-                //  Editable = true;//B2BSCM08SEP2023
+                Editable = true;//B2BSCM08SEP2023
 
             }
             field("Import Type"; Rec."Import Type")
@@ -147,8 +147,11 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             var
                 Err001: Label 'Qty. to Accept and Qty. to Reject must not be greater than Quantity.';
                 Error002: TextConst ENN = 'Quantity Receive can not be Grater then QC Accepted Quantity';
+                ImportTypeError: TextConst ENN = 'Import type Must have value in Invoice details Tab';//B2BSCM25SEP2023
             begin
-
+                Rec.TestField("Import Type", ErrorInfo.Create(ImportTypeError, true, PurchaseHeader));//B2BSCM25SEP2023
+                Rec.TestField("EPCG Scheme");//B2BSCM25SEP2023
+                Rec.TestField("EPCG No.");//B2BSCM25SEP2023
                 GateEntry.Reset();
                 GateEntry.SetRange("Source No.", Rec."No.");
                 if GateEntry.FindFirst() then begin
@@ -219,7 +222,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         {
             trigger OnBeforeAction()
             var
-                ImportTypeError: TextConst ENN = 'Import type Must have value in Invoice details Tab';
+            //ImportTypeError: TextConst ENN = 'Import type Must have value in Invoice details Tab';
             begin
                 //B2BSSD16JUN2023>>
                 PurchLine.Reset();
@@ -232,7 +235,9 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                             PurchLine.TestField("Serial No.");
                             PurchLine.TestField(Make_B2B);
                             PurchLine.TestField("Model No.");
-                        end
+                        end;
+                        PurchLine.TestField("GST Group Code");//B2BSCM22SEP2023
+                        PurchLine.TestField("HSN/SAC Code");//B2BSCM22SEP2023
                     until PurchLine.Next() = 0;
                 end;
                 //B2BSSD16JUN2023<<
@@ -245,12 +250,12 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                         Error('There is a Released LC document against this Vendor. To proceed, please provide LC No. in Purchase Order');
                 end;
                 //B2BSSD29JUN2023>>
-                Rec.TestField("Import Type", ErrorInfo.Create(ImportTypeError, true, PurchaseHeader));
+                // Rec.TestField("Import Type", ErrorInfo.Create(ImportTypeError, true, PurchaseHeader));
                 Rec.TestField("Payment Terms Code");
                 Rec.TestField("Transaction Specification");
                 Rec.TestField("Transaction Type");
                 Rec.TestField("Transport Method");
-                Rec.TestField("EPCG Scheme");
+                // Rec.TestField("EPCG Scheme");
                 //B2BSSD29JUN2023<<
             end;
         }

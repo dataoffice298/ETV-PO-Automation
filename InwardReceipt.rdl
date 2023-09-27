@@ -836,7 +836,7 @@
                                                     </Style>
                                                   </TextRun>
                                                   <TextRun>
-                                                    <Value>=Fields!Purpose.Value</Value>
+                                                    <Value>=Fields!Indentor.Value</Value>
                                                     <Style>
                                                       <FontWeight>Normal</FontWeight>
                                                     </Style>
@@ -935,7 +935,7 @@
                                                     </Style>
                                                   </TextRun>
                                                   <TextRun>
-                                                    <Value>=Fields!Indentor.Value</Value>
+                                                    <Value>=Fields!Purpose.Value</Value>
                                                     <Style>
                                                       <FontWeight>Normal</FontWeight>
                                                     </Style>
@@ -3179,7 +3179,6 @@
                                             </Style>
                                           </Textbox>
                                           <ColSpan>2</ColSpan>
-                                          <rd:Selected>true</rd:Selected>
                                         </CellContents>
                                       </TablixCell>
                                       <TablixCell />
@@ -4098,9 +4097,6 @@ End Function
         <Field Name="ReceiptDate">
           <DataField>ReceiptDate</DataField>
         </Field>
-        <Field Name="VehicleNo">
-          <DataField>VehicleNo</DataField>
-        </Field>
         <Field Name="VendorInvNo">
           <DataField>VendorInvNo</DataField>
         </Field>
@@ -4184,6 +4180,9 @@ End Function
         </Field>
         <Field Name="Purpose">
           <DataField>Purpose</DataField>
+        </Field>
+        <Field Name="VehicleNo">
+          <DataField>VehicleNo</DataField>
         </Field>
       </Fields>
       <Query>

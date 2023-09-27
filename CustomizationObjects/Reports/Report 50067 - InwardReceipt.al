@@ -129,8 +129,6 @@ report 50067 "INWARD RECEIPT"
             { }
             Column(ReceiptDate; ReceiptDate)
             { }
-            column(VehicleNo; VehicleNo)
-            { }
             column(VendorInvNo; VendorInvNo)
             { }
             column(VendorInvDate; VendorInvDate)
@@ -169,6 +167,10 @@ report 50067 "INWARD RECEIPT"
             { }
             column(Purpose; Purpose)
             { }
+            column(VehicleNo; VehicleNo)
+            { }
+
+
 
             trigger OnPreDataItem();
             begin
@@ -201,7 +203,7 @@ report 50067 "INWARD RECEIPT"
                     desc := PurchaseLineGRec.Description;
                     UOM := PurchaseLineGRec."Unit of Measure";
                     Totamt := PurchaseLineGRec."Amount Including VAT";
-                   // NetTotal += PurchaseLineGRec."Line Amount";
+                    // NetTotal += PurchaseLineGRec."Line Amount";
 
                     PurchaseHdr.reset();
                     PurchaseHdr.SetRange("No.", IndNo1);
@@ -211,13 +213,13 @@ report 50067 "INWARD RECEIPT"
                         Spot := PurchaseHdr."Location Code";
                         Indentor := PurchaseHdr.Indenter;
                         Purpose := PurchaseHdr.Purpose;
+                        VehicleNo := PurchaseHdr."Vehicle No.";
                     end;
 
                     PurchaseRcptHdr.Reset();
                     PurchaseRcptHdr.SetRange("Order No.", IndNo1);
                     If PurchaseRcptHdr.findfirst then
-                        VehicleNo := PurchaseRcptHdr."Vehicle No.";
-                    GRNNo := PurchaseRcptHdr."No.";
+                        GRNNo := PurchaseRcptHdr."No.";
                     GRNDate := PurchaseRcptHdr."Document Date";
                     SupplierName := PurchaseRcptHdr."Buy-from Vendor No.";
                     ReceiptDate := PurchaseRcptHdr."Posting Date";
@@ -359,4 +361,4 @@ report 50067 "INWARD RECEIPT"
         NetTotal: Decimal;
 
 
-}      
+}

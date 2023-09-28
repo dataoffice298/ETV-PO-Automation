@@ -133,34 +133,17 @@ report 50067 "INWARD RECEIPT"
             { }
             column(VendorInvDate; VendorInvDate)
             { }
-            column(Qty; Qty)
-            { }
-            column(QtyAccepted; QtyAccepted)
-            { }
-            column(QtyReceived; QtyReceived)
-            { }
-            column(QtyRejected; QtyRejected)
-            { }
-            column(SNo; SNo)
-            { }
-            column(Rate; Rate)
-            { }
-            column(PONo; PONo)
-            { }
-            column(BasicAmt; BasicAmt)
-            { }
-            column(Discount; Discount)
-            { }
-            column(Make; Make)
-            { }
-            column(Vat; Vat)
-            { }
-            column(desc; desc)
-            { }
-            column(UOM; UOM)
-            { }
-            column(Totamt; Totamt)
-            { }
+            // column(Qty; Qty)
+            // { }
+            // column(QtyAccepted; QtyAccepted)
+            // { }
+            // column(QtyReceived; QtyReceived)
+            // { }
+            // column(QtyRejected; QtyRejected)
+            // { }
+            // column(SNo; SNo)
+            // { }
+
             column(Spot; Spot)
             { }
             column(Indentor; Indentor)
@@ -169,8 +152,122 @@ report 50067 "INWARD RECEIPT"
             { }
             column(VehicleNo; VehicleNo)
             { }
+            column(IndNo1; IndNo1)
+            { }
+            dataitem("Indent Line"; "Indent Line")
+            {
+                DataItemLink = "Document No." = field("No.");
+                column(Document_No_; "Document No.")
+                { }
+                column(Line_No_; "Line No.")
+                {
+
+                }
+                column(Qty; Qty)
+                { }
+                column(QtyAccepted; QtyAccepted)
+                { }
+                column(QtyReceived; QtyReceived)
+                { }
+                column(QtyRejected; QtyRejected)
+                { }
+                column(SNo; SNo)
+                { }
+                column(UOM; UOM)
+                { }
+                column(Rate; Rate)
+                { }
+                column(PONo; PONo)
+                { }
+                column(BasicAmt; BasicAmt)
+                { }
+                column(Discount; Discount)
+                { }
+                column(Make; Make)
+                { }
+                column(Vat; Vat)
+                { }
+                column(desc; desc)
+                { }
+
+                column(Totamt; Totamt)
+                { }
+                trigger OnAfterGetRecord()
+                begin
+                    Clear(Qty);
+                    Clear(QtyReceived);
+                    Clear(QtyRejected);
+                    Clear(QtyAccepted);
+                    IndentReqLine.reset;
+                    IndentReqLine.setrange("Indent No.", "Document No.");
+                    IndentReqLine.SetRange("Item No.", "No.");
+                    If IndentReqLine.FindSet() then begin
+                        IndNo := IndentReqLine."Document No.";
+
+                        PurchaseLineGRec.Reset();
+                        PurchaseLineGRec.SetRange("Indent Req No", IndNo);
+                        PurchaseLineGRec.SetRange("No.", "No.");
+                        If PurchaseLineGRec.FindSet() then begin
+                            IndNo1 := PurchaseLineGRec."Document No.";
+                            Qty := PurchaseLineGRec.Quantity;
+                            QtyReceived := PurchaseLineGRec."Quantity Received";
+                            QtyRejected := PurchaseLineGRec."Quantity Rejected B2B";
+                            QtyAccepted := PurchaseLineGRec."Quantity Accepted B2B";
+                            Rate := PurchaseLineGRec."Direct Unit Cost";
+                            BasicAmt := PurchaseLineGRec."Line Amount";
+                            PONo := PurchaseLineGRec."Document No.";
+                            Discount := PurchaseLineGRec."Line Discount %";
+                            Make := PurchaseLineGRec.Make_B2B;
+                            Vat := PurchaseLineGRec."VAT %";
+                            desc := PurchaseLineGRec.Description;
+                            UOM := PurchaseLineGRec."Unit of Measure";
+                            Totamt := PurchaseLineGRec."Amount Including VAT";
+                        end;
+                        // NetTotal += PurchaseLineGRec."Line Amount";
+                    end;
+
+                end;
+
+            }
+
+            trigger OnAfterGetRecord()
+            begin
+
+                IndentReqLine.Reset();
+                IndentReqLine.setrange("Indent No.", "No.");
+                If IndentReqLine.FindFirst() then begin
+                    PurchaseHdr.Reset();
+                    PurchaseHdr.SetRange("Indent Requisition No", IndentReqLine."Document No.");
+                    if PurchaseHdr.FindFirst() then begin
+                        VendorInvNo := PurchaseHdr."Vendor Invoice No.";
+                        VendorInvDate := PurchaseHdr."Vendor Invoice Date";
+                        Spot := PurchaseHdr."Location Code";
+                        Indentor := PurchaseHdr.Indenter;
+                        Purpose := PurchaseHdr.Purpose;
+                        VehicleNo := PurchaseHdr."Vehicle No.";
+                        PurchaseRcptHdr.Reset();
+                        PurchaseRcptHdr.SetRange("Order No.", PurchaseHdr."No.");
+                        If PurchaseRcptHdr.FindFirst() then
+                            GRNNo := PurchaseRcptHdr."No.";
+                        GRNDate := PurchaseRcptHdr."Document Date";
+                        SupplierName := PurchaseRcptHdr."Buy-from Vendor No.";
+                        ReceiptDate := PurchaseRcptHdr."Posting Date";
+
+                        GateEntryhdrGRecB2B.Reset();
+                        GateEntryhdrGRecB2B.SetRange("Purchase Order No.", IndNo1);
+                        if GateEntryhdrGRecB2B.FindFirst() then begin
+                            InwardNo := GateEntryhdrGRecB2B."Gate Entry No.";
+                            InwardDate := GateEntryhdrGRecB2B."Posting Date";
+                            DCNO := GateEntryhdrGRecB2B."Challan No.";
+                            DCDate := GateEntryhdrGRecB2B."Challan Date";
 
 
+                        end;
+                    end;
+                end;
+
+
+            end;
 
             trigger OnPreDataItem();
             begin
@@ -179,66 +276,10 @@ report 50067 "INWARD RECEIPT"
                 CompanyInfo.CALCFIELDS(Picture);
             end;
 
-            trigger OnAfterGetRecord()
-            begin
-                IndentReqLine.reset;
-                IndentReqLine.setrange("Indent No.", "No.");
-                If IndentReqLine.FindFirst() then begin
-                    IndNo := IndentReqLine."Document No.";
-
-                    PurchaseLineGRec.Reset();
-                    PurchaseLineGRec.SetRange("Indent Req No", IndNo);
-                    If PurchaseLineGRec.FindFirst() then
-                        IndNo1 := PurchaseLineGRec."Document No.";
-                    Qty := PurchaseLineGRec.Quantity;
-                    QtyReceived := PurchaseLineGRec."Quantity Received";
-                    QtyAccepted := PurchaseLineGRec."Quantity Rejected B2B";
-                    QtyAccepted := PurchaseLineGRec."Quantity Accepted B2B";
-                    Rate := PurchaseLineGRec."Direct Unit Cost";
-                    BasicAmt := PurchaseLineGRec."Line Amount";
-                    PONo := PurchaseLineGRec."Document No.";
-                    Discount := PurchaseLineGRec."Line Discount %";
-                    Make := PurchaseLineGRec.Make_B2B;
-                    Vat := PurchaseLineGRec."VAT %";
-                    desc := PurchaseLineGRec.Description;
-                    UOM := PurchaseLineGRec."Unit of Measure";
-                    Totamt := PurchaseLineGRec."Amount Including VAT";
-                    // NetTotal += PurchaseLineGRec."Line Amount";
-
-                    PurchaseHdr.reset();
-                    PurchaseHdr.SetRange("No.", IndNo1);
-                    If PurchaseHdr.FindFirst() then begin
-                        VendorInvNo := PurchaseHdr."Vendor Invoice No.";
-                        VendorInvDate := PurchaseHdr."Vendor Invoice Date";
-                        Spot := PurchaseHdr."Location Code";
-                        Indentor := PurchaseHdr.Indenter;
-                        Purpose := PurchaseHdr.Purpose;
-                        VehicleNo := PurchaseHdr."Vehicle No.";
-                    end;
-
-                    PurchaseRcptHdr.Reset();
-                    PurchaseRcptHdr.SetRange("Order No.", IndNo1);
-                    If PurchaseRcptHdr.findfirst then
-                        GRNNo := PurchaseRcptHdr."No.";
-                    GRNDate := PurchaseRcptHdr."Document Date";
-                    SupplierName := PurchaseRcptHdr."Buy-from Vendor No.";
-                    ReceiptDate := PurchaseRcptHdr."Posting Date";
-
-                    GateEntryhdrGRecB2B.Reset();
-                    GateEntryhdrGRecB2B.SetRange("Purchase Order No.", IndNo1);
-                    if GateEntryhdrGRecB2B.FindFirst() then begin
-                        InwardNo := GateEntryhdrGRecB2B."Gate Entry No.";
-                        InwardDate := GateEntryhdrGRecB2B."Posting Date";
-                        DCNO := GateEntryhdrGRecB2B."Challan No.";
-                        DCDate := GateEntryhdrGRecB2B."Challan Date";
 
 
-                    end;
-                end;
+        }//B2B PJ 27092023 <<<<<<<<<<<<<<<<
 
-            end;
-
-        }
     }
 
     requestpage
@@ -298,7 +339,7 @@ report 50067 "INWARD RECEIPT"
         TotalAmtCapLbl: Label 'Total Amt';
         TotBasicValueCapLbl: Label 'Total Basic Value';
         TotalCapLbl: Label 'TOTAL';
-        TotalAmountCapLbl: Label 'TOTAL AMOUNT--';
+        TotalAmountCapLbl: Label 'TOTAL AMOUNT';
         Discount2CapLbl: label 'Discount--';
         TaxCapLbl: Label 'Tax--';
         FrgtChargesCapLbl: Label 'Frgt charges--';
@@ -311,7 +352,7 @@ report 50067 "INWARD RECEIPT"
         AccountsDeptCapLbl: Label 'ACCOUNTS DEPT';
         MakeCapLbl: Label 'MAKE';
         PackCapLbl: Label 'PACK';
-        NetAmtCapLbl: Label 'NET AMOUNT --';
+        NetAmtCapLbl: Label 'NET AMOUNT';
         RamojiFCCapLbl: Label 'RAMOJI FILM CITY - HYDERBAD';
         PurchaseOrderGRec: Record "Purchase Header";
         PurchaseHdr: Record "Purchase Header";
@@ -328,7 +369,7 @@ report 50067 "INWARD RECEIPT"
         IndentReqLine: Record "Indent Requisitions";
 
         InwardDate: Date;
-        InwardNo: Code[30];
+        InwardNo: Code[20];
         DCNO: Code[20];
         DCDate: Date;
         IndNo: Code[20];
@@ -336,10 +377,10 @@ report 50067 "INWARD RECEIPT"
 
         GRNNo: Code[20];
         GRNDate: Date;
-        SupplierName: Text[50];
+        SupplierName: Code[20];
         ReceiptDate: Date;
         VehicleNo: Code[20];
-        VendorInvNo: Code[20];
+        VendorInvNo: Code[35];
         VendorInvDate: date;
         Qty: Decimal;
         QtyReceived: Decimal;
@@ -350,15 +391,16 @@ report 50067 "INWARD RECEIPT"
         Discount: Decimal;
         SNo: Code[20];
         PONo: Code[20];
-        Make: Code[20];
+        Make: Code[50];
         Vat: Decimal;
         Totamt: decimal;
         desc: Text[100];
-        UOM: Code[20];
+        UOM: Text[50];
         Spot: Code[20];
         Indentor: Code[20];
         Purpose: Text[100];
         NetTotal: Decimal;
+        IteNo: Code[20];
 
 
 }

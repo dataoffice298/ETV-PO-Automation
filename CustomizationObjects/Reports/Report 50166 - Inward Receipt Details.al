@@ -48,13 +48,17 @@ report 50166 "Inward Receipt Details"
                             PurchLine.Reset();
                             PurchLine.SetRange("Document No.", PurchaseHdr."No.");
                             PurchLine.SetRange("Document Type", PurchaseHdr."Document Type"::Order);
-                            PurchLine.SetFilter("No.", '<>%1', '');
-                            if PurchLine.FindSet() then
-                                repeat
-                                    //Clear(IGSSTAmt);
-                                    GetGSTAmounts(TaxTransactionValue, PurchLine, GSTSetup);
-                                    TotalAmount := PurchLine."Line Amount" + IGSSTAmt + SGSTAmt + CGSTAmt;//B2BSSD14APR2023
-                                until PurchLine.Next() = 0;
+                            //   PurchLine.SetFilter("No.", '<>%1', '');
+                            PurchLine.setrange("Line No.", "Posted Gate Entry Line_B2B"."Line No.");
+                            if PurchLine.FindSet() then begin
+                                GetGSTAmounts(TaxTransactionValue, PurchLine, GSTSetup);
+                                TotalAmount := PurchLine."Line Amount" + IGSSTAmt + SGSTAmt + CGSTAmt;//B2BSSD14APR2023
+                            end;
+                            // repeat
+                            //Clear(IGSSTAmt);
+                            GetGSTAmounts(TaxTransactionValue, PurchLine, GSTSetup);
+                            TotalAmount := PurchLine."Line Amount" + IGSSTAmt + SGSTAmt + CGSTAmt;//B2BSSD14APR2023
+                                                                                                  //  until PurchLine.Next() = 0;
                         end;
                     end;
                     //B2BSSD03APR2023<<

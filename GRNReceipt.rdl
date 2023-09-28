@@ -24,7 +24,7 @@
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>7.77208in</Height>
+                  <Height>7.54747in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -1479,7 +1479,7 @@
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Fields!BasicAmount.Value</Value>
+                                      <Value>=sum(Fields!NetTotal.Value)</Value>
                                       <Style>
                                         <FontSize>8pt</FontSize>
                                         <Format>0.00;(0.00)</Format>
@@ -1663,7 +1663,7 @@
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Fields!NetTotal.Value</Value>
+                                      <Value>=sum(Fields!NetTotal.Value)</Value>
                                       <Style>
                                         <FontSize>8pt</FontSize>
                                         <Format>0.00;(0.00)</Format>
@@ -1730,7 +1730,7 @@
                               </Style>
                             </Textbox>
                             <Line Name="Line1">
-                              <Top>17.93558cm</Top>
+                              <Top>17.36408cm</Top>
                               <Left>1.50495cm</Left>
                               <Height>0cm</Height>
                               <Width>26.25958cm</Width>
@@ -1741,6 +1741,38 @@
                                 </Border>
                               </Style>
                             </Line>
+                            <Textbox Name="EnteredbyCapLbl">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=Fields!EnteredbyCapLbl.Value</Value>
+                                      <Style>
+                                        <FontSize>11pt</FontSize>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style />
+                                </Paragraph>
+                              </Paragraphs>
+                              <rd:DefaultName>EnteredbyCapLbl</rd:DefaultName>
+                              <Top>17.75037cm</Top>
+                              <Left>2.65324cm</Left>
+                              <Height>0.94396cm</Height>
+                              <Width>3.73849cm</Width>
+                              <ZIndex>21</ZIndex>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
                             <Textbox Name="SectioninChargeCapLbl">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
@@ -1758,11 +1790,11 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>SectioninChargeCapLbl</rd:DefaultName>
-                              <Top>18.22662cm</Top>
-                              <Left>7.22261cm</Left>
+                              <Top>17.75037cm</Top>
+                              <Left>7.17233cm</Left>
                               <Height>0.94396cm</Height>
                               <Width>3.90229cm</Width>
-                              <ZIndex>21</ZIndex>
+                              <ZIndex>22</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -1789,11 +1821,11 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>StoresinChargeCapLbl</rd:DefaultName>
-                              <Top>18.22662cm</Top>
+                              <Top>17.75037cm</Top>
                               <Left>11.94752cm</Left>
                               <Height>0.94396cm</Height>
                               <Width>4.01318cm</Width>
-                              <ZIndex>22</ZIndex>
+                              <ZIndex>23</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -1820,11 +1852,11 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>PurchDeptCapLbl</rd:DefaultName>
-                              <Top>18.22662cm</Top>
+                              <Top>17.75037cm</Top>
                               <Left>16.83491cm</Left>
                               <Height>0.94396cm</Height>
                               <Width>3.74354cm</Width>
-                              <ZIndex>23</ZIndex>
+                              <ZIndex>24</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -1851,11 +1883,11 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>AccountsDeptCapLbl</rd:DefaultName>
-                              <Top>18.22662cm</Top>
+                              <Top>17.75037cm</Top>
                               <Left>21.50988cm</Left>
                               <Height>0.94396cm</Height>
                               <Width>3.73582cm</Width>
-                              <ZIndex>24</ZIndex>
+                              <ZIndex>25</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -2712,14 +2744,14 @@
                                       </TablixCell>
                                       <TablixCell>
                                         <CellContents>
-                                          <Textbox Name="Textbox24">
+                                          <Textbox Name="QtyAccepted">
                                             <CanGrow>true</CanGrow>
                                             <KeepTogether>true</KeepTogether>
                                             <Paragraphs>
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value />
+                                                    <Value>=Fields!QtyAccepted.Value</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
                                                     </Style>
@@ -2728,7 +2760,7 @@
                                                 <Style />
                                               </Paragraph>
                                             </Paragraphs>
-                                            <rd:DefaultName>Textbox24</rd:DefaultName>
+                                            <rd:DefaultName>QtyAccepted</rd:DefaultName>
                                             <Style>
                                               <Border>
                                                 <Color>LightGrey</Color>
@@ -2744,14 +2776,14 @@
                                       </TablixCell>
                                       <TablixCell>
                                         <CellContents>
-                                          <Textbox Name="Textbox26">
+                                          <Textbox Name="QtyRejected">
                                             <CanGrow>true</CanGrow>
                                             <KeepTogether>true</KeepTogether>
                                             <Paragraphs>
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value />
+                                                    <Value>=Fields!QtyRejected.Value</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
                                                     </Style>
@@ -2760,7 +2792,7 @@
                                                 <Style />
                                               </Paragraph>
                                             </Paragraphs>
-                                            <rd:DefaultName>Textbox26</rd:DefaultName>
+                                            <rd:DefaultName>QtyRejected</rd:DefaultName>
                                             <Style>
                                               <Border>
                                                 <Color>LightGrey</Color>
@@ -3003,14 +3035,18 @@
                                   </TablixMember>
                                   <TablixMember>
                                     <Group Name="Details" />
+                                    <TablixMembers>
+                                      <TablixMember />
+                                    </TablixMembers>
                                   </TablixMember>
                                 </TablixMembers>
                               </TablixRowHierarchy>
+                              <DataSetName>DataSet_Result</DataSetName>
                               <Top>8.17245cm</Top>
                               <Left>2.11217cm</Left>
                               <Height>1.2cm</Height>
                               <Width>23.53462cm</Width>
-                              <ZIndex>25</ZIndex>
+                              <ZIndex>26</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -3040,7 +3076,7 @@
                               <Left>2.11217cm</Left>
                               <Height>0.94396cm</Height>
                               <Width>4.11396cm</Width>
-                              <ZIndex>26</ZIndex>
+                              <ZIndex>27</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -3075,7 +3111,7 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet_Result</DataSetName>
-            <Height>7.77208in</Height>
+            <Height>7.54747in</Height>
             <Width>11.44419in</Width>
             <Style>
               <Border>
@@ -3084,10 +3120,10 @@
             </Style>
           </Tablix>
         </ReportItems>
-        <Height>19.74109cm</Height>
+        <Height>19.21192cm</Height>
         <Style />
       </Body>
-      <Width>29.06823cm</Width>
+      <Width>29.06824cm</Width>
       <Page>
         <PageHeight>21cm</PageHeight>
         <PageWidth>29.7cm</PageWidth>
@@ -3345,6 +3381,12 @@ End Function
         <Field Name="IndentDate">
           <DataField>IndentDate</DataField>
         </Field>
+        <Field Name="TotalAmount1">
+          <DataField>TotalAmount1</DataField>
+        </Field>
+        <Field Name="TotalAmount1Format">
+          <DataField>TotalAmount1Format</DataField>
+        </Field>
         <Field Name="Indent_No_">
           <DataField>Indent_No_</DataField>
         </Field>
@@ -3407,6 +3449,18 @@ End Function
         </Field>
         <Field Name="DiscAmountFormat">
           <DataField>DiscAmountFormat</DataField>
+        </Field>
+        <Field Name="QtyAccepted">
+          <DataField>QtyAccepted</DataField>
+        </Field>
+        <Field Name="QtyAcceptedFormat">
+          <DataField>QtyAcceptedFormat</DataField>
+        </Field>
+        <Field Name="QtyRejected">
+          <DataField>QtyRejected</DataField>
+        </Field>
+        <Field Name="QtyRejectedFormat">
+          <DataField>QtyRejectedFormat</DataField>
         </Field>
       </Fields>
       <Query>

@@ -147,6 +147,8 @@ report 50071 "GRN RECEIPT"
             { }
             column(IndentDate; IndentDate)
             { }
+            column(TotalAmount1; TotalAmount1)
+            { }
             dataitem("Purch. Rcpt. Line"; "Purch. Rcpt. Line")
             {
                 DataItemLinkReference = "Purch. Rcpt. Header";
@@ -184,12 +186,35 @@ report 50071 "GRN RECEIPT"
                 { }
                 column(DiscAmount; DiscAmount)
                 { }
+                column(QtyAccepted; QtyAccepted)
+                { }
+                column(QtyRejected; QtyRejected)
+                { }
+
 
                 trigger OnAfterGetRecord()
                 begin
+                    Clear(QtyAccepted); //B2BSCM27SEP2023>>
+                    Clear(QtyRejected);
+                    Clear(BasicAmount);
+                    Clear(DiscAmount);
+                    Clear(NetTotal);  //B2BSCM27SEP2023<<
                     Clear(NumberText);
                     CheckGRec.InitTextVariable;
                     CheckGRec.FormatNoText(NumberText, Round(NetTotal, 1, '='), "Currency Code");
+                    //B2BSCM27SEP2023>>
+                    PurchaseLineGRec.Reset();
+                    PurchaseLineGRec.SetRange("Document No.", "Order No.");
+                    PurchaseLineGRec.SetRange("No.", "No.");
+                    if PurchaseLineGRec.FindSet() then begin
+                        QtyAccepted := PurchaseLineGRec."Quantity Accepted B2B";
+                        QtyRejected := PurchaseLineGRec."Quantity Rejected B2B";
+                        // BasicAmount := PurchaseLineGRec."Quantity Received" * PurchaseLineGRec."Direct Unit Cost";
+                        BasicAmount := PurchaseLineGRec."Line Amount";
+                        DiscAmount := PurchaseLineGRec."Line Discount Amount";
+                        // NetTotal := (BasicAmount - DiscAmount + CGSTAmt + SGSTAmt);
+                        NetTotal := PurchaseLineGRec."Line Amount";
+                    end; //B2BSCM27SEP2023<<
                 end;
             }
             trigger OnAfterGetRecord()
@@ -212,8 +237,10 @@ report 50071 "GRN RECEIPT"
                                 Indentor := IndentHeaderGRec.Indentor;
                             end;
                         end;//B2BSCM25SEP2023
-                        BasicAmount := PurchaseLineGRec."Quantity Received" * PurchaseLineGRec."Direct Unit Cost";
-                        DiscAmount := PurchaseLineGRec."Line Discount Amount";
+
+
+                        // BasicAmount := PurchaseLineGRec."Quantity Received" * PurchaseLineGRec."Direct Unit Cost";
+                        // DiscAmount := PurchaseLineGRec."Line Discount Amount";
                     end;
                     GateEntryhdrGRecB2B.Reset();
                     GateEntryhdrGRecB2B.SetRange("Purchase Order No.", "Order No.");
@@ -224,7 +251,8 @@ report 50071 "GRN RECEIPT"
                     end;
                     DCDate := GateEntryhdrGRecB2B."Challan Date";
                 end;
-                NetTotal := (BasicAmount + CGSTAmt + SGSTAmt);
+                // NetTotal := (BasicAmount + CGSTAmt + SGSTAmt); 
+
             end;
 
             trigger OnPreDataItem();
@@ -375,5 +403,9 @@ report 50071 "GRN RECEIPT"
         SNo: Integer;
         Purpose: Text[100];
         InwardNo: Code[30];
+        QtyAccepted: Decimal; //B2BSCM27SEP2023
+        QtyRejected: Decimal; //B2BSCM27SEP2023
+        TotalAmount: Decimal; //B2BSCM27SEP2023
+        TotalAmount1: Decimal; //B2BSCM27SEP2023
     //B2BMMOn06Oct2022<<
 }

@@ -8,5 +8,10 @@ tableextension 50075 UserSetUp extends "User Setup"//B2BSSD20MAR2023
             Caption = 'User Location';
             TableRelation = Location;
         }
+        field(50101; Stores; Boolean)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Stores';
+        }
     }
 }

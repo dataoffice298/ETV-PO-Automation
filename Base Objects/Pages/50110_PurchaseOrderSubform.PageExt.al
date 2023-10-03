@@ -209,6 +209,18 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             ShowMandatory = true;
         }
         //B2BSCM11SEP2023<<
+
+        modify("Qty. to Receive")
+        {
+            trigger OnBeforeValidate()
+            begin
+                if PurchHeader.Get(Rec."Document Type", Rec."Document No.") then begin
+                    if UserSetup.Get(PurchHeader."User ID") and not (UserSetup.Stores) then
+                        Error('Qty.to Receive field must be Modify only the user Qty.to Return and Qty.to Receive must be true');
+                end;
+
+            end;
+        }
     }
 
 
@@ -482,6 +494,16 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             }
         }
         //B2BSSD10Feb2023>>
+        modify("Item Tracking Lines")
+        {
+            trigger OnAfterAction()
+            begin
+                if PurchHeader.Get(Rec."Document Type", Rec."Document No.") then begin
+                    if UserSetup.Get(PurchHeader."User ID") and not (UserSetup.Stores) then
+                        Error('Qty.to Receive field must be Modify only the user Qty.to Return and Qty.to Receive must be true');
+                end;
+            end;
+        }
     }
 
     procedure CreateGateEntries(EntryType: Option Inward,Outward; DocType: Option RGP,NRGP)
@@ -711,6 +733,8 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         FALineNo: Integer;//B2BSSD26MAY2023
         //B2BSS07Feb2023>>
         purchaseline2: Record "Purchase Line";//B2BSSD26MAY2023
+        UserSetup: Record "User Setup";
+        PurchHeader: Record "Purchase Header";
 
     //B2BSSD07Feb2023 Import Start >>
     local procedure FixedAssetsReadExcelSheet()

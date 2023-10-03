@@ -10,6 +10,10 @@ pageextension 50116 UserSetUpExt_B2B extends "User Setup"
                 Caption = 'User Location';
                 TableRelation = Location;
             }
+           field(Stores;Rec.Stores)
+           {
+            ApplicationArea = all;
+           }
         }
     }
 }

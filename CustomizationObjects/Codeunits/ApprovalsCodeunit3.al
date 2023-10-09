@@ -1,4 +1,5 @@
 codeunit 50014 "Approvals MGt 3"
+
 {
     trigger OnRun()
     begin
@@ -6,90 +7,90 @@ codeunit 50014 "Approvals MGt 3"
     end;
 
     [IntegrationEvent(false, false)]
-    Procedure OnSendQuoteComparisionIRHForApproval(var QuoteComparisionIRH: Record "Indent Req Header")
+    Procedure OnSendIndentRequHdrForApproval(var IndentRequHdr: Record "Indent Req Header")
     begin
     end;
 
     [IntegrationEvent(false, false)]
-    Procedure OnCancelQuoteComparisionIRHForApproval(var QuoteComparisionIRH: Record "Indent Req Header")
+    Procedure OnCancelIndentRequHdrForApproval(var IndentRequHdr: Record "Indent Req Header")
     begin
     end;
 
     //Create events for workflow
-    procedure RunworkflowOnSendQuoteComparisionIRHforApprovalCode(): code[128]
+    procedure RunworkflowOnSendIndentRequHdrforApprovalCode(): code[128]
     begin
-        exit(CopyStr(UpperCase('RunworkflowOnSendQuoteComparisionIRHforApproval'), 1, 128));
+        exit(CopyStr(UpperCase('RunworkflowOnSendIndentRequHdrforApproval'), 1, 128));
     end;
 
 
-    [EventSubscriber(ObjectType::Codeunit, codeunit::"Approvals MGt 3", 'OnSendQuoteComparisionIRHForApproval', '', true, true)]
-    local procedure RunworkflowonsendQuoteComparisionIRHForApproval(var QuoteComparisionIRH: Record "Indent Req Header")
+    [EventSubscriber(ObjectType::Codeunit, codeunit::"Approvals MGt 3", 'OnSendIndentRequHdrForApproval', '', true, true)]
+    local procedure RunworkflowonsendIndentRequHdrForApproval(var IndentRequHdr: Record "Indent Req Header")
     begin
-        WorkflowManagement.HandleEvent(RunworkflowOnSendQuoteComparisionIRHforApprovalCode(), QuoteComparisionIRH);
+        WorkflowManagement.HandleEvent(RunworkflowOnSendIndentRequHdrforApprovalCode(), IndentRequHdr);
     end;
 
-    procedure RunworkflowOnCancelQuoteComparisionIRHforApprovalCode(): code[128]
+    procedure RunworkflowOnCancelIndentRequHdrforApprovalCode(): code[128]
     begin
-        exit(CopyStr(UpperCase('OnCancelQuoteComparisionIRHForApproval'), 1, 128));
+        exit(CopyStr(UpperCase('OnCancelIndentRequHdrForApproval'), 1, 128));
     end;
 
-    [EventSubscriber(ObjectType::Codeunit, codeunit::"Approvals MGt 3", 'OnCancelQuoteComparisionIRHForApproval', '', true, true)]
+    [EventSubscriber(ObjectType::Codeunit, codeunit::"Approvals MGt 3", 'OnCancelIndentRequHdrForApproval', '', true, true)]
 
-    local procedure RunworkflowonCancelQuoteComparisionIRHForApproval(var QuoteComparisionIRH: Record "Indent Req Header")
+    local procedure RunworkflowonCancelIndentRequHdrForApproval(var IndentRequHdr: Record "Indent Req Header")
     begin
-        WorkflowManagement.HandleEvent(RunworkflowOncancelQuoteComparisionIRHforApprovalCode(), QuoteComparisionIRH);
+        WorkflowManagement.HandleEvent(RunworkflowOncancelIndentRequHdrforApprovalCode(), IndentRequHdr);
     end;
 
     //Add events to library
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Event Handling", 'OnAddWorkflowEventsToLibrary', '', false, false)]
-    local procedure OnAddWorkflowEventsToLibraryQuoteComparisionIRH();
+    local procedure OnAddWorkflowEventsToLibraryIndentRequHdr();
     begin
-        WorkflowevenHandling.AddEventToLibrary(RunworkflowOnSendQuoteComparisionIRHforApprovalCode(), DATABASE::"Indent Req Header",
-          CopyStr(QuoteComparisionIRHsendforapprovaleventdesctxt, 1, 250), 0, FALSE);
-        WorkflowevenHandling.AddEventToLibrary(RunworkflowOnCancelQuoteComparisionIRHforApprovalCode(), DATABASE::"Indent Req Header",
-          CopyStr(QuoteComparisionIRHrequestcanceleventdesctxt, 1, 250), 0, FALSE);
+        WorkflowevenHandling.AddEventToLibrary(RunworkflowOnSendIndentRequHdrforApprovalCode(), DATABASE::"Indent Req Header",
+          CopyStr(IndentRequHdrsendforapprovaleventdesctxt, 1, 250), 0, FALSE);
+        WorkflowevenHandling.AddEventToLibrary(RunworkflowOnCancelIndentRequHdrforApprovalCode(), DATABASE::"Indent Req Header",
+          CopyStr(IndentRequHdrrequestcanceleventdesctxt, 1, 250), 0, FALSE);
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Event Handling", 'OnAddWorkflowEventPredecessorsToLibrary', '', true, true)]
-    local procedure OnAddworkfloweventprodecessorstolibraryQuoteComparisionIRH(EventFunctionName: code[128]);
+    local procedure OnAddworkfloweventprodecessorstolibraryIndentRequHdr(EventFunctionName: code[128]);
     begin
         case EventFunctionName of
-            RunworkflowOnCancelQuoteComparisionIRHforApprovalCode():
-                WorkflowevenHandling.AddEventPredecessor(RunworkflowOnCancelQuoteComparisionIRHforApprovalCode(), RunworkflowOnSendQuoteComparisionIRHforApprovalCode());
+            RunworkflowOnCancelIndentRequHdrforApprovalCode():
+                WorkflowevenHandling.AddEventPredecessor(RunworkflowOnCancelIndentRequHdrforApprovalCode(), RunworkflowOnSendIndentRequHdrforApprovalCode());
             WorkflowevenHandling.RunWorkflowOnApproveApprovalRequestCode():
-                WorkflowevenHandling.AddEventPredecessor(WorkflowevenHandling.RunWorkflowOnApproveApprovalRequestCode(), RunworkflowOnSendQuoteComparisionIRHforApprovalCode());
+                WorkflowevenHandling.AddEventPredecessor(WorkflowevenHandling.RunWorkflowOnApproveApprovalRequestCode(), RunworkflowOnSendIndentRequHdrforApprovalCode());
             WorkflowevenHandling.RunWorkflowOnRejectApprovalRequestCode():
-                WorkflowevenHandling.AddEventPredecessor(WorkflowevenHandling.RunWorkflowOnRejectApprovalRequestCode(), RunworkflowOnSendQuoteComparisionIRHforApprovalCode());
+                WorkflowevenHandling.AddEventPredecessor(WorkflowevenHandling.RunWorkflowOnRejectApprovalRequestCode(), RunworkflowOnSendIndentRequHdrforApprovalCode());
             WorkflowevenHandling.RunWorkflowOnDelegateApprovalRequestCode():
-                WorkflowevenHandling.AddEventPredecessor(WorkflowevenHandling.RunWorkflowOnDelegateApprovalRequestCode(), RunworkflowOnSendQuoteComparisionIRHforApprovalCode());
+                WorkflowevenHandling.AddEventPredecessor(WorkflowevenHandling.RunWorkflowOnDelegateApprovalRequestCode(), RunworkflowOnSendIndentRequHdrforApprovalCode());
         end;
     end;
 
-    procedure ISQuoteComparisionIRHworkflowenabled(var QuoteComparisionIRH: Record "Indent Req Header"): Boolean
+    procedure ISIndentRequHdrworkflowenabled(var IndentRequHdr: Record "Indent Req Header"): Boolean
     begin
-        if (QuoteComparisionIRH.Status <> QuoteComparisionIRH.Status::" ") then
+        if IndentRequHdr.status <> IndentRequHdr.status::Open then
             exit(false);
-        exit(WorkflowManagement.CanExecuteWorkflow(QuoteComparisionIRH, RunworkflowOnSendQuoteComparisionIRHforApprovalCode()));
+        exit(WorkflowManagement.CanExecuteWorkflow(IndentRequHdr, RunworkflowOnSendIndentRequHdrforApprovalCode()));
     end;
 
-    Procedure CheckQuoteComparisionIRHApprovalsWorkflowEnabled(var QuoteComparisionIRH: Record "Indent Req Header"): Boolean
+    Procedure CheckIndentRequHdrApprovalsWorkflowEnabled(var IndentRequHdr: Record "Indent Req Header"): Boolean
     begin
-        IF not ISQuoteComparisionIRHworkflowenabled(QuoteComparisionIRH) then
+        IF not ISIndentRequHdrworkflowenabled(IndentRequHdr) then
             Error((NoworkfloweableErr));
         exit(true);
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnpopulateApprovalEntryArgument', '', true, true)]
-    local procedure OnpopulateApprovalEntriesArgumentQuoteComparisionIRH(var RecRef: RecordRef; var ApprovalEntryArgument: Record "Approval Entry"; WorkflowStepInstance: Record "Workflow Step Instance")
+    local procedure OnpopulateApprovalEntriesArgumentIndentRequHdr(var RecRef: RecordRef; var ApprovalEntryArgument: Record "Approval Entry"; WorkflowStepInstance: Record "Workflow Step Instance")
     var
-        QuoteComparisionIRH: Record "Indent Req Header";
+        IndentRequHdr: Record "Indent Req Header";
     begin
         case RecRef.Number() of
             Database::"Indent Req Header":
                 begin
-                    RecRef.SetTable(QuoteComparisionIRH);
-                    ApprovalEntryArgument."Document No." := FORMAT(QuoteComparisionIRH."RFQ No.");
+                    RecRef.SetTable(IndentRequHdr);
+                    ApprovalEntryArgument."Document No." := FORMAT(IndentRequHdr."No.");
                 end;
         end;
     end;
@@ -97,101 +98,80 @@ codeunit 50014 "Approvals MGt 3"
     //Handling workflow response
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'Onopendocument', '', true, true)]
-    local procedure OnopendocumentQuoteComparisionIRH(RecRef: RecordRef; var Handled: boolean)
+    local procedure OnopendocumentIndentRequHdr(RecRef: RecordRef; var Handled: boolean)
     var
-        QuoteComparisionIRH: Record "Indent Req Header";
-        PurchaseHeader: Record "Purchase Header";
+        IndentRequHdr: Record "Indent Req Header";
     begin
         case RecRef.Number() of
             Database::"Indent Req Header":
                 begin
-                    RecRef.SetTable(QuoteComparisionIRH);
-                    QuoteComparisionIRH.Status := QuoteComparisionIRH.Status::Open;
-                    QuoteComparisionIRH.Modify;
-                    PurchaseHeader.Reset();
-                    PurchaseHeader.SetRange("RFQ No.", QuoteComparisionIRH."RFQ No.");
-                    PurchaseHeader.SetRange("Document Type", PurchaseHeader."Document Type"::Quote);
-                    if PurchaseHeader.FindSet() then
-                        PurchaseHeader.ModifyAll("Approval Status", PurchaseHeader."Approval Status"::Open);
+                    RecRef.SetTable(IndentRequHdr);
+                    IndentRequHdr.status := IndentRequHdr.status::Open;
+                    IndentRequHdr.Modify();
                     Handled := true;
-
                 end;
         end;
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'OnreleaseDocument', '', true, true)]
-    local procedure OnReleasedocumentQuoteComparisionIRH(RecRef: RecordRef; var Handled: boolean)
+    local procedure OnReleasedocumentIndentRequHdr(RecRef: RecordRef; var Handled: boolean)
     var
-        QuoteComparisionIRH: Record "Indent Req Header";
-        PurchaseHeader: Record "Purchase Header";
+        IndentRequHdr: Record "Indent Req Header";
     begin
         case RecRef.Number() of
             Database::"Indent Req Header":
                 begin
-                    RecRef.SetTable(QuoteComparisionIRH);
-                    QuoteComparisionIRH.Status := QuoteComparisionIRH.Status::Open;
-                    QuoteComparisionIRH.Modify;
-                    PurchaseHeader.Reset();
-                    PurchaseHeader.SetRange("RFQ No.", QuoteComparisionIRH."RFQ No.");
-                    PurchaseHeader.SetRange("Document Type", PurchaseHeader."Document Type"::Quote);
-                    if PurchaseHeader.FindSet() then
-                        PurchaseHeader.ModifyAll("Approval Status", PurchaseHeader."Approval Status"::Released);
+                    RecRef.SetTable(IndentRequHdr);
+                    IndentRequHdr.status := IndentRequHdr.status::Release;
+                    IndentRequHdr.Modify();
                     Handled := true;
-
                 end;
         end;
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'Onsetstatustopendingapproval', '', true, true)]
-    local procedure OnSetstatusToPendingApprovalQuoteComparisionIRH(RecRef: RecordRef; var IsHandled: boolean)
+    local procedure OnSetstatusToPendingApprovalIndentRequHdr(RecRef: RecordRef; var IsHandled: boolean)
     var
-        QuoteComparisionIRH: Record "Indent Req Header";
-        PurchaseHeader: Record "Purchase Header";
+        IndentRequHdr: Record "Indent Req Header";
     begin
         case RecRef.Number() of
             Database::"Indent Req Header":
                 begin
-                    RecRef.SetTable(QuoteComparisionIRH);
-                    QuoteComparisionIRH.Status := QuoteComparisionIRH.Status::"Pending Approval";
-                    QuoteComparisionIRH.Modify();
-
-                    PurchaseHeader.Reset();
-                    PurchaseHeader.SetRange("RFQ No.", QuoteComparisionIRH."RFQ No.");
-                    PurchaseHeader.SetRange("Document Type", PurchaseHeader."Document Type"::Quote);
-                    if PurchaseHeader.FindSet() then
-                        PurchaseHeader.ModifyAll("Approval Status", PurchaseHeader."Approval Status"::"Pending Approval");
+                    RecRef.SetTable(IndentRequHdr);
+                    IndentRequHdr.status := IndentRequHdr.status::"Pending Approval";
+                    IndentRequHdr.Modify();
                     IsHandled := true;
                 end;
         end;
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'Onaddworkflowresponsepredecessorstolibrary', '', true, true)]
-    local procedure OnaddworkflowresponseprodecessorstolibraryQuoteComparisionIRH(ResponseFunctionName: Code[128])
+    local procedure OnaddworkflowresponseprodecessorstolibraryIndentRequHdr(ResponseFunctionName: Code[128])
     var
         workflowresponsehandling: Codeunit "Workflow Response Handling";
     begin
         case ResponseFunctionName of
             workflowresponsehandling.SetStatusToPendingApprovalCode():
-                workflowresponsehandling.AddResponsePredecessor(workflowresponsehandling.SetStatusToPendingApprovalCode(), RunworkflowOnSendQuoteComparisionIRHforApprovalCode());
+                workflowresponsehandling.AddResponsePredecessor(workflowresponsehandling.SetStatusToPendingApprovalCode(), RunworkflowOnSendIndentRequHdrforApprovalCode());
             workflowresponsehandling.SendApprovalRequestForApprovalCode():
-                workflowresponsehandling.AddResponsePredecessor(workflowresponsehandling.SendApprovalRequestForApprovalCode(), RunworkflowOnSendQuoteComparisionIRHforApprovalCode());
+                workflowresponsehandling.AddResponsePredecessor(workflowresponsehandling.SendApprovalRequestForApprovalCode(), RunworkflowOnSendIndentRequHdrforApprovalCode());
             workflowresponsehandling.CancelAllApprovalRequestsCode():
-                workflowresponsehandling.AddResponsePredecessor(workflowresponsehandling.CancelAllApprovalRequestsCode(), RunworkflowOnCancelQuoteComparisionIRHforApprovalCode());
+                workflowresponsehandling.AddResponsePredecessor(workflowresponsehandling.CancelAllApprovalRequestsCode(), RunworkflowOnCancelIndentRequHdrforApprovalCode());
             workflowresponsehandling.OpenDocumentCode():
-                workflowresponsehandling.AddResponsePredecessor(workflowresponsehandling.OpenDocumentCode(), RunworkflowOnCancelQuoteComparisionIRHforApprovalCode());
+                workflowresponsehandling.AddResponsePredecessor(workflowresponsehandling.OpenDocumentCode(), RunworkflowOnCancelIndentRequHdrforApprovalCode());
         end;
     end;
 
     //Setup workflow
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Setup", 'OnAddworkflowcategoriestolibrary', '', true, true)]
-    local procedure OnaddworkflowCategoryTolibraryQuoteComparisionIRH()
+    local procedure OnaddworkflowCategoryTolibraryIndentRequHdr()
     begin
-        workflowsetup.InsertWorkflowCategory(CopyStr(QuoteComparisionIRHCategoryTxt, 1, 20), CopyStr(QuoteComparisionIRHCategoryDescTxt, 1, 100));
+        workflowsetup.InsertWorkflowCategory(CopyStr(IndentRequHdrCategoryTxt, 1, 20), CopyStr(IndentRequHdrCategoryDescTxt, 1, 100));
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Setup", 'Onafterinsertapprovalstablerelations', '', true, true)]
-    local procedure OnInsertApprovaltablerelationsQuoteComparisionIRH()
+    local procedure OnInsertApprovaltablerelationsIndentRequHdr()
     Var
         ApprovalEntry: record "Approval Entry";
     begin
@@ -199,52 +179,52 @@ codeunit 50014 "Approvals MGt 3"
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Setup", 'Oninsertworkflowtemplates', '', true, true)]
-    local procedure OnInsertworkflowtemplateQuoteComparisionIRH()
+    local procedure OnInsertworkflowtemplateIndentRequHdr()
     begin
-        InsertQuoteComparisionIRHApprovalworkflowtemplate();
+        InsertIndentRequHdrApprovalworkflowtemplate();
     end;
 
 
 
-    local procedure InsertQuoteComparisionIRHApprovalworkflowtemplate();
+    local procedure InsertIndentRequHdrApprovalworkflowtemplate();
     var
         workflow: record Workflow;
     begin
-        workflowsetup.InsertWorkflowTemplate(workflow, CopyStr(QuoteComparisionIRHDocOCRWorkflowCodeTxt, 1, 17), CopyStr(QuoteComparisionIRHApprWorkflowDescTxt, 1, 100), CopyStr(QuoteComparisionIRHCategoryTxt, 1, 20));
-        InsertQuoteComparisionIRHApprovalworkflowDetails(workflow);
+        workflowsetup.InsertWorkflowTemplate(workflow, CopyStr(IndentRequHdrDocOCRWorkflowCodeTxt, 1, 17), CopyStr(IndentRequHdrApprWorkflowDescTxt, 1, 100), CopyStr(IndentRequHdrCategoryTxt, 1, 20));
+        InsertIndentRequHdrApprovalworkflowDetails(workflow);
         workflowsetup.MarkWorkflowAsTemplate(workflow);
     end;
 
-    local procedure InsertQuoteComparisionIRHApprovalworkflowDetails(var workflow: record Workflow);
+    local procedure InsertIndentRequHdrApprovalworkflowDetails(var workflow: record Workflow);
     var
-        QuoteComparisionIRH: Record "Indent Req Header";
+        IndentRequHdr: Record "Indent Req Header";
         workflowstepargument: record "Workflow Step Argument";
         Blankdateformula: DateFormula;
     begin
-        workflowsetup.InitWorkflowStepArgument(workflowstepargument, workflowstepargument."Approver Type"::Approver, workflowstepargument."Approver Limit Type"::"Direct Approver", 0, '', Blankdateformula, true);
+        workflowsetup.PopulateWorkflowStepArgument(workflowstepargument, workflowstepargument."Approver Type"::Approver, workflowstepargument."Approver Limit Type"::"Direct Approver", 0, '', Blankdateformula, true);
 
-        workflowsetup.InsertDocApprovalWorkflowSteps(workflow, BuildQuoteComparisionIRHtypecondition(QuoteComparisionIRH.Status::Open), RunworkflowOnSendQuoteComparisionIRHforApprovalCode(), BuildQuoteComparisionIRHtypecondition(QuoteComparisionIRH.Status::"Pending Approval"), RunworkflowOnCancelQuoteComparisionIRHforApprovalCode(), workflowstepargument, true);
+        workflowsetup.InsertDocApprovalWorkflowSteps(workflow, BuildIndentRequHdrtypecondition(IndentRequHdr.status::Open), RunworkflowOnSendIndentRequHdrforApprovalCode(), BuildIndentRequHdrtypecondition(IndentRequHdr.status::"Pending Approval"), RunworkflowOnCancelIndentRequHdrforApprovalCode(), workflowstepargument, true);
     end;
 
 
-    local procedure BuildQuoteComparisionIRHtypecondition(status: integer): Text
+    local procedure BuildIndentRequHdrtypecondition(status: integer): Text
     var
-        QuoteComparisionIRH: Record "Indent Req Header";
+        IndentRequHdr: Record "Indent Req Header";
     Begin
-        QuoteComparisionIRH.SetRange(Status, status);
-        exit(StrSubstNo(QuoteComparisionIRHTypeCondnTxt, workflowsetup.Encode(QuoteComparisionIRH.GetView(false))));
+        IndentRequHdr.SetRange(status, status);
+        exit(StrSubstNo(IndentRequHdrTypeCondnTxt, workflowsetup.Encode(IndentRequHdr.GetView(false))));
     End;
 
     //Access record from the approval request page
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Page Management", 'Onaftergetpageid', '', true, true)]
-    local procedure OnaftergetpageidQuoteComparisionIRH(RecordRef: RecordRef; var PageID: Integer)
+    local procedure OnaftergetpageidIndentRequHdr(RecordRef: RecordRef; var PageID: Integer)
     begin
         if PageID = 0 then
-            PageID := GetConditionalcardPageidQuoteComparisionIRH(RecordRef)
+            PageID := GetConditionalcardPageidIndentRequHdr(RecordRef)
     end;
 
-    local procedure GetConditionalcardPageidQuoteComparisionIRH(RecordRef: RecordRef): Integer
+    local procedure GetConditionalcardPageidIndentRequHdr(RecordRef: RecordRef): Integer
     begin
         Case RecordRef.Number() of
             database::"Indent Req Header":
@@ -252,27 +232,28 @@ codeunit 50014 "Approvals MGt 3"
         end;
     end;
 
-    //Add QC QuoteComparisionIRH Approval End  <<
-    //b2besg  End
+    //Add  IndentRequHdr Approval End  <<
+    //B2BMS  End
+
 
     var
+        myInt: Integer;
         WorkflowManagement: Codeunit "Workflow Management";
         WorkflowevenHandling: Codeunit "Workflow Event Handling";
         workflowsetup: codeunit "Workflow Setup";
 
-        //b2besg  Start Variables for QC
-        QuoteComparisionIRHsendforapprovaleventdescTxt: Label 'Approval of a QuoteComparisionIRH Document is requested';
-        QuoteComparisionIRHCategoryDescTxt: Label 'QuoteComparisionIRHDocuments';
-        QuoteComparisionIRHTypeCondnTxt: Label '<?xml version="1.0" encoding="utf-8" standalone="yes"?><ReportParameters><DataItems><DataItem name=QuoteComparisionIRH>%1</DataItem></DataItems></ReportParameters>';
-        QuoteComparisionIRHrequestcanceleventdescTxt: Label 'Approval of a QuoteComparisionIRH Document is Cancelled';
-        QuoteComparisionIRHCategoryTxt: Label 'QuoteComparisionIRH specifications';
-        QuoteComparisionIRHDocOCRWorkflowCodeTxt: Label 'QC QuoteComparisionIRH';
-        QuoteComparisionIRHApprWorkflowDescTxt: Label 'QuoteComparisionIRH Approval Workflow';
+        //B2BMS  Start Variables for 
+        IndentRequHdrsendforapprovaleventdescTxt: Label 'Approval of a  IndentRequHdr Document is requested';
+        IndentRequHdrCategoryDescTxt: Label 'IndentRequHdrDocuments';
+        IndentRequHdrTypeCondnTxt: Label '<?xml version="1.0" encoding="utf-8" standalone="yes"?><ReportParameters><DataItems><DataItem name=IndentRequHdr>%1</DataItem></DataItems></ReportParameters>';
+        IndentRequHdrrequestcanceleventdescTxt: Label 'Approval of a  IndentRequHdr Document is Cancelled';
+        IndentRequHdrCategoryTxt: Label 'IndentRequHdrpecifications';
+        IndentRequHdrDocOCRWorkflowCodeTxt: Label ' IndentRequHdr';
+        IndentRequHdrApprWorkflowDescTxt: Label 'IndentRequHdr Approval Workflow';
         NoworkfloweableErr: Label 'No work flows enabled';
 
 
 
-    //b2besg  End Variables for QC
-
+    //B2BMS  End Variables for 
 
 }

@@ -161,7 +161,7 @@ page 50116 "Indent Header"
             {
                 ApplicationArea = All;
                 Image = Action;
-                Visible = OpenApprEntrEsists;
+              //  Visible = OpenApprEntrEsists;
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Process;
@@ -224,7 +224,7 @@ page 50116 "Indent Header"
                 PromotedIsBig = true;
                 PromotedOnly = true;
                 ToolTip = 'Reject the approval request.';
-                Visible = OpenAppEntrExistsForCurrUser;
+             //   Visible = OpenAppEntrExistsForCurrUser;
 
                 trigger OnAction()
                 var
@@ -255,7 +255,7 @@ page 50116 "Indent Header"
             {
                 ApplicationArea = All;
                 Image = SendApprovalRequest;
-                Visible = (Not OpenApprEntrEsists);
+               // Visible = (Not OpenApprEntrEsists);
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Process;
@@ -693,6 +693,7 @@ page 50116 "Indent Header"
                     REPORT.RUNMODAL(REPORT::"Material Issue Slip", TRUE, false, IndentHeader);
                 end;
             }
+            
         }
     }
 

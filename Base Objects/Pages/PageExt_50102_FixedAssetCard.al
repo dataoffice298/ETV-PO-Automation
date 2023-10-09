@@ -76,11 +76,15 @@ pageextension 50102 FixedAssetCard extends "Fixed Asset Card"
                     IndentLine: Record "Indent Line";
                     FieldRef: FieldRef;
                     RecRef: RecordRef;
+                    UserSetup: Record "User Setup";
                     CF: Char;
                     LF: Char;
                     QRText: Text;
                     QRDescription: Text;
+                    Text0001: Label 'You dont have Following Permessions To Generate Qr Code';
                 begin
+                    if (UserSetup.Get(UserId)) and (UserSetup."QR Code" = false) then
+                        Error(Text0001);
                     if FixedAsset.Get(Rec."No.") then begin
                         RecRef.GetTable(FixedAsset);
                         CF := 150;
@@ -124,7 +128,12 @@ pageextension 50102 FixedAssetCard extends "Fixed Asset Card"
                 trigger OnAction()
                 var
                     Fixedasset: Record "Fixed Asset";
+                    UserSetup: Record "User Setup";
+                    Text0001: Label 'You dont have Following Permessions To Generate Qr Print';
+
                 begin
+                    if (UserSetup.Get(UserId)) and (UserSetup."QR Code" = false) then
+                        Error(Text0001);
                     Fixedasset.Reset();
                     Fixedasset.SetRange("No.", Rec."No.");
                     Report.RunModal(Report::QRReport, true, false, Fixedasset);

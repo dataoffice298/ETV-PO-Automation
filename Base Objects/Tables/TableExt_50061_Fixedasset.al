@@ -45,6 +45,30 @@ tableextension 50061 FixedAssetExtPOAuto extends "Fixed Asset"
                     "FA Sub Location" := FAsublocation."Sub Location Code";
             end;*/
         }
+        modify("FA Class Code")
+        {
+            trigger OnBeforeValidate()
+            var
+                userSetup: Record "User Setup";
+                Text0001: Label 'You dont have  permissions to Enter the value';
+            begin
+                /*   if userSetup.Get(UserId) and (userSetup."FA Class" = false) then begin
+
+                   end;*/
+            end;
+        }
+        modify("FA Subclass Code")
+        {
+            trigger OnBeforeValidate()
+            var
+                userSetup: Record "User Setup";
+                Text0001: Label 'You dont have  permissions to Enter the value';
+            begin
+                /*   if userSetup.Get(UserId) and (userSetup."FA Sub Class" = false) then begin
+
+                   end;*/
+            end;
+        }
     }
 
 }

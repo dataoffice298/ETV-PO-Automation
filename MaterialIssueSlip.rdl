@@ -1001,7 +1001,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!SNo.Value</Value>
+                                  <Value>=RowNumber(Nothing)</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -1217,7 +1217,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!ILEQuantity.Value</Value>
+                                  <Value>=abs(Fields!ILEQuantity.Value)</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -1334,7 +1334,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum(Fields!ILEQuantity.Value)</Value>
+                                  <Value>=abs(Sum(Fields!ILEQuantity.Value))</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -1572,9 +1572,6 @@ End Function
         <Field Name="Req_QuantityFormat">
           <DataField>Req_QuantityFormat</DataField>
         </Field>
-        <Field Name="Item_Category_Code">
-          <DataField>Item_Category_Code</DataField>
-        </Field>
         <Field Name="Qty_Issued">
           <DataField>Qty_Issued</DataField>
         </Field>
@@ -1584,20 +1581,8 @@ End Function
         <Field Name="Unit_of_Measure_Code">
           <DataField>Unit_of_Measure_Code</DataField>
         </Field>
-        <Field Name="ISSNo1">
-          <DataField>ISSNo1</DataField>
-        </Field>
-        <Field Name="ISSDate1">
-          <DataField>ISSDate1</DataField>
-        </Field>
         <Field Name="Location_Code">
           <DataField>Location_Code</DataField>
-        </Field>
-        <Field Name="channel">
-          <DataField>channel</DataField>
-        </Field>
-        <Field Name="Dept">
-          <DataField>Dept</DataField>
         </Field>
         <Field Name="Description">
           <DataField>Description</DataField>
@@ -1628,6 +1613,21 @@ End Function
         </Field>
         <Field Name="ILEQuantityFormat">
           <DataField>ILEQuantityFormat</DataField>
+        </Field>
+        <Field Name="ISSNo1">
+          <DataField>ISSNo1</DataField>
+        </Field>
+        <Field Name="ISSDate1">
+          <DataField>ISSDate1</DataField>
+        </Field>
+        <Field Name="Item_Category_Code">
+          <DataField>Item_Category_Code</DataField>
+        </Field>
+        <Field Name="channel">
+          <DataField>channel</DataField>
+        </Field>
+        <Field Name="Dept">
+          <DataField>Dept</DataField>
         </Field>
       </Fields>
       <Query>

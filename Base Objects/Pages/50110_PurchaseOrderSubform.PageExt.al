@@ -3,6 +3,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
     //B2BVCOn03Oct22>>>
     layout
     {
+
         addafter(Description)
         {
             field(Select; Rec.Select)
@@ -49,7 +50,21 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             field("Spec Id"; rec."Spec Id")
             {
                 ApplicationArea = all;
+                trigger OnValidate()
+                var
+                    myInt: Integer;
+                    userSetup: Record "User Setup";
+                    Text0001: Label 'You dont have permessions for entering Specifications';
+                begin
+
+
+                    if userSetup.Get(UserId) and (userSetup.Specifications = false) then
+                        Error(Text0001);
+
+                end;
+
             }
+
         }
         addafter("Location Code")
         {
@@ -89,10 +104,34 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             field("Qty. to Accept B2B"; Rec."Qty. to Accept B2B")
             {
                 ApplicationArea = All;
+                trigger OnValidate()
+                var
+                    myInt: Integer;
+                    userSetup: Record "User Setup";
+                    Text0001: Label 'You dont have permessions for entering Accept/Reject values';
+                begin
+
+
+                    if userSetup.Get(UserId) and (userSetup."Accept/Reject" = false) then
+                        Error(Text0001);
+
+                end;
             }
             field("Qty. to Reject B2B"; Rec."Qty. to Reject B2B")
             {
                 ApplicationArea = All;
+                trigger OnValidate()
+                var
+                    myInt: Integer;
+                    userSetup: Record "User Setup";
+                    Text0001: Label 'You dont have permessions for entering Accept/Reject values';
+                begin
+
+
+                    if userSetup.Get(UserId) and (userSetup."Accept/Reject" = false) then
+                        Error(Text0001);
+
+                end;
             }
             field("Rejection Comments B2B"; rec."Rejection Comments B2B")
             {
@@ -209,6 +248,18 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             ShowMandatory = true;
         }
         //B2BSCM11SEP2023<<
+
+        modify("Qty. to Receive")
+        {
+            trigger OnBeforeValidate()
+            begin
+                if PurchHeader.Get(Rec."Document Type", Rec."Document No.") then begin
+                    if UserSetup.Get(PurchHeader."User ID") and not (UserSetup.Stores) then
+                        Error('Qty.to Receive field must be Modify only the user Qty.to Return and Qty.to Receive must be true');
+                end;
+
+            end;
+        }
     }
 
 
@@ -227,6 +278,12 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 var
                     TrackImport: Report "Purchase Line Tracking Import";
                 begin
+
+                    if PurchHeader.Get(Rec."Document Type", Rec."Document No.") then begin
+                        if UserSetup.Get(PurchHeader."User ID") and not (UserSetup.Stores) then
+                            Error(Text0005);
+                    end;
+
                     Clear(TrackImport);
                     TrackImport.GetValues(Rec);
                     TrackImport.Run();
@@ -482,6 +539,53 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             }
         }
         //B2BSSD10Feb2023>>
+        modify(DocumentLineTracking)
+        {
+            trigger OnBeforeAction()
+            begin
+                if PurchHeader.Get(Rec."Document Type", Rec."Document No.") then begin
+                    if UserSetup.Get(PurchHeader."User ID") THEN begin
+                        IF (UserSetup.Stores = false) then
+                            Error(Text0004);
+                    END;
+                end;
+            end;
+        }
+        modify(CreateRGPInward)
+        {
+            trigger OnBeforeAction()
+            var
+                Text0003: Label 'You dont have Permessions to Open  CreateRGPInward';
+
+            begin
+                if PurchHeader.Get(Rec."Document Type", Rec."Document No.") then begin
+                    if UserSetup.Get(PurchHeader."User ID") then begin
+                        IF (UserSetup.Stores = false) then
+                            Error(Text0003);
+                    end;
+                END;
+
+            end;
+        }
+
+        modify(CreateRGPOutward)
+        {
+            trigger OnBeforeAction()
+            var
+                Text0002: Label 'You dont have Permessions to Open  CreateRGPOutward';
+
+            begin
+                if PurchHeader.Get(Rec."Document Type", Rec."Document No.") then begin
+                    if UserSetup.Get(PurchHeader."User ID") then begin
+                        IF (UserSetup.Stores = false) then
+                            Error(Text0002);
+                    end;
+                END;
+            end;
+
+        }
+
+
     }
 
     procedure CreateGateEntries(EntryType: Option Inward,Outward; DocType: Option RGP,NRGP)
@@ -680,6 +784,9 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
 
     var
         GateEntryType: Option Inward,Outward;
+        Text0004: Label 'You dont have Permessions to Open Documebt Tracking';
+        Text0005: Label 'You dont have Permessions to Open Import Item Tracking';
+
         GateEntryDocType: Option RGP,NRGP;
         //B2BSS07Feb2023<<
         ExcelImportSuccess: Label 'Excel File Imported Successfully';
@@ -711,6 +818,8 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         FALineNo: Integer;//B2BSSD26MAY2023
         //B2BSS07Feb2023>>
         purchaseline2: Record "Purchase Line";//B2BSSD26MAY2023
+        UserSetup: Record "User Setup";
+        PurchHeader: Record "Purchase Header";
 
     //B2BSSD07Feb2023 Import Start >>
     local procedure FixedAssetsReadExcelSheet()

@@ -410,6 +410,7 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             DataClassification = CustomerContent;
         }
         //B2BSSD16JUN2023<<
+
     }
 
 

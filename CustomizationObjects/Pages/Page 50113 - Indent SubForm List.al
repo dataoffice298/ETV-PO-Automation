@@ -84,6 +84,10 @@ page 50113 "Indent SubForm List"
                 {
                     ApplicationArea = All;
                 }
+                field(Status; Rec.Status)
+                {
+                    ApplicationArea = all;
+                }
             }
         }
     }

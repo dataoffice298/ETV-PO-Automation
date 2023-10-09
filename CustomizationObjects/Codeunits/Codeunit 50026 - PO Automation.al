@@ -239,6 +239,7 @@ codeunit 50026 "PO Automation"
         PurchUOMQtyMeasure: Decimal;
         LineNo: Integer;
         PrevVendor: Code[20];
+        IndentLineRec: Record "Indent Line";
     begin
         PPSetup.GET;
         CreateIndents4.COPYFILTERS(CreateIndentsEnquiry);
@@ -325,6 +326,21 @@ codeunit 50026 "PO Automation"
                             PurchaseLine."Spec Id" := IndentVendorEnquiry."Spec Id";
                             PurchaseLine."Unit of Measure Code" := IndentVendorEnquiry."Unit Of Measure";//B2BSSD20APR2023
 
+
+                            IndentLineRec.Reset();
+                            IndentLineRec.SetRange("Document No.", PurchaseLine."Indent No.");
+                            IndentLineRec.SetRange("Line No.", PurchaseLine."Indent Line No.");
+                            if IndentLineRec.FindSet() then begin
+                                repeat
+                                    //    SetSelectionFilter(IndentLineRec);
+
+                                    IndentLineRec.Status := IndentLineRec.Status::Enqiury;
+                                    IndentLineRec.Modify();
+                                until IndentLineRec.Next() = 0;
+                            end;
+
+
+
                             LineNo += 10000;//B2BSSD13APR2023
 
                             //B2BSSD03Feb2023>>
@@ -367,6 +383,7 @@ codeunit 50026 "PO Automation"
         PPSetup: Record 312;
         CreateIndents2: Record "Indent Requisitions";
         IndentLine: Record "Indent Line";
+        IndentLineRec: Record "Indent Line";
         Item2: Record 27;
         ItemUnitofMeasure: Record 5404;
         BaseUOMQtyMeasure: Decimal;
@@ -442,6 +459,17 @@ codeunit 50026 "PO Automation"
                             IndentVendorEnquiry.Quantity := IndentVendorEnquiry.Quantity
 
                         END;
+                        IndentLineRec.Reset();
+                        IndentLineRec.SetRange("Document No.", PurchaseLine."Indent No.");
+                        IndentLineRec.SetRange("Line No.", PurchaseLine."Indent Line No.");
+
+                        if IndentLineRec.FindSet() then begin
+                            repeat
+                                IndentLineRec.Status := IndentLineRec.Status::Enqiury;
+                                IndentLineRec.Modify();
+                            until IndentLineRec.Next() = 0;
+                        end;
+
 
                         //B2BSSD16FEB2023<<
                         CreateIndents2.Reset();
@@ -859,6 +887,7 @@ codeunit 50026 "PO Automation"
         Vend: Record Vendor;
         PurchaseHeader: Record "Purchase Header";
         QuoCompHdr: Record QuotCompHdr;
+        IndentLineRec: Record "Indent Line";
     begin
         clear(TotalWeightage);
         PurchaseHeader.RESET();
@@ -1023,7 +1052,19 @@ codeunit 50026 "PO Automation"
                             QuoteCompare.Department := PurchaseLine."Shortcut Dimension 2 Code";
 
                             QuoteCompare.INSERT();
+
+                            IndentLineRec.Reset();
+                            IndentLineRec.SetRange("Document No.", PurchaseLine."Indent No.");
+                            IndentLineRec.SetRange("Line No.", PurchaseLine."Indent Line No.");
+                            if IndentLineRec.FindSet() then begin
+                                repeat
+                                    //    SetSelectionFilter(IndentLineRec);
+                                    IndentLineRec.Status := IndentLineRec.Status::"Quotation Comparsion";
+                                    IndentLineRec.Modify();
+                                until IndentLineRec.Next() = 0;
+                            end;
                         UNTIL PurchaseLine.NEXT() = 0;
+                
                 END;
             UNTIL PurchaseHeader.NEXT() = 0;
 
@@ -1317,6 +1358,7 @@ codeunit 50026 "PO Automation"
         Text001: Label 'Enquiry %1 has been changed to Quote %2';
         IndentLine: Record "Indent Line";
         DimentionSetEntry: Record "Dimension Set Entry";//B2BSSD20Feb2023
+        IndentLineRec: Record "Indent Line";
     begin
         PurchaseHeader.INIT;
         PurchaseHeader."Document Type" := PurchaseHeader."Document Type"::Quote;
@@ -1341,6 +1383,7 @@ codeunit 50026 "PO Automation"
         PurchaseHeader."Programme Name" := Rec."Programme Name";//B2BSSD20MAR2023
         PurchaseHeader.Purpose := Rec.Purpose;//B2BSSD21MAR2023
         PurchaseHeader.Modify(true);//B2BSSD21FEB2023
+
 
         PurchaseLine.SETRANGE("Document Type", PurchaseLine."Document Type"::Enquiry);
         PurchaseLine.SETRANGE("Document No.", Rec."No.");
@@ -1395,7 +1438,28 @@ codeunit 50026 "PO Automation"
                     IndentLine."Indent Status" := IndentLine."Indent Status"::Offer;
                     IndentLine.MODIFY;
                 END;
+                IndentLineRec.Reset();
+                IndentLineRec.SetRange("Document No.", PurchaseLine."Indent No.");
+                IndentLineRec.SetRange("Line No.", PurchaseLine."Indent Line No.");
+                if IndentLineRec.FindSet() then begin
+                    repeat
+                        //    SetSelectionFilter(IndentLineRec);
+                        IndentLineRec.Status := IndentLineRec.Status::Quote;
+                        IndentLineRec.Modify();
+                    until IndentLineRec.Next() = 0;
+                end;
+
             UNTIL PurchaseLine.NEXT = 0;
+        IndentLineRec.Reset();
+        /*     IndentLineRec.SetRange("Document No.", PurchaseLine."Indent No.");
+             IndentLineRec.SetRange("Line No.", PurchaseLine."Indent Line No.");
+             if IndentLineRec.FindSet() then begin
+                 repeat
+                     //    SetSelectionFilter(IndentLineRec);
+                     IndentLineRec.Status := IndentLineRec.Status::Quote;
+                     IndentLineRec.Modify();
+                 until IndentLineRec.Next() = 0;
+             end;*/
         MESSAGE(Text001, Rec."No.", PurchaseLineQuote."Document No.");
         Rec.DELETE;
     end;
@@ -1490,6 +1554,7 @@ codeunit 50026 "PO Automation"
         NoSeriesMgt: Codeunit NoSeriesManagement;
         PPSetup: Record 312;
         CreateIndents2: Record "Indent Requisitions";
+        IndentLineRec: Record "Indent Line";
         IndentLine: Record "Indent Line";
         Item2: Record 27;
         ItemUnitofMeasure: Record 5404;
@@ -1545,6 +1610,19 @@ codeunit 50026 "PO Automation"
                         PurchaseLine."Buy-from Vendor No." := PurchaseHeader."Buy-from Vendor No.";
                         PurchaseLine.VALIDATE("Buy-from Vendor No.");
                         PurchaseLine."Pay-to Vendor No." := PurchaseHeader."Pay-to Vendor No.";//B2BSSD27FEB2023
+                        IndentLineRec.Reset();
+                        IndentLineRec.SetRange("Document No.", PurchaseLine."Indent No.");
+                        IndentLineRec.SetRange("Line No.", PurchaseLine."Indent Line No.");
+                        if IndentLineRec.FindSet() then begin
+                            repeat
+                                //    SetSelectionFilter(IndentLineRec);
+                                IndentLineRec.Status := IndentLineRec.Status::Enqiury;
+                                IndentLineRec.Modify();
+                            until IndentLineRec.Next() = 0;
+                        end;
+
+
+
 
                         //B2BSSD16FEB2023<<
                         if IndentVendorEnquiry."Line Type" = IndentVendorEnquiry."Line Type"::Item then begin

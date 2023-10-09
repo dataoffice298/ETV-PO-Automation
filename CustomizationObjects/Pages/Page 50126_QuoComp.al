@@ -211,6 +211,9 @@ page 50126 "Quotation Comparision Doc"
                     QuoteCompareArchive: Record "Archive Quotation Comparison";
                     ArchiveQuotationHeader: Record "Archive Quotation Header";
                     QuoCompHdr: Record QuotCompHdr;
+                    PurchaseHeader: Record "Purchase Header";
+                    PurchaseLine: Record "Purchase Line";
+                    IndentLineRec: Record "Indent Line";
 
                 begin
                     Rec.TestField("Orders Created", false);
@@ -246,14 +249,39 @@ page 50126 "Quotation Comparision Doc"
 
 
                     ArchiveQCS(); //ETVPO1.1
-                    //B2B1.1START
-                    // QuotationComparisionDelete.RESET;
-                    // QuotationComparisionDelete.SETRANGE("Carry Out Action", TRUE);
-                    // IF QuotationComparisionDelete.FINDFIRST THEN BEGIN
-                    //     QuotationComparisionDelete.DELETE;//B2B1.1
-                    // END;
-                    //END B2B1.1
-                    //CurrPage.UPDATE;
+                                  //B2B1.1START
+                                  // QuotationComparisionDelete.RESET;
+                                  // QuotationComparisionDelete.SETRANGE("Carry Out Action", TRUE);
+                                  // IF QuotationComparisionDelete.FINDFIRST THEN BEGIN
+                                  //     QuotationComparisionDelete.DELETE;//B2B1.1
+                                  // END;
+                                  //END B2B1.1
+                                  //CurrPage.UPDATE;
+                    PurchaseHeader.RESET();
+                    PurchaseHeader.SETRANGE("Document Type", PurchaseHeader."Document Type"::Quote);
+                    PurchaseHeader.SETRANGE("RFQ No.", RFQNumber);
+                    IF PurchaseHeader.FindSet() THEN begin
+                        REPEAT
+                            PurchaseLine.Reset();
+                            PurchaseLine.SetRange("Document No.", PurchaseHeader."No.");
+                            if PurchaseLine.FindSet() then begin
+                                repeat
+                                    IndentLineRec.Reset();
+                                    IndentLineRec.SetRange("Document No.", PurchaseLine."Indent No.");
+                                    IndentLineRec.SetRange("Line No.", PurchaseLine."Indent Line No.");
+                                    if IndentLineRec.FindSet() then begin
+                                        repeat
+                                            //    SetSelectionFilter(IndentLineRec);
+                                            IndentLineRec.Status := IndentLineRec.Status::"Purchase Order";
+                                            IndentLineRec.Modify();
+                                        until IndentLineRec.Next() = 0;
+                                    end;
+                                until PurchaseLine.Next() = 0;
+                            end;
+
+
+                        until PurchaseHeader.Next() = 0;
+                    end;
 
 
                 end;

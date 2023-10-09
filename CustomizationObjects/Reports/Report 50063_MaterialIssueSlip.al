@@ -97,23 +97,16 @@ report 50063 "Material Issue Slip"
 
                 column(Req_Quantity; "Req.Quantity")
                 { }
-                column(Item_Category_Code; ItemCategoryCode)
-                { }
+
                 column(Qty_Issued; "Qty Issued")
                 { }
 
                 column(Unit_of_Measure_Code; "Unit of Measure")
                 { }
-                column(ISSNo1; ISSNo1)
-                { }
-                column(ISSDate1; ISSDate1)
-                { }
+
                 column(Location_Code; "delivery location")
                 { }
-                column(channel; ItemLedgerEntry."Global Dimension 1 Code")
-                { }
-                column(Dept; ItemLedgerEntry."Global Dimension 2 Code")
-                { }
+
                 column(Description; Description)
                 { }
                 column(SNo; SNo)
@@ -126,25 +119,29 @@ report 50063 "Material Issue Slip"
                 { }
                 column(QtyIssue; QtyIssue)
                 { }
-                column(ILEQuantity; ILEQuantity)//B2BSSD24APR2023
-                { }
+                dataitem("Item Ledger Entry"; "Item Ledger Entry")
+                {
+                    DataItemLink = "Indent No." = field("Document No."), "Item No." = field("No.");
 
+                    column(ILEQuantity; Quantity)
+                    { }
+                    column(ISSNo1; "Document No.")
+                    { }
+                    column(ISSDate1; "Document Date")
+                    { }
+                    column(Item_Category_Code; "Item Category Code")
+                    { }
+                    column(channel; "Global Dimension 1 Code")
+                    { }
+                    column(Dept; "Global Dimension 2 Code")
+                    { }
+                }
                 trigger OnAfterGetRecord()
+                var
+                    myInt: Integer;
                 begin
-                    CalcFields("Qty Issued");
                     SNo += 1;
-                    ItemLedgerEntry.Reset();
-                    ItemLedgerEntry.SetCurrentKey("Document No.");//B2BSSD24APR2023
-                    ItemLedgerEntry.SetRange("Indent No.", "Document No.");
-                    ItemLedgerEntry.SetRange("Indent Line No.", "Line No.");
-                    ItemLedgerEntry.SetFilter(Quantity, '<%1', 0);
-                    if ItemLedgerEntry.FindSet() then begin //B2BSSD24APR2023
-                        ISSNo1 := ItemLedgerEntry."Document No.";
-                        ISSDate1 := ItemLedgerEntry."Posting Date";
-                        ItemCategoryCode := ItemLedgerEntry."Item Category Code";
-                        ItemLedgerEntry.CalcSums(Quantity);
-                        ILEQuantity := Abs(ItemLedgerEntry.Quantity);
-                    end;
+
                 end;
             }
 

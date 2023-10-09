@@ -114,15 +114,31 @@ page 50120 "Indent Requisition Document"
                 trigger OnAction();
                 var
                     IndentReqLine: Record "Indent Requisitions";
+                    IndentLineRec: Record "Indent Line";
                 begin
                     Rec.TestField(Status, Rec.Status::Open);
                     Clear(IndentReqLines);
                     IndentReqLines.GetValue(Rec."No.", Rec."Resposibility Center");
                     IndentReqLines.RUN;
+
+
                     IndentReqLine.Reset();
                     IndentReqLine.SetRange("Document No.", Rec."No.");
-                    if IndentReqLine.FindFirst() then
-                        Message('Lines Inserted Successfully.');
+                    if IndentReqLine.FindSet() then begin
+                        repeat
+                            IndentLineRec.Reset();
+                            IndentLineRec.SetRange("Document No.", IndentReqLine."Indent No.");
+                            IndentLineRec.SetRange("Line No.", IndentReqLine."Indent Line No.");
+                            if IndentLineRec.FindSet() then begin
+                                repeat
+
+                                    IndentLineRec.Status := IndentLineRec.Status::"Indent Requisition";
+                                    IndentLineRec.Modify();
+                                until IndentLineRec.Next() = 0;
+                            end;
+                        until IndentReqLine.Next() = 0;
+                    end;
+                    Message('Lines Inserted Successfully.');
                 end;
             }
             action("Create &Enquiry")
@@ -133,6 +149,9 @@ page 50120 "Indent Requisition Document"
                 Visible = ShowAct;
 
                 trigger OnAction();
+                var
+                    IndentReqLine: Record "Indent Requisitions";
+                    IndentLineRec: Record "Indent Line";
                 begin
                     Rec.TESTFIELD(Status, Rec.Status::Release);
                     Rec.TESTFIELD(Type, Rec.Type::Enquiry);
@@ -164,6 +183,23 @@ page 50120 "Indent Requisition Document"
                                 EXIT;
                         END;
                     END;
+                    /* IndentReqLine.Reset();
+                     IndentReqLine.SetRange("Document No.", Rec."No.");
+                     if IndentReqLine.FindSet() then begin
+                         repeat
+                             IndentLineRec.Reset();
+                             IndentLineRec.SetRange("Document No.", IndentReqLine."Indent No.");
+                             IndentLineRec.SetRange("Line No.", IndentReqLine."Indent Line No.");
+                             if IndentLineRec.FindSet() then begin
+                                 repeat
+                                     //    SetSelectionFilter(IndentLineRec);
+
+                                     IndentLineRec.Status := IndentLineRec.Status::Enqiury;
+                                     IndentLineRec.Modify();
+                                 until IndentLineRec.Next() = 0;
+                             end;
+                         until IndentReqLine.Next() = 0;
+                     end;*/
                 end;
             }
             action("Create &Quote")
@@ -175,6 +211,9 @@ page 50120 "Indent Requisition Document"
                 Visible = ShowAct;
 
                 trigger OnAction();
+                var
+                    IndentReqLine: Record "Indent Requisitions";
+                    IndentLineRec: Record "Indent Line";
                 begin
                     Rec.TESTFIELD(Status, Rec.Status::Release);
                     Rec.TESTFIELD(Type, Rec.Type::Quote);
@@ -206,6 +245,21 @@ page 50120 "Indent Requisition Document"
                         END ELSE
                             EXIT;
                     END;
+                    IndentReqLine.Reset();
+                    IndentReqLine.SetRange("Document No.", Rec."No.");
+                    if IndentReqLine.FindSet() then begin
+                        repeat
+                            IndentLineRec.Reset();
+                            IndentLineRec.SetRange("Document No.", IndentReqLine."Indent No.");
+                            IndentLineRec.SetRange("Line No.", IndentReqLine."Indent Line No.");
+                            if IndentLineRec.FindSet() then begin
+                                //  repeat
+                                IndentLineRec.Status := IndentLineRec.Status::Quote;
+                                IndentLineRec.Modify();
+                                ///  until IndentLineRec.Next() = 0;
+                            end;
+                        until IndentReqLine.Next() = 0;
+                    end;
                 end;
             }
             action("Create &Purchase Order")
@@ -216,6 +270,9 @@ page 50120 "Indent Requisition Document"
                 Visible = ShowAct;
 
                 trigger OnAction();
+                var
+                    IndentReqLine: Record "Indent Requisitions";
+                    IndentLineRec: Record "Indent Line";
                 begin
                     //B2BSSD09MAY2023>>
                     if Rec."Create Purchase Order" = true then
@@ -248,7 +305,58 @@ page 50120 "Indent Requisition Document"
                         //B2BSSD09MAY2023<<
                         MESSAGE(Text001);
                     END;
+                    /*  IndentReqLine.Reset();
+                      IndentReqLine.SetRange("Document No.", Rec."No.");
+                      if IndentReqLine.FindSet() then begin
+                          repeat
+                              IndentLineRec.Reset();
+                              IndentLineRec.SetRange("Document No.", IndentReqLine."Indent No.");
+                              IndentLineRec.SetRange("Line No.", IndentReqLine."Indent Line No.");
+                              if IndentLineRec.FindSet() then begin
+                                  repeat
+                                      //    SetSelectionFilter(IndentLineRec);
+                                      IndentLineRec.Status := IndentLineRec.Status::Quote;
+                                      IndentLineRec.Modify();
+                                  until IndentLineRec.Next() = 0;
+                              end;
+                          until IndentReqLine.Next() = 0;
+                      end;*/
 
+                end;
+            }
+            action("Send Approval Request")
+            {
+                ApplicationArea = All;
+                Image = SendApprovalRequest;
+                // Visible = (Not OpenApprEntrEsists);
+                /* Promoted = true;
+                 PromotedIsBig = true;
+                 PromotedCategory = Process;
+                 PromotedOnly = true;*/
+                trigger OnAction()
+                var
+                    ItemVariantLRec: Record "Item Variant";
+                    IndentLine: Record "Indent Req Header";
+                begin
+                    Rec.TESTFIELD(Status, rec.Status::Open);
+                    // Rec.TESTFIELD(Indentor);
+                    Rec.TestField("Shortcut Dimension 1 Code");
+                    Rec.TestField("Shortcut Dimension 2 Code");
+
+                    IF allinoneCU.CheckIndentRequHdrApprovalsWorkflowEnabled(Rec) then
+                        allinoneCU.OnSendIndentRequHdrForApproval(Rec);
+
+                end;
+            }
+            action("Cancel Approval Request")
+            {
+                ApplicationArea = All;
+                Image = CancelApprovalRequest;
+
+
+                trigger OnAction()
+                begin
+                    allinoneCU.OnCancelIndentRequHdrForApproval(Rec);
                 end;
             }
             action("Re&lease")
@@ -425,6 +533,7 @@ page 50120 "Indent Requisition Document"
         Email: Text[50];
         StrVar: Text[50];
         Chr: Char;
+        allinoneCU: Codeunit "Approvals MGt 3";
         MailCreated: Boolean;
         "---": Integer;
         UserSetupApproval: Page 119;
@@ -532,17 +641,35 @@ page 50120 "Indent Requisition Document"
         Rec.Status := Rec.Status::Open;
     end;
 
-    trigger OnAfterGetRecord();
-    begin
-        if (Rec.Status = Rec.Status::Release) then begin
-            FieldEditable := false;
-            ShowAct := true;
-        end else begin
-            FieldEditable := true;
-            ShowAct := false;
-        end;
+    /* trigger OnAfterGetRecord();
+     begin
 
-    end;
+         if (Rec.Status = Rec.Status::Release) then begin
+             FieldEditable := false;
+             ShowAct := true;
+         end else begin
+             FieldEditable := true;
+             ShowAct := false;
+         end;
+
+     end;*/
+    /* trigger OnAfterGetRecord();
+     begin
+         //Approval visible conditions - B2BMSOn09Sep2022>>
+         OpenAppEntrExistsForCurrUser := approvalmngmt.HasOpenApprovalEntriesForCurrentUser(Rec.RecordId());
+         OpenApprEntrEsists := approvalmngmt.HasOpenApprovalEntries(Rec.RecordId());
+         CanCancelapprovalforrecord := approvalmngmt.CanCancelApprovalForRecord(Rec.RecordId());
+         workflowwebhookmangt.GetCanRequestAndCanCancel(Rec.RecordId(), CanrequestApprovForFlow, CanCancelapprovalforflow);
+         //Approval visible conditions - B2BMSOn09Sep2022<<
+
+         //B2BPGON10OCT2022
+         if (Rec."Released Status" = Rec."Released Status"::Released) then
+             PageEditable := false
+         else
+             PageEditable := true;
+         //CurrPage.indentLine.Page.QTyToIssueNonEditable();
+     end;*/
+
 
 
     trigger OnNewRecord(BelowxRec: Boolean)
@@ -551,4 +678,8 @@ page 50120 "Indent Requisition Document"
     end;
 
     var
+        OpenAppEntrExistsForCurrUser: Boolean;
+        OpenApprEntrEsists: Boolean;
+        CanCancelapprovalforrecord: Boolean;
+        workflowwebhookmangt: Boolean;
 }

@@ -2520,14 +2520,14 @@
                                       </TablixCell>
                                       <TablixCell>
                                         <CellContents>
-                                          <Textbox Name="Textbox9">
+                                          <Textbox Name="ItemCategory">
                                             <CanGrow>true</CanGrow>
                                             <KeepTogether>true</KeepTogether>
                                             <Paragraphs>
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Fields!Item_Category_Code.Value</Value>
+                                                    <Value>=Fields!ItemCategory.Value</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
                                                     </Style>
@@ -2536,7 +2536,7 @@
                                                 <Style />
                                               </Paragraph>
                                             </Paragraphs>
-                                            <rd:DefaultName>Textbox9</rd:DefaultName>
+                                            <rd:DefaultName>ItemCategory</rd:DefaultName>
                                             <Style>
                                               <Border>
                                                 <Color>LightGrey</Color>
@@ -2552,14 +2552,14 @@
                                       </TablixCell>
                                       <TablixCell>
                                         <CellContents>
-                                          <Textbox Name="Textbox11">
+                                          <Textbox Name="ItemSubCategory">
                                             <CanGrow>true</CanGrow>
                                             <KeepTogether>true</KeepTogether>
                                             <Paragraphs>
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Fields!Item_Category_Code.Value</Value>
+                                                    <Value>=Fields!ItemSubCategory.Value</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
                                                     </Style>
@@ -2568,7 +2568,7 @@
                                                 <Style />
                                               </Paragraph>
                                             </Paragraphs>
-                                            <rd:DefaultName>Textbox11</rd:DefaultName>
+                                            <rd:DefaultName>ItemSubCategory</rd:DefaultName>
                                             <Style>
                                               <Border>
                                                 <Color>LightGrey</Color>
@@ -2584,14 +2584,14 @@
                                       </TablixCell>
                                       <TablixCell>
                                         <CellContents>
-                                          <Textbox Name="Textbox13">
+                                          <Textbox Name="ItemCategory1">
                                             <CanGrow>true</CanGrow>
                                             <KeepTogether>true</KeepTogether>
                                             <Paragraphs>
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Fields!Description.Value</Value>
+                                                    <Value>=Fields!ItemCategory.Value</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
                                                     </Style>
@@ -2600,7 +2600,7 @@
                                                 <Style />
                                               </Paragraph>
                                             </Paragraphs>
-                                            <rd:DefaultName>Textbox13</rd:DefaultName>
+                                            <rd:DefaultName>ItemCategory1</rd:DefaultName>
                                             <Style>
                                               <Border>
                                                 <Color>LightGrey</Color>
@@ -2612,18 +2612,19 @@
                                               <PaddingBottom>2pt</PaddingBottom>
                                             </Style>
                                           </Textbox>
+                                          <rd:Selected>true</rd:Selected>
                                         </CellContents>
                                       </TablixCell>
                                       <TablixCell>
                                         <CellContents>
-                                          <Textbox Name="Textbox15">
+                                          <Textbox Name="itemno">
                                             <CanGrow>true</CanGrow>
                                             <KeepTogether>true</KeepTogether>
                                             <Paragraphs>
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value />
+                                                    <Value>=Fields!itemno.Value</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
                                                     </Style>
@@ -2632,7 +2633,7 @@
                                                 <Style />
                                               </Paragraph>
                                             </Paragraphs>
-                                            <rd:DefaultName>Textbox15</rd:DefaultName>
+                                            <rd:DefaultName>itemno</rd:DefaultName>
                                             <Style>
                                               <Border>
                                                 <Color>LightGrey</Color>
@@ -3378,9 +3379,6 @@ End Function
         <Field Name="Purpose">
           <DataField>Purpose</DataField>
         </Field>
-        <Field Name="IndentDate">
-          <DataField>IndentDate</DataField>
-        </Field>
         <Field Name="TotalAmount1">
           <DataField>TotalAmount1</DataField>
         </Field>
@@ -3461,6 +3459,18 @@ End Function
         </Field>
         <Field Name="QtyRejectedFormat">
           <DataField>QtyRejectedFormat</DataField>
+        </Field>
+        <Field Name="IndentDate">
+          <DataField>IndentDate</DataField>
+        </Field>
+        <Field Name="itemno">
+          <DataField>itemno</DataField>
+        </Field>
+        <Field Name="ItemCategory">
+          <DataField>ItemCategory</DataField>
+        </Field>
+        <Field Name="ItemSubCategory">
+          <DataField>ItemSubCategory</DataField>
         </Field>
       </Fields>
       <Query>

@@ -13,5 +13,30 @@ tableextension 50075 UserSetUp extends "User Setup"//B2BSSD20MAR2023
             DataClassification = CustomerContent;
             Caption = 'Stores';
         }
+        field(50102; Specifications; Boolean)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Specifications';
+        }
+        field(50103; "Accept/Reject"; Boolean)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Accept/Reject';
+        }
+       /* field(50104; "FA Class"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(50105; "FA Sub Class"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }*/
+        field(50106; "QR Code"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
+        
+
+
     }
 }

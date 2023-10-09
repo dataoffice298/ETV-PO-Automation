@@ -70,6 +70,11 @@ page 50023 "Indent Line"
                     ApplicationArea = All;
                     Editable = FieldEditable; //B2B22AUG2023
                 }
+                field(Status; Status)
+                {
+                    ApplicationArea = all;
+                }
+
                 field(Department; rec.Department)
                 {
                     Visible = false;

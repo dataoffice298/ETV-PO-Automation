@@ -1,4 +1,4 @@
-tableextension 50051 tableextension70000002 extends "Purch. Rcpt. Header"
+tableextension 50051 PurchRcptHdr extends "Purch. Rcpt. Header"
 {
     // version NAVW19.00.00.45778,NAVIN9.00.00.45778,PO
 
@@ -77,6 +77,15 @@ tableextension 50051 tableextension70000002 extends "Purch. Rcpt. Header"
             OptionMembers = ,Open,"Pending Approval",Released;
             OptionCaption = ' ,Open,Pending Approval,Released';
         }
+        field(50119; "Vendor Invoice No."; Code[35])
+        {
+            Caption = 'Vendor Invoice No.';
+        }
+        field(50116; "Vendor Invoice Date"; Date)
+        {
+            Caption = 'Vendor Invoice Date';
+        }
+
 
     }
 

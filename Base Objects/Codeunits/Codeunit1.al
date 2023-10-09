@@ -426,5 +426,12 @@ codeunit 50016 "MyBaseSubscr"
         FixedAsset2."QC Enabled B2B" := false;
     end;
     //B2BSSD16JUN2023<<
-}
+    //B2BPJ 4thOct23 >>>>>>
+     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforePurchRcptHeaderInsert', '', false, false)]
+    local procedure OnBeforePurchRcptHeaderInsert(var PurchRcptHeader: Record "Purch. Rcpt. Header"; var PurchaseHeader: Record "Purchase Header"; CommitIsSupressed: Boolean; WarehouseReceiptHeader: Record "Warehouse Receipt Header"; WhseReceive: Boolean; WarehouseShipmentHeader: Record "Warehouse Shipment Header"; WhseShip: Boolean)
+    begin
+        PurchRcptHeader."Vendor Invoice No." := PurchaseHeader."Vendor Invoice No.";
+        PurchRcptHeader."Vendor Invoice Date" := PurchaseHeader."Vendor Invoice Date";
+    end;
+}   //B2BPJ 4thOct23 <<<<<<<<
 

@@ -174,12 +174,6 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
-                                                  <TextRun>
-                                                    <Value>=Fields!SupplierName.Value</Value>
-                                                    <Style>
-                                                      <FontWeight>Normal</FontWeight>
-                                                    </Style>
-                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -228,12 +222,6 @@
                                                     <Value xml:space="preserve"> </Value>
                                                     <Style>
                                                       <FontWeight>Bold</FontWeight>
-                                                    </Style>
-                                                  </TextRun>
-                                                  <TextRun>
-                                                    <Value>=Fields!InwardNo.Value</Value>
-                                                    <Style>
-                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -290,10 +278,6 @@
                                                     <Value> : </Value>
                                                     <Style />
                                                   </TextRun>
-                                                  <TextRun>
-                                                    <Value>=Fields!DCNO.Value</Value>
-                                                    <Style />
-                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -337,13 +321,6 @@
                                                     <Value xml:space="preserve"> </Value>
                                                     <Style>
                                                       <FontWeight>Bold</FontWeight>
-                                                    </Style>
-                                                  </TextRun>
-                                                  <TextRun>
-                                                    <Value>=Fields!DCDate.Value</Value>
-                                                    <Style>
-                                                      <FontWeight>Normal</FontWeight>
-                                                      <Format>M/d/yyyy</Format>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -392,13 +369,6 @@
                                                     <Value xml:space="preserve"> </Value>
                                                     <Style>
                                                       <FontWeight>Bold</FontWeight>
-                                                    </Style>
-                                                  </TextRun>
-                                                  <TextRun>
-                                                    <Value>=Fields!InwardDate.Value</Value>
-                                                    <Style>
-                                                      <FontWeight>Normal</FontWeight>
-                                                      <Format>M/d/yyyy</Format>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -457,12 +427,6 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
-                                                  <TextRun>
-                                                    <Value>=Fields!VendorInvNo.Value</Value>
-                                                    <Style>
-                                                      <FontWeight>Normal</FontWeight>
-                                                    </Style>
-                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -506,13 +470,6 @@
                                                     <Value xml:space="preserve"> </Value>
                                                     <Style>
                                                       <FontWeight>Bold</FontWeight>
-                                                    </Style>
-                                                  </TextRun>
-                                                  <TextRun>
-                                                    <Value>=Fields!VendorInvDate.Value</Value>
-                                                    <Style>
-                                                      <FontWeight>Normal</FontWeight>
-                                                      <Format>M/d/yyyy</Format>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -560,12 +517,6 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
-                                                  <TextRun>
-                                                    <Value>=Fields!GRNNo.Value</Value>
-                                                    <Style>
-                                                      <FontWeight>Normal</FontWeight>
-                                                    </Style>
-                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -609,13 +560,6 @@
                                                     <Value xml:space="preserve"> </Value>
                                                     <Style>
                                                       <FontWeight>Bold</FontWeight>
-                                                    </Style>
-                                                  </TextRun>
-                                                  <TextRun>
-                                                    <Value>=Fields!GRNDate.Value</Value>
-                                                    <Style>
-                                                      <FontWeight>Normal</FontWeight>
-                                                      <Format>M/d/yyyy</Format>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -668,13 +612,6 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
-                                                  <TextRun>
-                                                    <Value>=Fields!ReceiptDate.Value</Value>
-                                                    <Style>
-                                                      <FontWeight>Normal</FontWeight>
-                                                      <Format>M/d/yyyy</Format>
-                                                    </Style>
-                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -720,12 +657,6 @@
                                                     <Value xml:space="preserve"> </Value>
                                                     <Style>
                                                       <FontWeight>Bold</FontWeight>
-                                                    </Style>
-                                                  </TextRun>
-                                                  <TextRun>
-                                                    <Value>=Fields!Spot.Value</Value>
-                                                    <Style>
-                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -784,12 +715,6 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
-                                                  <TextRun>
-                                                    <Value>=Fields!VehicleNo.Value</Value>
-                                                    <Style>
-                                                      <FontWeight>Normal</FontWeight>
-                                                    </Style>
-                                                  </TextRun>
                                                 </TextRuns>
                                                 <Style />
                                               </Paragraph>
@@ -833,12 +758,6 @@
                                                     <Value xml:space="preserve"> </Value>
                                                     <Style>
                                                       <FontWeight>Bold</FontWeight>
-                                                    </Style>
-                                                  </TextRun>
-                                                  <TextRun>
-                                                    <Value>=Fields!Purpose.Value</Value>
-                                                    <Style>
-                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -932,12 +851,6 @@
                                                     <Value xml:space="preserve"> </Value>
                                                     <Style>
                                                       <FontWeight>Bold</FontWeight>
-                                                    </Style>
-                                                  </TextRun>
-                                                  <TextRun>
-                                                    <Value>=Fields!Indentor.Value</Value>
-                                                    <Style>
-                                                      <FontWeight>Normal</FontWeight>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -1194,7 +1107,7 @@
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=SUM(Fields!TotalAmount.Value, "DataSet_Result")</Value>
+                                      <Value />
                                       <Style>
                                         <Format>n2</Format>
                                       </Style>
@@ -2431,7 +2344,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=ROWNUMBER(NOTHING)</Value>
+                                                    <Value />
                                                     <Style>
                                                       <FontWeight>Normal</FontWeight>
                                                     </Style>
@@ -2478,7 +2391,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Fields!desc.Value</Value>
+                                                    <Value />
                                                     <Style>
                                                       <FontWeight>Normal</FontWeight>
                                                     </Style>
@@ -2509,7 +2422,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Fields!UOM.Value</Value>
+                                                    <Value />
                                                     <Style>
                                                       <FontWeight>Normal</FontWeight>
                                                     </Style>
@@ -2643,7 +2556,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Fields!PONo.Value</Value>
+                                                    <Value />
                                                     <Style>
                                                       <FontWeight>Normal</FontWeight>
                                                     </Style>
@@ -2719,7 +2632,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Fields!Make.Value</Value>
+                                                    <Value />
                                                     <Style>
                                                       <FontWeight>Normal</FontWeight>
                                                     </Style>
@@ -2784,7 +2697,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Fields!ChallanQty.Value</Value>
+                                                    <Value />
                                                     <Style>
                                                       <FontWeight>Normal</FontWeight>
                                                     </Style>
@@ -2824,7 +2737,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Fields!QtyReceived.Value</Value>
+                                                    <Value />
                                                     <Style>
                                                       <FontWeight>Normal</FontWeight>
                                                     </Style>
@@ -2871,7 +2784,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Fields!QtyAccepted.Value</Value>
+                                                    <Value />
                                                     <Style>
                                                       <FontWeight>Normal</FontWeight>
                                                     </Style>
@@ -2918,7 +2831,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Fields!QtyRejected.Value</Value>
+                                                    <Value />
                                                     <Style />
                                                   </TextRun>
                                                 </TextRuns>
@@ -2963,7 +2876,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Fields!Rate.Value</Value>
+                                                    <Value />
                                                     <Style>
                                                       <Format>n2</Format>
                                                     </Style>
@@ -3010,7 +2923,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Fields!BasicAmt.Value</Value>
+                                                    <Value />
                                                     <Style>
                                                       <Format>n2</Format>
                                                     </Style>
@@ -3041,7 +2954,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Fields!Discount.Value</Value>
+                                                    <Value />
                                                     <Style />
                                                   </TextRun>
                                                 </TextRuns>
@@ -3070,7 +2983,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Fields!Vat.Value</Value>
+                                                    <Value />
                                                     <Style>
                                                       <FontWeight>Normal</FontWeight>
                                                     </Style>
@@ -3116,7 +3029,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Fields!TotalAmount.Value</Value>
+                                                    <Value />
                                                     <Style>
                                                       <Format>n2</Format>
                                                     </Style>
@@ -3206,13 +3119,6 @@
                                                     <Value xml:space="preserve">                                                                </Value>
                                                     <Style>
                                                       <FontWeight>Bold</FontWeight>
-                                                    </Style>
-                                                  </TextRun>
-                                                  <TextRun>
-                                                    <Value>=SUM(Fields!TotalAmount.Value, "DataSet_Result")</Value>
-                                                    <Style>
-                                                      <FontWeight>Normal</FontWeight>
-                                                      <Format>n2</Format>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -3315,7 +3221,6 @@
                             </RightBorder>
                           </Style>
                         </Rectangle>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -3329,21 +3234,7 @@
             </TablixColumnHierarchy>
             <TablixRowHierarchy>
               <TablixMembers>
-                <TablixMember>
-                  <Group Name="No_">
-                    <GroupExpressions>
-                      <GroupExpression>=Fields!GRNNo.Value</GroupExpression>
-                    </GroupExpressions>
-                  </Group>
-                  <SortExpressions>
-                    <SortExpression>
-                      <Value>=Fields!No_.Value</Value>
-                    </SortExpression>
-                  </SortExpressions>
-                  <TablixMembers>
-                    <TablixMember />
-                  </TablixMembers>
-                </TablixMember>
+                <TablixMember />
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet_Result</DataSetName>
@@ -3434,9 +3325,6 @@ End Function
   <DataSets>
     <DataSet Name="DataSet_Result">
       <Fields>
-        <Field Name="No_">
-          <DataField>No_</DataField>
-        </Field>
         <Field Name="CompanyInfoName">
           <DataField>CompanyInfoName</DataField>
         </Field>
@@ -3590,47 +3478,41 @@ End Function
         <Field Name="RamojiFCCapLbl">
           <DataField>RamojiFCCapLbl</DataField>
         </Field>
-        <Field Name="DCNO">
-          <DataField>DCNO</DataField>
+        <Field Name="Indent_No_">
+          <DataField>Indent_No_</DataField>
         </Field>
-        <Field Name="DCDate">
-          <DataField>DCDate</DataField>
+        <Field Name="No_">
+          <DataField>No_</DataField>
         </Field>
-        <Field Name="InwardNo">
-          <DataField>InwardNo</DataField>
+        <Field Name="Order_No_">
+          <DataField>Order_No_</DataField>
         </Field>
-        <Field Name="InwardDate">
-          <DataField>InwardDate</DataField>
+        <Field Name="Order_Date">
+          <DataField>Order_Date</DataField>
         </Field>
-        <Field Name="GRNDate">
-          <DataField>GRNDate</DataField>
+        <Field Name="Buy_from_Vendor_No_">
+          <DataField>Buy_from_Vendor_No_</DataField>
         </Field>
-        <Field Name="SupplierName">
-          <DataField>SupplierName</DataField>
-        </Field>
-        <Field Name="ReceiptDate">
-          <DataField>ReceiptDate</DataField>
-        </Field>
-        <Field Name="VendorInvNo">
-          <DataField>VendorInvNo</DataField>
-        </Field>
-        <Field Name="VendorInvDate">
-          <DataField>VendorInvDate</DataField>
-        </Field>
-        <Field Name="Spot">
-          <DataField>Spot</DataField>
-        </Field>
-        <Field Name="Indentor">
-          <DataField>Indentor</DataField>
+        <Field Name="Location_Code">
+          <DataField>Location_Code</DataField>
         </Field>
         <Field Name="Purpose">
           <DataField>Purpose</DataField>
         </Field>
-        <Field Name="VehicleNo">
-          <DataField>VehicleNo</DataField>
+        <Field Name="Indent_Req_No">
+          <DataField>Indent_Req_No</DataField>
         </Field>
-        <Field Name="IndNo1">
-          <DataField>IndNo1</DataField>
+        <Field Name="Vendor_Invoice_No_">
+          <DataField>Vendor_Invoice_No_</DataField>
+        </Field>
+        <Field Name="Vendor_Invoice_Date">
+          <DataField>Vendor_Invoice_Date</DataField>
+        </Field>
+        <Field Name="Vehicle_No_">
+          <DataField>Vehicle_No_</DataField>
+        </Field>
+        <Field Name="Posting_Date">
+          <DataField>Posting_Date</DataField>
         </Field>
         <Field Name="Document_No_">
           <DataField>Document_No_</DataField>
@@ -3638,89 +3520,44 @@ End Function
         <Field Name="Line_No_">
           <DataField>Line_No_</DataField>
         </Field>
-        <Field Name="Qty">
-          <DataField>Qty</DataField>
+        <Field Name="Quantity">
+          <DataField>Quantity</DataField>
         </Field>
-        <Field Name="QtyFormat">
-          <DataField>QtyFormat</DataField>
+        <Field Name="QuantityFormat">
+          <DataField>QuantityFormat</DataField>
         </Field>
-        <Field Name="QtyAccepted">
-          <DataField>QtyAccepted</DataField>
+        <Field Name="Unit_of_Measure">
+          <DataField>Unit_of_Measure</DataField>
         </Field>
-        <Field Name="QtyAcceptedFormat">
-          <DataField>QtyAcceptedFormat</DataField>
+        <Field Name="Direct_Unit_Cost">
+          <DataField>Direct_Unit_Cost</DataField>
         </Field>
-        <Field Name="QtyReceived">
-          <DataField>QtyReceived</DataField>
+        <Field Name="Direct_Unit_CostFormat">
+          <DataField>Direct_Unit_CostFormat</DataField>
         </Field>
-        <Field Name="QtyReceivedFormat">
-          <DataField>QtyReceivedFormat</DataField>
+        <Field Name="Unit_Cost">
+          <DataField>Unit_Cost</DataField>
         </Field>
-        <Field Name="QtyRejected">
-          <DataField>QtyRejected</DataField>
+        <Field Name="Unit_CostFormat">
+          <DataField>Unit_CostFormat</DataField>
         </Field>
-        <Field Name="QtyRejectedFormat">
-          <DataField>QtyRejectedFormat</DataField>
+        <Field Name="Description">
+          <DataField>Description</DataField>
         </Field>
-        <Field Name="SNo">
-          <DataField>SNo</DataField>
+        <Field Name="VAT__">
+          <DataField>VAT__</DataField>
         </Field>
-        <Field Name="UOM">
-          <DataField>UOM</DataField>
+        <Field Name="VAT__Format">
+          <DataField>VAT__Format</DataField>
         </Field>
-        <Field Name="Rate">
-          <DataField>Rate</DataField>
+        <Field Name="Line_Discount__">
+          <DataField>Line_Discount__</DataField>
         </Field>
-        <Field Name="RateFormat">
-          <DataField>RateFormat</DataField>
+        <Field Name="Line_Discount__Format">
+          <DataField>Line_Discount__Format</DataField>
         </Field>
-        <Field Name="PONo">
-          <DataField>PONo</DataField>
-        </Field>
-        <Field Name="BasicAmt">
-          <DataField>BasicAmt</DataField>
-        </Field>
-        <Field Name="BasicAmtFormat">
-          <DataField>BasicAmtFormat</DataField>
-        </Field>
-        <Field Name="Discount">
-          <DataField>Discount</DataField>
-        </Field>
-        <Field Name="DiscountFormat">
-          <DataField>DiscountFormat</DataField>
-        </Field>
-        <Field Name="Make">
-          <DataField>Make</DataField>
-        </Field>
-        <Field Name="Vat">
-          <DataField>Vat</DataField>
-        </Field>
-        <Field Name="VatFormat">
-          <DataField>VatFormat</DataField>
-        </Field>
-        <Field Name="desc">
-          <DataField>desc</DataField>
-        </Field>
-        <Field Name="Totamt">
-          <DataField>Totamt</DataField>
-        </Field>
-        <Field Name="TotamtFormat">
-          <DataField>TotamtFormat</DataField>
-        </Field>
-        <Field Name="ChallanQty">
-          <DataField>ChallanQty</DataField>
-        </Field>
-        <Field Name="ChallanQtyFormat">
-          <DataField>ChallanQtyFormat</DataField>
-        </Field>
-        <Field Name="TotalAmount">
-          <DataField>TotalAmount</DataField>
-        </Field>
-        <Field Name="TotalAmountFormat">
-          <DataField>TotalAmountFormat</DataField>
-        </Field>
-        <Field Name="GRNNo">
-          <DataField>GRNNo</DataField>
+        <Field Name="Make_B2B">
+          <DataField>Make_B2B</DataField>
         </Field>
       </Fields>
       <Query>

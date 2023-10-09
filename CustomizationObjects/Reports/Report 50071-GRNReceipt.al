@@ -145,8 +145,7 @@ report 50071 "GRN RECEIPT"
             { }
             column(Purpose; Purpose)
             { }
-            column(IndentDate; IndentDate)
-            { }
+
             column(TotalAmount1; TotalAmount1)
             { }
             dataitem("Purch. Rcpt. Line"; "Purch. Rcpt. Line")
@@ -162,6 +161,7 @@ report 50071 "GRN RECEIPT"
                 //B2BMMOn06Oct2022>>
                 column(InwardNo; InwardNo)
                 { }
+
                 column(InwardDate; InwardDate)
                 { }
                 column(Indentor; Indentor)
@@ -176,20 +176,36 @@ report 50071 "GRN RECEIPT"
                 { }
                 column(Direct_Unit_Cost; "Direct Unit Cost")
                 { }
-                column(BasicAmount; BasicAmount)
+                column(BasicAmount; "Direct Unit Cost" * Quantity)
                 { }
-                column(NetTotal; NetTotal)
+                column(NetTotal; "Direct Unit Cost" * Quantity)
                 { }
                 column(NumberText1; NumberText[1])
                 { }
                 column(Rate; Rate)
                 { }
-                column(DiscAmount; DiscAmount)
+                column(DiscAmount; "Line Discount %")
                 { }
-                column(QtyAccepted; QtyAccepted)
+                column(QtyAccepted; Quantity)
                 { }
                 column(QtyRejected; QtyRejected)
                 { }
+                column(IndentDate; IndentDate)
+                { }
+                column(itemno; "No.")
+                {
+
+
+                }
+                column(ItemCategory; ItemCategory)
+                {
+
+                }
+                column(ItemSubCategory; ItemSubCategory)
+                {
+
+                }
+
 
 
                 trigger OnAfterGetRecord()
@@ -198,60 +214,83 @@ report 50071 "GRN RECEIPT"
                     Clear(QtyRejected);
                     Clear(BasicAmount);
                     Clear(DiscAmount);
-                    Clear(NetTotal);  //B2BSCM27SEP2023<<
+                    Clear(NetTotal);
+                    //B2BSCM27SEP2023<<
+                    Clear(ItemCategory);
+                    Clear(ItemSubCategory);
                     Clear(NumberText);
                     CheckGRec.InitTextVariable;
                     CheckGRec.FormatNoText(NumberText, Round(NetTotal, 1, '='), "Currency Code");
                     //B2BSCM27SEP2023>>
-                    PurchaseLineGRec.Reset();
-                    PurchaseLineGRec.SetRange("Document No.", "Order No.");
-                    PurchaseLineGRec.SetRange("No.", "No.");
-                    if PurchaseLineGRec.FindSet() then begin
-                        QtyAccepted := PurchaseLineGRec."Quantity Accepted B2B";
-                        QtyRejected := PurchaseLineGRec."Quantity Rejected B2B";
-                        // BasicAmount := PurchaseLineGRec."Quantity Received" * PurchaseLineGRec."Direct Unit Cost";
-                        BasicAmount := PurchaseLineGRec."Line Amount";
-                        DiscAmount := PurchaseLineGRec."Line Discount Amount";
-                        // NetTotal := (BasicAmount - DiscAmount + CGSTAmt + SGSTAmt);
-                        NetTotal := PurchaseLineGRec."Line Amount";
-                    end; //B2BSCM27SEP2023<<
+
+                    IndentHdr.Reset();
+                    IndentHdr.SetRange("No.", "Indent No.");
+                    if IndentHdr.FindFirst() then begin
+                        IndentDate := IndentHdr."Document Date";
+                        Indentor := IndentHdr.Indentor;
+                    end;
+                    if ItemRec.get("No.") then begin
+                        ItemCategory := "Purch. Rcpt. Line"."Item Category Code";
+                        ItemSubCategory := "Purch. Rcpt. Line"."Item Category Code";
+                    end else
+                        if FixedAssetRec.Get("No.") then begin
+                            ItemCategory := FixedAssetRec."FA Class Code";
+                            ItemSubCategory := FixedAssetRec."FA Subclass Code";
+                        end;
+                    if "Purch. Rcpt. Line".Quantity = 0 then
+                        CurrReport.Skip();
                 end;
+
             }
             trigger OnAfterGetRecord()
             begin
-                PurchaseOrderGRec.Reset();
-                PurchaseOrderGRec.SetRange("No.", "Order No.");
-                if PurchaseOrderGRec.FindFirst() then begin
-                    VendorInvNo := PurchaseOrderGRec."Vendor Invoice No.";
-                    VendorInvDate := PurchaseOrderGRec."Vendor Invoice Date";
-                    Purpose := PurchaseOrderGRec.Purpose;
-                    PurchaseLineGRec.Reset();
-                    PurchaseLineGRec.SetRange("Document No.", PurchaseOrderGRec."No.");
-                    if PurchaseLineGRec.FindSet() then begin
-                        if (PurchaseLineGRec.Type = PurchaseLineGRec.Type::Item) or (PurchaseLineGRec.Type = PurchaseLineGRec.Type::"Fixed Asset") or (PurchaseLineGRec.Type = PurchaseLineGRec.Type::Description) then begin
-                            IndentHeaderGRec.Reset();
-                            IndentHeaderGRec.SetRange("No.", PurchaseLineGRec."Indent No.");
-                            if IndentHeaderGRec.FindFirst() then begin
-                                IndentNo := IndentHeaderGRec."No.";
-                                IndentDate := IndentHeaderGRec."Document Date";
-                                Indentor := IndentHeaderGRec.Indentor;
-                            end;
-                        end;//B2BSCM25SEP2023
+
+                /*/
+                 PurchaseOrderGRec.Reset();
+                 PurchaseOrderGRec.SetRange("No.", "Order No.");
+                 if PurchaseOrderGRec.FindFirst() then begin
+                     VendorInvNo := PurchaseOrderGRec."Vendor Invoice No.";
+                     VendorInvDate := PurchaseOrderGRec."Vendor Invoice Date";
+                     Purpose := PurchaseOrderGRec.Purpose;
+                     PurchaseLineGRec.Reset();
+                     PurchaseLineGRec.SetRange("Document No.", PurchaseOrderGRec."No.");
+                     if PurchaseLineGRec.FindSet() then begin
+                         if (PurchaseLineGRec.Type = PurchaseLineGRec.Type::Item) or (PurchaseLineGRec.Type = PurchaseLineGRec.Type::"Fixed Asset") or (PurchaseLineGRec.Type = PurchaseLineGRec.Type::Description) then begin
+                             IndentHeaderGRec.Reset();
+                             IndentHeaderGRec.SetRange("No.", PurchaseLineGRec."Indent No.");
+                             if IndentHeaderGRec.FindFirst() then begin
+                                 IndentNo := IndentHeaderGRec."No.";
+                                 IndentDate := IndentHeaderGRec."Document Date";
+                                 Indentor := IndentHeaderGRec.Indentor;
+                             end;
+                         end;//B2BSCM25SEP2023
 
 
-                        // BasicAmount := PurchaseLineGRec."Quantity Received" * PurchaseLineGRec."Direct Unit Cost";
-                        // DiscAmount := PurchaseLineGRec."Line Discount Amount";
-                    end;
-                    GateEntryhdrGRecB2B.Reset();
-                    GateEntryhdrGRecB2B.SetRange("Purchase Order No.", "Order No.");
-                    if GateEntryhdrGRecB2B.FindFirst() then begin
-                        InwardNo := GateEntryhdrGRecB2B."No.";
-                        InwardDate := GateEntryhdrGRecB2B."Document Date";
-                        DCNO := GateEntryhdrGRecB2B."Challan No.";
-                    end;
+                         // BasicAmount := PurchaseLineGRec."Quantity Received" * PurchaseLineGRec."Direct Unit Cost";
+                         // DiscAmount := PurchaseLineGRec."Line Discount Amount";
+                     end;
+                     GateEntryhdrGRecB2B.Reset();
+                     GateEntryhdrGRecB2B.SetRange("Purchase Order No.", "Order No.");
+                     if GateEntryhdrGRecB2B.FindFirst() then begin
+                         InwardNo := GateEntryhdrGRecB2B."No.";
+                         InwardDate := GateEntryhdrGRecB2B."Document Date";
+                         DCNO := GateEntryhdrGRecB2B."Challan No.";
+                     end;
+                     DCDate := GateEntryhdrGRecB2B."Challan Date";
+                 end;
+                 // NetTotal := (BasicAmount + CGSTAmt + SGSTAmt); 
+
+                 */
+                GateEntryhdrGRecB2B.Reset();
+                GateEntryhdrGRecB2B.SetRange("Purchase Order No.", "Order No.");
+                GateEntryhdrGRecB2B.SetRange("Entry Type", GateEntryhdrGRecB2B."Entry Type"::Inward);
+                GateEntryhdrGRecB2B.SetRange(Type, GateEntryhdrGRecB2B.Type::RGP);
+                if GateEntryhdrGRecB2B.FindFirst() then begin
+                    DCNO := GateEntryhdrGRecB2B."Challan No.";
                     DCDate := GateEntryhdrGRecB2B."Challan Date";
+                    InwardNo := GateEntryhdrGRecB2B."No.";
+                    InwardDate := GateEntryhdrGRecB2B."Document Date";
                 end;
-                // NetTotal := (BasicAmount + CGSTAmt + SGSTAmt); 
 
             end;
 
@@ -319,6 +358,10 @@ report 50071 "GRN RECEIPT"
 
 
     var
+        ItemCategory: Code[20];
+        ItemSubCategory: Code[20];
+        ItemRec: Record Item;
+        FixedAssetRec: Record "Fixed Asset";
         IndentNo: Code[30];
         InwardDate: Date;
         Indentor: Text[50];
@@ -407,5 +450,6 @@ report 50071 "GRN RECEIPT"
         QtyRejected: Decimal; //B2BSCM27SEP2023
         TotalAmount: Decimal; //B2BSCM27SEP2023
         TotalAmount1: Decimal; //B2BSCM27SEP2023
+        IndentHdr: Record "Indent Header";
     //B2BMMOn06Oct2022<<
 }

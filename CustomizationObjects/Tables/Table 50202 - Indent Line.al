@@ -503,6 +503,10 @@ table 50202 "Indent Line"
             end;
 
         } //B2BSCM21AUG2023<<
+        field(50025; Status; Option)
+        {
+            OptionMembers = " ",Enqiury,"Indent Requisition",Quote,"Purchase Order","Quotation Comparsion";
+        }
 
 
     }

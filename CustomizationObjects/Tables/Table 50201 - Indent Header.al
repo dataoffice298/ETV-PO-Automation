@@ -243,6 +243,7 @@ table 50201 "Indent Header"
         {
             DataClassification = CustomerContent;
         }
+       
     }
 
     keys

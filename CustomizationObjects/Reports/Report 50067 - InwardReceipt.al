@@ -211,6 +211,7 @@ report 50067 "INWARD RECEIPT"
                         end else
                             currreport.break;
                     end;
+
                     trigger OnAfterGetRecord()
                     begin
                         if Number > 1 then
@@ -275,7 +276,7 @@ report 50067 "INWARD RECEIPT"
                                 IndNo2 := PurchaseRcptHdr."Order No.";
                                 GRNNo := PurchaseRcptHdr."No.";
                                 GRNDate := PurchaseRcptHdr."Document Date";
-                                SupplierName := PurchaseRcptHdr."Buy-from Vendor No.";
+                                SupplierName := PurchaseRcptHdr."Buy-from Vendor Name";
                                 ReceiptDate := PurchaseRcptHdr."Posting Date";
                                 Spot := PurchaseRcptHdr."Location Code";
                                 VehicleNo := PurchaseRcptHdr."Vehicle No.";

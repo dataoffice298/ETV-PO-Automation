@@ -327,7 +327,7 @@ page 50126 "Quotation Comparision Doc"
             {
                 ApplicationArea = All;
                 Image = SendApprovalRequest;
-                Visible = Not OpenApprEntrEsists and CanrequestApprovForFlow;
+              //  Visible = Not OpenApprEntrEsists and CanrequestApprovForFlow;
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Process;
@@ -350,7 +350,7 @@ page 50126 "Quotation Comparision Doc"
             {
                 ApplicationArea = All;
                 Image = CancelApprovalRequest;
-                Visible = CanCancelapprovalforrecord or CanCancelapprovalforflow;
+                //     Visible = CanCancelapprovalforrecord or CanCancelapprovalforflow;
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Process;

@@ -107,7 +107,7 @@ table 50203 "Indent Requisitions"
         field(8; "Release Status"; Option)
         {
             Editable = false;
-            OptionMembers = Open,Released,Cancel,Closed;
+            OptionMembers = Open,Released,Cancel,Closed,"Pending Approval";
         }
         field(9; "Due Date"; Date)
         {

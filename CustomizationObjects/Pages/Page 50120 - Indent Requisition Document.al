@@ -29,7 +29,7 @@ page 50120 "Indent Requisition Document"
                 field("Resposibility Center"; Rec."Resposibility Center")
                 {
                     ApplicationArea = All;
-                    Editable = FieldEditable;
+                    //   Editable = FieldEditable;
                 }
                 field(Status; Rec.Status)
                 {
@@ -146,8 +146,8 @@ page 50120 "Indent Requisition Document"
                 Caption = 'Create &Enquiry';
                 ApplicationArea = All;
                 Image = Create;
-                Visible = ShowAct;
-
+                //   Visible = ShowAct;
+                //
                 trigger OnAction();
                 var
                     IndentReqLine: Record "Indent Requisitions";
@@ -208,7 +208,7 @@ page 50120 "Indent Requisition Document"
 
                 ApplicationArea = All;
                 Image = NewSalesQuote;
-                Visible = ShowAct;
+                // Visible = ShowAct;
 
                 trigger OnAction();
                 var
@@ -267,7 +267,7 @@ page 50120 "Indent Requisition Document"
                 Caption = 'Create &Purchase Order';
                 ApplicationArea = All;
                 Image = MakeOrder;
-                Visible = ShowAct;
+                //   Visible = ShowAct;
 
                 trigger OnAction();
                 var
@@ -324,97 +324,155 @@ page 50120 "Indent Requisition Document"
 
                 end;
             }
-            action("Send Approval Request")
+
+            /*  action("Re&lease")
+              {
+                  Caption = 'Re&lease';
+                  Image = ReleaseDoc;
+                  ApplicationArea = All;
+
+                  trigger OnAction();
+                  var
+                      IndentReqLine: Record "Indent Requisitions";
+                      RelText1: Label 'Document released and Moved to Local Indent Requisition List.';
+                      RelText2: Label 'Document released and Moved to Central Indent Requisition List.';
+                      WorkflowManagement: Codeunit "Workflow Management";
+                  begin
+
+                      Rec.TestField("No.Series");
+                      Rec.TestField(Status, Rec.Status::Open);
+                      IndentReqLine.Reset();
+                      IndentReqLine.SetRange("Document No.", Rec."No.");
+                      if not IndentReqLine.FindFirst() then begin
+                          Error('No Lines Found');
+                      end;
+                      //B2BSCM20SEP2023>>
+                      if IndentReqLine.FindSet() then begin
+                          repeat
+                              IndentReqLine.TestField("Qty. To Order");
+                          until IndentReqLine.Next() = 0;
+                      end; //B2BSCM20SEP2023<<
+                      Rec.TestField("Resposibility Center");
+                      Rec.TESTFIELD("Document Date");
+
+
+                      Rec.Status := Rec.Status::Release;
+                      Rec.MODIFY;
+                      if Rec."Resposibility Center" = 'LOCAL REQ' then
+                          Message(RelText1);
+                      if Rec."Resposibility Center" = 'CENTRL REQ' then
+                          Message(RelText2);
+
+                      IF WorkflowManagement.CanExecuteWorkflow(Rec, allinoneCU.RunworkflowOnSendIndentRequisitionDoc1forApprovalCode()) then
+                          error('Workflow is enabled. You can not release manually.');
+
+                      IF Rec."Status" <> Rec."Status"::Release then BEGIN
+                          Rec."Status" := Rec."Status"::Release;
+                          Rec.Modify();
+                          Message('Document has been Released.');
+                      end;
+
+                  end;
+
+              }*/
+            action("Re&lease")
+            {
+                ApplicationArea = all;
+                Caption = 'Re&lease';
+                ShortCutKey = 'Ctrl+F11';
+                Image = ReleaseDoc;
+
+                ToolTip = 'Executes the Re&lease action.';
+                trigger OnAction()
+                var
+                    WorkflowManagement: Codeunit "Workflow Management";
+                    allinoneCU: Codeunit "Approvals MGt 4";
+                begin
+                    //IF WorkflowManagement.CanExecuteWorkflow(Rec, Approvalmgmt.run) then
+                    if allinoneCU.CheckIndentRequisitionDoc1ApprovalsWorkflowEnabled(Rec) then
+                        error('Workflow is enabled. You can not release manually.');
+
+                    IF Rec.Status <> Rec.Status::Release then BEGIN
+                        Rec.Status := Rec.Status::Release;
+
+                        Rec.Modify();
+                        Message('Document has been Released.');
+                    end;
+                end;
+            }
+
+
+            action("Send Approval Request1")
             {
                 ApplicationArea = All;
                 Image = SendApprovalRequest;
-                // Visible = (Not OpenApprEntrEsists);
-                /* Promoted = true;
-                 PromotedIsBig = true;
-                 PromotedCategory = Process;
-                 PromotedOnly = true;*/
+                //Visible = Not OpenApprEntrEsists and CanrequestApprovForFlow;
+                ToolTip = 'Executes the Send Approval Request action.';
                 trigger OnAction()
                 var
-                    ItemVariantLRec: Record "Item Variant";
-                    IndentLine: Record "Indent Req Header";
+                    ApprovalsCodeunit: Codeunit "Approvals MGt 4";
+
                 begin
-                    Rec.TESTFIELD(Status, rec.Status::Open);
-                    // Rec.TESTFIELD(Indentor);
-                    Rec.TestField("Shortcut Dimension 1 Code");
-                    Rec.TestField("Shortcut Dimension 2 Code");
-
-                    IF allinoneCU.CheckIndentRequHdrApprovalsWorkflowEnabled(Rec) then
-                        allinoneCU.OnSendIndentRequHdrForApproval(Rec);
-
+                    rec.TestField("Resposibility Center");
+                    IF ApprovalsCodeunit.CheckIndentRequisitionDoc1ApprovalsWorkflowEnabled(rec) then
+                        ApprovalsCodeunit.OnSendIndentRequisitionDoc1ForApproval(Rec);
                 end;
             }
+
             action("Cancel Approval Request")
             {
                 ApplicationArea = All;
                 Image = CancelApprovalRequest;
-
-
+                //Visible = CanCancelapprovalforrecord or CanCancelapprovalforflow;
                 trigger OnAction()
-                begin
-                    allinoneCU.OnCancelIndentRequHdrForApproval(Rec);
-                end;
-            }
-            action("Re&lease")
-            {
-                Caption = 'Re&lease';
-                Image = ReleaseDoc;
-                ApplicationArea = All;
-
-                trigger OnAction();
                 var
-                    IndentReqLine: Record "Indent Requisitions";
-                    RelText1: Label 'Document released and Moved to Local Indent Requisition List.';
-                    RelText2: Label 'Document released and Moved to Central Indent Requisition List.';
+                    ApprovalsCodeunit: Codeunit "Approvals MGt 4";
                 begin
-
-                    Rec.TestField("No.Series");
-                    Rec.TestField(Status, Rec.Status::Open);
-                    IndentReqLine.Reset();
-                    IndentReqLine.SetRange("Document No.", Rec."No.");
-                    if not IndentReqLine.FindFirst() then begin
-                        Error('No Lines Found');
-                    end; 
-                    //B2BSCM20SEP2023>>
-                    if IndentReqLine.FindSet() then begin
-                        repeat
-                            IndentReqLine.TestField("Qty. To Order");
-                        until IndentReqLine.Next() = 0;
-                    end; //B2BSCM20SEP2023<<
-                    Rec.TestField("Resposibility Center");
-                    Rec.TESTFIELD("Document Date");
-
-
-                    Rec.Status := Rec.Status::Release;
-                    Rec.MODIFY;
-                    if Rec."Resposibility Center" = 'LOCAL REQ' then
-                        Message(RelText1);
-                    if Rec."Resposibility Center" = 'CENTRL REQ' then
-                        Message(RelText2);
+                    ApprovalsCodeunit.OnCancelIndentRequisitionDoc1ForApproval(Rec);
                 end;
-
             }
+            action("Approval Entries")
+            {
+                ApplicationArea = All;
+                Image = Entries;
+                //Visible = openapp;
+                ToolTip = 'Executes the Approval Entries action.';
+                trigger OnAction()
+                var
+                    ApprovalEntries: Page "Approval Entries";
+                    ApprovalEntry: Record "Approval Entry";
+                begin
+                    ApprovalEntry.Reset();
+                    ApprovalEntry.SetRange("Table ID", DATABASE::"Indent Req Header");
+                    ApprovalEntry.SetRange("Document No.", Rec."No.");
+                    ApprovalEntries.SetTableView(ApprovalEntry);
+                    ApprovalEntries.RUN;
+                end;
+            }
+
+
+
+
             action("Re&open")
             {
                 Caption = 'Re&open';
                 Image = ReOpen;
                 ApplicationArea = All;
-                Visible = ShowAct;
+                // Visible = ShowAct;
 
                 trigger OnAction();
                 var
                     ReText01: Label 'Document has been re-opened and moved to Indent Requisition List.';
                 begin
                     Rec.TestField(Status, Rec.Status::Release);
-                    Rec.Status := Rec.Status::Open;
-                    Rec.MODIFY;
-                    Message(ReText01);
+                    IF Rec."Status" <> Rec."Status"::Open then BEGIN
+                        Rec."Status" := Rec."Status"::Open;
+                        Rec.Modify();
+                        Message(ReText01);
+                    end;
                 end;
             }
+
         }
         area(navigation)
         {
@@ -425,7 +483,7 @@ page 50120 "Indent Requisition Document"
                     Caption = 'Open Created Order';
                     ApplicationArea = All;
                     Image = Open;
-                    Visible = ShowAct;
+                    //    Visible = ShowAct;
 
                     trigger OnAction();
                     begin
@@ -438,7 +496,7 @@ page 50120 "Indent Requisition Document"
                     Caption = 'Open Created Enquiries';
                     ApplicationArea = All;
                     Image = ShowList;
-                    Visible = ShowAct;
+                    // Visible = ShowAct;
 
                     trigger OnAction()
                     var
@@ -457,7 +515,7 @@ page 50120 "Indent Requisition Document"
                     Caption = 'Open Created Quotes';
                     ApplicationArea = All;
                     Image = EntriesList;
-                    Visible = ShowAct;
+                    // Visible = ShowAct;
 
                     trigger OnAction()
                     var
@@ -533,7 +591,7 @@ page 50120 "Indent Requisition Document"
         Email: Text[50];
         StrVar: Text[50];
         Chr: Char;
-        allinoneCU: Codeunit "Approvals MGt 3";
+        allinoneCU: Codeunit "Approvals MGt 4";
         MailCreated: Boolean;
         "---": Integer;
         UserSetupApproval: Page 119;
@@ -546,7 +604,7 @@ page 50120 "Indent Requisition Document"
         Text0010: Label 'Enquiries Created Successfully';
         Text0011: Label 'Quotes Created Successfully';
         FieldEditable: Boolean;
-        ShowAct: Boolean;
+    // ShowAct: Boolean;
 
     procedure CheckRemainingQuantity();
     var
@@ -652,7 +710,7 @@ page 50120 "Indent Requisition Document"
              ShowAct := false;
          end;
 
-     end;*/
+     end;*
     /* trigger OnAfterGetRecord();
      begin
          //Approval visible conditions - B2BMSOn09Sep2022>>
@@ -669,6 +727,16 @@ page 50120 "Indent Requisition Document"
              PageEditable := true;
          //CurrPage.indentLine.Page.QTyToIssueNonEditable();
      end;*/
+    trigger OnAfterGetRecord()
+    begin
+        OpenAppEntrExistsForCurrUser := approvalmngmt.HasOpenApprovalEntriesForCurrentUser(Rec.RecordId());
+        OpenApprEntrEsists := approvalmngmt.HasOpenApprovalEntries(Rec.RecordId());
+        CanCancelapprovalforrecord := approvalmngmt.CanCancelApprovalForRecord(Rec.RecordId());
+        workflowwebhookmangt.GetCanRequestAndCanCancel(Rec.RecordId(), CanrequestApprovForFlow, CanCancelapprovalforflow);
+    end;
+
+
+
 
 
 
@@ -680,6 +748,13 @@ page 50120 "Indent Requisition Document"
     var
         OpenAppEntrExistsForCurrUser: Boolean;
         OpenApprEntrEsists: Boolean;
+
+        CanrequestApprovForFlow: Boolean;
         CanCancelapprovalforrecord: Boolean;
-        workflowwebhookmangt: Boolean;
+        CanCancelapprovalforflow: Boolean;
+
+        // approvalmngmt: Codeunit "Approvals MGt 3"
+        approvalmngmt: Codeunit "Approvals Mgmt.";
+        workflowwebhookmangt: Codeunit "Workflow Webhook Management";
+
 }

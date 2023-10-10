@@ -21,9 +21,9 @@ report 50071 "GRN RECEIPT"
             { }
             column(DCDate; DCDate)//B2BPGON12OCT2022
             { }
-            column(VendorInvNo; VendorInvNo)
+            column(VendorInvNo; "Vendor Invoice No.")
             { }
-            column(VendorInvDate; VendorInvDate)
+            column(VendorInvDate; "Vendor Invoice Date")
             { }
             column(Spot; "Location Code")//B2BPGON12OCT2022
             { }

@@ -516,6 +516,265 @@ codeunit 50018 "Approvals MGt 4"
     end;
     //Indent Header Approvals End --- B2BMSOn09Sep2022<<
 
+
+
+
+//1
+    //Indent Header Approvals Start --- B2BMSOn09Sep2022>>
+    [IntegrationEvent(false, false)]
+    Procedure OnSendIndentRequisitionDoc1ForApproval(var IndentRequisitionDoc1: Record "Indent Req Header")
+    begin
+    end;
+//2
+    [IntegrationEvent(false, false)]
+    Procedure OnCancelIndentRequisitionDoc1ForApproval(var IndentRequisitionDoc1: Record "Indent Req Header")
+    begin
+    end;
+//3
+    //Create events for workflow
+    procedure RunworkflowOnSendIndentRequisitionDoc1forApprovalCode(): code[128]
+    begin
+        exit(CopyStr(UpperCase('RunworkflowOnSendIndentRequisitionDoc1forApproval'), 1, 128));
+    end;
+//4
+
+    [EventSubscriber(ObjectType::Codeunit, codeunit::"Approvals MGt 4", 'OnSendIndentRequisitionDoc1ForApproval', '', true, true)]
+    local procedure RunworkflowonsendIndentRequisitionDoc1ForApproval(var IndentRequisitionDoc1: Record "Indent Req Header")
+    begin
+        WorkflowManagement.HandleEvent(RunworkflowOnSendIndentRequisitionDoc1forApprovalCode(), IndentRequisitionDoc1);
+    end;
+//5
+    procedure RunworkflowOnCancelIndentRequisitionDoc1forApprovalCode(): code[128]
+    begin
+        exit(CopyStr(UpperCase('OnCancelIndentRequisitionDoc1ForApproval'), 1, 128));
+    end;
+//6
+    [EventSubscriber(ObjectType::Codeunit, codeunit::"Approvals MGt 4", 'OnCancelIndentRequisitionDoc1ForApproval', '', true, true)]
+
+    local procedure RunworkflowonCancelIndentRequisitionDoc1ForApproval(var IndentRequisitionDoc1: Record "Indent Req Header")
+    begin
+        WorkflowManagement.HandleEvent(RunworkflowOncancelIndentRequisitionDoc1forApprovalCode(), IndentRequisitionDoc1);
+    end;
+
+    //Add events to library
+//7
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Event Handling", 'OnAddWorkflowEventsToLibrary', '', false, false)]
+    local procedure OnAddWorkflowEventsToLibraryIndentRequisitionDoc1();
+    begin
+        WorkflowevenHandling.AddEventToLibrary(RunworkflowOnSendIndentRequisitionDoc1forApprovalCode(), DATABASE::"Indent Req Header",
+          CopyStr(IndentRequisitionDoc1sendforapprovaleventdesctxt, 1, 250), 0, FALSE);
+        WorkflowevenHandling.AddEventToLibrary(RunworkflowOnCancelIndentRequisitionDoc1forApprovalCode(), DATABASE::"Indent Req Header",
+          CopyStr(IndentRequisitionDoc1requestcanceleventdesctxt, 1, 250), 0, FALSE);
+    end;
+//8
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Event Handling", 'OnAddWorkflowEventPredecessorsToLibrary', '', true, true)]
+    local procedure OnAddworkfloweventprodecessorstolibraryIndentRequisitionDoc1(EventFunctionName: code[128]);
+    begin
+        case EventFunctionName of
+            RunworkflowOnCancelIndentRequisitionDoc1forApprovalCode():
+                WorkflowevenHandling.AddEventPredecessor(RunworkflowOnCancelIndentRequisitionDoc1forApprovalCode(), RunworkflowOnSendIndentRequisitionDoc1forApprovalCode());
+            WorkflowevenHandling.RunWorkflowOnApproveApprovalRequestCode():
+                WorkflowevenHandling.AddEventPredecessor(WorkflowevenHandling.RunWorkflowOnApproveApprovalRequestCode(), RunworkflowOnSendIndentRequisitionDoc1forApprovalCode());
+            WorkflowevenHandling.RunWorkflowOnRejectApprovalRequestCode():
+                WorkflowevenHandling.AddEventPredecessor(WorkflowevenHandling.RunWorkflowOnRejectApprovalRequestCode(), RunworkflowOnSendIndentRequisitionDoc1forApprovalCode());
+            WorkflowevenHandling.RunWorkflowOnDelegateApprovalRequestCode():
+                WorkflowevenHandling.AddEventPredecessor(WorkflowevenHandling.RunWorkflowOnDelegateApprovalRequestCode(), RunworkflowOnSendIndentRequisitionDoc1forApprovalCode());
+        end;
+    end;
+//9
+    procedure ISIndentRequisitionDoc1workflowenabled(var IndentRequisitionDoc1: Record "Indent Req Header"): Boolean
+    begin
+        if (IndentRequisitionDoc1.Status <> IndentRequisitionDoc1.Status::Open) then
+            exit(false);
+        exit(WorkflowManagement.CanExecuteWorkflow(IndentRequisitionDoc1, RunworkflowOnSendIndentRequisitionDoc1forApprovalCode()));
+    end;
+//10
+    Procedure CheckIndentRequisitionDoc1ApprovalsWorkflowEnabled(var IndentRequisitionDoc1: Record "Indent Req Header"): Boolean
+    begin
+        IF not ISIndentRequisitionDoc1workflowenabled(IndentRequisitionDoc1) then
+            Error((NoworkfloweableErr));
+        exit(true);
+    end;
+//11
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnpopulateApprovalEntryArgument', '', true, true)]
+    local procedure OnpopulateApprovalEntriesArgumentIndentRequisitionDoc1(var RecRef: RecordRef; var ApprovalEntryArgument: Record "Approval Entry"; WorkflowStepInstance: Record "Workflow Step Instance")
+    var
+        IndentRequisitionDoc1: Record "Indent Req Header";
+    begin
+        case RecRef.Number() of
+            Database::"Indent Req Header":
+                begin
+                    RecRef.SetTable(IndentRequisitionDoc1);
+                    ApprovalEntryArgument."Document No." := IndentRequisitionDoc1."No.";
+                end;
+        end;
+    end;
+
+    //Handling workflow response
+//12
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'Onopendocument', '', true, true)]
+    local procedure OnopendocumentIndentRequisitionDoc1(RecRef: RecordRef; var Handled: boolean)
+    var
+        IndentRequisitionDoc1: Record "Indent Req Header";
+        IndentRequisitionLine: Record "Indent Requisitions";
+    begin
+        case RecRef.Number() of
+            Database::"Indent Req Header":
+                begin
+                    RecRef.SetTable(IndentRequisitionDoc1);
+                    IndentRequisitionDoc1.SetRange("No.", IndentRequisitionDoc1."No.");
+                    IndentRequisitionDoc1.Status := IndentRequisitionDoc1.Status::Open;
+                    //  IndentRequisitionDoc1."Last Modified Date" := WorkDate();
+                    IndentRequisitionDoc1.Modify();
+
+                    IndentRequisitionLine.RESET;
+                    IndentRequisitionLine.SETRANGE("Document No.", IndentRequisitionDoc1."No.");
+                    // IndentRequisitionLine.SETRANGE("Indent Status", IndentLine."Indent Status"::Indent);
+                    IF IndentRequisitionLine.FindSet() THEN
+                        IndentRequisitionLine.MODIFYALL("Release Status", IndentRequisitionLine."Release Status"::Open);
+                    Handled := true;
+
+                end;
+        end;
+    end;
+//13
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'OnreleaseDocument', '', true, true)]
+    local procedure OnReleasedocumentIndentRequisitionDoc1(RecRef: RecordRef; var Handled: boolean)
+    var
+        IndentRequisitionDoc1: Record "Indent Req Header";
+        IndentrequisitionLine: Record "Indent Requisitions";
+    begin
+        case RecRef.Number() of
+            Database::"Indent Req Header":
+                begin
+                    RecRef.SetTable(IndentRequisitionDoc1);
+                    IndentRequisitionDoc1.SetRange("No.", IndentRequisitionDoc1."No.");
+                    IndentRequisitionDoc1.Status := IndentRequisitionDoc1.Status::Release;
+                    //    IndentRequisitionDoc1."Last Modified Date" := WORKDATE;
+                    IndentRequisitionDoc1.Modify();
+
+                    IndentRequisitionLine.RESET;
+                    IndentRequisitionLine.SETRANGE("Document No.", IndentRequisitionDoc1."No.");
+                    IF IndentRequisitionLine.FINDSET THEN
+                        IndentRequisitionLine.MODIFYALL("Release Status", IndentRequisitionLine."Release Status"::Released);
+
+                    Handled := true;
+                end;
+        end;
+    end;
+//14
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'Onsetstatustopendingapproval', '', true, true)]
+    local procedure OnSetstatusToPendingApprovalIndentRequisitionDoc1(RecRef: RecordRef; var IsHandled: boolean)
+    var
+        IndentRequisitionDoc1: Record "Indent Req Header";
+        IndentRequisitionLine: Record "Indent Requisitions";
+    begin
+        case RecRef.Number() of
+            Database::"Indent Req Header":
+                begin
+                    RecRef.SetTable(IndentRequisitionDoc1);
+                    IndentRequisitionDoc1.SetRange("No.", IndentRequisitionDoc1."No.");
+                    IndentRequisitionDoc1.Status := IndentRequisitionDoc1.Status::"Pending Approval";
+                    // IndentRequisitionDoc1."Last Modified Date" := WorkDate();
+                    IndentRequisitionDoc1.Modify();
+
+                    IndentRequisitionLine.RESET;
+                    IndentRequisitionLine.SETRANGE("Document No.", IndentRequisitionDoc1."No.");
+                    IndentRequisitionLine.SETRANGE("Indent Status", IndentRequisitionLine."Indent Status"::Indent);
+                    IF IndentRequisitionLine.FindSet() THEN
+                        IndentRequisitionLine.MODIFYALL("Release Status", IndentRequisitionLine."Release Status"::"Pending Approval");
+                    IsHandled := true;
+                end;
+        end;
+    end;
+//15
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'Onaddworkflowresponsepredecessorstolibrary', '', true, true)]
+    local procedure OnaddworkflowresponseprodecessorstolibraryIndentRequisitionDoc1(ResponseFunctionName: Code[128])
+    var
+        workflowresponsehandling: Codeunit "Workflow Response Handling";
+    begin
+        case ResponseFunctionName of
+            workflowresponsehandling.SetStatusToPendingApprovalCode():
+                workflowresponsehandling.AddResponsePredecessor(workflowresponsehandling.SetStatusToPendingApprovalCode(), RunworkflowOnSendIndentRequisitionDoc1forApprovalCode());
+            workflowresponsehandling.SendApprovalRequestForApprovalCode():
+                workflowresponsehandling.AddResponsePredecessor(workflowresponsehandling.SendApprovalRequestForApprovalCode(), RunworkflowOnSendIndentRequisitionDoc1forApprovalCode());
+            workflowresponsehandling.CancelAllApprovalRequestsCode():
+                workflowresponsehandling.AddResponsePredecessor(workflowresponsehandling.CancelAllApprovalRequestsCode(), RunworkflowOnCancelIndentRequisitionDoc1forApprovalCode());
+            workflowresponsehandling.OpenDocumentCode():
+                workflowresponsehandling.AddResponsePredecessor(workflowresponsehandling.OpenDocumentCode(), RunworkflowOnCancelIndentRequisitionDoc1forApprovalCode());
+        end;
+    end;
+
+    //Setup workflow
+//16
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Setup", 'OnAddworkflowcategoriestolibrary', '', true, true)]
+    local procedure OnaddworkflowCategoryTolibraryIndentRequisitionDoc1()
+    begin
+        workflowsetup.InsertWorkflowCategory(CopyStr(IndentRequisitionDoc1CategoryTxt, 1, 20), CopyStr(IndentRequisitionDoc1CategoryDescTxt, 1, 100));
+    end;
+//17
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Setup", 'Onafterinsertapprovalstablerelations', '', true, true)]
+    local procedure OnInsertApprovaltablerelationsIndentRequisitionDoc1()
+    Var
+        ApprovalEntry: record "Approval Entry";
+    begin
+        workflowsetup.InsertTableRelation(Database::"Indent Req Header", 0, Database::"Approval Entry", ApprovalEntry.FieldNo("Record ID to Approve"));
+    end;
+//18
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Setup", 'Oninsertworkflowtemplates', '', true, true)]
+    local procedure OnInsertworkflowtemplateIndentRequisitionDoc1()
+    begin
+        InsertIndentRequisitionDoc1Approvalworkflowtemplate();
+    end;
+//19
+
+
+    local procedure InsertIndentRequisitionDoc1Approvalworkflowtemplate();
+    var
+        workflow: record Workflow;
+    begin
+        workflowsetup.InsertWorkflowTemplate(workflow, CopyStr(IndentRequisitionDoc1DocOCRWorkflowCodeTxt, 1, 17), CopyStr(IndentRequisitionDoc1ApprWorkflowDescTxt, 1, 100), CopyStr(IndentRequisitionDoc1CategoryTxt, 1, 20));
+        InsertIndentRequisitionDoc1ApprovalworkflowDetails(workflow);
+        workflowsetup.MarkWorkflowAsTemplate(workflow);
+    end;
+
+    local procedure InsertIndentRequisitionDoc1ApprovalworkflowDetails(var workflow: record Workflow);
+    var
+        IndentRequisitionDoc1: Record "Indent Req Header";
+        workflowstepargument: record "Workflow Step Argument";
+        Blankdateformula: DateFormula;
+    begin
+        workflowsetup.InitWorkflowStepArgument(workflowstepargument, workflowstepargument."Approver Type"::Approver, workflowstepargument."Approver Limit Type"::"Direct Approver", 0, '', Blankdateformula, true);
+
+        workflowsetup.InsertDocApprovalWorkflowSteps(workflow, BuildIndentRequisitionDoc1typecondition(IndentRequisitionDoc1.Status::Open), RunworkflowOnSendIndentRequisitionDoc1forApprovalCode(), BuildIndentRequisitionDoc1typecondition(IndentRequisitionDoc1.Status::"Pending Approval"), RunworkflowOnCancelIndentRequisitionDoc1forApprovalCode(), workflowstepargument, true);
+    end;
+
+
+    local procedure BuildIndentRequisitionDoc1typecondition(status: integer): Text
+    var
+        IndentRequisitionDoc1: Record "Indent Req Header";
+    Begin
+        IndentRequisitionDoc1.SetRange(status, status);
+        exit(StrSubstNo(IndentRequisitionDoc1TypeCondnTxt, workflowsetup.Encode(IndentRequisitionDoc1.GetView(false))));
+    End;
+
+    //Access record from the approval request page
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Page Management", 'Onaftergetpageid', '', true, true)]
+    local procedure OnaftergetpageidIndentRequisitionDoc1(RecordRef: RecordRef; var PageID: Integer)
+    begin
+        if PageID = 0 then
+            PageID := GetConditionalcardPageidIndentRequisitionDoc1(RecordRef)
+    end;
+
+    local procedure GetConditionalcardPageidIndentRequisitionDoc1(RecordRef: RecordRef): Integer
+    begin
+        Case RecordRef.Number() of
+            database::"Indent Req Header":
+                exit(page::"Indent Requisition Document");
+        end;
+    end;
+    //Indent Header Approvals End --- B2BMSOn09Sep2022<<
     var
         WorkflowManagement: Codeunit "Workflow Management";
         WorkflowevenHandling: Codeunit "Workflow Event Handling";
@@ -540,5 +799,16 @@ codeunit 50018 "Approvals MGt 4"
         IndentDocCategoryTxt: Label 'IndentDoc specifications';
         IndentDocDocOCRWorkflowCodeTxt: Label 'QC IndentDoc';
         IndentDocApprWorkflowDescTxt: Label 'IndentDoc Approval Workflow';
-    //Indent Header Approvals Variables End --- B2BMSOn09Sep2022<<
+        //Indent Header Approvals Variables End --- B2BMSOn09Sep2022<<
+
+
+        //IndentRequisition Header Approvals Variables Start --- B2BMSOn09Sep2022>>
+        IndentRequisitionDoc1sendforapprovaleventdescTxt: Label 'Approval of a IndentRequisitionDoc Document is requested';
+        IndentRequisitionDoc1CategoryDescTxt: Label 'IndentRequisitionDocDocuments';
+        IndentRequisitionDoc1TypeCondnTxt: Label '<?xml version="1.0" encoding="utf-8" standalone="yes"?><ReportParameters><DataItems><DataItem name=IndentRequisitionDoc>%1</DataItem></DataItems></ReportParameters>';
+        IndentRequisitionDoc1requestcanceleventdescTxt: Label 'Approval of a IndentRequisitionDoc Document is Cancelled';
+        IndentRequisitionDoc1CategoryTxt: Label 'IndentRequisitionDoc specifications';
+        IndentRequisitionDoc1DocOCRWorkflowCodeTxt: Label 'IndentRequisitionDoc';
+        IndentRequisitionDoc1ApprWorkflowDescTxt: Label 'IndentRequisitionDoc Approval Workflow';
+    //IndentRequisition Header Approvals Variables End --- B2BMSOn09Sep2022<<
 }

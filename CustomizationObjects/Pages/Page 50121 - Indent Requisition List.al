@@ -5,7 +5,8 @@ page 50121 "Indent Requisition List"
     CardPageID = "Indent Requisition Document";
     PageType = List;
     SourceTable = "Indent Req Header";
-    SourceTableView = where(Status = const(Open)); //B2BMS
+    SourceTableView = where(Status = filter(Open | "Pending Approval")); //B2BMS
+
     UsageCategory = Lists;
     ApplicationArea = all;
     Editable = false;

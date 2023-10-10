@@ -122,8 +122,11 @@ report 50063 "Material Issue Slip"
                 dataitem("Item Ledger Entry"; "Item Ledger Entry")
                 {
                     DataItemLink = "Indent No." = field("Document No."), "Item No." = field("No.");
+                    DataItemTableView = where("Entry Type" = filter('Negative Adjmt.'));
 
-                    column(ILEQuantity; Quantity)
+
+                    column(ILEQuantity;
+                    Quantity)
                     { }
                     column(ISSNo1; "Document No.")
                     { }

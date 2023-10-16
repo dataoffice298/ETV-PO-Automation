@@ -378,7 +378,7 @@ page 50120 "Indent Requisition Document"
             action("Re&lease")
             {
                 ApplicationArea = all;
-                Caption = 'Re&lease';
+                Caption = 'Re&lease New';
                 ShortCutKey = 'Ctrl+F11';
                 Image = ReleaseDoc;
 
@@ -387,14 +387,38 @@ page 50120 "Indent Requisition Document"
                 var
                     WorkflowManagement: Codeunit "Workflow Management";
                     allinoneCU: Codeunit "Approvals MGt 4";
+                    RelText1: Label 'Document released and Moved to Local Indent Requisition List.';
+                    RelText2: Label 'Document released and Moved to Central Indent Requisition List.';
                 begin
                     //IF WorkflowManagement.CanExecuteWorkflow(Rec, Approvalmgmt.run) then
-                    if allinoneCU.CheckIndentRequisitionDoc1ApprovalsWorkflowEnabled(Rec) then
+                    //if allinoneCU.CheckIndentRequisitionDoc1ApprovalsWorkflowEnabled(Rec) then
+                    //  error('Workflow is enabled. You can not release manually.');
+                    Rec.TestField("No.Series");
+                    Rec.TestField(Status, Rec.Status::Open);
+                    IndentReqLine.Reset();
+                    IndentReqLine.SetRange("Document No.", Rec."No.");
+                    if not IndentReqLine.FindFirst() then begin
+                        Error('No Lines Found');
+                    end;
+                    //B2BSCM20SEP2023>>
+                    if IndentReqLine.FindSet() then begin
+                        repeat
+                            IndentReqLine.TestField("Qty. To Order");
+                        until IndentReqLine.Next() = 0;
+                    end; //B2BSCM20SEP2023<<
+                    Rec.TestField("Resposibility Center");
+                    Rec.TESTFIELD("Document Date");
+                    if Rec."Resposibility Center" = 'LOCAL REQ' then
+                        Message(RelText1);
+                    if Rec."Resposibility Center" = 'CENTRL REQ' then
+                        Message(RelText2);
+
+
+                    IF WorkflowManagement.CanExecuteWorkflow(Rec, allinoneCU.RunworkflowOnSendIndentRequisitionDoc1forApprovalCode()) then
                         error('Workflow is enabled. You can not release manually.');
 
                     IF Rec.Status <> Rec.Status::Release then BEGIN
                         Rec.Status := Rec.Status::Release;
-
                         Rec.Modify();
                         Message('Document has been Released.');
                     end;
@@ -413,7 +437,21 @@ page 50120 "Indent Requisition Document"
                     ApprovalsCodeunit: Codeunit "Approvals MGt 4";
 
                 begin
-                    rec.TestField("Resposibility Center");
+                    Rec.TestField("No.Series");
+                    Rec.TestField(Status, Rec.Status::Open);
+                    IndentReqLine.Reset();
+                    IndentReqLine.SetRange("Document No.", Rec."No.");
+                    if not IndentReqLine.FindFirst() then begin
+                        Error('No Lines Found');
+                    end;
+                    //B2BSCM20SEP2023>>
+                    if IndentReqLine.FindSet() then begin
+                        repeat
+                            IndentReqLine.TestField("Qty. To Order");
+                        until IndentReqLine.Next() = 0;
+                    end; //B2BSCM20SEP2023<<
+                    Rec.TestField("Resposibility Center");
+                    Rec.TESTFIELD("Document Date");
                     IF ApprovalsCodeunit.CheckIndentRequisitionDoc1ApprovalsWorkflowEnabled(rec) then
                         ApprovalsCodeunit.OnSendIndentRequisitionDoc1ForApproval(Rec);
                 end;
@@ -429,8 +467,12 @@ page 50120 "Indent Requisition Document"
                     ApprovalsCodeunit: Codeunit "Approvals MGt 4";
                 begin
                     ApprovalsCodeunit.OnCancelIndentRequisitionDoc1ForApproval(Rec);
+                    if rec."Status" = rec."Status"::"Pending Approval" then
+                        rec."Status" := rec."Status"::Open;
+                    Rec.Modify();
                 end;
             }
+
             action("Approval Entries")
             {
                 ApplicationArea = All;

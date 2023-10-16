@@ -175,15 +175,19 @@ report 50071 "GRN RECEIPT"
                 { }
                 column(Direct_Unit_Cost; "Direct Unit Cost")
                 { }
-                column(BasicAmount; "Direct Unit Cost" * Quantity)
+                /*   column(BasicAmount; "Direct Unit Cost" * Quantity)
+                   { }
+                   column(NetTotal; "Direct Unit Cost" * Quantity)
+                   { }*/
+                column(BasicAmount; BasicAmount)
                 { }
-                column(NetTotal; "Direct Unit Cost" * Quantity)
+                column(NetTotal; TotalAmountNew)
                 { }
                 column(NumberText1; NumberText[1])
                 { }
-                column(Rate; Rate)
+                column(Rate; "Direct Unit Cost")
                 { }
-                column(DiscAmount; "Line Discount %")
+                column(DiscAmount; DiscountVar)
                 { }
                 column(QtyAccepted; Quantity)
                 { }
@@ -191,7 +195,7 @@ report 50071 "GRN RECEIPT"
                 { }
                 column(IndentDate; IndentDate)
                 { }
-                column(itemno; "No.")
+                column(itemno; "Purch. Rcpt. Line"."Variant Code")
                 {
 
 
@@ -208,6 +212,8 @@ report 50071 "GRN RECEIPT"
 
 
                 trigger OnAfterGetRecord()
+                var
+
                 begin
                     Clear(QtyAccepted); //B2BSCM27SEP2023>>
                     Clear(QtyRejected);
@@ -218,6 +224,9 @@ report 50071 "GRN RECEIPT"
                     Clear(ItemCategory);
                     Clear(ItemSubCategory);
                     Clear(NumberText);
+                    Clear(BasicAmount);
+                    Clear(DiscountVar);
+                    Clear(TotalAmountNew);
                     CheckGRec.InitTextVariable;
                     CheckGRec.FormatNoText(NumberText, Round(NetTotal, 1, '='), "Currency Code");
                     //B2BSCM27SEP2023>>
@@ -236,6 +245,10 @@ report 50071 "GRN RECEIPT"
                             ItemCategory := FixedAssetRec."FA Class Code";
                             ItemSubCategory := FixedAssetRec."FA Subclass Code";
                         end;
+                    BasicAmount := "Purch. Rcpt. Line"."Direct Unit Cost" * "Purch. Rcpt. Line".Quantity;
+                    DiscountVar := (BasicAmount / 100) * ("Purch. Rcpt. Line"."Line Discount %");
+                    TotalAmountNew := BasicAmount - DiscountVar;
+
                     if "Purch. Rcpt. Line".Quantity = 0 then
                         CurrReport.Skip();
                 end;
@@ -357,6 +370,9 @@ report 50071 "GRN RECEIPT"
 
 
     var
+        Baseamount: Decimal;
+        DiscountVar: Decimal;
+        TotalAmountNew: Decimal;
         ItemCategory: Code[20];
         ItemSubCategory: Code[20];
         ItemRec: Record Item;

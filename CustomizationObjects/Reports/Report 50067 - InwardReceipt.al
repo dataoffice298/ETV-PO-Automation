@@ -182,7 +182,7 @@ report 50067 "INWARD RECEIPT"
                 { }
                 column(Totamt; Totamt)
                 { }
-                column(ChallanQty; ChallanQty)
+                column(ChallanQty; ChallanQtyvar)
                 { }
                 column(TotalAmount; TotalAmount)
                 { }
@@ -289,10 +289,26 @@ report 50067 "INWARD RECEIPT"
                                     InwardDate := GateEntryhdrGRecB2B."Posting Date";
                                     DCNO := GateEntryhdrGRecB2B."Challan No.";
                                     DCDate := GateEntryhdrGRecB2B."Challan Date";
-                                    ChallanQty := GateEntLinGRecB2B.Quantity;
+
+                                    GateEntLinGRecB2B.Reset();
+                                    GateEntLinGRecB2B.SetRange("Gate Entry No.", GateEntryhdrGRecB2B."No.");
+                                    //    GateEntLinGRecB2B.SetRange("Entry Type", GateEntLinGRecB2B."Entry Type"::Inward);
+
+                                    if GateEntLinGRecB2B.FindSet() then begin
+                                        repeat
+                                            ChallanQtyvar += GateEntLinGRecB2B.Quantity;
+
+                                        until GateEntLinGRecB2B.Next() = 0;
+                                    end;
+
                                 end;
                             until PurchaseRcptHdr.Next() = 0;
+
+
+
                         end;
+
+
                     end;
                 end;
 
@@ -347,7 +363,7 @@ report 50067 "INWARD RECEIPT"
         RateCapLbl: Label 'Rate';
         PONoCapLbl: Label 'PO NO.';
         BasicAmtCapLbl: Label 'Basic Amt';
-        DiscountCapLbl: Label 'Discount';
+        DiscountCapLbl: Label 'Discount (%)';
         VatCapLbl: Label 'Vat';
         TotalAmtCapLbl: Label 'Total Amt';
         TotBasicValueCapLbl: Label 'Total Basic Value';
@@ -415,7 +431,7 @@ report 50067 "INWARD RECEIPT"
         Purpose: Text[100];
         NetTotal: Decimal;
         IteNo: Code[20];
-        ChallanQty: Decimal;
+        ChallanQtyvar: Decimal;
         TotalAmount: Decimal;
 
 }

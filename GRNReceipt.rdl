@@ -2584,14 +2584,14 @@
                                       </TablixCell>
                                       <TablixCell>
                                         <CellContents>
-                                          <Textbox Name="ItemCategory1">
+                                          <Textbox Name="Description">
                                             <CanGrow>true</CanGrow>
                                             <KeepTogether>true</KeepTogether>
                                             <Paragraphs>
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Fields!ItemCategory.Value</Value>
+                                                    <Value>=Fields!Description.Value</Value>
                                                     <Style>
                                                       <FontSize>8pt</FontSize>
                                                     </Style>
@@ -2600,7 +2600,7 @@
                                                 <Style />
                                               </Paragraph>
                                             </Paragraphs>
-                                            <rd:DefaultName>ItemCategory1</rd:DefaultName>
+                                            <rd:DefaultName>Description</rd:DefaultName>
                                             <Style>
                                               <Border>
                                                 <Color>LightGrey</Color>
@@ -2612,7 +2612,6 @@
                                               <PaddingBottom>2pt</PaddingBottom>
                                             </Style>
                                           </Textbox>
-                                          <rd:Selected>true</rd:Selected>
                                         </CellContents>
                                       </TablixCell>
                                       <TablixCell>

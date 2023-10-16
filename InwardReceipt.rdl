@@ -2969,7 +2969,9 @@
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
-                                                <Style />
+                                                <Style>
+                                                  <TextAlign>Center</TextAlign>
+                                                </Style>
                                               </Paragraph>
                                             </Paragraphs>
                                             <rd:DefaultName>Textbox5</rd:DefaultName>
@@ -3157,8 +3159,22 @@
                                                       <FontWeight>Bold</FontWeight>
                                                     </Style>
                                                   </TextRun>
+                                                  <TextRun>
+                                                    <Value xml:space="preserve">                                                                   </Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
+                                                  <TextRun>
+                                                    <Value>=Sum(Fields!Rate.Value,"DataSet_Result")</Value>
+                                                    <Style>
+                                                      <FontWeight>Bold</FontWeight>
+                                                    </Style>
+                                                  </TextRun>
                                                 </TextRuns>
-                                                <Style />
+                                                <Style>
+                                                  <TextAlign>Right</TextAlign>
+                                                </Style>
                                               </Paragraph>
                                             </Paragraphs>
                                             <rd:DefaultName>TotBasicValueCapLbl</rd:DefaultName>
@@ -3315,7 +3331,6 @@
                             </RightBorder>
                           </Style>
                         </Rectangle>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>

@@ -618,7 +618,7 @@ codeunit 50018 "Approvals MGt 4"
         IndentRequisitionDoc1: Record "Indent Req Header";
         IndentRequisitionLine: Record "Indent Requisitions";
     begin
-        case RecRef.Number() of
+       /* case RecRef.Number() of
             Database::"Indent Req Header":
                 begin
                     RecRef.SetTable(IndentRequisitionDoc1);
@@ -633,7 +633,15 @@ codeunit 50018 "Approvals MGt 4"
                     IF IndentRequisitionLine.FindSet() THEN
                         IndentRequisitionLine.MODIFYALL("Release Status", IndentRequisitionLine."Release Status"::Open);
                     Handled := true;
-
+                end;
+        end;*/
+         case RecRef.Number() of
+            Database::"Indent Req Header":
+                begin
+                    RecRef.SetTable(IndentRequisitionDoc1);
+                    IndentRequisitionDoc1."Status" := IndentRequisitionDoc1."Status"::Open;
+                    IndentRequisitionDoc1.Modify();
+                    Handled := true;
                 end;
         end;
     end;
@@ -644,7 +652,7 @@ codeunit 50018 "Approvals MGt 4"
         IndentRequisitionDoc1: Record "Indent Req Header";
         IndentrequisitionLine: Record "Indent Requisitions";
     begin
-        case RecRef.Number() of
+       /* case RecRef.Number() of
             Database::"Indent Req Header":
                 begin
                     RecRef.SetTable(IndentRequisitionDoc1);
@@ -660,6 +668,15 @@ codeunit 50018 "Approvals MGt 4"
 
                     Handled := true;
                 end;
+        end;*/
+         case RecRef.Number() of
+            Database::"Indent Req Header":
+                begin
+                    RecRef.SetTable(IndentRequisitionDoc1);
+                    IndentRequisitionDoc1."Status" := IndentRequisitionDoc1."Status"::Release;
+                    IndentRequisitionDoc1.Modify();
+                    Handled := true;
+                end;
         end;
     end;
 //14
@@ -669,7 +686,7 @@ codeunit 50018 "Approvals MGt 4"
         IndentRequisitionDoc1: Record "Indent Req Header";
         IndentRequisitionLine: Record "Indent Requisitions";
     begin
-        case RecRef.Number() of
+       /* case RecRef.Number() of
             Database::"Indent Req Header":
                 begin
                     RecRef.SetTable(IndentRequisitionDoc1);
@@ -683,6 +700,15 @@ codeunit 50018 "Approvals MGt 4"
                     IndentRequisitionLine.SETRANGE("Indent Status", IndentRequisitionLine."Indent Status"::Indent);
                     IF IndentRequisitionLine.FindSet() THEN
                         IndentRequisitionLine.MODIFYALL("Release Status", IndentRequisitionLine."Release Status"::"Pending Approval");
+                    IsHandled := true;
+                end;
+        end;*/
+        case RecRef.Number() of
+            Database::"Indent Req Header":
+                begin
+                    RecRef.SetTable(IndentRequisitionDoc1);
+                    IndentRequisitionDoc1."Status" := IndentRequisitionDoc1."Status"::"Pending Approval";
+                    IndentRequisitionDoc1.Modify();
                     IsHandled := true;
                 end;
         end;

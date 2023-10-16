@@ -161,7 +161,7 @@ page 50116 "Indent Header"
             {
                 ApplicationArea = All;
                 Image = Action;
-              //  Visible = OpenApprEntrEsists;
+                //  Visible = OpenApprEntrEsists;
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Process;
@@ -224,7 +224,7 @@ page 50116 "Indent Header"
                 PromotedIsBig = true;
                 PromotedOnly = true;
                 ToolTip = 'Reject the approval request.';
-             //   Visible = OpenAppEntrExistsForCurrUser;
+                //   Visible = OpenAppEntrExistsForCurrUser;
 
                 trigger OnAction()
                 var
@@ -255,7 +255,7 @@ page 50116 "Indent Header"
             {
                 ApplicationArea = All;
                 Image = SendApprovalRequest;
-               // Visible = (Not OpenApprEntrEsists);
+                // Visible = (Not OpenApprEntrEsists);
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Process;
@@ -387,17 +387,30 @@ page 50116 "Indent Header"
                         trigger OnAction();
                         var
                             IndentError001: TextConst ENN = 'Select Must Have a Value';
+                            IndentLineRec: Record "Indent Line";
+                            Text0001: Label 'Quantity to  issue should not be greaterthan Required Quantity ';
+
                         begin
+                            IndentLineRec.Reset();
+                            IndentLineRec.SetRange("Document No.", rec."No.");
+                            if IndentLineRec.FindSet() then begin
+                                repeat
+                                    IndentLineRec.CalcFields("Qty Issued");
+                                    if IndentLineRec."Qty Issued" <= IndentLineRec."Req.Quantity" then
+                                        Error(Text0001, IndentLineRec."Qty Issued");
+                                until IndentLineRec.Next() = 0;
+                            end;
                             MaterialIssue();//B2BSCM23AUG2023
                             Rec.TestField("Released Status", Rec."Released Status"::Released);
                             IndentLineRec.SETCURRENTKEY("Document No.", "Line No.");
                             IndentLineRec.RESET();
                             IndentLineRec.SETRANGE("Document No.", Rec."No.");
-                           // IndentLineRec.SetRange(Select, true);//B2BSCM23AUG2023
+                            // IndentLineRec.SetRange(Select, true);//B2BSCM23AUG2023
                             if not IndentLineRec.FINDFIRST() then
                                 ERROR('No Line with Qty. to Issue > 0');
 
                             Rec.CreateItemJnlLine();//B2BSSD04JUL2023
+
                             CurrPage.Update();
                             CurrPage.indentLine.Page.QTyToIssueNonEditable();
                         end;
@@ -693,7 +706,7 @@ page 50116 "Indent Header"
                     REPORT.RUNMODAL(REPORT::"Material Issue Slip", TRUE, false, IndentHeader);
                 end;
             }
-            
+
         }
     }
 

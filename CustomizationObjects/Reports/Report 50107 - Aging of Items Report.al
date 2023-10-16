@@ -11,6 +11,7 @@ report 50107 "Aging of Items Report"
         dataitem(Item; Item)
         {
 
+
             DataItemTableView = sorting("Item Category Code") ORDER(Ascending);
             RequestFilterFields = "Item Category Code", "No.";
 
@@ -19,10 +20,17 @@ report 50107 "Aging of Items Report"
                 ItemLedgerEntry: Record "Item Ledger Entry";
                 AgingDays: Integer;
                 PostedPurchReceipt: Record "Purch. Rcpt. Header";
+                PostedPurchReceiptLine: Record "Purch. Rcpt. Line";
+                ValueEntry: Record "Value Entry";
+
+                UnitCostRec: Decimal;
             begin
                 CalcFields(Inventory);
+                Clear(UnitCostRec);
                 if Item.Inventory = 0 then //B2BSCM25SCM2023
                     CurrReport.Skip();//B2BSCM25SCM2023
+
+
 
 
                 ItemLedgerEntry.Reset();
@@ -30,6 +38,7 @@ report 50107 "Aging of Items Report"
                 ItemLedgerEntry.SetFilter(Quantity, '<>%1', 0);//B2BSCM25SCM2023
                                                                // ItemLedgerEntry.SetAscending("Posting Date", true);
                 ItemLedgerEntry.SetRange("Item No.", "No.");
+                ItemLedgerEntry.SetFilter("Entry Type", '%1|%2', ItemLedgerEntry."Entry Type"::Purchase, ItemLedgerEntry."Entry Type"::"Positive Adjmt.");
                 if ItemLedgerEntry.FindSet() then begin
                     repeat //B2BSCM25SEP2023
                         Clear(AgingDays);
@@ -39,22 +48,32 @@ report 50107 "Aging of Items Report"
                         //     CurrReport.Skip();
                         // if Item.Inventory = 0 then
                         //     CurrReport.Skip();
+                        ValueEntry.Reset();
+                        ValueEntry.SetRange("Item Ledger Entry No.", ItemLedgerEntry."Entry No.");
+                        if ValueEntry.FindSet() then begin
+                            repeat
+                                ValueEntry.CalcSums("Cost per Unit");
+                                UnitCostRec := ValueEntry."Cost per Unit";
+                            until ValueEntry.Next() = 0;
+                        end;
 
                         SNo += 1;
                         WindPa.Update(1, "No.");
                         TempExcelBuffer.NewRow();
                         TempExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD04AUG2023
-                        TempExcelBuffer.AddColumn("Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(ItemLedgerEntry."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                         TempExcelBuffer.AddColumn("No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                         TempExcelBuffer.AddColumn(Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                        TempExcelBuffer.AddColumn("Base Unit of Measure", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                        TempExcelBuffer.AddColumn(Inventory, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                        TempExcelBuffer.AddColumn("Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                        TempExcelBuffer.AddColumn(Round(Inventory * "Unit Cost", 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        TempExcelBuffer.AddColumn(ItemLedgerEntry."Unit of Measure Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(ItemLedgerEntry.Quantity, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+
+                        TempExcelBuffer.AddColumn(UnitCostRec, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        TempExcelBuffer.AddColumn(Round(ItemLedgerEntry.Quantity * UnitCostRec, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                         TempExcelBuffer.AddColumn(ItemLedgerEntry."Posting Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                         TempExcelBuffer.AddColumn(AgingDays, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     until ItemLedgerEntry.Next() = 0;//B2BSCM25SEP2023
                 end;
+
             end;
 
             trigger OnPreDataItem()

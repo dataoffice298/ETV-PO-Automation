@@ -38,7 +38,7 @@ table 50209 "Indent Req Header"
         field(12; Status; Option)
         {
             Editable = false;
-            OptionMembers = " ",Open,Release,"Pending Approval";
+            OptionMembers =Open,Release,"Pending Approval";
         }
         field(13; "No.Series"; Code[20])
         {

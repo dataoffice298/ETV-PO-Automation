@@ -7,12 +7,13 @@ report 50194 "GRN Register"//B2BSSD14JUN2023
 
     dataset
     {
-        dataitem("Purch. Inv. Header"; "Purch. Inv. Header")
+        dataitem("Purch. Rcpt. Header"; "Purch. Rcpt. Header")
         {
-            dataitem("Purch. Inv. Line"; "Purch. Inv. Line")
+
+            dataitem("Purch. Rcpt. Line"; "Purch. Rcpt. Line")
             {
                 DataItemLink = "Document No." = field("No.");
-                DataItemLinkReference = "Purch. Inv. Header";
+                DataItemLinkReference = "Purch. Rcpt. Header";
                 trigger OnAfterGetRecord()
                 var
                     Item: Record Item;
@@ -31,18 +32,23 @@ report 50194 "GRN Register"//B2BSSD14JUN2023
                             GRNno := PostedPurchRcptGRec."No.";
                             GRNDate := PostedPurchRcptGRec."Document Date";
                             GSTSetup.Get();
-                            GetGSTAmounts("Purch. Inv. Line", GSTSetup);
-                            TotalAmount := TotalGSTAmount + ("Purch. Inv. Line".Quantity * "Purch. Inv. Line"."Direct Unit Cost");
+                            GetGSTAmounts("Purch. Rcpt. Line", GSTSetup);
+                            TotalAmount := TotalGSTAmount + ("Purch. Rcpt. Line".Quantity * "Purch. Rcpt. Line"."Direct Unit Cost");
                         until PostedPurchRcptGRec.Next() = 0;
+                        PostedRGPInwardGRec.Reset();
+                        PostedRGPInwardGRec.SetRange("Purchase Order No.", PostedPurchRcptGRec."Order No.");
+
+                        if PostedRGPInwardGRec.findset() then begin
+                            repeat
+                                RgpInwardRecieptDate := PostedRGPInwardGRec."Receipt Date";
+                                RgpInwardNo := PostedRGPInwardGRec."No.";
+                                RgpInwardDate := PostedRGPInwardGRec."Document Date";
+                            until PostedRGPInwardGRec.Next() = 0;
+
+                        end;
+
                     end;
 
-                    PostedRGPInwardGRec.Reset();
-                    PostedRGPInwardGRec.SetRange("Purchase Order No.", "Order No.");
-                    if PostedRGPInwardGRec.findset() then begin
-                        RgpInwardNo := PostedRGPInwardGRec."No.";
-                        RgpInwardDate := PostedRGPInwardGRec."Document Date";
-                        RgpInwardRecieptDate := PostedRGPInwardGRec."Receipt Date";
-                    end;
 
                     if Item.Get("No.") then;
                     SNo += 1;
@@ -50,30 +56,31 @@ report 50194 "GRN Register"//B2BSSD14JUN2023
                     TempExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn(RgpInwardNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn(RgpInwardDate, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
+
                     TempExcelBuffer.AddColumn(RgpInwardRecieptDate, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
                     TempExcelBuffer.AddColumn(GRNno, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
                     TempExcelBuffer.AddColumn(GRNDate, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
-                    TempExcelBuffer.AddColumn("Purch. Inv. Header"."Pay-to Name", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn("Purch. Inv. Header"."Vendor Invoice No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn("Purch. Inv. Header"."Posting Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
+                    TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."Pay-to Name", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."Vendor Invoice No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."Posting Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
                     TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD03APR2023
                     TempExcelBuffer.AddColumn(Item."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    // TempExcelBuffer.AddColumn("Purch. Inv. Line".Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSCM19SEP2023
-                    // TempExcelBuffer.AddColumn("Purch. Inv. Line"."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSCM19SEP2023
+                    // TempExcelBuffer.AddColumn("Purch. Rcpt. Line".Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSCM19SEP2023
+                    // TempExcelBuffer.AddColumn("Purch. Rcpt. Line"."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSCM19SEP2023
                     TempExcelBuffer.AddColumn(Item.Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn("Purch. Inv. Line"."Unit of Measure Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn("Purch. Inv. Line".Quantity, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn("Purch. Inv. Line"."Direct Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn("Purch. Inv. Line"."Line Discount %", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    TempExcelBuffer.AddColumn("Purch. Rcpt. Line"."Unit of Measure Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn("Purch. Rcpt. Line".Quantity, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    TempExcelBuffer.AddColumn("Purch. Rcpt. Line"."Direct Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    TempExcelBuffer.AddColumn("Purch. Rcpt. Line"."Line Discount %", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn(CGSTAmt, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn(SGSTAmt, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn(IGSSTAmt, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn(("Purch. Inv. Line".Quantity * "Purch. Inv. Line"."Direct Unit Cost"), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    TempExcelBuffer.AddColumn(("Purch. Rcpt. Line".Quantity * "Purch. Rcpt. Line"."Direct Unit Cost"), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn(TotalAmount, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn("Purch. Inv. Line".Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn("Purch. Inv. Header"."Import Type", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn("Purch. Inv. Header"."EPCG Scheme", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn("Purch. Inv. Header"."Order No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn("Purch. Rcpt. Line".Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."Import Type", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."EPCG Scheme", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."Order No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                 end;
             }
             trigger OnPreDataItem()
@@ -153,7 +160,7 @@ report 50194 "GRN Register"//B2BSSD14JUN2023
         TempExcelBuffer.AddColumn('UOM', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('QTY', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('RATE', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-        TempExcelBuffer.AddColumn('DISCOUNT', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        TempExcelBuffer.AddColumn('DISCOUNT %', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('CGST', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('SGST', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('IGST', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
@@ -191,7 +198,7 @@ report 50194 "GRN Register"//B2BSSD14JUN2023
         SGSTBaseAmount: Decimal;
         IGSTBaseAmount: Decimal;
 
-    procedure GetGSTAmounts(PurchInvLine: Record "Purch. Inv. Line";
+    procedure GetGSTAmounts(PurchInvLine: Record "Purch. Rcpt. Line";
     GSTSetup: Record "GST Setup")
     var
         DetailedGSTLedgerEntry: Record "Detailed GST Ledger Entry";

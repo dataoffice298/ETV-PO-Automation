@@ -26,12 +26,13 @@ tableextension 50051 PurchRcptHdr extends "Purch. Rcpt. Header"
         field(50113; "EPCG Scheme"; Option)
         {
             OptionMembers = "Under EPCG","Non EPCG";
-            OptionCaption = 'Under EPCG,Non EPCG';
+            //    OptionCaption = 'Under EPCG,Non EPCG';
+
         }
         field(50114; "Import Type"; Option)
         {
             OptionMembers = Import,Indigenous;
-            OptionCaption = 'Import,Indigenous';
+            //  OptionCaption = 'Import,Indigenous';
         }
         //B2BMSOn18Oct2022>>
         Field(50115; "Regularization"; Boolean)

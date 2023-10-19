@@ -67,7 +67,6 @@ report 50107 "Aging of Items Report"
                         TempExcelBuffer.AddColumn(ItemLedgerEntry."Unit of Measure Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                         if ItemLedgerEntry."Remaining Quantity" <> 0 then
                             TempExcelBuffer.AddColumn(ItemLedgerEntry."Remaining Quantity", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-
                         TempExcelBuffer.AddColumn(UnitCostRec, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                         TempExcelBuffer.AddColumn(Round(ItemLedgerEntry."Remaining Quantity" * UnitCostRec, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                         TempExcelBuffer.AddColumn(ItemLedgerEntry."Posting Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);

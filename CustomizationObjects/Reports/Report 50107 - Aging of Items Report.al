@@ -22,6 +22,7 @@ report 50107 "Aging of Items Report"
                 PostedPurchReceipt: Record "Purch. Rcpt. Header";
                 PostedPurchReceiptLine: Record "Purch. Rcpt. Line";
                 ValueEntry: Record "Value Entry";
+                Location: Code[20];
 
                 UnitCostRec: Decimal;
             begin
@@ -42,6 +43,7 @@ report 50107 "Aging of Items Report"
                 if ItemLedgerEntry.FindSet() then begin
                     repeat //B2BSCM25SEP2023
                         Clear(AgingDays);
+                        Clear(Location);
                         AgingDays := StartDate - ItemLedgerEntry."Posting Date";
 
                         // if ItemLedgerEntry.Quantity = 0 then
@@ -71,6 +73,7 @@ report 50107 "Aging of Items Report"
                         TempExcelBuffer.AddColumn(Round(ItemLedgerEntry."Remaining Quantity" * UnitCostRec, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                         TempExcelBuffer.AddColumn(ItemLedgerEntry."Posting Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                         TempExcelBuffer.AddColumn(AgingDays, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        TempExcelBuffer.AddColumn(ItemLedgerEntry."Location Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     until ItemLedgerEntry.Next() = 0;//B2BSCM25SEP2023
                 end;
 

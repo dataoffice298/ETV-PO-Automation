@@ -418,6 +418,8 @@ page 50159 "Inward Gate Entry-RGP"
                                         RgpGateEntryInwardLine.ModelNo := PostedGateEntryLIne.ModelNo;
                                         RgpGateEntryInwardLine.SerialNo := PostedGateEntryLIne.SerialNo;
                                         RgpGateEntryInwardLine.Make := PostedGateEntryLIne.Variant;
+                                        RgpGateEntryInwardLine."Purchase Order No." := PostedGateEntryLIne."Purchase Order No.";
+                                        RgpGateEntryInwardLine."Purchase Order Line No." := PostedGateEntryLIne."Purchase Order Line No.";
                                         RgpGateEntryInwardLine.Modify(true);
                                     until PostedGateEntryLIne.Next() = 0;
                                 end;

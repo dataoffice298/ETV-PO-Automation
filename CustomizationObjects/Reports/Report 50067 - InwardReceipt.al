@@ -8,13 +8,17 @@ report 50067 "INWARD RECEIPT"
 
     dataset
     {
-        dataitem("Indent Header"; "Indent Header")
+        dataitem("Posted Gate Entry Header_B2B"; "Posted Gate Entry Header_B2B")
         {
-            RequestFilterFields = "No.";
+            // RequestFilterFields = "No.";
             column(No_; "No.")
             { }
             column(CompanyInfoName; CompanyInfo.Name)
             { }
+            column(Purpose; Purpose)
+            {
+
+            }
             column(CompanyInfoAddress; CompanyInfo.Address)
             { }
             column(CompanyInfoAddress2; CompanyInfo."Address 2")
@@ -117,13 +121,13 @@ report 50067 "INWARD RECEIPT"
             column(RamojiFCCapLbl; RamojiFCCapLbl)
             { }
 
-            column(DCNO; DCNO)
+            column(DCNO; "Challan No.")
             { }
-            column(DCDate; DCDate)
+            column(DCDate; "Challan Date")
             { }
-            column(InwardNo; InwardNo)
+            column(InwardNo; "Gate Entry No.")
             { }
-            column(InwardDate; InwardDate)
+            column(InwardDate; "Posting Date")
             { }
             column(GRNDate; GRNDate)
             { }
@@ -141,20 +145,19 @@ report 50067 "INWARD RECEIPT"
             {
 
             }
-            column(Purpose; Purpose)
-            { }
+
             column(VehicleNo; VehicleNo)
             { }
             column(IndNo1; IndNo1)
             { }
-            dataitem("Indent Line"; "Indent Line")
+            dataitem("Posted Gate Entry Line_B2B"; "Posted Gate Entry Line_B2B")
             {
-                DataItemLink = "Document No." = field("No.");
-                column(Document_No_; "Document No.")
+                DataItemLink = "Gate Entry No." = field("No."), "Entry Type" = field("Entry Type");
+                column(Document_No_; "Gate Entry No.")
                 { }
                 column(Line_No_; "Line No.")
                 { }
-                column(Qty; Qty)
+                column(Qty; Quantity)
                 { }
                 column(QtyAccepted; QtyAccepted)
                 { }
@@ -164,7 +167,7 @@ report 50067 "INWARD RECEIPT"
                 { }
                 column(SNo; SNo)
                 { }
-                column(UOM; UOM)
+                column(UOM; "Unit of Measure")
                 { }
                 column(Rate; Rate)
                 { }
@@ -182,7 +185,7 @@ report 50067 "INWARD RECEIPT"
                 { }
                 column(Totamt; Totamt)
                 { }
-                column(ChallanQty; ChallanQtyvar)
+                column(ChallanQty; Quantity)
                 { }
                 column(TotalAmount; TotalAmount)
                 { }
@@ -195,8 +198,8 @@ report 50067 "INWARD RECEIPT"
                     begin
 
                         PurchaseRcptLine.reset();
-                        PurchaseRcptLine.SetRange("Indent No.", "Indent Line"."Document No.");
-                        PurchaseRcptLine.SetRange("Indent Line No.", "Indent Line"."Line No.");
+                        PurchaseRcptLine.SetRange("Order No.", "Posted Gate Entry Header_B2B"."Purchase Order No.");
+                        // PurchaseRcptLine.SetRange("Order Line No.", "Indent Line"."Line No.");
                         If PurchaseRcptLine.FindSet() then
                             repeat
                                 PurchaseRcptLine.Mark(true);
@@ -260,57 +263,61 @@ report 50067 "INWARD RECEIPT"
                             end;
                         end;
 
+
                     end;
 
                 }
 
                 trigger OnAfterGetRecord()
                 begin
-                    IndentReqLine.Reset();
-                    IndentReqLine.setrange("Indent No.", "Indent Header"."No.");
-                    If IndentReqLine.FindFirst() then begin
-                        PurchaseRcptHdr.Reset();
-                        PurchaseRcptHdr.SetRange("Indent Req No", IndentReqLine."Document No.");
-                        if PurchaseRcptHdr.FindFirst() then begin
-                            repeat
-                                IndNo2 := PurchaseRcptHdr."Order No.";
-                                GRNNo := PurchaseRcptHdr."No.";
-                                GRNDate := PurchaseRcptHdr."Document Date";
-                                SupplierName := PurchaseRcptHdr."Buy-from Vendor Name";
-                                ReceiptDate := PurchaseRcptHdr."Posting Date";
-                                Spot := PurchaseRcptHdr."Location Code";
-                                VehicleNo := PurchaseRcptHdr."Vehicle No.";
-                                VendorInvNo := PurchaseRcptHdr."Vendor Invoice No.";
-                                VendorInvDate := PurchaseRcptHdr."Vendor Invoice Date";
-                                GateEntryhdrGRecB2B.Reset();
-                                GateEntryhdrGRecB2B.SetRange("Purchase Order No.", IndNo2);
-                                if GateEntryhdrGRecB2B.FindFirst() then begin
-                                    InwardNo := GateEntryhdrGRecB2B."Gate Entry No.";
-                                    InwardDate := GateEntryhdrGRecB2B."Posting Date";
-                                    DCNO := GateEntryhdrGRecB2B."Challan No.";
-                                    DCDate := GateEntryhdrGRecB2B."Challan Date";
+                    // IndentReqLine.Reset();
+                    //  IndentReqLine.setrange("Indent No.", "Indent Header"."No.");
+                    //  If IndentReqLine.FindFirst() then begin
+                    PurchaseRcptHdr.Reset();
+                    PurchaseRcptHdr.SetRange("Order No.", "Posted Gate Entry Header_B2B"."Purchase Order No.");
+                    if PurchaseRcptHdr.FindFirst() then begin
+                        repeat
+                            IndNo2 := PurchaseRcptHdr."Order No.";
+                            GRNNo := PurchaseRcptHdr."No.";
+                            GRNDate := PurchaseRcptHdr."Document Date";
+                            SupplierName := PurchaseRcptHdr."Buy-from Vendor Name";
+                            ReceiptDate := PurchaseRcptHdr."Posting Date";
+                            Spot := PurchaseRcptHdr."Location Code";
+                            VehicleNo := PurchaseRcptHdr."Vehicle No.";
+                            VendorInvNo := PurchaseRcptHdr."Vendor Invoice No.";
+                            VendorInvDate := PurchaseRcptHdr."Vendor Invoice Date";
+                        /*GateEntryhdrGRecB2B.Reset();
+                        GateEntryhdrGRecB2B.SetRange("Purchase Order No.", IndNo2);
+                        if GateEntryhdrGRecB2B.FindFirst() then begin*/
+                        /*   InwardNo := GateEntryhdrGRecB2B."Gate Entry No.";
+                           InwardDate := GateEntryhdrGRecB2B."Posting Date";
+                           DCNO := GateEntryhdrGRecB2B."Challan No.";
+                           DCDate := GateEntryhdrGRecB2B."Challan Date";*/
 
-                                    GateEntLinGRecB2B.Reset();
-                                    GateEntLinGRecB2B.SetRange("Gate Entry No.", GateEntryhdrGRecB2B."No.");
-                                    //    GateEntLinGRecB2B.SetRange("Entry Type", GateEntLinGRecB2B."Entry Type"::Inward);
+                        //  GateEntLinGRecB2B.Reset();
+                        //  GateEntLinGRecB2B.SetRange("Gate Entry No.", GateEntryhdrGRecB2B."No.");
+                        //    GateEntLinGRecB2B.SetRange("Entry Type", GateEntLinGRecB2B."Entry Type"::Inward);
 
-                                    if GateEntLinGRecB2B.FindSet() then begin
-                                        repeat
-                                            ChallanQtyvar += GateEntLinGRecB2B.Quantity;
+                        /* if GateEntLinGRecB2B.FindSet() then begin
+                             repeat
+                                 ChallanQtyvar += GateEntLinGRecB2B.Quantity;
 
-                                        until GateEntLinGRecB2B.Next() = 0;
-                                    end;
+                             until GateEntLinGRecB2B.Next() = 0;
+                         end;
 
-                                end;
-                            until PurchaseRcptHdr.Next() = 0;
-
+                     end;*/
 
 
-                        end;
+
+                        until PurchaseRcptHdr.Next() = 0;
 
 
                     end;
+
+
+
                 end;
+                // end;
 
                 trigger OnPreDataItem();
                 begin
@@ -320,9 +327,19 @@ report 50067 "INWARD RECEIPT"
 
             }
 
+            trigger OnPreDataItem()
+            var
+            begin
+                "Posted Gate Entry Header_B2B".SetRange("No.", No);
+
+            end;
+
+
+
         }
 
     }
+
 
     /*   rendering
        {
@@ -332,8 +349,29 @@ report 50067 "INWARD RECEIPT"
                LayoutFile = 'mylayout.rdl';
            }
        }*/
+    requestpage
+    {
+        layout
+        {
+            area(Content)
+            {
+                group("Posted Gate Entry")
+                {
+                    field(No; No)
+                    {
+                        ApplicationArea = all;
+                        TableRelation = "Posted Gate Entry Header_B2B"."No." where("Entry Type" = const(Inward));
+                    }
+
+                }
+            }
+        }
+
+    }
+
 
     var
+        No: Code[50];
         CompanyInfo: Record "Company Information";
         StoresRecCumInspectionCapLbl: Label 'STORES RECEIPT CUM INSPECTION REPORT';
         SupplierNameCapLbl: Label 'SUPPLIER NAME:';
@@ -407,7 +445,7 @@ report 50067 "INWARD RECEIPT"
 
         GRNNo: Code[20];
         GRNDate: Date;
-        SupplierName: Code[20];
+        SupplierName: Code[40];
         ReceiptDate: Date;
         VehicleNo: Code[20];
         VendorInvNo: Code[35];
@@ -433,5 +471,6 @@ report 50067 "INWARD RECEIPT"
         IteNo: Code[20];
         ChallanQtyvar: Decimal;
         TotalAmount: Decimal;
+        Indent: Record "Indent Header";
 
 }

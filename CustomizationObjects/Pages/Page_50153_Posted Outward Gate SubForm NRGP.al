@@ -41,6 +41,14 @@ page 50153 "Posted Outward Gate SubFm-NRGP"
                     ApplicationArea = All;
                 }
                 //B2BSSD30Dec2022>>
+                field("Purchase Order No."; "Purchase Order No.")
+                {
+                    ApplicationArea = all;
+                }
+                field("Purchase Order Line No."; "Purchase Order Line No.")
+                {
+                    ApplicationArea = all;
+                }
             }
         }
     }

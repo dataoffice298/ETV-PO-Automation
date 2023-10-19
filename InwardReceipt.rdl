@@ -19,7 +19,7 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>10.99342in</Width>
+                  <Width>11.08139in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -2467,6 +2467,7 @@
                                               <PaddingBottom>2pt</PaddingBottom>
                                             </Style>
                                           </Textbox>
+                                          <rd:Selected>true</rd:Selected>
                                         </CellContents>
                                       </TablixCell>
                                       <TablixCell>
@@ -2813,6 +2814,7 @@
                                               <PaddingBottom>2pt</PaddingBottom>
                                             </Style>
                                           </Textbox>
+                                          <rd:Selected>true</rd:Selected>
                                         </CellContents>
                                       </TablixCell>
                                       <TablixCell>
@@ -3273,22 +3275,31 @@
                               </TablixColumnHierarchy>
                               <TablixRowHierarchy>
                                 <TablixMembers>
+                                  <TablixMember />
+                                  <TablixMember />
                                   <TablixMember>
-                                    <KeepWithGroup>After</KeepWithGroup>
-                                  </TablixMember>
-                                  <TablixMember>
-                                    <KeepWithGroup>After</KeepWithGroup>
-                                  </TablixMember>
-                                  <TablixMember>
-                                    <Group Name="Details" />
+                                    <Group Name="No_1">
+                                      <GroupExpressions>
+                                        <GroupExpression>=Fields!No_.Value</GroupExpression>
+                                        <GroupExpression>=Fields!Document_No_.Value</GroupExpression>
+                                      </GroupExpressions>
+                                    </Group>
+                                    <SortExpressions>
+                                      <SortExpression>
+                                        <Value>=Fields!No_.Value</Value>
+                                      </SortExpression>
+                                    </SortExpressions>
                                     <TablixMembers>
-                                      <TablixMember />
-                                      <TablixMember />
+                                      <TablixMember>
+                                        <Group Name="Details" />
+                                        <TablixMembers>
+                                          <TablixMember />
+                                          <TablixMember />
+                                        </TablixMembers>
+                                      </TablixMember>
                                     </TablixMembers>
                                   </TablixMember>
-                                  <TablixMember>
-                                    <KeepWithGroup>Before</KeepWithGroup>
-                                  </TablixMember>
+                                  <TablixMember />
                                 </TablixMembers>
                               </TablixRowHierarchy>
                               <DataSetName>DataSet_Result</DataSetName>
@@ -3363,7 +3374,7 @@
             </TablixRowHierarchy>
             <DataSetName>DataSet_Result</DataSetName>
             <Height>7.16791in</Height>
-            <Width>10.99342in</Width>
+            <Width>11.08139in</Width>
             <Style>
               <Border>
                 <Style>Solid</Style>
@@ -3394,7 +3405,7 @@
         <Height>18.20649cm</Height>
         <Style />
       </Body>
-      <Width>27.92329cm</Width>
+      <Width>28.14673cm</Width>
       <Page>
         <PageHeight>21cm</PageHeight>
         <PageWidth>29.7cm</PageWidth>
@@ -3450,6 +3461,9 @@ End Function
         </Field>
         <Field Name="CompanyInfoName">
           <DataField>CompanyInfoName</DataField>
+        </Field>
+        <Field Name="Purpose">
+          <DataField>Purpose</DataField>
         </Field>
         <Field Name="CompanyInfoAddress">
           <DataField>CompanyInfoAddress</DataField>
@@ -3633,9 +3647,6 @@ End Function
         </Field>
         <Field Name="Indentor">
           <DataField>Indentor</DataField>
-        </Field>
-        <Field Name="Purpose">
-          <DataField>Purpose</DataField>
         </Field>
         <Field Name="VehicleNo">
           <DataField>VehicleNo</DataField>

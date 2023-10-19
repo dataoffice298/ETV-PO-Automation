@@ -678,6 +678,8 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                     GateEntryLine.Description := ItemLRec.Description;
                     GateEntryLine.Variant := PurchLine."Variant Code";//B2BSSDOn13Dec2022
                     GateEntryLine."Unit of Measure" := Rec."Unit of Measure Code";
+                    GateEntryLine."Purchase Order No." := PurchLine."Document No.";
+                    GateEntryLine."Purchase Order Line No." := PurchLine."Line No.";
                     //GateEntryLine.Validate(Quantity, ReservationEntry.Quantity);
                     //B2BSSD24Feb2023<<
                     GateEntryLine.Quantity := PurchLine.Quantity;
@@ -712,12 +714,15 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         GateEntryLine."Line No." := LineNo;
                         GateEntryLine."Source Type" := GateEntryLine."Source Type"::"Fixed Asset";
                         GateEntryLine.Validate("Source No.", PurchLine."No.");
+
                         FALRec.Get(PurchLine."No.");
                         GateEntryLine."Source Name" := FALRec.Description;
                         GateEntryLine.Description := FALRec.Description;
                         GateEntryLine."Unit of Measure" := Rec."Unit of Measure Code";
                         GateEntryLine.ModelNo := FALRec."Model No.";
                         GateEntryLine.SerialNo := FALRec."Serial No.";
+                        GateEntryLine."Purchase Order No." := PurchLine."Document No.";
+                        GateEntryLine."Purchase Order Line No." := PurchLine."Line No.";
                         GateEntryLine.Make := FALRec.Make_B2B;
                         Inwardqty := (PurchLine."Qty to Inward_B2B" + PurchLine."Qty Accepted Inward_B2B");//B2BSSD25MAY2023
                         GateEntryLine.Insert(true);
@@ -740,6 +745,8 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                             GateEntryLine."Source No." := PurchLine."No.";
                             GateEntryLine."Unit of Measure" := Rec."Unit of Measure Code";//B2BSSD27APR2023
                             GateEntryLine.Description := PurchLine.Description;
+                            GateEntryLine."Purchase Order No." := PurchLine."Document No.";
+                            GateEntryLine."Purchase Order Line No." := PurchLine."Line No.";
                             GateEntryLine."Source Name" := PurchLine."Spec Id";//B2BSSD18APR2023   
                             Inwardqty := (PurchLine."Qty to Inward_B2B" + PurchLine."Qty Accepted Inward_B2B");//B2BSSD25MAY2023            
                             GateEntryLine.Insert(true);

@@ -191,6 +191,14 @@ table 50222 "Gate Entry Line_B2B"
         {
             DataClassification = CustomerContent;
         }
+        field(36; "Purchase Order No."; code[20])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(37; "Purchase Order Line No."; Integer)
+        {
+            DataClassification = ToBeClassified;
+        }
     }
 
     keys

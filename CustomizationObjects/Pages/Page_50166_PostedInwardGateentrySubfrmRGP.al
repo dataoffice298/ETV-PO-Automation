@@ -64,6 +64,15 @@ page 50166 "Posted Inward Gate SubFm-RGP"
                     ApplicationArea = All;
                 }
                 //B2BSSD30Dec2022>>
+                field("Purchase Order No."; "Purchase Order No.")
+                {
+                    ApplicationArea = all;
+
+                }
+                field("Purchase Order Line No."; "Purchase Order Line No.")
+                {
+                    ApplicationArea = all;
+                }
             }
         }
     }

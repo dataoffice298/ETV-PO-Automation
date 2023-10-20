@@ -22,9 +22,9 @@ report 50107 "Aging of Items Report"
                 PostedPurchReceipt: Record "Purch. Rcpt. Header";
                 PostedPurchReceiptLine: Record "Purch. Rcpt. Line";
                 ValueEntry: Record "Value Entry";
-
-                UnitCostRec: Decimal;
                 Location: Code[20];
+                UnitCostRec: Decimal;
+
             begin
                 CalcFields(Inventory);
                 Clear(UnitCostRec);
@@ -45,6 +45,12 @@ report 50107 "Aging of Items Report"
                         AgingDays := StartDate - ItemLedgerEntry."Posting Date";
                         if ItemLedgerEntry."Remaining Quantity" = 0 then
                             CurrReport.Skip();
+                        // Location := ItemLedgerEntry."Location Code";
+
+                        // if ItemLedgerEntry.Quantity = 0 then
+                        //     CurrReport.Skip();
+                        // if Item.Inventory = 0 then
+                        //     CurrReport.Skip();
                         ValueEntry.Reset();
                         ValueEntry.SetRange("Item Ledger Entry No.", ItemLedgerEntry."Entry No.");
                         if ValueEntry.FindSet() then begin
@@ -67,7 +73,10 @@ report 50107 "Aging of Items Report"
                         TempExcelBuffer.AddColumn(Round(ItemLedgerEntry."Remaining Quantity" * UnitCostRec, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                         TempExcelBuffer.AddColumn(ItemLedgerEntry."Posting Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                         TempExcelBuffer.AddColumn(AgingDays, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                        TempExcelBuffer.AddColumn(ItemLedgerEntry."Location Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(ItemLedgerEntry."Location Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+
+
+
 
                     until ItemLedgerEntry.Next() = 0;//B2BSCM25SEP2023
                 end;

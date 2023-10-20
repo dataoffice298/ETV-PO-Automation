@@ -31,26 +31,20 @@ report 50107 "Aging of Items Report"
                 if Item.Inventory = 0 then //B2BSCM25SCM2023
                     CurrReport.Skip();//B2BSCM25SCM2023
 
-
-
-
                 ItemLedgerEntry.Reset();
                 ItemLedgerEntry.SetCurrentKey("Posting Date");
                 ItemLedgerEntry.SetFilter(Quantity, '<>%1', 0);//B2BSCM25SCM2023
                                                                // ItemLedgerEntry.SetAscending("Posting Date", true);
                 ItemLedgerEntry.SetRange("Item No.", "No.");
-                ItemLedgerEntry.SetFilter("Entry Type", '%1|%2', ItemLedgerEntry."Entry Type"::Purchase, ItemLedgerEntry."Entry Type"::"Positive Adjmt.");
+                ItemLedgerEntry.SetFilter("Entry Type", '%1|%2|%3', ItemLedgerEntry."Entry Type"::Purchase, ItemLedgerEntry."Entry Type"::"Positive Adjmt.", ItemLedgerEntry."Entry Type"::Transfer);
+                ItemLedgerEntry.SetFilter("Document Type", '%1|%2|%3', ItemLedgerEntry."Document Type"::"Purchase Receipt", ItemLedgerEntry."Document Type"::" ", ItemLedgerEntry."Document Type"::"Transfer Receipt");
                 if ItemLedgerEntry.FindSet() then begin
                     repeat //B2BSCM25SEP2023
                         Clear(AgingDays);
                         Clear(Location);
                         AgingDays := StartDate - ItemLedgerEntry."Posting Date";
-                       // Location := ItemLedgerEntry."Location Code";
-
-                        // if ItemLedgerEntry.Quantity = 0 then
-                        //     CurrReport.Skip();
-                        // if Item.Inventory = 0 then
-                        //     CurrReport.Skip();
+                        if ItemLedgerEntry."Remaining Quantity" = 0 then
+                            CurrReport.Skip();
                         ValueEntry.Reset();
                         ValueEntry.SetRange("Item Ledger Entry No.", ItemLedgerEntry."Entry No.");
                         if ValueEntry.FindSet() then begin
@@ -68,8 +62,7 @@ report 50107 "Aging of Items Report"
                         TempExcelBuffer.AddColumn("No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                         TempExcelBuffer.AddColumn(Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                         TempExcelBuffer.AddColumn(ItemLedgerEntry."Unit of Measure Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                        if ItemLedgerEntry."Remaining Quantity" <> 0 then
-                            TempExcelBuffer.AddColumn(ItemLedgerEntry."Remaining Quantity", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        TempExcelBuffer.AddColumn(ItemLedgerEntry."Remaining Quantity", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                         TempExcelBuffer.AddColumn(UnitCostRec, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                         TempExcelBuffer.AddColumn(Round(ItemLedgerEntry."Remaining Quantity" * UnitCostRec, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                         TempExcelBuffer.AddColumn(ItemLedgerEntry."Posting Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);

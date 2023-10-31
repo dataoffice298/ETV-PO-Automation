@@ -2,7 +2,7 @@ page 50116 "Indent Header"
 {
     // version PH1.0,PO1.0,REP1.0
 
-    PageType = ListPlus;
+    PageType = Document;
     SourceTable = "Indent Header";
     Caption = 'Indent Document';
     SourceTableView = where("Indent Transfer" = const(false));//BaluOn19Oct2022>>
@@ -396,7 +396,7 @@ page 50116 "Indent Header"
                             if IndentLineRec.FindSet() then begin
                                 repeat
                                     IndentLineRec.CalcFields("Qty Issued");
-                                    if IndentLineRec."Qty Issued" <= IndentLineRec."Req.Quantity" then
+                                    if IndentLineRec."Qty Issued" >= IndentLineRec."Req.Quantity" then
                                         Error(Text0001, IndentLineRec."Qty Issued");
                                 until IndentLineRec.Next() = 0;
                             end;

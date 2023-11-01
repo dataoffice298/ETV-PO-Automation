@@ -33,24 +33,22 @@ report 50107 "Aging of Items Report"
 
                 ItemLedgerEntry.Reset();
                 ItemLedgerEntry.SetCurrentKey("Posting Date");
-                ItemLedgerEntry.SetFilter(Quantity, '<>%1', 0);//B2BSCM25SCM2023
-                                                   
-                                                               // ItemLedgerEntry.SetAscending("Posting Date", true);
+                // ItemLedgerEntry.SetAscending("Posting Date", true);
                 ItemLedgerEntry.SetRange("Item No.", "No.");
-                // ItemLedgerEntry.SetFilter("Entry Type", '=%1', ItemLedgerEntry."Entry Type"::Transfer);
-
                 ItemLedgerEntry.SetFilter("Entry Type", '%1|%2|%3', ItemLedgerEntry."Entry Type"::Purchase, ItemLedgerEntry."Entry Type"::"Positive Adjmt.", ItemLedgerEntry."Entry Type"::Transfer);
                 ItemLedgerEntry.SetFilter("Document Type", '%1|%2|%3', ItemLedgerEntry."Document Type"::"Purchase Receipt", ItemLedgerEntry."Document Type"::" ", ItemLedgerEntry."Document Type"::"Transfer Receipt");
-                //ItemLedgerEntry.SetFilter("Document Type", '=%1', ItemLedgerEntry."Document Type"::"Transfer Receipt");
+                ItemLedgerEntry.SetFilter("Remaining Quantity", '<>%1', 0); //B2BVCOn25Oct2023
 
                 if ItemLedgerEntry.FindSet() then begin
+                    ItemLedgerEntry.CalcFields("Cost Amount (Actual)");
                     repeat //B2BSCM25SEP2023
                         Clear(AgingDays);
                         Clear(Location);
                         AgingDays := StartDate - ItemLedgerEntry."Posting Date";
-                        if ItemLedgerEntry."Remaining Quantity" = 0 then
-                            CurrReport.Skip();
-
+                        //B2BVCOn25Oct2023 //Commented >>
+                        //if ItemLedgerEntry."Remaining Quantity" = 0 then 
+                        //CurrReport.Skip();
+                        //B2BVCOn25Oct2023 //Commented <<
                         ValueEntry.Reset();
                         ValueEntry.SetRange("Item Ledger Entry No.", ItemLedgerEntry."Entry No.");
                         if ValueEntry.FindSet() then begin
@@ -69,7 +67,8 @@ report 50107 "Aging of Items Report"
                         TempExcelBuffer.AddColumn(Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                         TempExcelBuffer.AddColumn(ItemLedgerEntry."Unit of Measure Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                         TempExcelBuffer.AddColumn(ItemLedgerEntry."Remaining Quantity", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                        TempExcelBuffer.AddColumn(UnitCostRec, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        //TempExcelBuffer.AddColumn(UnitCostRec, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number); //B2BVCOn25Oct2023 //commented
+                        TempExcelBuffer.AddColumn(ItemLedgerEntry."Cost Amount (Actual)", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number); //B2BVCOn25Oct2023
                         TempExcelBuffer.AddColumn(Round(ItemLedgerEntry."Remaining Quantity" * UnitCostRec, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                         TempExcelBuffer.AddColumn(ItemLedgerEntry."Posting Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                         TempExcelBuffer.AddColumn(AgingDays, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);

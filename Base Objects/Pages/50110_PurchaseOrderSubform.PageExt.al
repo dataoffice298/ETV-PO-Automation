@@ -650,6 +650,8 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             GateEntryHeader."Shortcut Dimension 1 Code" := Rec."Shortcut Dimension 1 Code";
             GateEntryHeader."Shortcut Dimension 2 Code" := Rec."Shortcut Dimension 2 Code";
             GateEntryHeader."Shortcut Dimension 9 Code" := Rec."Shortcut Dimension 9 Code";
+            GateEntryHeader."Indent Document No" := rec."Indent No.";
+            GateEntryHeader."Indent Line No" := rec."Indent Line No.";
             GateEntryHeader.SubLocation := Rec."Sub Location Code";
             //B2BSSD11Jan2023>>
             GateEntryHeader.Insert(true);

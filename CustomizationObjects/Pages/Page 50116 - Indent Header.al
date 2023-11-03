@@ -391,12 +391,14 @@ page 50116 "Indent Header"
                             Text0001: Label 'Quantity to  issue should not be greaterthan Required Quantity ';
 
                         begin
+
                             IndentLineRec.Reset();
                             IndentLineRec.SetRange("Document No.", rec."No.");
                             if IndentLineRec.FindSet() then begin
                                 repeat
-                                    IndentLineRec.CalcFields("Qty Issued");
-                                    if IndentLineRec."Qty Issued" >= IndentLineRec."Req.Quantity" then
+
+                                    //  IndentLineRec.CalcFields("Qty Issued");
+                                    IF (IndentLineRec."Req.Quantity" <= ABS(IndentLineRec."Qty Issued")) then
                                         Error(Text0001, IndentLineRec."Qty Issued");
                                 until IndentLineRec.Next() = 0;
                             end;
@@ -413,6 +415,7 @@ page 50116 "Indent Header"
 
                             CurrPage.Update();
                             CurrPage.indentLine.Page.QTyToIssueNonEditable();
+                           
                         end;
                     }
                     action("Create Return Jnl. Batch")
@@ -568,8 +571,8 @@ page 50116 "Indent Header"
                             repeat
                                 //B2BMSOn27Oct2022>>
                                 if IndentLine."Qty To Issue" <> 0 then begin
-                                    IndentLine.TestField("Issue Location");
                                     IndentLine.TestField("Issue Sub Location");
+                                    IndentLine.TestField("Issue Location");
                                 end;
                                 //B2BMSOn27Oct2022<<
                                 //B2BMSOn01Nov2022>>

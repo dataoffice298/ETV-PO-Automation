@@ -13,96 +13,78 @@ report 50162 "Issuance Report"
             {
                 DataItemLink = "Document No." = field("No.");
                 DataItemTableView = where("Quantity (Base)" = filter(<> 0), "Qty Issued" = FILTER(<> 0));
-                dataitem("Item Ledger Entry"; "Item Ledger Entry")
-                {
-                    DataItemLinkReference = "Indent Line";
-                    DataItemLink = "Indent No." = field("Document No."), "Indent Line No." = field("Line No.");
-                    trigger OnPreDataItem()
-                    begin
-                        SetCurrentKey("Document No.");
-                        SetFilter("Indent No.", '<>%1', '');
-                        SetFilter("Indent Line No.", '<>%1', 0);
-                    end;
-
-                    trigger OnAfterGetRecord()
-                    var
-                        Item: Record Item;
-                        Users: Record User;
-                        PurchLine: Record "Purchase Line";
-                        PostGateEntryLine: Record "Posted Gate Entry Line_B2B";
-                        PostedGateEntryHed: Record "Posted Gate Entry Header_B2B";
-                        ItemLedgerEntries: Record "Item Ledger Entry";
-                        indetno: Integer;
-                        i: Integer;
-                    begin
-                        Clear(InwardRefNumber);
-                        //B2BSSD24APR2023>>
-                        if DocumentNoVar <> "Item Ledger Entry"."Document No." then begin
-                            DocumentNoVar := "Item Ledger Entry"."Document No.";
-                            Clear(ItemLedgerQty);
-                            ItemLedgerEntries.Reset();
-                            ItemLedgerEntries.SetRange("Document No.", "Item Ledger Entry"."Document No.");
-                            ItemLedgerEntries.SetRange("Entry Type", "Item Ledger Entry"."Entry Type"::"Negative Adjmt.");//B2BSCM14SEP2023
-                            if ItemLedgerEntries.FindSet() then
+                trigger OnAfterGetRecord()
+                var
+                    Item: Record Item;
+                    Users: Record User;
+                    PurchLine: Record "Purchase Line";
+                    PostGateEntryLine: Record "Posted Gate Entry Line_B2B";
+                    PostedGateEntryHed: Record "Posted Gate Entry Header_B2B";
+                    ItemLedgerEntries: Record "Item Ledger Entry";
+                    indetno: Integer;
+                    i: Integer;
+                    ValueEntryLVar: Record "Value Entry";
+                begin
+                    Clear(InwardRefNumber);
+                    Clear(ItemLedgerQty);
+                    ItemLedgerEntries.Reset();
+                    ItemLedgerEntries.SetRange("Indent No.", "Indent Line"."Document No.");
+                    ItemLedgerEntries.SetRange("Indent Line No.", "Indent Line"."Line No.");
+                    ItemLedgerEntries.SetRange("Entry Type", ItemLedgerEntries."Entry Type"::"Negative Adjmt.");//B2BSCM14SEP2023
+                    if ItemLedgerEntries.FindSet() then
+                        repeat
+                            //B2BSSD24APR2023<<
+                            Users.Reset();
+                            Users.SetRange("User Name", "Indent Header".Indentor);
+                            if Users.FindFirst() then;
+                            if Item.Get("Indent Line"."No.") then;
+                            "Indent Line".CalcFields("Qty Issued");
+                            PostedGateEntryHed.Reset();
+                            PostedGateEntryHed.SetRange("Indent Document No", "Indent Line"."Document No.");
+                            PostedGateEntryHed.SetRange("Indent Line No", "Indent Line"."Line No.");
+                            if PostedGateEntryHed.FindSet() then begin
                                 repeat
-                                    ItemLedgerQty := "Item Ledger Entry".Quantity;
-
-                                    //B2BSSD24APR2023<<
-
-                                    Users.Reset();
-                                    Users.SetRange("User Name", "Indent Header".Indentor);
-                                    if Users.FindFirst() then;
-                                    if Item.Get("Indent Line"."No.") then;
-                                    //CalcFields("Qty Issued");
-                                    "Indent Line".CalcFields("Qty Issued");
+                                    InwardRefNumber := PostedGateEntryHed."No.";
+                                until PostedGateEntryHed.Next() = 0;
+                            end;
 
 
-                                    PostedGateEntryHed.Reset();
-                                    //PostedGateEntryHed.SetRange("Entry Type", PostedGateEntryHed."Entry Type"::Outward);
-                                    PostedGateEntryHed.SetRange("Indent Document No", "Indent Line"."Document No.");
-                                    PostedGateEntryHed.SetRange("Indent Line No", "Indent Line"."Line No.");
-                                    if PostedGateEntryHed.FindSet() then begin
-                                        repeat
-                                            // if InwardRefNumber <> '' then
-                                            //     InwardRefNumber := InwardRefNumber + '|' + PostedGateEntryHed."No."
-                                            // else
-                                            InwardRefNumber := PostedGateEntryHed."No.";
-                                        until PostedGateEntryHed.Next() = 0;
-                                    end;
+                            Users.Reset();
+                            Users.SetRange("User Name", UserId);
+                            if Users.FindFirst() then
+                                username := Users."Full Name";
 
-                                    //B2BSSD28MAR2023<<
-                                    Users.Reset();
-                                    Users.SetRange("User Name", UserId);
-                                    if Users.FindFirst() then
-                                        username := Users."Full Name";
-                                    //B2BSSD28MAR2023>>
-                                    WindPa.Update(1, "Document No.");
-                                    TempExcelBuffer.NewRow();
-                                    SNo += 1;
-                                    TempExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                                    TempExcelBuffer.AddColumn("Indent Header"."Shortcut Dimension 2 Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                                    TempExcelBuffer.AddColumn("Indent Header"."Delivery Location", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                                    TempExcelBuffer.AddColumn("Indent Header"."Shortcut Dimension 1 Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                                    TempExcelBuffer.AddColumn("Indent Header"."programme Name", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD28MAR2023
-                                    TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                                    TempExcelBuffer.AddColumn(username, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD28MAR2023
-                                    TempExcelBuffer.AddColumn("Indent Header"."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD09AUG2023
-                                    TempExcelBuffer.AddColumn("Indent Header"."Document Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
-                                    TempExcelBuffer.AddColumn("Item Ledger Entry"."Document No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                                    TempExcelBuffer.AddColumn("Item Ledger Entry"."Posting Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                                    TempExcelBuffer.AddColumn("Indent Line"."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                                    TempExcelBuffer.AddColumn("Indent Line".Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                                    TempExcelBuffer.AddColumn("Indent Line"."Quantity (Base)", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                                    TempExcelBuffer.AddColumn("Indent Line"."Unit of Measure", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                                    TempExcelBuffer.AddColumn(ItemLedgerQty, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD24APR2023
-                                    TempExcelBuffer.AddColumn("Indent Line"."Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                                    TempExcelBuffer.AddColumn(ABS("Item Ledger Entry".Quantity * "Indent Line"."Unit Cost"), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//B2BSSD19Jan2023
-                                    TempExcelBuffer.AddColumn(InwardRefNumber, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD28MAR2023
-                                until ItemLedgerEntries.Next() = 0;
-                        end;
-                    end;
-                }
+                            ValueEntryLVar.Reset();
+                            ValueEntryLVar.SetRange("Item Ledger Entry No.", ItemLedgerEntries."Entry No.");
+                            if ValueEntryLVar.FindFirst() then;
+
+                            WindPa.Update(1, "Document No.");
+
+                            TempExcelBuffer.NewRow();
+                            SNo += 1;
+                            TempExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                            TempExcelBuffer.AddColumn("Indent Header"."Shortcut Dimension 2 Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn("Indent Header"."Delivery Location", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn("Indent Header"."Shortcut Dimension 1 Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                            TempExcelBuffer.AddColumn("Indent Header"."programme Name", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn(username, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn("Indent Header"."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn("Indent Header"."Document Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
+                            TempExcelBuffer.AddColumn(ItemLedgerEntries."Document No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn(ItemLedgerEntries."Posting Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn("Indent Line"."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn("Indent Line".Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn("Indent Line"."Quantity (Base)", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                            TempExcelBuffer.AddColumn("Indent Line"."Unit of Measure", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn(ItemLedgerQty, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn(ValueEntryLVar."Cost per Unit", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                            TempExcelBuffer.AddColumn(ABS(ItemLedgerEntries.Quantity * "Indent Line"."Unit Cost"), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                            TempExcelBuffer.AddColumn(InwardRefNumber, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        until ItemLedgerEntries.Next() = 0;
+                end;
             }
+
             trigger OnPreDataItem()
             begin
                 SetFilter("Document Date", '%1..%2', StartDate, EndDate);

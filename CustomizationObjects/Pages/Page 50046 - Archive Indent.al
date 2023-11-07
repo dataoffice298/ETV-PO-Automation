@@ -91,6 +91,11 @@ page 50046 "Archive Indent"
                     ApplicationArea = Location;
                     ToolTip = 'Specifies the in-transit code for the transfer order, such as a shipping agent.';
                 }
+                field("Indent Issued"; Rec."Indent Issued")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Indent Issued';
+                }
             }
             part(ArchiveIndentSubform; "Archive Indent Subform")
             {
@@ -99,7 +104,37 @@ page 50046 "Archive Indent"
             }
         }
 
-    }
 
+    }
+    actions
+    {
+        area(Processing)
+        {
+            group("&Print")
+            {
+                action(Print)
+                {
+                    Caption = 'Print';
+                    ApplicationArea = ALL;
+                    Image = Print;
+                    Promoted = true;
+                    PromotedCategory = Report;
+                    PromotedIsBig = true;
+                    trigger OnAction()
+
+                    begin
+                        Archiveindent.Reset();
+                        Archiveindent.setrange("No.", rec."No.");
+                        if Archiveindent.findfirst then
+                            Report.RunModal(Report::"Archive Material Issue Slip", true, true, Archiveindent);
+
+                    end;
+                }
+            }
+        }
+    }
+    var
+        Archiveindent: Record "Archive Indent Header";
 }
+
 

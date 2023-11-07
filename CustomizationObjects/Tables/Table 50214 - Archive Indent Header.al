@@ -111,6 +111,11 @@ table 50214 "Archive Indent Header"
         field(50009; "Archived By"; Code[30])
         {
         }
+        //B2BPGON6Nov23>>>
+        field(50010; "Indent Issued"; Boolean)
+        {
+
+        }//B2BPGON6Nov23<<<
 
     }
 

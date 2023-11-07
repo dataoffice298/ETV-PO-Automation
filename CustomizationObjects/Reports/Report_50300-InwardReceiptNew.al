@@ -152,6 +152,8 @@ report 50300 "INWARD RECEIPT New"
             }
             column(Purpose; Purpose)
             { }
+            column(PONo; "Purchase Order No.")
+            { }
 
 
 
@@ -167,6 +169,8 @@ report 50300 "INWARD RECEIPT New"
                 {
 
                 }
+                column(SourceNo_; "Source No.")
+                { }
 
                 column(SNo; SNo)
                 { }
@@ -188,17 +192,13 @@ report 50300 "INWARD RECEIPT New"
                 { }
                 column(QtyReceived; QtyReceived)
                 { }
-                column(QtyRejected; QtyRejected)
-                { }
-                column(PONo; PONo)
-                {
-
-                }
+                /*column(QtyRejected; QtyRejected) //B2BVCOn25Oct2023 //Commented
+                { }*/
                 column(BasicAmt; BasicAmt)
                 {
 
                 }
-                column(desc; Description)
+                column(desc; desc)
                 { }
                 column(Discount; Discount)
                 { }
@@ -206,6 +206,54 @@ report 50300 "INWARD RECEIPT New"
                 {
 
                 }
+
+                //B2BVCOn25Oct2023 >>
+                dataitem("Purchase Line"; "Purchase Line")
+                {
+                    DataItemLink = "Document No." = field("Purchase Order No.");
+                    column(QtyRejected; "Quantity Rejected B2B")
+                    { }
+                }
+                /* dataitem("Purch. Rcpt. Line"; "Purch. Rcpt. Line")
+                 {
+                     DataItemLink = "Order No." = field("Purchase Order No.");
+                     DataItemLinkReference = "Posted Gate Entry Line_B2B";
+                     column(QtyAccepted; Quantity)
+                     { }
+                     column(Rate; "Direct Unit Cost")
+                     { }
+                     column(QtyReceived; Quantity)
+                     { }
+                     column(BasicAmt; BasicAmt)
+                     { }
+                     column(Discount; Discount)
+                     { }
+                     column(TotalAmount; TotalAmount)
+                     { }
+                     column(Make; Make)
+                     { }
+                     column(desc; Description)
+                     { }
+                     column(ItemNo; "No.")
+                     { }
+                     trigger OnAfterGetRecord()
+                     begin
+                         BasicAmt := Quantity * "Direct Unit Cost";
+                         //desc := PurchaseRcptLineGRec.Description;
+                         Discount := (BasicAmt / 100) * "Line Discount %";
+                         TotalAmount := BasicAmt - Discount;
+                         if "Purch. Rcpt. Line".Type = "Purch. Rcpt. Line".Type::Item then
+                             Make := "Purch. Rcpt. Line"."Variant Code"
+                         else
+                             if "Purch. Rcpt. Line".Type = "Purch. Rcpt. Line".Type::"Fixed Asset" then begin
+                                 if FixedAsset.Get("Purch. Rcpt. Line"."No.") then
+                                     Make := FixedAsset."FA Class Code";
+                             end;
+
+                     end;
+
+                 }*/
+                //B2BVCOn25Oct2023 <<
 
                 trigger OnPreDataItem();
                 begin
@@ -215,48 +263,33 @@ report 50300 "INWARD RECEIPT New"
 
                 trigger OnAfterGetRecord()
                 begin
-                    Clear(Qty);
+                    clear(Make);
                     Clear(QtyReceived);
-                    Clear(QtyRejected);
                     Clear(QtyAccepted);
                     Clear(Discount);
                     Clear(TotalAmount);
-
+                    Clear(Rate);
+                    Clear(BasicAmt);
+                    PurchaseRcptLine.Reset();
                     PurchaseRcptLine.SetRange("Order No.", "Posted Gate Entry Line_B2B"."Purchase Order No.");
-                    PurchaseRcptLine.SetRange("Order Line No.", "Posted Gate Entry Line_B2B"."Purchase Order Line No.");
-                    IF PurchaseRcptLine.FindFirst() then begin
-                        QtyAccepted := PurchaseRcptLine.Quantity;
-                        Rate := PurchaseRcptLine."Unit Cost";
-                        QtyReceived := PurchaseRcptLine.Quantity;
-                        PONo := PurchaseRcptLine."Order No.";
-                        BasicAmt := PurchaseRcptLine.Quantity * PurchaseRcptLine."Unit Cost";
-                        desc := PurchaseRcptLine.Description;
-                        Discount := (BasicAmt / 100) * PurchaseRcptLine."Line Discount %";
-                        TotalAmount := BasicAmt - Discount;
-                        /* if PurchaseRcptHdr.Get(PurchaseRcptLine."Document No.") then begin
-                             IndNo2 := PurchaseRcptHdr."Order No.";
-                             GRNNo := PurchaseRcptHdr."No.";
-                             GRNDate := PurchaseRcptHdr."Document Date";
-                             SupplierName := PurchaseRcptHdr."Buy-from Vendor Name";
-                             ReceiptDate := PurchaseRcptHdr."Posting Date";
-                             Spot := PurchaseRcptHdr."Location Code";
-                             VehicleNo := PurchaseRcptHdr."Vehicle No.";
-                             VendorInvNo := PurchaseRcptHdr."Vendor Invoice No.";
-                             VendorInvDate := PurchaseRcptHdr."Vendor Invoice Date";
-                         end;*/
-
-                        PurchaseHdr.Reset();
-                        PurchaseHdr.SetRange("No.", PurchaseRcptLine."Order No.");
-                        if PurchaseHdr.FindFirst() then begin
-                            PurchaseLineGRec.Reset();
-                            PurchaseLineGRec.SetRange("Document No.", PurchaseHdr."No.");
-                            if PurchaseLineGRec.FindSet() then begin
-                                PurchaseLineGRec.calcsums("Quantity Rejected B2B");
-                                QtyRejected := PurchaseLineGRec."Quantity Rejected B2B";
-                            end;
-                        end;
-
-
+                    //PurchaseRcptLine.SetRange("Order Line No.", "Posted Gate Entry Line_B2B"."Purchase Order Line No.");
+                    if PurchaseRcptLine.FindSet() then begin
+                        repeat
+                            QtyAccepted := PurchaseRcptLine.Quantity;
+                            Rate := PurchaseRcptLine."Direct Unit Cost";
+                            QtyReceived := PurchaseRcptLine.Quantity;
+                            BasicAmt := PurchaseRcptLine.Quantity * PurchaseRcptLine."Direct Unit Cost";
+                            desc := PurchaseRcptLine.Description;
+                            Discount := (BasicAmt / 100) * PurchaseRcptLine."Line Discount %";
+                            TotalAmount := BasicAmt - Discount;
+                            if PurchaseRcptLine.Type = PurchaseRcptLine.Type::Item then
+                                Make := PurchaseRcptLine."Variant Code"
+                            else
+                                if PurchaseRcptLine.Type = PurchaseRcptLine.Type::"Fixed Asset" then begin
+                                    if FixedAsset.Get(PurchaseRcptLine."No.") then
+                                        Make := FixedAsset."FA Class Code";
+                                end;
+                        until PurchaseRcptLine.Next = 0;
                     end;
                 end;
 
@@ -264,6 +297,7 @@ report 50300 "INWARD RECEIPT New"
 
             trigger OnAfterGetRecord()
             begin
+                SNo += 1;
                 PurchaseRcptHdr.Reset();
                 PurchaseRcptHdr.SetRange("Order No.", "Posted Gate Entry Header_B2B"."Purchase Order No.");
                 if PurchaseRcptHdr.FindFirst() then begin
@@ -292,10 +326,6 @@ report 50300 "INWARD RECEIPT New"
 
 
             end;
-
-
-
-
 
 
             trigger OnPreDataItem()
@@ -393,6 +423,7 @@ report 50300 "INWARD RECEIPT New"
         PurchaseRcptHdr: Record "Purch. Rcpt. Header";
 
         PurchaseRcptLine: Record "Purch. Rcpt. Line";
+        PurchaseRcptLineGRec: Record "Purch. Rcpt. Line";
 
         IndentHdr: Record "Indent Header";
         IndentLine: Record "Indent Line";
@@ -423,7 +454,8 @@ report 50300 "INWARD RECEIPT New"
         Rate: Decimal;
         BasicAmt: Decimal;
         Discount: Decimal;
-        SNo: Code[20];
+        //SNo: Code[20];
+        SNo: Integer;
         PONo: Code[20];
         Make: Code[50];
         Vat: Decimal;
@@ -438,5 +470,6 @@ report 50300 "INWARD RECEIPT New"
         ChallanQtyvar: Decimal;
         TotalAmount: Decimal;
         Indent: Record "Indent Header";
+        FixedAsset: Record "Fixed Asset";
 
 }

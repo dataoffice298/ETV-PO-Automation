@@ -14,6 +14,7 @@ page 50023 "Indent Line"
 
     layout
     {
+
         area(content)
         {
             repeater("Control")
@@ -394,23 +395,11 @@ page 50023 "Indent Line"
                                 IndentLine.CalcFields("Qty Returned");
                                 IndentLine.TestField("Qty Returned");
                                 indentLine.CalcFields("Qty Returned", "Qty Issued");
-                                //IndentLine.TestField("Qty Returned");
-                                if Abs(indentLine."Qty Issued") > IndentLine."Qty Returned" then
+                                if IndentLine."Qty Returned" > Abs(IndentLine."Qty Issued") then
                                     Error(Errorinward1);
                             until IndentLine.Next() = 0;
                         end;
 
-                        // indentLine.Reset();//B2BSSD03AUG2023
-                        // indentLine.SetRange("Document No.", IndentLIne1."Document No.");//B2BSCM06SEP2023
-                        // IndentLine.SetRange(Type, IndentLIne1.Type::Item);
-                        // IndentLine.SetRange(Select, true);//B2BSCM23AUG2023
-                        // if indentLine.FindSet() then begin
-                        //     repeat
-                        //         indentLine.CalcFields("Qty Returned", "Qty Issued");
-                        //         if Abs(indentLine."Qty Issued") > IndentLine."Qty Returned" then
-                        //             Error(Errorinward1);
-                        //     until indentLine.Next() = 0;
-                        // end;
 
                         IndentLine.Reset();//B2BSSD02AUG2023
                         IndentLine.SetRange("Document No.", Rec."Document No.");
@@ -452,8 +441,6 @@ page 50023 "Indent Line"
                                 indentLine.CalcFields("Qty Issued");
                                 if indentLine."Qty Issued" = 0 then
                                     Error(ErrorOutward1);
-
-                                indentLine.TestField("Qty To Issue");//B2BSCM05SEP2023
                             until indentLine.Next() = 0;
                         end;
 

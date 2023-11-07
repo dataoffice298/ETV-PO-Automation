@@ -388,7 +388,7 @@ page 50116 "Indent Header"
                         var
                             IndentError001: TextConst ENN = 'Select Must Have a Value';
                             IndentLineRec: Record "Indent Line";
-                            Text0001: Label 'Quantity to  issue should not be greaterthan Required Quantity ';
+                            Text0001: Label 'Quantity to  issue should not be greaterthan Required Quantity %1  for Line No. %2';
 
                         begin
                             IndentLineRec.Reset();
@@ -396,8 +396,8 @@ page 50116 "Indent Header"
                             if IndentLineRec.FindSet() then begin
                                 repeat
                                     IndentLineRec.CalcFields("Qty Issued");
-                                    if IndentLineRec."Qty Issued" >= IndentLineRec."Req.Quantity" then
-                                        Error(Text0001, IndentLineRec."Qty Issued");
+                                    if ABS(IndentLineRec."Qty Issued") > IndentLineRec."Req.Quantity" then
+                                        Error(Text0001, IndentLineRec."Qty Issued", IndentLineRec."Line No.");
                                 until IndentLineRec.Next() = 0;
                             end;
                             MaterialIssue();//B2BSCM23AUG2023
@@ -450,6 +450,10 @@ page 50116 "Indent Header"
                         ItemJournalLine: Record "Item Journal Line";
                         ItemJournal: Page "Item Journal";
                         PurchaseSetup: Record "Purchases & Payables Setup";
+                        IndentLine: Record "Indent Line";
+                        ArchiveIndHdr1: Record "Archive Indent Header";
+                        ArchiveVersion: Integer;
+                        text0001: Label 'Cannot Reopen the indent if the status is Cancel/Closed.';
                     BEGIN
                         Rec.TestField("Released Status", Rec."Released Status"::Released);
                         PurchaseSetup.Get();
@@ -460,7 +464,57 @@ page 50116 "Indent Header"
                         ItemJournalLine.SetRange("Indent No.", Rec."No.");
                         IF ItemJournalLine.findset then;
                         Page.RunModal(40, ItemJournalLine);
-                    END;
+                        IndentLine.Reset();
+                        IndentLine.SetRange("Document No.", Rec."No.");
+                        IndentLine.SetFilter("Qty To Issue", '<>%1', 0);
+                        if IndentLine.FindSet() then begin
+                            IndentLine.ModifyAll("Qty To Issue", 0);
+                        end;
+
+                        //B2BPGOn6Nov23>>>>
+                       
+
+                        IF NOT (Rec."Indent Status" = Rec."Indent Status"::Close) OR (Rec."Indent Status" = Rec."Indent Status"::Cancel) THEN BEGIN
+
+                            ArchiveIndHdr.Reset();
+                            ArchiveIndHdr.SetCurrentKey("Archived Version");
+                            ArchiveIndHdr.SetRange("No.", Rec."No.");
+                            if ArchiveIndHdr.FindLast() then
+                                ArchiveVersion := ArchiveIndHdr."Archived Version" + 1
+                            else
+                                ArchiveVersion := 1;
+
+                            ArchiveIndHdr.Init();
+                            ArchiveIndHdr.TransferFields(Rec);
+                            ArchiveIndHdr."Archived Version" := ArchiveVersion;
+                            ArchiveIndHdr."Archived By" := UserId;
+                            ArchiveIndHdr.Insert();
+                            if ArchiveIndHdr1.Get(Rec."No.") then begin
+                                ArchiveIndHdr1."Indent Issued" := true;
+                                ArchiveIndHdr1.Modify(true);
+                            end;
+                            IndentLine.Reset();
+                            IndentLine.SetRange("Document No.", Rec."No.");
+                            if IndentLine.FindSet() then
+                                repeat
+                                    ArchiveIndLine.Init();
+                                    ArchiveIndLine.TransferFields(IndentLine);
+                                    ArchiveIndLine."Archived Version" := ArchiveVersion;
+                                    ArchiveIndLine."Archived By" := UserId;
+                                    ArchiveIndLine.Insert();
+                                until IndentLine.Next() = 0;
+                            Message('Document Archived %1', Rec."No.");
+
+                            Rec.ReopenIndent;
+                            Rec."Ammendent Comments" := '';
+                            CurrPage.UPDATE;
+                        END ELSE
+                            MESSAGE(text0001);
+                    end;
+                    //B2BPGOn6Nov23<<<<
+
+
+
                 }
 
                 action(ShowItemJournalBatchReturn)

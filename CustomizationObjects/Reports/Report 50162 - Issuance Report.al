@@ -21,9 +21,11 @@ report 50162 "Issuance Report"
                     PostGateEntryLine: Record "Posted Gate Entry Line_B2B";
                     PostedGateEntryHed: Record "Posted Gate Entry Header_B2B";
                     ItemLedgerEntries: Record "Item Ledger Entry";
+                    GateEntryHeader_B2B: Record "Gate Entry Header_B2B";
                     indetno: Integer;
                     i: Integer;
                     ValueEntryLVar: Record "Value Entry";
+                    IndentLine: Record "Indent Line";
                 begin
                     Clear(InwardRefNumber);
                     Clear(ItemLedgerQty);
@@ -47,6 +49,16 @@ report 50162 "Issuance Report"
                                     InwardRefNumber := PostedGateEntryHed."No.";
                                 until PostedGateEntryHed.Next() = 0;
                             end;
+
+
+
+                            ItemLedgerEntries.Reset();
+                            ItemLedgerEntries.SetRange("Entry Type", ItemLedgerEntries."Entry Type"::Purchase);
+                            ItemLedgerEntries.SetRange("Entry Type", ItemLedgerEntries."Entry Type"::"Positive Adjmt.");
+                            ItemLedgerEntries.SetRange("Entry Type", ItemLedgerEntries."Entry Type"::Transfer);
+                            ItemLedgerEntries.SetRange("Document Type", ItemLedgerEntries."Document Type"::"Purchase Receipt");
+                            if ItemLedgerEntries.FindSet() then
+                                InwardRefNumber := GateEntryHeader_B2B."No.";
 
 
                             Users.Reset();
@@ -82,7 +94,10 @@ report 50162 "Issuance Report"
                             TempExcelBuffer.AddColumn(ABS(ItemLedgerEntries.Quantity * "Indent Line"."Unit Cost"), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                             TempExcelBuffer.AddColumn(InwardRefNumber, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                         until ItemLedgerEntries.Next() = 0;
+
                 end;
+
+
             }
 
             trigger OnPreDataItem()
@@ -195,4 +210,7 @@ report 50162 "Issuance Report"
         TempExcelBuffer.AddColumn('Total Amount', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('Inward Ref.', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
     end;
+
+
+
 }

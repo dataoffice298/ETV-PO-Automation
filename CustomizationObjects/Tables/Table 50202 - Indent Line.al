@@ -379,19 +379,22 @@ table 50202 "Indent Line"
             trigger OnValidate()
             var
                 IndentLine: Record "Indent Line";
+                text0001: Label 'Nothing To Return because Qty Issued %1';
+                Text0002: Label 'Qty to return should not be greater than Qty Issued %1';
+                Text0003: Label 'Quantity Return Must Not be negative value';
             begin
                 if IndentLine.Type = IndentLine.Type::Item then begin
                     // if "Qty To Return" > "Avail.Qty" then
                     //     Error('Qty Should not be greater than Available Qty')
                     // else
                     if "Qty To Return" > Abs("Qty Issued") then
-                        Error('Nothing To Return because Qty Issued %1', "Qty Issued")
+                        Error(text0001, "Qty Issued")
                     else
                         if (Rec."Qty To Return" + Rec."Qty Returned") > Abs(Rec."Qty Issued") then
-                            Error('Qty to return should not be greater than Qty Issued %1', Abs((Rec."Qty Issued")))
+                            Error(Text0002, Abs((Rec."Qty Issued")))
                         else
                             if "Qty To Return" < 0 then
-                                Error('Quantity Return Must Not be negative value');
+                                Error(Text0003);
                 end;
             end;
         }

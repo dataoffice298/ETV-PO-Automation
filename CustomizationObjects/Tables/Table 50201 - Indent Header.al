@@ -459,6 +459,7 @@ table 50201 "Indent Header"
         ItemLedgerEntry1: Record "Item Ledger Entry";
         LineNo: Integer;
         QTYVar: Integer;
+        IndentLine: Record "Indent Line";
     begin
 
         PurchPaySetup.Get();
@@ -550,6 +551,17 @@ table 50201 "Indent Header"
             // IndentLineRec."Qty To issue" := 0;//B2BSSD02AUG2023
             // IndentLineRec.Modify();
             until IndentLineRec.NEXT() = 0;
+            /* IndentLine.Reset();
+             IndentLine.SetRange("Document No.", Rec."No.");
+             if IndentLine.FindSet() then begin
+                 repeat
+                     if (IndentLine."Qty Issued" <> 0) or (IndentLine."Qty Issued" < 0) then
+                         IndentLine."Qty To Issue" := 0;
+                     IndentLine.Modify();
+
+
+                 until IndentLine.Next() = 0;
+             end;*/
             MESSAGE('Issue journals are created successfully.');
         end
         else

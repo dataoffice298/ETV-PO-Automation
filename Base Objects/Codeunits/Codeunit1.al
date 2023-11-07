@@ -342,11 +342,11 @@ codeunit 50016 "MyBaseSubscr"
             //B2BSSD03MAY2023>>
             if NewItemLedgEntry."Entry Type" = NewItemLedgEntry."Entry Type"::"Negative Adjmt." then begin
                 IndentLine."Avail.Qty" := IndentLine."Avail.Qty" - ItemJournalLine.Quantity;
-                //IndentLine."Qty To Issue" := 0; //B2BMSOn07Nov2022
+                IndentLine."Qty To Issue" := 0; //B2BMSOn07Nov2022
             end else
                 if NewItemLedgEntry."Entry Type" = NewItemLedgEntry."Entry Type"::"Positive Adjmt." then begin
                     IndentLine."Avail.Qty" := IndentLine."Avail.Qty" + ItemJournalLine.Quantity;
-                    //IndentLine."Qty To Return" := 0; //B2BSSD25JUL2023
+                    IndentLine."Qty To Return" := 0; //B2BSSD25JUL2023
                 end;
             IndentLine.Modify();
         end;
@@ -427,7 +427,7 @@ codeunit 50016 "MyBaseSubscr"
     end;
     //B2BSSD16JUN2023<<
     //B2BPJ 4thOct23 >>>>>>
-     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforePurchRcptHeaderInsert', '', false, false)]
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforePurchRcptHeaderInsert', '', false, false)]
     local procedure OnBeforePurchRcptHeaderInsert(var PurchRcptHeader: Record "Purch. Rcpt. Header"; var PurchaseHeader: Record "Purchase Header"; CommitIsSupressed: Boolean; WarehouseReceiptHeader: Record "Warehouse Receipt Header"; WhseReceive: Boolean; WarehouseShipmentHeader: Record "Warehouse Shipment Header"; WhseShip: Boolean)
     begin
         PurchRcptHeader."Vendor Invoice No." := PurchaseHeader."Vendor Invoice No.";

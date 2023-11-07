@@ -101,6 +101,7 @@ table 50212 "Archive Indent Line"
         {
 
         }
+
         field(50000; "Quantity (Base)"; Decimal)
         {
         }
@@ -171,6 +172,10 @@ table 50212 "Archive Indent Line"
         }
         field(50010; "Archived By"; Code[30])
         {
+        }
+        field(50011; "Archived Qty Issued"; Decimal)
+        {
+
         }
     }
 

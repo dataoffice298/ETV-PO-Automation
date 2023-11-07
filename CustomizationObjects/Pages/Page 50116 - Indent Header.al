@@ -364,11 +364,14 @@ page 50116 "Indent Header"
                         IndentLine.SetRange("Document No.", Rec."No.");
                         if IndentLine.FindSet() then
                             repeat
+                                IndentLine.CalcFields("Qty Issued");
                                 ArchiveIndLine.Init();
                                 ArchiveIndLine.TransferFields(IndentLine);
                                 ArchiveIndLine."Archived Version" := ArchiveVersion;
                                 ArchiveIndLine."Archived By" := UserId;
                                 ArchiveIndLine.Insert();
+                                ArchiveIndLine."Archived Qty Issued" := IndentLine."Qty Issued";
+                                ArchiveIndLine.Modify();
                             until IndentLine.Next() = 0;
                         Message('Archived Document %1', Rec."No.");
                     end;
@@ -421,7 +424,7 @@ page 50116 "Indent Header"
 
                             CurrPage.Update();
                             CurrPage.indentLine.Page.QTyToIssueNonEditable();
-                           
+
                         end;
                     }
                     action("Create Return Jnl. Batch")
@@ -481,7 +484,7 @@ page 50116 "Indent Header"
                         end;
 
                         //B2BPGOn6Nov23>>>>
-                       
+
 
                         IF NOT (Rec."Indent Status" = Rec."Indent Status"::Close) OR (Rec."Indent Status" = Rec."Indent Status"::Cancel) THEN BEGIN
 

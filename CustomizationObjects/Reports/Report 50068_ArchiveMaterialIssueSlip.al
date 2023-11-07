@@ -117,7 +117,7 @@ report 50068 "Archive Material Issue Slip"
                 { }
                 column(ReqQty; ReqQty)
                 { }
-                column(QtyIssue; QtyIssue)
+                column(QtyIssue; "Archived Qty Issued")
                 { }
                 dataitem("Item Ledger Entry"; "Item Ledger Entry")
                 {

@@ -364,14 +364,13 @@ page 50116 "Indent Header"
                         IndentLine.SetRange("Document No.", Rec."No.");
                         if IndentLine.FindSet() then
                             repeat
-                                IndentLine.CalcFields("Qty Issued");
+
                                 ArchiveIndLine.Init();
                                 ArchiveIndLine.TransferFields(IndentLine);
                                 ArchiveIndLine."Archived Version" := ArchiveVersion;
                                 ArchiveIndLine."Archived By" := UserId;
                                 ArchiveIndLine.Insert();
-                                ArchiveIndLine."Archived Qty Issued" := IndentLine."Qty Issued";
-                                ArchiveIndLine.Modify();
+
                             until IndentLine.Next() = 0;
                         Message('Archived Document %1', Rec."No.");
                     end;
@@ -509,11 +508,14 @@ page 50116 "Indent Header"
                             IndentLine.SetRange("Document No.", Rec."No.");
                             if IndentLine.FindSet() then
                                 repeat
+                                    IndentLine.CalcFields("Qty Issued");
                                     ArchiveIndLine.Init();
                                     ArchiveIndLine.TransferFields(IndentLine);
                                     ArchiveIndLine."Archived Version" := ArchiveVersion;
                                     ArchiveIndLine."Archived By" := UserId;
+                                    ArchiveIndLine."Archived Qty Issued" := IndentLine."Qty Issued";
                                     ArchiveIndLine.Insert();
+
                                 until IndentLine.Next() = 0;
                             Message('Document Archived %1', Rec."No.");
 

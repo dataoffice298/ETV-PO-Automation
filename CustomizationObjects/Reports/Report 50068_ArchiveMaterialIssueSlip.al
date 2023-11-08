@@ -90,12 +90,15 @@ report 50068 "Archive Material Issue Slip"
             { } */
             dataitem("Archive Indent Line"; "Archive Indent Line")
             {
-                DataItemLink = "Document No." = field("No.");
-                DataItemTableView = where("Qty Issued" = filter(<> 0));
+                DataItemLink = "Document No." = field("No."), "Archived Version" = field("Archived Version");
+                DataItemTableView = where("Archived Qty Issued" = filter(<> 0));
+
                 column(Variant_Code; "Variant Code")
                 { }
 
                 column(Req_Quantity; "Req.Quantity")
+                { }
+                column(Archived_Qty_Issued; "Archived Qty Issued")
                 { }
 
                 column(Qty_Issued; "Qty Issued")
@@ -117,8 +120,13 @@ report 50068 "Archive Material Issue Slip"
                 { }
                 column(ReqQty; ReqQty)
                 { }
-                column(QtyIssue; "Archived Qty Issued")
+                column(Document_No_; "Document No.")
+                {
+
+                }
+                column(ArchievedQty; ArchievedQty)
                 { }
+
                 dataitem("Item Ledger Entry"; "Item Ledger Entry")
                 {
                     DataItemLink = "Indent No." = field("Document No."), "Item No." = field("No.");
@@ -142,10 +150,19 @@ report 50068 "Archive Material Issue Slip"
                 trigger OnAfterGetRecord()
 
                 begin
-                    SNo += 1;
 
+                    SNo += 1;
+                    "Archive Indent Line".CalcSums("Archived Qty Issued", "Req.Quantity");
+                    ArchievedQty := "Archived Qty Issued";
+                    ReqQty := "Req.Quantity";
                 end;
             }
+            trigger OnAfterGetRecord()
+            var
+                myInt: Integer;
+            begin
+
+            end;
 
             trigger OnPreDataItem();
             begin
@@ -157,6 +174,7 @@ report 50068 "Archive Material Issue Slip"
     }
     var
         StartDate: Date;
+        IssuedQty: Decimal;
         EndDate: Date;
         pa: Page "Purchase Invoice Statistics";
         ItemCategoryCode: Code[20];
@@ -193,4 +211,6 @@ report 50068 "Archive Material Issue Slip"
         SNo: Integer;
         ItemLedgerEntry: Record "Item Ledger Entry";
         ILEQuantity: Decimal;
+        ArchievedQty: Decimal;
+        RequiredQty: Decimal;
 }

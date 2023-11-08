@@ -64,7 +64,7 @@ page 50047 "Archive Indent Subform"
                 {
                     ApplicationArea = all;
                 }
-                field("Archived Qty Issued"; "Archived Qty Issued")
+                field("Archived Qty Issued"; rec."Archived Qty Issued")
                 {
                     ApplicationArea = All;
                 }

@@ -24,6 +24,8 @@ report 50162 "Issuance Report"
                     indetno: Integer;
                     i: Integer;
                     ValueEntryLVar: Record "Value Entry";
+                    TempItemLedgerEntry: Record "Item Ledger Entry" temporary;
+
                 begin
                     Clear(InwardRefNumber);
                     Clear(ItemLedgerQty);
@@ -47,6 +49,9 @@ report 50162 "Issuance Report"
                                     InwardRefNumber := PostedGateEntryHed."No.";
                                 until PostedGateEntryHed.Next() = 0;
                             end;
+                            // if ItemLedgerEntries.Get('5368') then
+                            Clear(No2);
+                            FindAppliedEntries(ItemLedgerEntries, TempItemLedgerEntry);
 
 
                             Users.Reset();
@@ -80,7 +85,8 @@ report 50162 "Issuance Report"
                             TempExcelBuffer.AddColumn(ItemLedgerQty, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                             TempExcelBuffer.AddColumn(ValueEntryLVar."Cost per Unit", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                             TempExcelBuffer.AddColumn(ABS(ItemLedgerEntries.Quantity * "Indent Line"."Unit Cost"), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                            TempExcelBuffer.AddColumn(InwardRefNumber, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn(No2, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn(ItemLedgerEntries."Entry No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                         until ItemLedgerEntries.Next() = 0;
                 end;
             }
@@ -194,5 +200,80 @@ report 50162 "Issuance Report"
         TempExcelBuffer.AddColumn('Issue Rate', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('Total Amount', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('Inward Ref.', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        TempExcelBuffer.AddColumn('Entry No.', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
     end;
+
+    procedure FindAppliedEntries(ItemLedgEntry: Record "Item Ledger Entry"; var TempItemLedgerEntry: Record "Item Ledger Entry" temporary)
+    var
+        ItemApplnEntry: Record "Item Application Entry";
+    begin
+        with ItemLedgEntry do
+            if Positive then begin
+                ItemApplnEntry.Reset();
+                ItemApplnEntry.SetCurrentKey("Inbound Item Entry No.", "Outbound Item Entry No.", "Cost Application");
+                ItemApplnEntry.SetRange("Inbound Item Entry No.", "Entry No.");
+                ItemApplnEntry.SetFilter("Outbound Item Entry No.", '<>%1', 0);
+                ItemApplnEntry.SetRange("Cost Application", true);
+                if ItemApplnEntry.Find('-') then
+                    repeat
+                        InsertTempEntry(TempItemLedgerEntry, ItemApplnEntry."Outbound Item Entry No.", ItemApplnEntry.Quantity);
+                    until ItemApplnEntry.Next() = 0;
+            end else begin
+                ItemApplnEntry.Reset();
+                ItemApplnEntry.SetCurrentKey("Outbound Item Entry No.", "Item Ledger Entry No.", "Cost Application");
+                ItemApplnEntry.SetRange("Outbound Item Entry No.", "Entry No.");
+                ItemApplnEntry.SetRange("Item Ledger Entry No.", "Entry No.");
+                ItemApplnEntry.SetRange("Cost Application", true);
+
+                if ItemApplnEntry.Find('-') then
+                    repeat
+                        InsertTempEntry(TempItemLedgerEntry, ItemApplnEntry."Inbound Item Entry No.", -ItemApplnEntry.Quantity);
+                        //DocumentGVAr := TempItemLedgerEntry."Document No.";
+                        if PurchaseReceiptHeader.Get(TempItemLedgerEntry."Document No.") then begin
+                            // if purchaseHeader.Get(PurchaseReceiptHeader."Order No.") then begin
+                            GateEntryHeader_B2B.Reset();
+                            GateEntryHeader_B2B.SetRange("Purchase Order No.", PurchaseReceiptHeader."Order No.");
+                            GateEntryHeader_B2B.SetRange("Entry Type", GateEntryHeader_B2B."Entry Type"::Inward);
+                            GateEntryHeader_B2B.SetRange(Type, GateEntryHeader_B2B.Type::RGP);
+                            if GateEntryHeader_B2B.FindFirst() then
+                                No2 := GateEntryHeader_B2B."No.";
+                            // End;
+                        End;
+
+                    until ItemApplnEntry.Next() = 0;
+            End;
+
+    end;
+
+    local procedure InsertTempEntry(var TempItemLedgerEntry: Record "Item Ledger Entry" temporary; EntryNo: Integer; AppliedQty: Decimal)
+    var
+        ItemLedgEntry: Record "Item Ledger Entry";
+        IsHandled: Boolean;
+    begin
+        ItemLedgEntry.Get(EntryNo);
+
+        IsHandled := false;
+        if IsHandled then
+            exit;
+
+        if AppliedQty * ItemLedgEntry.Quantity < 0 then
+            exit;
+
+        if not TempItemLedgerEntry.Get(EntryNo) then begin
+            TempItemLedgerEntry.Init();
+            TempItemLedgerEntry := ItemLedgEntry;
+            TempItemLedgerEntry.Quantity := AppliedQty;
+            TempItemLedgerEntry.Insert();
+        end else begin
+            TempItemLedgerEntry.Quantity := TempItemLedgerEntry.Quantity + AppliedQty;
+            TempItemLedgerEntry.Modify();
+        end;
+    end;
+
+    var
+        DocumentGVAr: Code[20];
+        PurchaseReceiptHeader: Record "Purch. Rcpt. Header";
+        purchaseHeader: Record "Purchase Header";
+        GateEntryHeader_B2B: Record "Posted Gate Entry Header_B2B";
+        No2: Code[20];
 }

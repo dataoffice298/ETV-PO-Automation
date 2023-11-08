@@ -90,10 +90,10 @@ report 50068 "Archive Material Issue Slip"
             { } */
             dataitem("Archive Indent Line"; "Archive Indent Line")
             {
-                DataItemLink = "Document No." = field("No.");
-                DataItemTableView = where("Qty Issued" = filter(<> 0));
+                DataItemLink = "Document No." = field("No."), "Archived Version" = field("Archived Version");
                 column(Variant_Code; "Variant Code")
                 { }
+                column(Document_No_; "Document No.") { }
 
                 column(Req_Quantity; "Req.Quantity")
                 { }
@@ -117,33 +117,26 @@ report 50068 "Archive Material Issue Slip"
                 { }
                 column(ReqQty; ReqQty)
                 { }
-                column(QtyIssue; "Archived Qty Issued")
+                column(QtyIssue; QtyIssue)
                 { }
-                dataitem("Item Ledger Entry"; "Item Ledger Entry")
-                {
-                    DataItemLink = "Indent No." = field("Document No."), "Item No." = field("No.");
-                    DataItemTableView = where("Entry Type" = filter('Negative Adjmt.'));
+                column(Qty_Iss; Qty_Iss) { }
+                column(Req_Q; Req_Q) { }
+                column(Archived_Qty_Issued; "Archived Qty Issued") { }
 
-
-                    column(ILEQuantity;
-                    Quantity)
-                    { }
-                    column(ISSNo1; "Document No.")
-                    { }
-                    column(ISSDate1; "Document Date")
-                    { }
-                    column(Item_Category_Code; "Item Category Code")
-                    { }
-                    column(channel; "Global Dimension 1 Code")
-                    { }
-                    column(Dept; "Global Dimension 2 Code")
-                    { }
-                }
                 trigger OnAfterGetRecord()
 
                 begin
-                    SNo += 1;
 
+                    ArchiveLine.Reset();
+                    ArchiveLine.SetRange("Document No.", "Archive Indent Line"."Document No.");
+                    ArchiveLine.SetRange("Archived Version", "Archive Indent Line"."Archived Version");
+                    if ArchiveLine.FindSet() then begin
+                        ArchiveLine.CalcSums("Archived Qty Issued", "Req.Quantity");
+                        Req_Q := ArchiveLine."Req.Quantity";
+                        Qty_Iss := ArchiveLine."Archived Qty Issued";
+                    end;
+
+                    SNo += 1;
                 end;
             }
 
@@ -162,6 +155,7 @@ report 50068 "Archive Material Issue Slip"
         ItemCategoryCode: Code[20];
         ISSNo1: Code[20];
         ISSDate1: Date;
+        ArchiveLine: Record "Archive Indent Line";
         CompanyInfo: Record "Company Information";
         TechnicalStoresCapLbl: Label 'TECHNICAL STORES';
         ArchiveMatIssueSlipCapLbl: Label 'ARCHIVE MATERIAL ISSUE SLIP';
@@ -193,4 +187,6 @@ report 50068 "Archive Material Issue Slip"
         SNo: Integer;
         ItemLedgerEntry: Record "Item Ledger Entry";
         ILEQuantity: Decimal;
+        Qty_Iss: Decimal;
+        Req_Q: Decimal;
 }

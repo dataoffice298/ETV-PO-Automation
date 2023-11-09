@@ -125,6 +125,7 @@ page 50046 "Archive Indent"
                     begin
                         Archiveindent.Reset();
                         Archiveindent.setrange("No.", rec."No.");
+                        Archiveindent.SetRange("Archived Version", Rec."Archived Version");
                         if Archiveindent.findfirst then
                             Report.RunModal(Report::"Archive Material Issue Slip", true, true, Archiveindent);
 

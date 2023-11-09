@@ -2483,7 +2483,7 @@
                                               <Paragraph>
                                                 <TextRuns>
                                                   <TextRun>
-                                                    <Value>=Fields!desc.Value</Value>
+                                                    <Value>=Fields!SourceName.Value</Value>
                                                     <Style>
                                                       <FontWeight>Normal</FontWeight>
                                                     </Style>
@@ -3308,7 +3308,7 @@
                                   <TablixMember>
                                     <Group Name="Details">
                                       <GroupExpressions>
-                                        <GroupExpression>=Fields!ChallanQty.Value</GroupExpression>
+                                        <GroupExpression>=Fields!SourceNo_.Value</GroupExpression>
                                       </GroupExpressions>
                                     </Group>
                                     <TablixMembers>
@@ -3687,6 +3687,12 @@ End Function
         <Field Name="Make">
           <DataField>Make</DataField>
         </Field>
+        <Field Name="QtyReceived">
+          <DataField>QtyReceived</DataField>
+        </Field>
+        <Field Name="QtyReceivedFormat">
+          <DataField>QtyReceivedFormat</DataField>
+        </Field>
         <Field Name="Vat">
           <DataField>Vat</DataField>
         </Field>
@@ -3717,20 +3723,11 @@ End Function
         <Field Name="RateFormat">
           <DataField>RateFormat</DataField>
         </Field>
-        <Field Name="QtyReceived">
-          <DataField>QtyReceived</DataField>
-        </Field>
-        <Field Name="QtyReceivedFormat">
-          <DataField>QtyReceivedFormat</DataField>
-        </Field>
         <Field Name="BasicAmt">
           <DataField>BasicAmt</DataField>
         </Field>
         <Field Name="BasicAmtFormat">
           <DataField>BasicAmtFormat</DataField>
-        </Field>
-        <Field Name="desc">
-          <DataField>desc</DataField>
         </Field>
         <Field Name="Discount">
           <DataField>Discount</DataField>
@@ -3749,6 +3746,15 @@ End Function
         </Field>
         <Field Name="QtyRejectedFormat">
           <DataField>QtyRejectedFormat</DataField>
+        </Field>
+        <Field Name="SourceName">
+          <DataField>SourceName</DataField>
+        </Field>
+        <Field Name="Document_No_PL">
+          <DataField>Document_No_PL</DataField>
+        </Field>
+        <Field Name="Line_No_PL">
+          <DataField>Line_No_PL</DataField>
         </Field>
       </Fields>
       <Query>

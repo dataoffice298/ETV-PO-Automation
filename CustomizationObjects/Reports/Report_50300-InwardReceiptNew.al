@@ -179,6 +179,8 @@ report 50300 "INWARD RECEIPT New"
 
                 column(Make; Make)
                 { }
+                column(QtyReceived; QtyReceived)
+                { }
                 column(Vat; Vat)
                 { }
 
@@ -190,16 +192,14 @@ report 50300 "INWARD RECEIPT New"
                 { }
                 column(Rate; Rate)
                 { }
-                column(QtyReceived; QtyReceived)
-                { }
-                /*column(QtyRejected; QtyRejected) //B2BVCOn25Oct2023 //Commented
-                { }*/
+
+
                 column(BasicAmt; BasicAmt)
                 {
 
                 }
-                column(desc; desc)
-                { }
+                /* column(SourceName; "Source Name")
+                { } */
                 column(Discount; Discount)
                 { }
                 column(QtyAccepted; QtyAccepted)
@@ -211,70 +211,31 @@ report 50300 "INWARD RECEIPT New"
                 dataitem("Purchase Line"; "Purchase Line")
                 {
                     DataItemLink = "Document No." = field("Purchase Order No.");
+                    DataItemLinkReference = "Posted Gate Entry Header_B2B";
                     column(QtyRejected; "Quantity Rejected B2B")
                     { }
-                }
-                /* dataitem("Purch. Rcpt. Line"; "Purch. Rcpt. Line")
-                 {
-                     DataItemLink = "Order No." = field("Purchase Order No.");
-                     DataItemLinkReference = "Posted Gate Entry Line_B2B";
-                     column(QtyAccepted; Quantity)
-                     { }
-                     column(Rate; "Direct Unit Cost")
-                     { }
-                     column(QtyReceived; Quantity)
-                     { }
-                     column(BasicAmt; BasicAmt)
-                     { }
-                     column(Discount; Discount)
-                     { }
-                     column(TotalAmount; TotalAmount)
-                     { }
-                     column(Make; Make)
-                     { }
-                     column(desc; Description)
-                     { }
-                     column(ItemNo; "No.")
-                     { }
-                     trigger OnAfterGetRecord()
-                     begin
-                         BasicAmt := Quantity * "Direct Unit Cost";
-                         //desc := PurchaseRcptLineGRec.Description;
-                         Discount := (BasicAmt / 100) * "Line Discount %";
-                         TotalAmount := BasicAmt - Discount;
-                         if "Purch. Rcpt. Line".Type = "Purch. Rcpt. Line".Type::Item then
-                             Make := "Purch. Rcpt. Line"."Variant Code"
-                         else
-                             if "Purch. Rcpt. Line".Type = "Purch. Rcpt. Line".Type::"Fixed Asset" then begin
-                                 if FixedAsset.Get("Purch. Rcpt. Line"."No.") then
-                                     Make := FixedAsset."FA Class Code";
-                             end;
+                    column(SourceName; Description)
+                    { }
+                    column(Document_No_PL; "Document No.")
+                    { }
+                    column(Line_No_PL; "Line No.")
+                    { }
+                    trigger OnAfterGetRecord()
+                    begin
+                        clear(Make);
+                        Clear(QtyReceived);
+                        Clear(QtyAccepted);
+                        Clear(Discount);
+                        Clear(TotalAmount);
+                        Clear(Rate);
+                        Clear(BasicAmt);
 
-                     end;
-
-                 }*/
-                //B2BVCOn25Oct2023 <<
-
-                trigger OnPreDataItem();
-                begin
-                    CompanyInfo.FIND('-');
-                    CompanyInfo.CALCFIELDS(Picture);
-                end;
-
-                trigger OnAfterGetRecord()
-                begin
-                    clear(Make);
-                    Clear(QtyReceived);
-                    Clear(QtyAccepted);
-                    Clear(Discount);
-                    Clear(TotalAmount);
-                    Clear(Rate);
-                    Clear(BasicAmt);
-                    PurchaseRcptLine.Reset();
-                    PurchaseRcptLine.SetRange("Order No.", "Posted Gate Entry Line_B2B"."Purchase Order No.");
-                    //PurchaseRcptLine.SetRange("Order Line No.", "Posted Gate Entry Line_B2B"."Purchase Order Line No.");
-                    if PurchaseRcptLine.FindSet() then begin
-                        repeat
+                        SNo += 1;
+                        PurchaseRcptLine.Reset();
+                        PurchaseRcptLine.SetRange("Order No.", "Purchase Line"."Document No.");
+                        PurchaseRcptLine.SetRange("Order Line No.", "Purchase Line"."Line No.");
+                        if PurchaseRcptLine.FindSet() then begin
+                            //repeat
                             QtyAccepted := PurchaseRcptLine.Quantity;
                             Rate := PurchaseRcptLine."Direct Unit Cost";
                             QtyReceived := PurchaseRcptLine.Quantity;
@@ -289,15 +250,44 @@ report 50300 "INWARD RECEIPT New"
                                     if FixedAsset.Get(PurchaseRcptLine."No.") then
                                         Make := FixedAsset."FA Class Code";
                                 end;
-                        until PurchaseRcptLine.Next = 0;
+                            //until PurchaseRcptLine.Next = 0;
+                        end;
                     end;
+                }
+
+
+                trigger OnPreDataItem();
+                begin
+                    CompanyInfo.FIND('-');
+                    CompanyInfo.CALCFIELDS(Picture);
+                end;
+
+                trigger OnAfterGetRecord()
+                var
+                    PurchaseLineLRec: Record "Purchase Line";
+                begin
+                    PurchaseLineLRec.reset;
+                    PurchaseLineLRec.SetRange("Document Type", PurchaseLineLRec."Document Type"::Order);
+                    PurchaseLineLRec.SetRange("Document No.", "Purchase Order No.");
+                    PurchaseLineLRec.SetRange("Line No.", "Purchase Order Line No.");
+                    if PurchaseLineLRec.FindFirst() then
+                        InsertTempLine("Posted Gate Entry Line_B2B", PurchaseLineLRec, true)
+                    else begin
+                        PurchaseLineLRec.SetRange("FA Line No.", "Purchase Order Line No.");
+                        if PurchaseLineLRec.FindSet() then
+                            repeat
+                                InsertTempLine("Posted Gate Entry Line_B2B", PurchaseLineLRec, false);
+                            until PurchaseLineLRec.Next() = 0;
+                    end;
+
                 end;
 
             }
 
             trigger OnAfterGetRecord()
             begin
-                SNo += 1;
+                //SNo += 1;
+
                 PurchaseRcptHdr.Reset();
                 PurchaseRcptHdr.SetRange("Order No.", "Posted Gate Entry Header_B2B"."Purchase Order No.");
                 if PurchaseRcptHdr.FindFirst() then begin
@@ -364,7 +354,14 @@ report 50300 "INWARD RECEIPT New"
         }
 
     }
-
+    local procedure InsertTempLine(var PostedGateEntryLineB2B: Record "Posted Gate Entry Line_B2B"; var PurchaseLine: Record "Purchase Line"; AssignFALine: Boolean)
+    begin
+        TempPurchLine.Init();
+        TempPurchLine.TransferFields(PurchaseLine);
+        if AssignFALine then
+            TempPurchLine."FA Line No." := PurchaseLine."Line No.";
+        TempPurchLine.Insert();
+    end;
 
     var
         No: Code[50];
@@ -471,5 +468,6 @@ report 50300 "INWARD RECEIPT New"
         TotalAmount: Decimal;
         Indent: Record "Indent Header";
         FixedAsset: Record "Fixed Asset";
+        TempPurchLine: Record "Purchase Line" temporary;
 
 }

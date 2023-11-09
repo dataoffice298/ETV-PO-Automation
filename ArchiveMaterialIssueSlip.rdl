@@ -11,6 +11,178 @@
       <rd:DataSourceID>7fc76f2e-93f4-4e31-bf89-62f48180b3dc</rd:DataSourceID>
     </DataSource>
   </DataSources>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+      <Fields>
+        <Field Name="Indentor1">
+          <DataField>Indentor1</DataField>
+        </Field>
+        <Field Name="IndentNo1">
+          <DataField>IndentNo1</DataField>
+        </Field>
+        <Field Name="IndentDate">
+          <DataField>IndentDate</DataField>
+        </Field>
+        <Field Name="CompanyInfoName">
+          <DataField>CompanyInfoName</DataField>
+        </Field>
+        <Field Name="CompanyInfoAddress">
+          <DataField>CompanyInfoAddress</DataField>
+        </Field>
+        <Field Name="CompanyInfoAdress2">
+          <DataField>CompanyInfoAdress2</DataField>
+        </Field>
+        <Field Name="TechnicalStoresCapLbl">
+          <DataField>TechnicalStoresCapLbl</DataField>
+        </Field>
+        <Field Name="ArchiveMatIssueSlipCapLbl">
+          <DataField>ArchiveMatIssueSlipCapLbl</DataField>
+        </Field>
+        <Field Name="IndentorCapLbl">
+          <DataField>IndentorCapLbl</DataField>
+        </Field>
+        <Field Name="DeptCapLbl">
+          <DataField>DeptCapLbl</DataField>
+        </Field>
+        <Field Name="LocationCapLbl">
+          <DataField>LocationCapLbl</DataField>
+        </Field>
+        <Field Name="ProgNamCapLbl">
+          <DataField>ProgNamCapLbl</DataField>
+        </Field>
+        <Field Name="IndentNoCapLbl">
+          <DataField>IndentNoCapLbl</DataField>
+        </Field>
+        <Field Name="IndentDateCapLbl">
+          <DataField>IndentDateCapLbl</DataField>
+        </Field>
+        <Field Name="ChannelCapLbl">
+          <DataField>ChannelCapLbl</DataField>
+        </Field>
+        <Field Name="IssNoCapLbl">
+          <DataField>IssNoCapLbl</DataField>
+        </Field>
+        <Field Name="IssDateCapLbl">
+          <DataField>IssDateCapLbl</DataField>
+        </Field>
+        <Field Name="SNoCapLbl">
+          <DataField>SNoCapLbl</DataField>
+        </Field>
+        <Field Name="DescofMatCapLbl">
+          <DataField>DescofMatCapLbl</DataField>
+        </Field>
+        <Field Name="CatNameCapLbl">
+          <DataField>CatNameCapLbl</DataField>
+        </Field>
+        <Field Name="MakeCapLbl">
+          <DataField>MakeCapLbl</DataField>
+        </Field>
+        <Field Name="SD1">
+          <DataField>SD1</DataField>
+        </Field>
+        <Field Name="SD2">
+          <DataField>SD2</DataField>
+        </Field>
+        <Field Name="UOMCapLbl">
+          <DataField>UOMCapLbl</DataField>
+        </Field>
+        <Field Name="ReqQtyCapLbl">
+          <DataField>ReqQtyCapLbl</DataField>
+        </Field>
+        <Field Name="IssQtyCapLbl">
+          <DataField>IssQtyCapLbl</DataField>
+        </Field>
+        <Field Name="PurposeCapLbl">
+          <DataField>PurposeCapLbl</DataField>
+        </Field>
+        <Field Name="StoresAssCapLbl">
+          <DataField>StoresAssCapLbl</DataField>
+        </Field>
+        <Field Name="ReceiversSigCapLbl">
+          <DataField>ReceiversSigCapLbl</DataField>
+        </Field>
+        <Field Name="RamojiFCCapLbl">
+          <DataField>RamojiFCCapLbl</DataField>
+        </Field>
+        <Field Name="Indentor">
+          <DataField>Indentor</DataField>
+        </Field>
+        <Field Name="Department">
+          <DataField>Department</DataField>
+        </Field>
+        <Field Name="No_">
+          <DataField>No_</DataField>
+        </Field>
+        <Field Name="Document_Date">
+          <DataField>Document_Date</DataField>
+        </Field>
+        <Field Name="Delivery_Location">
+          <DataField>Delivery_Location</DataField>
+        </Field>
+        <Field Name="ProgrammeName">
+          <DataField>ProgrammeName</DataField>
+        </Field>
+        <Field Name="ISSNo1">
+          <DataField>ISSNo1</DataField>
+        </Field>
+        <Field Name="ISSDate1">
+          <DataField>ISSDate1</DataField>
+        </Field>
+        <Field Name="Variant_Code">
+          <DataField>Variant_Code</DataField>
+        </Field>
+        <Field Name="Req_Quantity">
+          <DataField>Req_Quantity</DataField>
+        </Field>
+        <Field Name="Req_QuantityFormat">
+          <DataField>Req_QuantityFormat</DataField>
+        </Field>
+        <Field Name="Qty_Issued">
+          <DataField>Qty_Issued</DataField>
+        </Field>
+        <Field Name="Qty_IssuedFormat">
+          <DataField>Qty_IssuedFormat</DataField>
+        </Field>
+        <Field Name="Unit_of_Measure_Code">
+          <DataField>Unit_of_Measure_Code</DataField>
+        </Field>
+        <Field Name="Location_Code">
+          <DataField>Location_Code</DataField>
+        </Field>
+        <Field Name="Description">
+          <DataField>Description</DataField>
+        </Field>
+        <Field Name="SNo">
+          <DataField>SNo</DataField>
+        </Field>
+        <Field Name="DescriptionGrec">
+          <DataField>DescriptionGrec</DataField>
+        </Field>
+        <Field Name="UomGrec">
+          <DataField>UomGrec</DataField>
+        </Field>
+        <Field Name="ReqQty">
+          <DataField>ReqQty</DataField>
+        </Field>
+        <Field Name="ReqQtyFormat">
+          <DataField>ReqQtyFormat</DataField>
+        </Field>
+        <Field Name="QtyIssue">
+          <DataField>QtyIssue</DataField>
+        </Field>
+        <Field Name="QtyIssueFormat">
+          <DataField>QtyIssueFormat</DataField>
+        </Field>
+        <Field Name="ItemCatcode">
+          <DataField>ItemCatcode</DataField>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
@@ -223,9 +395,8 @@
                                   </Style>
                                 </TextRun>
                                 <TextRun>
-                                  <Value>=Fields!Dept.Value</Value>
+                                  <Value>=Fields!SD2.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
@@ -264,11 +435,25 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
+                                  <Value>=Fields!ProgNamCapLbl.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>:</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>=Fields!ProgrammeName.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Normal</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -381,9 +566,8 @@
                                   </Style>
                                 </TextRun>
                                 <TextRun>
-                                  <Value>=Fields!channel.Value</Value>
+                                  <Value>=Fields!SD1.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
@@ -431,7 +615,6 @@
                                 <TextRun>
                                   <Value>=Fields!ISSNo1.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
                                   </Style>
@@ -459,10 +642,9 @@
                                 <TextRun>
                                   <Value>=Fields!ISSDate1.Value</Value>
                                   <Style>
-                                    <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Normal</FontWeight>
-                                    <Format>MM/dd/yyyy</Format>
+                                    <Format>M/d/yyyy</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -529,11 +711,45 @@
               </RightBorder>
             </Style>
           </Tablix>
+          <Textbox Name="PurposeCapLbl">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Fields!PurposeCapLbl.Value</Value>
+                    <Style>
+                      <FontFamily>Segoe UI</FontFamily>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>PurposeCapLbl</rd:DefaultName>
+            <Top>3.50216in</Top>
+            <Height>0.25in</Height>
+            <Width>0.69861in</Width>
+            <ZIndex>5</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <VerticalAlign>Middle</VerticalAlign>
+              <PaddingLeft>5pt</PaddingLeft>
+              <PaddingRight>5pt</PaddingRight>
+            </Style>
+          </Textbox>
           <Line Name="Line2">
             <Top>3.76605in</Top>
             <Height>0in</Height>
             <Width>7.78125in</Width>
-            <ZIndex>5</ZIndex>
+            <ZIndex>6</ZIndex>
             <Style>
               <Border>
                 <Style>Solid</Style>
@@ -561,7 +777,7 @@
             <Top>4.3998in</Top>
             <Height>0.25in</Height>
             <Width>2.07292in</Width>
-            <ZIndex>6</ZIndex>
+            <ZIndex>7</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -593,7 +809,7 @@
             <Left>5.97354in</Left>
             <Height>0.25in</Height>
             <Width>1.82228in</Width>
-            <ZIndex>7</ZIndex>
+            <ZIndex>8</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -602,6 +818,40 @@
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
               <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox7">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>:</Value>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox7</rd:DefaultName>
+            <Top>8.89549cm</Top>
+            <Left>1.79917cm</Left>
+            <Height>0.635cm</Height>
+            <Width>9.43208cm</Width>
+            <ZIndex>9</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <VerticalAlign>Middle</VerticalAlign>
+              <PaddingLeft>5pt</PaddingLeft>
+              <PaddingRight>5pt</PaddingRight>
             </Style>
           </Textbox>
           <Tablix Name="Tablix1">
@@ -906,14 +1156,14 @@
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="SNo">
+                        <Textbox Name="Textbox15">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!SNo.Value</Value>
+                                  <Value>=RowNumber(Nothing)</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -925,7 +1175,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>SNo</rd:DefaultName>
+                          <rd:DefaultName>Textbox15</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -938,7 +1188,6 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -986,7 +1235,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Item_Category_Code.Value</Value>
+                                  <Value>=Fields!ItemCatcode.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -1130,7 +1379,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=abs(Fields!ILEQuantity.Value)</Value>
+                                  <Value>=Fields!QtyIssue.Value</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -1204,14 +1453,14 @@
                     <TablixCell />
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Req_Quantity">
+                        <Textbox Name="Textbox40">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Req_Quantity.Value</Value>
+                                  <Value>=Sum(Fields!Req_Quantity.Value)</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -1223,7 +1472,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Req_Quantity</rd:DefaultName>
+                          <rd:DefaultName>Textbox40</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -1247,7 +1496,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=abs(Fields!ILEQuantity.Value)</Value>
+                                  <Value>=Sum(Fields!QtyIssue.Value)</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -1291,16 +1540,21 @@
             </TablixColumnHierarchy>
             <TablixRowHierarchy>
               <TablixMembers>
-                <TablixMember />
-                <TablixMember />
-                <TablixMember />
+                <TablixMember>
+                  <KeepWithGroup>After</KeepWithGroup>
+                </TablixMember>
+                <TablixMember>
+                  <Group Name="Details" />
+                </TablixMember>
+                <TablixMember>
+                  <KeepWithGroup>Before</KeepWithGroup>
+                </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>DataSet_Result</DataSetName>
             <Top>5.64833cm</Top>
             <Height>1.8cm</Height>
             <Width>19.80932cm</Width>
-            <ZIndex>8</ZIndex>
+            <ZIndex>10</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1324,6 +1578,12 @@
       </Page>
     </ReportSection>
   </ReportSections>
+  <ReportParametersLayout>
+    <GridLayoutDefinition>
+      <NumberOfColumns>4</NumberOfColumns>
+      <NumberOfRows>2</NumberOfRows>
+    </GridLayoutDefinition>
+  </ReportParametersLayout>
   <Code>Public Function BlankZero(ByVal Value As Decimal)
     if Value = 0 then
         Return ""
@@ -1363,158 +1623,4 @@ End Function
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
   <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
-  <DataSets>
-    <DataSet Name="DataSet_Result">
-      <Fields>
-        <Field Name="Indentor1">
-          <DataField>Indentor1</DataField>
-        </Field>
-        <Field Name="IndentNo1">
-          <DataField>IndentNo1</DataField>
-        </Field>
-        <Field Name="IndentDate">
-          <DataField>IndentDate</DataField>
-        </Field>
-        <Field Name="CompanyInfoName">
-          <DataField>CompanyInfoName</DataField>
-        </Field>
-        <Field Name="CompanyInfoAddress">
-          <DataField>CompanyInfoAddress</DataField>
-        </Field>
-        <Field Name="CompanyInfoAdress2">
-          <DataField>CompanyInfoAdress2</DataField>
-        </Field>
-        <Field Name="TechnicalStoresCapLbl">
-          <DataField>TechnicalStoresCapLbl</DataField>
-        </Field>
-        <Field Name="ArchiveMatIssueSlipCapLbl">
-          <DataField>ArchiveMatIssueSlipCapLbl</DataField>
-        </Field>
-        <Field Name="IndentorCapLbl">
-          <DataField>IndentorCapLbl</DataField>
-        </Field>
-        <Field Name="DeptCapLbl">
-          <DataField>DeptCapLbl</DataField>
-        </Field>
-        <Field Name="LocationCapLbl">
-          <DataField>LocationCapLbl</DataField>
-        </Field>
-        <Field Name="ProgNamCapLbl">
-          <DataField>ProgNamCapLbl</DataField>
-        </Field>
-        <Field Name="IndentNoCapLbl">
-          <DataField>IndentNoCapLbl</DataField>
-        </Field>
-        <Field Name="IndentDateCapLbl">
-          <DataField>IndentDateCapLbl</DataField>
-        </Field>
-        <Field Name="ChannelCapLbl">
-          <DataField>ChannelCapLbl</DataField>
-        </Field>
-        <Field Name="IssNoCapLbl">
-          <DataField>IssNoCapLbl</DataField>
-        </Field>
-        <Field Name="IssDateCapLbl">
-          <DataField>IssDateCapLbl</DataField>
-        </Field>
-        <Field Name="SNoCapLbl">
-          <DataField>SNoCapLbl</DataField>
-        </Field>
-        <Field Name="DescofMatCapLbl">
-          <DataField>DescofMatCapLbl</DataField>
-        </Field>
-        <Field Name="CatNameCapLbl">
-          <DataField>CatNameCapLbl</DataField>
-        </Field>
-        <Field Name="MakeCapLbl">
-          <DataField>MakeCapLbl</DataField>
-        </Field>
-        <Field Name="UOMCapLbl">
-          <DataField>UOMCapLbl</DataField>
-        </Field>
-        <Field Name="ReqQtyCapLbl">
-          <DataField>ReqQtyCapLbl</DataField>
-        </Field>
-        <Field Name="IssQtyCapLbl">
-          <DataField>IssQtyCapLbl</DataField>
-        </Field>
-        <Field Name="PurposeCapLbl">
-          <DataField>PurposeCapLbl</DataField>
-        </Field>
-        <Field Name="StoresAssCapLbl">
-          <DataField>StoresAssCapLbl</DataField>
-        </Field>
-        <Field Name="ReceiversSigCapLbl">
-          <DataField>ReceiversSigCapLbl</DataField>
-        </Field>
-        <Field Name="RamojiFCCapLbl">
-          <DataField>RamojiFCCapLbl</DataField>
-        </Field>
-        <Field Name="Indentor">
-          <DataField>Indentor</DataField>
-        </Field>
-        <Field Name="Department">
-          <DataField>Department</DataField>
-        </Field>
-        <Field Name="No_">
-          <DataField>No_</DataField>
-        </Field>
-        <Field Name="Document_Date">
-          <DataField>Document_Date</DataField>
-        </Field>
-        <Field Name="Delivery_Location">
-          <DataField>Delivery_Location</DataField>
-        </Field>
-        <Field Name="Variant_Code">
-          <DataField>Variant_Code</DataField>
-        </Field>
-        <Field Name="Req_Quantity">
-          <DataField>Req_Quantity</DataField>
-        </Field>
-        <Field Name="Req_QuantityFormat">
-          <DataField>Req_QuantityFormat</DataField>
-        </Field>
-        <Field Name="Qty_Issued">
-          <DataField>Qty_Issued</DataField>
-        </Field>
-        <Field Name="Qty_IssuedFormat">
-          <DataField>Qty_IssuedFormat</DataField>
-        </Field>
-        <Field Name="Unit_of_Measure_Code">
-          <DataField>Unit_of_Measure_Code</DataField>
-        </Field>
-        <Field Name="Location_Code">
-          <DataField>Location_Code</DataField>
-        </Field>
-        <Field Name="Description">
-          <DataField>Description</DataField>
-        </Field>
-        <Field Name="SNo">
-          <DataField>SNo</DataField>
-        </Field>
-        <Field Name="DescriptionGrec">
-          <DataField>DescriptionGrec</DataField>
-        </Field>
-        <Field Name="UomGrec">
-          <DataField>UomGrec</DataField>
-        </Field>
-        <Field Name="ReqQty">
-          <DataField>ReqQty</DataField>
-        </Field>
-        <Field Name="ReqQtyFormat">
-          <DataField>ReqQtyFormat</DataField>
-        </Field>
-        <Field Name="QtyIssue">
-          <DataField>QtyIssue</DataField>
-        </Field>
-        <Field Name="QtyIssueFormat">
-          <DataField>QtyIssueFormat</DataField>
-        </Field>
-      </Fields>
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText />
-      </Query>
-    </DataSet>
-  </DataSets>
 </Report>

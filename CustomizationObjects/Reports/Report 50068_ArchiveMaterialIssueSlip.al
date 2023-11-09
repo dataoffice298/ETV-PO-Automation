@@ -3,9 +3,8 @@ report 50068 "Archive Material Issue Slip"
     UsageCategory = ReportsAndAnalysis;
     ApplicationArea = All;
     Caption = 'Archive Material Issue Slip';
-    RDLCLayout = './CustomizationObjects/Reports/Layouts/ArchiveMaterialIssueSlip.rdl';
+    RDLCLayout = './ArchiveMaterialIssueSlip.rdl';
     DefaultLayout = RDLC;
-
 
     dataset
     {
@@ -55,6 +54,10 @@ report 50068 "Archive Material Issue Slip"
             { }
             column(MakeCapLbl; MakeCapLbl)
             { }
+            column(SD1; "Shortcut Dimension 1 Code")
+            { }
+            column(SD2; "Shortcut Dimension 2 Code")
+            { }
 
             /* column(PackCapLbl; PackCapLbl)
              {
@@ -84,14 +87,23 @@ report 50068 "Archive Material Issue Slip"
             { }
             column(Delivery_Location; "Delivery Location")
             { }
+            column(ProgrammeName; ProgrammeName)
+            { }
+            column(ISSNo1; ISSNo1)
+            {
+
+            }
+            column(ISSDate1; ISSDate1)
+            { }
             /* column(programme_Name; "programme Name")
             { }
             column(Purpose; Purpose)
             { } */
             dataitem("Archive Indent Line"; "Archive Indent Line")
             {
-                DataItemLink = "Document No." = field("No.");
-                DataItemTableView = where("Qty Issued" = filter(<> 0));
+                DataItemLinkReference = "Archive Indent Header";
+                DataItemLink = "Document No." = field("No."), "Archived Version" = field("Archived Version");
+                //DataItemTableView = where("Qty Issued" = filter(<> 0));
                 column(Variant_Code; "Variant Code")
                 { }
 
@@ -119,33 +131,29 @@ report 50068 "Archive Material Issue Slip"
                 { }
                 column(QtyIssue; "Archived Qty Issued")
                 { }
-                dataitem("Item Ledger Entry"; "Item Ledger Entry")
-                {
-                    DataItemLink = "Indent No." = field("Document No."), "Item No." = field("No.");
-                    DataItemTableView = where("Entry Type" = filter('Negative Adjmt.'));
-
-
-                    column(ILEQuantity;
-                    Quantity)
-                    { }
-                    column(ISSNo1; "Document No.")
-                    { }
-                    column(ISSDate1; "Document Date")
-                    { }
-                    column(Item_Category_Code; "Item Category Code")
-                    { }
-                    column(channel; "Global Dimension 1 Code")
-                    { }
-                    column(Dept; "Global Dimension 2 Code")
-                    { }
-                }
+                column(ItemCatcode; ItemCatcode)
+                { }
                 trigger OnAfterGetRecord()
-
+                var
+                    ItemLVar: record Item;
                 begin
-                    SNo += 1;
-
+                    if ItemLVar.Get("Archive Indent Line"."No.") then
+                        ItemCatcode := ItemLVar."Item Category Code";
                 end;
+
             }
+            trigger OnAfterGetRecord()
+            begin
+                iF IndHdr.Get("No.") then
+                    ProgrammeName := IndHdr."programme Name";
+                ItemLedgerEntryGvar.Reset();
+                ItemLedgerEntryGvar.SetRange("Indent No.", "Archive Indent Header"."No.");
+                if ItemLedgerEntryGvar.FindFirst() then begin
+                    ISSNo1 := ItemLedgerEntryGvar."Document No.";
+                    ISSDate1 := ItemLedgerEntryGvar."Posting Date";
+                end;
+
+            end;
 
             trigger OnPreDataItem();
             begin
@@ -157,6 +165,7 @@ report 50068 "Archive Material Issue Slip"
     }
     var
         StartDate: Date;
+        ItemCatcode: code[20];
         EndDate: Date;
         pa: Page "Purchase Invoice Statistics";
         ItemCategoryCode: Code[20];
@@ -191,6 +200,11 @@ report 50068 "Archive Material Issue Slip"
         ReqQty: Decimal;
         QtyIssue: Decimal;
         SNo: Integer;
-        ItemLedgerEntry: Record "Item Ledger Entry";
+        ItemLedgerEntryGvar: Record "Item Ledger Entry";
         ILEQuantity: Decimal;
+        IndHdr: Record "Indent Header";
+        ProgrammeName: Text[100];
+
+
+
 }

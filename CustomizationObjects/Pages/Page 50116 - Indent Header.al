@@ -512,6 +512,8 @@ page 50116 "Indent Header"
                                     ArchiveIndLine.Init();
                                     ArchiveIndLine.TransferFields(IndentLine);
                                     ArchiveIndLine."Archived Version" := ArchiveVersion;
+                                    IndentLine.CalcFields("Qty Issued");
+                                    ArchiveIndLine."Qty Issued" := IndentLine."Qty Issued";
                                     ArchiveIndLine."Archived By" := UserId;
                                     ArchiveIndLine.Insert();
                                 until IndentLine.Next() = 0;

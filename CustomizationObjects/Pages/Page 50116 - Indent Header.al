@@ -837,6 +837,7 @@ page 50116 "Indent Header"
             end;
             IndentLine.Reset();
             IndentLine.SetRange("Document No.", Rec."No.");
+            IndentLine.SetRange("Archive Indent");
             if IndentLine.FindSet() then
                 repeat
                     IndentLine.CalcFields("Qty Issued");

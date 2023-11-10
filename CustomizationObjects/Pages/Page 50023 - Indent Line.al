@@ -157,11 +157,18 @@ page 50023 "Indent Line"
                     ApplicationArea = all;
                     Caption = 'Qty. to Issue';
                     //Editable = FieldEditable; //B2BSCM21AUG2023
+                    trigger OnValidate()
+                    begin
+                        if "Qty To Issue" <> 0 then
+                            "Archive Indent" := true;
+
+                    end;
                 }
                 field("Qty Issued"; Rec."Qty Issued")
                 {
                     ApplicationArea = all;
                     Editable = false;
+
                 }
                 field("Qty To Return"; Rec."Qty To Return")
                 {
@@ -193,6 +200,11 @@ page 50023 "Indent Line"
                     ApplicationArea = all;
                     Caption = 'To Location';//B2BSSD05APR2023
                     Editable = FieldEditable; //B2BSCM21AUG2023
+                }
+                field("Archive Indent"; "Archive Indent")
+                {
+                    ApplicationArea = all;
+                    Caption = 'Archive Indent';
                 }
             }
         }

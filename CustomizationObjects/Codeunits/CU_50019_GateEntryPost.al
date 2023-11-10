@@ -155,7 +155,19 @@ codeunit 50019 "Gate Entry- Post"
                 PostedGateEntryLine.Type := PostedGateEntryHeader.Type;
                 PostedGateEntryLine."Gate Entry No." := PostedGateEntryHeader."No.";
                 PostedGateEntryLine.INSERT;
+
+                //B2BVCOn09Nov2023 >>
+                PurchLineGRec.Reset();
+                PurchLineGRec.SetRange("Document No.", PostedGateEntryLine."Purchase Order No.");
+                PurchLineGRec.SetRange("Line No.", PostedGateEntryLine."Purchase Order Line No.");
+                if PurchLineGRec.FindFirst() then begin
+                    PurchLineGRec."Posted Gate Entry No." := PostedGateEntryLine."Gate Entry No.";
+                    PurchLineGRec."Posted Gate Entry Line No." := PostedGateEntryLine."Line No.";
+                    PurchLineGRec.Modify();
+                end;
+            //B2BVCOn09Nov2023 <<
             until GateEntryLine.NEXT = 0;
+
 
         //B2BMSOn04Nov2022>>
         PurchLine.Reset();
@@ -176,7 +188,7 @@ codeunit 50019 "Gate Entry- Post"
             Window.CLOSE;
         Rec := GateEntryHeader;
         Commit();//PK-Added
-        //SendMailAlerts(GateEntryHeader);//PK-Added                       
+                 //SendMailAlerts(GateEntryHeader);//PK-Added                       
     end;
 
     var
@@ -203,6 +215,7 @@ codeunit 50019 "Gate Entry- Post"
         indentLine: Record "Indent Line";
         indentHeader: Record "Indent Header";
         FixedAsset: Record "Fixed Asset";
+        PurchLineGRec: Record "Purchase Line";
 
     procedure CopyCommentLines(FromEntryType: Integer; ToEntryType: Integer; FromNumber: Code[20]; ToNumber: Code[20]);
     begin

@@ -237,6 +237,16 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             {
                 ApplicationArea = All;
             }
+            field("Posted Gate Entry No."; Rec."Posted Gate Entry No.")
+            {
+                ApplicationArea = All;
+                Caption = 'Posted Gate Entry No.';
+            }
+            field("Posted Gate Entry Line No."; Rec."Posted Gate Entry Line No.")
+            {
+                ApplicationArea = All;
+                Caption = 'Posted Gate Entry Line No.';
+            }
         }
         //B2BSCM11SEP2023>>
         modify("GST Group Code")
@@ -829,6 +839,8 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         purchaseline2: Record "Purchase Line";//B2BSSD26MAY2023
         UserSetup: Record "User Setup";
         PurchHeader: Record "Purchase Header";
+        GateEntryNo: Code[20]; //B2BVCOn09Nov2023
+        GateEntryLineNo: Integer;//B2BVCOn09Nov2023
 
     //B2BSSD07Feb2023 Import Start >>
     local procedure FixedAssetsReadExcelSheet()
@@ -946,6 +958,8 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                     Evaluate(GSTCredit, GetCellValue(RowNo, 8));
                     Evaluate(location, GetCellValue(RowNo, 9));
                     Evaluate(FALineNo, GetCellValue(RowNo, 10));//B2BSSD26MAY2023
+                    Evaluate(GateEntryNo, GetCellValue(RowNo, 11));//B2BVCOn09Nov2023
+                    Evaluate(GateEntryLineNo, GetCellValue(RowNo, 12));//B2BVCOn09Nov2023
 
                     if FALineNo = purChaseLine1."Line No." then begin
                         PurchaseLine.Init();
@@ -968,6 +982,8 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         PurchaseLine."GST Credit" := GSTCredit;
                         PurchaseLine."Location Code" := location;
                         PurchaseLine."FA Line No." := FALineNo;//B2BSSD26MAY2023
+                        PurchaseLine."Posted Gate Entry No." := GateEntryNo;
+                        PurchaseLine."Posted Gate Entry Line No." := GateEntryLineNo;
 
                         if PurchaseLine."Indent No." = '' then
                             PurchaseLine."Indent No." := purChaseLine1."Indent No.";

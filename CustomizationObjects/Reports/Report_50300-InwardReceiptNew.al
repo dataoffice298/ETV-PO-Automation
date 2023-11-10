@@ -198,8 +198,8 @@ report 50300 "INWARD RECEIPT New"
                 {
 
                 }
-                /* column(SourceName; "Source Name")
-                { } */
+                column(SourceName; desc)
+                { }
                 column(Discount; Discount)
                 { }
                 column(QtyAccepted; QtyAccepted)
@@ -214,13 +214,13 @@ report 50300 "INWARD RECEIPT New"
                     DataItemLinkReference = "Posted Gate Entry Header_B2B";
                     column(QtyRejected; "Quantity Rejected B2B")
                     { }
-                    column(SourceName; Description)
-                    { }
+                    /* column(SourceName; Description)
+                    { } */
                     column(Document_No_PL; "Document No.")
                     { }
                     column(Line_No_PL; "Line No.")
                     { }
-                    trigger OnAfterGetRecord()
+                    /* trigger OnAfterGetRecord()
                     begin
                         clear(Make);
                         Clear(QtyReceived);
@@ -252,8 +252,74 @@ report 50300 "INWARD RECEIPT New"
                                 end;
                             //until PurchaseRcptLine.Next = 0;
                         end;
-                    end;
+                    end; */
                 }
+                trigger OnAfterGetRecord()
+                begin
+                    clear(Make);
+                    Clear(QtyReceived);
+                    Clear(QtyAccepted);
+                    Clear(Discount);
+                    Clear(TotalAmount);
+                    Clear(Rate);
+                    Clear(BasicAmt);
+
+                    SNo += 1;
+                    if "Posted Gate Entry Line_B2B"."Source Type" = "Posted Gate Entry Line_B2B"."Source Type"::Item then begin
+                        PurchaseRcptLine.Reset();
+                        PurchaseRcptLine.SetRange("Posted Gate Entry No.", "Posted Gate Entry Line_B2B"."Gate Entry No.");
+                        PurchaseRcptLine.SetRange("Posted Gate Entry Line No.", "Posted Gate Entry Line_B2B"."Line No.");
+                        if PurchaseRcptLine.FindSet() then begin
+                            //repeat
+                            QtyAccepted := PurchaseRcptLine.Quantity;
+                            Rate := PurchaseRcptLine."Direct Unit Cost";
+                            QtyReceived := PurchaseRcptLine.Quantity;
+                            BasicAmt := PurchaseRcptLine.Quantity * PurchaseRcptLine."Direct Unit Cost";
+                            desc := PurchaseRcptLine.Description;
+                            Discount := (BasicAmt / 100) * PurchaseRcptLine."Line Discount %";
+                            TotalAmount := BasicAmt - Discount;
+                            if PurchaseRcptLine.Type = PurchaseRcptLine.Type::Item then
+                                Make := PurchaseRcptLine."Variant Code"
+                            else
+                                if PurchaseRcptLine.Type = PurchaseRcptLine.Type::"Fixed Asset" then begin
+                                    if FixedAsset.Get(PurchaseRcptLine."No.") then
+                                        Make := FixedAsset."FA Class Code";
+                                end;
+                            //until PurchaseRcptLine.Next = 0;
+                        end;
+                    end else begin
+                        if "Posted Gate Entry Line_B2B"."Source Type" = "Posted Gate Entry Line_B2B"."Source Type"::Description then begin
+                            PurchaseRcptLine.Reset();
+                            PurchaseRcptLine.SetRange("Posted Gate Entry No.", "Posted Gate Entry Line_B2B"."Gate Entry No.");
+                            PurchaseRcptLine.SetRange("Posted Gate Entry Line No.", "Posted Gate Entry Line_B2B"."Line No.");
+                            if PurchaseRcptLine.FindSet() then begin
+                                repeat
+                                    PurchaseRcptLineGRec.SetRange(PurchaseRcptLineGRec."Document No.", PurchaseRcptLine."Document No.");
+                                    PurchaseRcptLineGRec.SetRange(PurchaseRcptLineGRec."Line No.", PurchaseRcptLine."Line No.");
+                                    if PurchaseRcptLineGRec.FindFirst() then begin
+                                        QtyAccepted := PurchaseRcptLineGRec.Quantity;
+                                        Rate := PurchaseRcptLineGRec."Direct Unit Cost";
+                                        QtyReceived := PurchaseRcptLineGRec.Quantity;
+                                        BasicAmt := PurchaseRcptLine.Quantity * PurchaseRcptLine."Direct Unit Cost";
+                                        desc := PurchaseRcptLineGRec.Description;
+                                        Discount := (BasicAmt / 100) * PurchaseRcptLineGRec."Line Discount %";
+                                        TotalAmount := BasicAmt - Discount;
+                                        if PurchaseRcptLineGRec.Type = PurchaseRcptLineGRec.Type::Item then
+                                            Make := PurchaseRcptLineGRec."Variant Code"
+                                        else
+                                            if PurchaseRcptLineGRec.Type = PurchaseRcptLineGRec.Type::"Fixed Asset" then begin
+                                                if FixedAsset.Get(PurchaseRcptLineGRec."No.") then
+                                                    Make := FixedAsset."FA Class Code";
+                                            end;
+                                    end;
+
+                                until PurchaseRcptLine.Next() = 0;
+                            end;
+
+                        end;
+                    end;
+
+                end;
 
 
                 trigger OnPreDataItem();
@@ -262,7 +328,7 @@ report 50300 "INWARD RECEIPT New"
                     CompanyInfo.CALCFIELDS(Picture);
                 end;
 
-                trigger OnAfterGetRecord()
+                /* trigger OnAfterGetRecord()
                 var
                     PurchaseLineLRec: Record "Purchase Line";
                 begin
@@ -280,7 +346,7 @@ report 50300 "INWARD RECEIPT New"
                             until PurchaseLineLRec.Next() = 0;
                     end;
 
-                end;
+                end; */
 
             }
 

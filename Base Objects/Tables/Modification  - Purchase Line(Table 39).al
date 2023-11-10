@@ -410,6 +410,14 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             DataClassification = CustomerContent;
         }
         //B2BSSD16JUN2023<<
+        field(60050; "Posted Gate Entry No."; Code[20])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(60051; "Posted Gate Entry Line No."; Integer)
+        {
+            DataClassification = CustomerContent;
+        }
 
     }
 

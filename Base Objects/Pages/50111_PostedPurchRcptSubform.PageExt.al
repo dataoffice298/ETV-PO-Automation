@@ -29,6 +29,16 @@ pageextension 50111 PostedPurchRcptSubform extends "Posted Purchase Rcpt. Subfor
                 ApplicationArea = All;
                 Caption = 'warranty';
             }
+            field("Posted Gate Entry No."; Rec."Posted Gate Entry No.")
+            {
+                ApplicationArea = All;
+                Caption = 'Posted Gate Entry No.';
+            }
+            field("Posted Gate Entry Line No."; Rec."Posted Gate Entry Line No.")
+            {
+                ApplicationArea = All;
+                Caption = 'Posted Gate Entry Line No.';
+            }
         }
 
     }

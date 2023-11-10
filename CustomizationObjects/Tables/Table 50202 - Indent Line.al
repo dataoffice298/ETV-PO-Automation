@@ -510,6 +510,10 @@ table 50202 "Indent Line"
         {
             OptionMembers = " ",Enqiury,"Indent Requisition",Quote,"Purchase Order","Quotation Comparsion";
         }
+        field(50026; "Archive Indent"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
 
 
     }

@@ -15,8 +15,9 @@ report 50068 "Archive Material Issue Slip"
             { }
             column(IndentNo1; "No.")
             { }
-
-            column(IndentDate; "Document Date")
+            column(RamojiFCCapLbl; RamojiFCCapLbl)
+            { }
+            column(ArchiveMatIssueSlipCapLbl; MatIssueSlipCapLbl)
             { }
             column(CompanyInfoName; Companyinfo.Name)
             { }
@@ -26,8 +27,9 @@ report 50068 "Archive Material Issue Slip"
             { }
             column(TechnicalStoresCapLbl; TechnicalStoresCapLbl)
             { }
-            column(ArchiveMatIssueSlipCapLbl; ArchiveMatIssueSlipCapLbl)
+            column(IndentNoCapLbl; IndentNoCapLbl)
             { }
+
             column(IndentorCapLbl; IndentorCapLbl)
             { }
             column(DeptCapLbl; DeptCapLbl)
@@ -36,8 +38,15 @@ report 50068 "Archive Material Issue Slip"
             { }
             column(ProgNamCapLbl; ProgNamCapLbl)
             { }
-            column(IndentNoCapLbl; IndentNoCapLbl)
+
+            column(IndentDate; "Document Date")
             { }
+
+            column(SD1; "Shortcut Dimension 1 Code")
+            { }
+            column(SD2; "Shortcut Dimension 2 Code")
+            { }
+
             column(IndentDateCapLbl; IndentDateCapLbl)
             { }
             column(ChannelCapLbl; ChannelCapLbl)
@@ -53,10 +62,6 @@ report 50068 "Archive Material Issue Slip"
             column(CatNameCapLbl; CatNameCapLbl)
             { }
             column(MakeCapLbl; MakeCapLbl)
-            { }
-            column(SD1; "Shortcut Dimension 1 Code")
-            { }
-            column(SD2; "Shortcut Dimension 2 Code")
             { }
 
             /* column(PackCapLbl; PackCapLbl)
@@ -75,8 +80,8 @@ report 50068 "Archive Material Issue Slip"
             { }
             column(ReceiversSigCapLbl; ReceiversSigCapLbl)
             { }
-            column(RamojiFCCapLbl; RamojiFCCapLbl)
-            { }
+
+
             column(Indentor; Indentor)
             { }
             column(Department; Department)
@@ -95,17 +100,16 @@ report 50068 "Archive Material Issue Slip"
             }
             column(ISSDate1; ISSDate1)
             { }
-            /* column(programme_Name; "programme Name")
-            { }
-            column(Purpose; Purpose)
-            { } */
+
+
             dataitem("Archive Indent Line"; "Archive Indent Line")
             {
+
                 DataItemLinkReference = "Archive Indent Header";
                 DataItemLink = "Document No." = field("No."), "Archived Version" = field("Archived Version");
-                //DataItemTableView = where("Qty Issued" = filter(<> 0));
                 column(Variant_Code; "Variant Code")
                 { }
+                column(Document_No_; "Document No.") { }
 
                 column(Req_Quantity; "Req.Quantity")
                 { }
@@ -129,16 +133,26 @@ report 50068 "Archive Material Issue Slip"
                 { }
                 column(ReqQty; ReqQty)
                 { }
-                column(QtyIssue; "Archived Qty Issued")
+                column(QtyIssue; QtyIssue)
                 { }
                 column(ItemCatcode; ItemCatcode)
                 { }
+
+                column(Qty_Iss; Qty_Iss) { }
+                column(Req_Q; Req_Q) { }
+                column(Archived_Qty_Issued; "Archived Qty Issued") { }
+
+
                 trigger OnAfterGetRecord()
                 var
                     ItemLVar: record Item;
                 begin
+
                     if ItemLVar.Get("Archive Indent Line"."No.") then
                         ItemCatcode := ItemLVar."Item Category Code";
+
+                    SNo += 1;
+
                 end;
 
             }
@@ -171,6 +185,7 @@ report 50068 "Archive Material Issue Slip"
         ItemCategoryCode: Code[20];
         ISSNo1: Code[20];
         ISSDate1: Date;
+        ArchiveLine: Record "Archive Indent Line";
         CompanyInfo: Record "Company Information";
         TechnicalStoresCapLbl: Label 'TECHNICAL STORES';
         ArchiveMatIssueSlipCapLbl: Label 'ARCHIVE MATERIAL ISSUE SLIP';
@@ -196,15 +211,17 @@ report 50068 "Archive Material Issue Slip"
         ReceiversSigCapLbl: Label 'Receivers Signature';
         RamojiFCCapLbl: Label 'RAMOJI FILM CITY - HYDERBAD';
         DescriptionGrec: Text[50];
+        MatIssueSlipCapLbl: Label 'MATERIAL ISSUE SLIP';
         UomGrec: Code[10];
         ReqQty: Decimal;
         QtyIssue: Decimal;
         SNo: Integer;
         ItemLedgerEntryGvar: Record "Item Ledger Entry";
         ILEQuantity: Decimal;
+
         IndHdr: Record "Indent Header";
         ProgrammeName: Text[100];
 
-
-
+        Qty_Iss: Decimal;
+        Req_Q: Decimal;
 }

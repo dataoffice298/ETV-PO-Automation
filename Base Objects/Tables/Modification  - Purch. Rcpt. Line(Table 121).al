@@ -179,6 +179,14 @@ tableextension 50052 tableextension70000003 extends "Purch. Rcpt. Line"
         {
             DataClassification = CustomerContent;
         }
+        field(60050; "Posted Gate Entry No."; Code[20])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(60051; "Posted Gate Entry Line No."; Integer)
+        {
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {

@@ -27,7 +27,15 @@ pageextension 50113 ItemJournalsB2B extends "Item Journal"
 
     actions
     {
-        // Add changes to page actions here
+        modify(Post)
+        {
+            trigger OnAfterAction()
+            var
+                myInt: Integer;
+            begin
+
+            end;
+        }
     }
 
     var

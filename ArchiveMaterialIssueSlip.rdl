@@ -1383,6 +1383,9 @@
             <Height>1.8cm</Height>
             <Width>19.80932cm</Width>
             <ZIndex>10</ZIndex>
+            <Visibility>
+              <Hidden>=IIf(First(Fields!Archived_Qty_Issued.Value, "DataSet_Result")=0,True,False)</Hidden>
+            </Visibility>
             <Style>
               <Border>
                 <Style>None</Style>

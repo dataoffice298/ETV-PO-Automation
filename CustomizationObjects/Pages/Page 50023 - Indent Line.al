@@ -159,11 +159,7 @@ page 50023 "Indent Line"
                     //Editable = FieldEditable; //B2BSCM21AUG2023
                     trigger OnValidate()
                     begin
-                        if "Qty To Issue" <> 0 then
-                            "Archive Indent" := true
-                        Else
-                            "Archive Indent" := false;
-
+                      
 
                     end;
                 }

@@ -370,6 +370,11 @@ table 50202 "Indent Line"
                                 if "Qty To Issue" < 0 then
                                     Error('Quantity issue Must Not be negative value');
                 end;
+                if "Qty To Issue" <> 0 then
+                    "Archive Indent" := true
+                Else
+                    "Archive Indent" := false;
+
             end;
         }
         field(50006; "Qty To Return"; Decimal)

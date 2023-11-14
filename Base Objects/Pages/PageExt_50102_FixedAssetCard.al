@@ -56,6 +56,14 @@ pageextension 50102 FixedAssetCard extends "Fixed Asset Card"
         {
             ShowMandatory = true;//B2BSCM11SEP2023
         }
+        modify("FA Class Code")
+        {
+            Editable = FieldEditable; //B2BVCOn14Nov2023
+        }
+        modify("FA Subclass Code")
+        {
+            Editable = FieldEditable;//B2BVCOn14Nov2023
+        }
 
 
     }
@@ -142,6 +150,18 @@ pageextension 50102 FixedAssetCard extends "Fixed Asset Card"
         }
         //B2BSSD11JUL2023<<
     }
+    //B2BVCOn14Nov2023 >>
+    trigger OnOpenPage()
+    begin
+        if UserSetup.Get(UserId) then begin
+            if UserSetup.Stores then
+                FieldEditable := true
+            else
+                FieldEditable := false;
+        end;
+    end;
+    //B2BVCOn14Nov2023 <<
     var
-        myInt: Integer;
+        UserSetup: Record "User Setup";
+        FieldEditable: Boolean;
 }

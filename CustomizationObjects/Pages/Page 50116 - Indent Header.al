@@ -483,7 +483,7 @@ page 50116 "Indent Header"
                         IndentLine.SetRange("Document No.", Rec."No.");
                         IndentLine.SetFilter("Qty To Issue", '<>%1', 0);
                         if IndentLine.FindSet() then begin
-                            IndentLine.ModifyAll("Qty To Issue", 0);
+                            //IndentLine.ModifyAll("Qty To Issue", 0);
                             if rec."Material Issued" then
                                 ArchiveQuantityIssued();
                         end;
@@ -843,12 +843,12 @@ page 50116 "Indent Header"
             IndentLine.SetFilter("Archive Indent", '%1', True);
             if IndentLine.FindSet() then
                 repeat
-                    IndentLine.CalcFields("Qty Issued");
+                    // IndentLine.CalcFields("Qty Issued");
                     ArchiveIndLine.Init();
                     ArchiveIndLine.TransferFields(IndentLine);
                     ArchiveIndLine."Archived Version" := ArchiveVersion;
                     ArchiveIndLine."Archived By" := UserId;
-                    ArchiveIndLine."Archived Qty Issued" := IndentLine."Qty Issued";
+                    ArchiveIndLine."Archived Qty Issued" := IndentLine."Qty To Issue";
                     ArchiveIndLine.Insert();
                 until IndentLine.Next() = 0;
             Message('Document Archived %1', Rec."No.");

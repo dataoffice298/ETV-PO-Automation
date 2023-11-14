@@ -160,7 +160,10 @@ page 50023 "Indent Line"
                     trigger OnValidate()
                     begin
                         if "Qty To Issue" <> 0 then
-                            "Archive Indent" := true;
+                            "Archive Indent" := true
+                        Else
+                            "Archive Indent" := false;
+
 
                     end;
                 }
@@ -205,6 +208,7 @@ page 50023 "Indent Line"
                 {
                     ApplicationArea = all;
                     Caption = 'Archive Indent';
+                    Editable = false;
                 }
             }
         }

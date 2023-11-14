@@ -372,6 +372,7 @@ page 50116 "Indent Header"
                                 ArchiveIndLine.Insert();
                                 ArchiveIndLine."Archived Qty Issued" := IndentLine."Qty Issued";
                                 ArchiveIndLine.Modify();
+
                             until IndentLine.Next() = 0;
                         Message('Archived Document %1', Rec."No.");
                     end;
@@ -522,8 +523,10 @@ page 50116 "Indent Header"
                                     ArchiveIndLine."Archived Qty Issued" := IndentLine."Qty Issued";
                                     ArchiveIndLine."Archived By" := UserId;
                                     ArchiveIndLine.Insert();
+                                    IndentLine."Archive Indent" := false;
+                                    IndentLine.modify();
                                 until IndentLine.Next() = 0;
-                            Message('Document Archived %1', Rec."No.");
+                            // Message('Document Archived %1', Rec."No.");
 
                             Rec."Ammendent Comments" := '';
                             CurrPage.UPDATE;
@@ -837,7 +840,7 @@ page 50116 "Indent Header"
             end;
             IndentLine.Reset();
             IndentLine.SetRange("Document No.", Rec."No.");
-            IndentLine.SetRange("Archive Indent");
+            IndentLine.SetFilter("Archive Indent", '%1', True);
             if IndentLine.FindSet() then
                 repeat
                     IndentLine.CalcFields("Qty Issued");
@@ -849,9 +852,9 @@ page 50116 "Indent Header"
                     ArchiveIndLine.Insert();
                 until IndentLine.Next() = 0;
             Message('Document Archived %1', Rec."No.");
-
             Rec."Ammendent Comments" := '';
             CurrPage.UPDATE;
+
         END;
     end;
 

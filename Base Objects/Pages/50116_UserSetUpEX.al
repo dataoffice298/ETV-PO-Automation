@@ -22,14 +22,18 @@ pageextension 50116 UserSetUpExt_B2B extends "User Setup"
             {
                 ApplicationArea = all;
             }
-          /*  field("FA Class"; "FA Class")
+            /*  field("FA Class"; "FA Class")
+              {
+                  ApplicationArea = all;
+              }
+              field("FA Sub Class"; "FA Sub Class")
+              {
+                  ApplicationArea = all;
+              }*/
+            field("QR Code"; Rec."QR Code")
             {
-                ApplicationArea = all;
+                ApplicationArea = All;
             }
-            field("FA Sub Class"; "FA Sub Class")
-            {
-                ApplicationArea = all;
-            }*/
 
         }
     }

@@ -283,6 +283,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 ApplicationArea = All;
                 Caption = 'Import Item Tracking';
                 Image = Import;
+                Enabled = FieldEditable; //B2BVCOn14Nov2023
 
                 trigger OnAction()
                 var
@@ -594,6 +595,10 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             end;
 
         }
+        modify(OrderTracking)
+        {
+            Enabled = FieldEditable; //B2BVCOn14Nov2023
+        }
 
 
     }
@@ -800,7 +805,18 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         end else
             Error(SelErr);
     end;
+    //B2BVCOn14Nov2023 >>
+    trigger OnOpenPage()
+    begin
+        if UserSetupGRec.Get(UserId) then begin
+            if UserSetupGRec.Stores then
+                FieldEditable := true
+            else
+                FieldEditable := false;
+        end;
 
+    end;
+    //B2BVCOn14Nov2023 <<
     var
         GateEntryType: Option Inward,Outward;
         Text0004: Label 'You dont have Permessions to Open Documebt Tracking';
@@ -841,6 +857,8 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         PurchHeader: Record "Purchase Header";
         GateEntryNo: Code[20]; //B2BVCOn09Nov2023
         GateEntryLineNo: Integer;//B2BVCOn09Nov2023
+        UserSetupGRec: Record "User Setup";
+        FieldEditable: Boolean;
 
     //B2BSSD07Feb2023 Import Start >>
     local procedure FixedAssetsReadExcelSheet()
@@ -958,8 +976,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                     Evaluate(GSTCredit, GetCellValue(RowNo, 8));
                     Evaluate(location, GetCellValue(RowNo, 9));
                     Evaluate(FALineNo, GetCellValue(RowNo, 10));//B2BSSD26MAY2023
-                    Evaluate(GateEntryNo, GetCellValue(RowNo, 11));//B2BVCOn09Nov2023
-                    Evaluate(GateEntryLineNo, GetCellValue(RowNo, 12));//B2BVCOn09Nov2023
+
 
                     if FALineNo = purChaseLine1."Line No." then begin
                         PurchaseLine.Init();
@@ -982,8 +999,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         PurchaseLine."GST Credit" := GSTCredit;
                         PurchaseLine."Location Code" := location;
                         PurchaseLine."FA Line No." := FALineNo;//B2BSSD26MAY2023
-                        PurchaseLine."Posted Gate Entry No." := GateEntryNo;
-                        PurchaseLine."Posted Gate Entry Line No." := GateEntryLineNo;
+
 
                         if PurchaseLine."Indent No." = '' then
                             PurchaseLine."Indent No." := purChaseLine1."Indent No.";
@@ -1022,6 +1038,12 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         if purChaseLine."Indent Req Line No" = 0 then
                             purChaseLine."Indent Req Line No" := purChaseLine1."Indent Req Line No";
                         //B2BSSD04APR2023>>
+                        //B2BVCOn14Nov2023 >>
+                        if PurchaseLine."Posted Gate Entry No." = '' then
+                            PurchaseLine."Posted Gate Entry No." := purChaseLine1."Posted Gate Entry No.";
+                        if PurchaseLine."Posted Gate Entry Line No." = 0 then
+                            PurchaseLine."Posted Gate Entry Line No." := purChaseLine1."Posted Gate Entry Line No.";
+                        //B2BVCOn14Nov2023 <<
                         PurchaseLine.validate("Qty. to Accept B2B", 0);
                         PurchaseLine.Modify(true);
 

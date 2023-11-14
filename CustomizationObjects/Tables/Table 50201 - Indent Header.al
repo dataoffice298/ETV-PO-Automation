@@ -944,6 +944,7 @@ table 50201 "Indent Header"
                 ArchiveIndHdr.TransferFields(IndentHeader);
                 ArchiveIndHdr."Archived Version" := ArchiveVersion;
                 ArchiveIndHdr."Archived By" := UserId;
+                ArchiveIndHdr."Indent Issued" := true;
                 ArchiveIndHdr.Insert();
                 if ArchiveIndHdr1.Get(IndentHeader."No.") then begin
                     ArchiveIndHdr1."Indent Issued" := true;

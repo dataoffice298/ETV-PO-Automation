@@ -390,6 +390,7 @@ page 50116 "Indent Header"
                             IndentError001: TextConst ENN = 'Select Must Have a Value';
                             IndentLineRec: Record "Indent Line";
                             Text0001: Label 'Quantity to  issue should not be greaterthan Required Quantity %1  for Line No. %2';
+                            QtyIssued: Decimal;
 
                         begin
 
@@ -397,15 +398,13 @@ page 50116 "Indent Header"
                             IndentLineRec.SetRange("Document No.", rec."No.");
                             if IndentLineRec.FindSet() then begin
                                 repeat
-
+                                    QtyIssued := abs(IndentLineRec."Qty Issued");
                                     IndentLineRec.CalcFields("Qty Issued");
-                                    if ABS(IndentLineRec."Qty Issued") > IndentLineRec."Req.Quantity" then
+                                    if QtyIssued > IndentLineRec."Req.Quantity" then
                                         Error(Text0001, IndentLineRec."Qty Issued", IndentLineRec."Line No.");
 
-
-                                    //  IndentLineRec.CalcFields("Qty Issued");
-                                    IF (IndentLineRec."Req.Quantity" <= ABS(IndentLineRec."Qty Issued")) then
-                                        Error(Text0001, IndentLineRec."Qty Issued");
+                                    IF IndentLineRec."Req.Quantity" <= QtyIssued then
+                                        Error(Text0001, IndentLineRec."Qty Issued", IndentLineRec."Line No.");
 
                                 until IndentLineRec.Next() = 0;
                             end;
@@ -476,10 +475,10 @@ page 50116 "Indent Header"
                         IF ItemJournalLine.findset then;
                         Page.RunModal(40, ItemJournalLine);
 
-                     
 
-                      Rec."Material Issued" := false;
-                      CurrPage.UPDATE
+
+                        Rec."Material Issued" := false;
+                        CurrPage.UPDATE
 
                         //B2BPGOn6Nov23>>>>
 

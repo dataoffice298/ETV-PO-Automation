@@ -48,7 +48,11 @@ page 50048 "Archive Indent List"
                     ApplicationArea = All;
                     Caption = 'Ammendent Comments';
                 }
-                
+                field("Indent Issued"; "Indent Issued")
+                {
+                    ApplicationArea = All;
+                }
+
             }
         }
     }

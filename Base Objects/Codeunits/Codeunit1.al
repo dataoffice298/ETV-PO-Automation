@@ -337,10 +337,10 @@ codeunit 50016 "MyBaseSubscr"
         NewItemLedgEntry."Indent No." := ItemJournalLine."Indent No.";
         NewItemLedgEntry."Indent Line No." := ItemJournalLine."Indent Line No.";
         NewItemLedgEntry."Qty issue&Return" := ItemJournalLine."Qty issue&Return";//B2BSSD10JUL2023
-        IndentLine.Get(NewItemLedgEntry."Indent No.", NewItemLedgEntry."Indent Line No.");
-        INDENTHEADER.Get(IndentLine."Document No.");
-        if I = 1 then
-            INDENTHEADER.ArchiveQuantityIssued(INDENTHEADER, IndentLine);
+        if IndentLine.Get(NewItemLedgEntry."Indent No.", NewItemLedgEntry."Indent Line No.") then
+            if INDENTHEADER.Get(IndentLine."Document No.") then
+                if I = 1 then
+                    INDENTHEADER.ArchiveQuantityIssued(INDENTHEADER, IndentLine);
         if NewItemLedgEntry."Indent Line No." <> 0 then begin
             IndentLine.Get(NewItemLedgEntry."Indent No.", NewItemLedgEntry."Indent Line No.");
             IndentLine.NoHeadStatusCheck(true);

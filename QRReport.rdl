@@ -19,15 +19,15 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>1.89147cm</Width>
+                  <Width>2.20456cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.42063cm</Width>
+                  <Width>2.62789cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>1.52605cm</Height>
+                  <Height>1.53074cm</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -35,14 +35,12 @@
                           <Source>Database</Source>
                           <Value>=Fields!Qr_Code.Value</Value>
                           <MIMEType>image/jpeg</MIMEType>
-                          <Sizing>FitProportional</Sizing>
+                          <Sizing>Fit</Sizing>
                           <ToolTip>=Fields!Qr_Code.Value</ToolTip>
                           <Style>
                             <Border>
                               <Style>None</Style>
                             </Border>
-                            <PaddingLeft>5pt</PaddingLeft>
-                            <PaddingRight>5pt</PaddingRight>
                           </Style>
                         </Image>
                       </CellContents>
@@ -111,7 +109,7 @@
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.94396cm</Height>
+                  <Height>0.8249cm</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -184,8 +182,10 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet_Result</DataSetName>
-            <Height>2.47001cm</Height>
-            <Width>4.3121cm</Width>
+            <Top>0.01563in</Top>
+            <Left>0.02778in</Left>
+            <Height>2.35564cm</Height>
+            <Width>4.83244cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -198,15 +198,15 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>2.13223cm</Width>
+                  <Width>2.20719cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.82015cm</Width>
+                  <Width>2.7099cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>1.51282cm</Height>
+                  <Height>1.52412cm</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -214,14 +214,12 @@
                           <Source>Database</Source>
                           <Value>=Fields!Qr_Code.Value</Value>
                           <MIMEType>image/jpeg</MIMEType>
-                          <Sizing>FitProportional</Sizing>
+                          <Sizing>Fit</Sizing>
                           <ToolTip>=Fields!Qr_Code.Value</ToolTip>
                           <Style>
                             <Border>
                               <Style>None</Style>
                             </Border>
-                            <PaddingLeft>5pt</PaddingLeft>
-                            <PaddingRight>5pt</PaddingRight>
                           </Style>
                         </Image>
                       </CellContents>
@@ -290,7 +288,7 @@
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.93073cm</Height>
+                  <Height>0.85798cm</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -363,10 +361,10 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet_Result</DataSetName>
-            <Top>0.02647cm</Top>
-            <Left>4.32858cm</Left>
-            <Height>2.44355cm</Height>
-            <Width>4.95238cm</Width>
+            <Top>0.04632cm</Top>
+            <Left>4.97355cm</Left>
+            <Height>2.3821cm</Height>
+            <Width>4.9171cm</Width>
             <ZIndex>1</ZIndex>
             <Style>
               <Border>
@@ -377,15 +375,15 @@
             </Style>
           </Tablix>
         </ReportItems>
-        <Height>2.47002cm</Height>
+        <Height>2.42842cm</Height>
         <Style />
       </Body>
-      <Width>9.28097cm</Width>
+      <Width>9.94357cm</Width>
       <Page>
-        <PageHeight>21cm</PageHeight>
-        <PageWidth>10cm</PageWidth>
-        <LeftMargin>0.4cm</LeftMargin>
-        <RightMargin>0.3cm</RightMargin>
+        <PageHeight>4.5cm</PageHeight>
+        <PageWidth>10.3cm</PageWidth>
+        <LeftMargin>0.2cm</LeftMargin>
+        <RightMargin>0.1cm</RightMargin>
         <TopMargin>1cm</TopMargin>
         <BottomMargin>1cm</BottomMargin>
         <ColumnSpacing>1.27cm</ColumnSpacing>

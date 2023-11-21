@@ -38,6 +38,10 @@ report 50107 "Aging of Items Report"
                 ItemLedgerEntry.SetFilter("Entry Type", '%1|%2|%3', ItemLedgerEntry."Entry Type"::Purchase, ItemLedgerEntry."Entry Type"::"Positive Adjmt.", ItemLedgerEntry."Entry Type"::Transfer);
                 ItemLedgerEntry.SetFilter("Document Type", '%1|%2|%3', ItemLedgerEntry."Document Type"::"Purchase Receipt", ItemLedgerEntry."Document Type"::" ", ItemLedgerEntry."Document Type"::"Transfer Receipt");
                 ItemLedgerEntry.SetFilter("Remaining Quantity", '<>%1', 0); //B2BVCOn25Oct2023
+                                                                            // ItemLedgerEntry.SetFilter("Entry Type", '%1', ItemLedgerEntry."Entry Type"::Transfer);
+                                                                            // ItemLedgerEntry.SetFilter("Document Type", '%1', ItemLedgerEntry."Document Type"::"Transfer Receipt");
+                                                                            // ItemLedgerEntry.SetFilter("Entry Type", '%1', ItemLedgerEntry."Entry Type"::Transfer);
+                                                                            // ItemLedgerEntry.SetFilter("Document Type", '%1', ItemLedgerEntry."Document Type"::" ");
 
                 if ItemLedgerEntry.FindSet() then begin
                     ItemLedgerEntry.CalcFields("Cost Amount (Actual)");

@@ -11,34 +11,6 @@
       <rd:DataSourceID>0211904e-4c84-4f0c-8af8-3b1e8d226d05</rd:DataSourceID>
     </DataSource>
   </DataSources>
-  <DataSets>
-    <DataSet Name="DataSet_Result">
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText />
-      </Query>
-      <Fields>
-        <Field Name="No_">
-          <DataField>No_</DataField>
-        </Field>
-        <Field Name="Qr_Code">
-          <DataField>Qr_Code</DataField>
-        </Field>
-        <Field Name="Serial_No_">
-          <DataField>Serial_No_</DataField>
-        </Field>
-        <Field Name="Make_B2B">
-          <DataField>Make_B2B</DataField>
-        </Field>
-        <Field Name="Model_No_">
-          <DataField>Model_No_</DataField>
-        </Field>
-        <Field Name="Description">
-          <DataField>Description</DataField>
-        </Field>
-      </Fields>
-    </DataSet>
-  </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
@@ -209,7 +181,6 @@
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <KeepTogether>true</KeepTogether>
             <DataSetName>DataSet_Result</DataSetName>
             <Top>0.01563in</Top>
             <Left>0.02778in</Left>
@@ -235,7 +206,7 @@
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>1.52412cm</Height>
+                  <Height>1.49238cm</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -317,7 +288,7 @@
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.85798cm</Height>
+                  <Height>0.82624cm</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -389,11 +360,10 @@
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <KeepTogether>true</KeepTogether>
             <DataSetName>DataSet_Result</DataSetName>
             <Top>0.04632cm</Top>
             <Left>4.97355cm</Left>
-            <Height>2.3821cm</Height>
+            <Height>2.31861cm</Height>
             <Width>4.91709cm</Width>
             <ZIndex>1</ZIndex>
             <Style>
@@ -405,7 +375,7 @@
             </Style>
           </Tablix>
         </ReportItems>
-        <Height>2.5078cm</Height>
+        <Height>2.39534cm</Height>
         <Style />
       </Body>
       <Width>9.94357cm</Width>
@@ -421,12 +391,6 @@
       </Page>
     </ReportSection>
   </ReportSections>
-  <ReportParametersLayout>
-    <GridLayoutDefinition>
-      <NumberOfColumns>4</NumberOfColumns>
-      <NumberOfRows>2</NumberOfRows>
-    </GridLayoutDefinition>
-  </ReportParametersLayout>
   <Code>Public Function BlankZero(ByVal Value As Decimal)
     if Value = 0 then
         Return ""
@@ -466,4 +430,32 @@ End Function
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
   <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="No_">
+          <DataField>No_</DataField>
+        </Field>
+        <Field Name="Qr_Code">
+          <DataField>Qr_Code</DataField>
+        </Field>
+        <Field Name="Serial_No_">
+          <DataField>Serial_No_</DataField>
+        </Field>
+        <Field Name="Make_B2B">
+          <DataField>Make_B2B</DataField>
+        </Field>
+        <Field Name="Model_No_">
+          <DataField>Model_No_</DataField>
+        </Field>
+        <Field Name="Description">
+          <DataField>Description</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
 </Report>

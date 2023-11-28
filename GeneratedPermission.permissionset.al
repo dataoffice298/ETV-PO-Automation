@@ -180,5 +180,10 @@ permissionset 50000 GeneratedPermission //B2BSSD16MAR2023
         report "GRN Register" = X,
         report QRReport = X,
         page "FA Sub Locations" = X,
-        report "Fixed Assets Register New" = X;
+        report "Fixed Assets Register New" = X,
+        report "Archive Material Issue Slip" = X,
+        report "Gate Inward Receipt" = X,
+        report "GRN RECEIPT1" = X,
+        report "INWARD RECEIPT New" = X,
+        report InwardReceipt1 = X;
 }

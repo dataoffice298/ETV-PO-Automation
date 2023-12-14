@@ -28,9 +28,10 @@ tableextension 50049 tableextension70000004 extends "Purch. Inv. Header"
 
         field(50113; "EPCG Scheme"; Option)
         {
-            OptionMembers = "Under EPCG","Non EPCG";
-            OptionCaption = 'Under EPCG,Non EPCG';
+            OptionMembers = " ","Under EPCG","Non EPCG";
+            OptionCaption = ' ,Under EPCG,Non EPCG';
         }
+
         field(50114; "Import Type"; Option)
         {
             OptionMembers = Import,Indigenous;

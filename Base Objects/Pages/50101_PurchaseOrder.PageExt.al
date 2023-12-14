@@ -149,9 +149,13 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 Error002: TextConst ENN = 'Quantity Receive can not be Grater then QC Accepted Quantity';
                 ImportTypeError: TextConst ENN = 'Import type Must have value in Invoice details Tab';//B2BSCM25SEP2023
             begin
+
                 Rec.TestField("Import Type", ErrorInfo.Create(ImportTypeError, true, PurchaseHeader));//B2BSCM25SEP2023
-                Rec.TestField("EPCG Scheme");//B2BSCM25SEP2023
-                Rec.TestField("EPCG No.");//B2BSCM25SEP2023
+                if rec."EPCG Scheme" = rec."EPCG Scheme"::"Under EPCG" then
+                    Rec.TestField("EPCG No.");
+
+                //   Rec.TestField("EPCG Scheme");//B2BSCM25SEP2023
+                //  Rec.TestField("EPCG No.");//B2BSCM25SEP2023 
                 GateEntry.Reset();
                 GateEntry.SetRange("Source No.", Rec."No.");
                 if GateEntry.FindFirst() then begin

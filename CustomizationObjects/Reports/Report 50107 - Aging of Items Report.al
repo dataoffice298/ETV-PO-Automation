@@ -42,11 +42,11 @@ report 50107 "Aging of Items Report"
                                                                             // ItemLedgerEntry.SetFilter("Document Type", '%1', ItemLedgerEntry."Document Type"::"Transfer Receipt");
                                                                             // ItemLedgerEntry.SetFilter("Entry Type", '%1', ItemLedgerEntry."Entry Type"::Transfer);
                                                                             // ItemLedgerEntry.SetFilter("Document Type", '%1', ItemLedgerEntry."Document Type"::" ");
-
                 if ItemLedgerEntry.FindSet() then begin
                     ItemLedgerEntry.CalcFields("Cost Amount (Actual)");
                     repeat //B2BSCM25SEP2023
                         Clear(AgingDays);
+                        Clear(UnitCostRec);
                         Clear(Location);
                         AgingDays := StartDate - ItemLedgerEntry."Posting Date";
                         //B2BVCOn25Oct2023 //Commented >>
@@ -55,6 +55,10 @@ report 50107 "Aging of Items Report"
                         //B2BVCOn25Oct2023 //Commented <<
                         ValueEntry.Reset();
                         ValueEntry.SetRange("Item Ledger Entry No.", ItemLedgerEntry."Entry No.");
+                        ValueEntry.SetRange("Document No.", ItemLedgerEntry."Document No.");
+                        ValueEntry.SetRange("Item No.", ItemLedgerEntry."Item No.");
+                        ValueEntry.SetRange("Document Type", ItemLedgerEntry."Document Type");
+                        ValueEntry.SetRange("Item Ledger Entry Type", ValueEntry."Item Ledger Entry Type");
                         if ValueEntry.FindSet() then begin
                             repeat
                                 ValueEntry.CalcSums("Cost per Unit");
@@ -71,8 +75,8 @@ report 50107 "Aging of Items Report"
                         TempExcelBuffer.AddColumn(Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                         TempExcelBuffer.AddColumn(ItemLedgerEntry."Unit of Measure Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                         TempExcelBuffer.AddColumn(ItemLedgerEntry."Remaining Quantity", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                        //TempExcelBuffer.AddColumn(UnitCostRec, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number); //B2BVCOn25Oct2023 //commented
-                        TempExcelBuffer.AddColumn(ItemLedgerEntry."Cost Amount (Actual)", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number); //B2BVCOn25Oct2023
+                        TempExcelBuffer.AddColumn(UnitCostRec, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number); //B2BVCOn25Oct2023 //commented
+                                                                                                                                         // TempExcelBuffer.AddColumn(ItemLedgerEntry."Cost Amount (Actual)", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number); //B2BVCOn25Oct2023
                         TempExcelBuffer.AddColumn(Round(ItemLedgerEntry."Remaining Quantity" * UnitCostRec, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                         TempExcelBuffer.AddColumn(ItemLedgerEntry."Posting Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                         TempExcelBuffer.AddColumn(AgingDays, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);

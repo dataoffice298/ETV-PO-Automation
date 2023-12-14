@@ -11,6 +11,7 @@ report 50166 "Inward Receipt Details"
         {
             DataItemTableView = WHERE("Entry Type" = const(Inward),
                                       Type = FILTER('RGP'));//Baluon30Nov2022
+
             dataitem("Posted Gate Entry Line_B2B"; "Posted Gate Entry Line_B2B")
             {
                 DataItemLink = "Entry Type" = field("Entry Type"), "Gate Entry No." = field("No.");
@@ -30,6 +31,8 @@ report 50166 "Inward Receipt Details"
                     BasicAmount: Decimal;
                     BasePercent: Decimal;
                     ImporType: Text;
+                    DirectunitCost: Decimal;
+                //  vendor: Record Vendor;
 
 
 
@@ -39,50 +42,42 @@ report 50166 "Inward Receipt Details"
                     Clear(SGSTAmt);
                     Clear(IGSSTAmt);
                     Clear(TotalAmount);    //B2BSCM27SEP2023<<
+                    Clear(SUPPLIERNAME);
+                    Clear(DirectunitCost);
                     WindPa.Update(1, "Gate Entry No.");
                     if SourceNoGvar <> "Source No." then begin
                         SourceNoGvar := "Source No.";
                         //B2BSSD28Dec2022<<
                         PurchasRecpteHdr.Reset();
-                        // PurchasRecpteHdr.SetRange("Document Type", PurchasRecpteHdr."Document Type"::Order);
-                        PurchasRecpteHdr.SetRange("Order No.", "Posted Gate Entry Header_B2B"."Purchase Order No.");
-                        if PurchasRecpteHdr.FindFirst() then begin
-                            INVOICENO := PurchasRecpteHdr."Vendor Invoice No.";  //B2BSCM27SEP2023
-                            INVOICEDate := PurchasRecpteHdr."Vendor Invoice Date";  //B2BSCM27SEP2023
-                            SUPPLIERNAME := PurchasRecpteHdr."Buy-from Vendor Name";  //B2BSCM27SEP2023
-                            if PurchasRecpteHdr."Import Type" = PurchasRecpteHdr."Import Type"::Import then
-                                ImporType := 'Import';
-                            if PurchasRecpteHdr."Import Type" = PurchasRecpteHdr."Import Type"::Indigenous then
-                                ImporType := 'Indigenous';
-
-                            GSTSetup.get();  //B2BSCM27SEP2023
-                            PurchRecptLine.Reset();
-                            PurchRecptLine.SetRange("Document No.", PurchasRecpteHdr."No.");
-                            //   PurchRecptLine.SetRange("Document Type", PurchasRecpteHdr."Document Type"::Order);
-                            //   PurchRecptLine.SetFilter("No.", '<>%1', '');
-                            PurchRecptLine.setrange("Line No.", "Posted Gate Entry Line_B2B"."Line No.");
-                            if PurchRecptLine.FindSet() then begin
-                                //GetGSTAmounts(TaxTransactionValue, PurchRecptLine, GSTSetup);
-
-
-                                BasicAmount := PurchRecptLine."Direct Unit Cost" * "Posted Gate Entry Line_B2B".Quantity;
-                                // if PurchRecptLine."Line Discount %" <> 0 then
-                                //  BasePercent := (BasicAmount / 100) * PurchRecptLine."Line Discount %");
-                                BasePercent := (BasicAmount / 100) * PurchRecptLine."Line Discount %";
-                                TotalAmount := BasicAmount - BasePercent;
-
-
-
-                            end;
-                            // repeat
-                            //Clear(IGSSTAmt);
-                            // GetGSTAmounts(TaxTransactionValue, PurchRecptLine, GSTSetup);
-                            // TotalAmount := BasicAmount - PurchRecptLine."Line Discount %";
-
-                            //B2BSSD14APR2023
-                            //  until PurchRecptLine.Next() = 0;
+                        PurchasRecpteHdr.SetRange("Order No.", "Posted Gate Entry Line_B2B"."Purchase Order No.");
+                        if PurchasRecpteHdr.FindFirst() then;
+                        PurchRecptLine.Reset();
+                        PurchRecptLine.SetRange("Order No.", "Posted Gate Entry Line_B2B"."Purchase Order No.");
+                        PurchRecptLine.SetRange("Order Line No.", "Posted Gate Entry Line_B2B"."Purchase Order Line No.");
+                        if PurchRecptLine.FindFirst() then begin
+                            DirectunitCost := PurchRecptLine."Direct Unit Cost";
+                            BasicAmount := PurchRecptLine."Direct Unit Cost" * "Posted Gate Entry Line_B2B".Quantity;
+                            BasePercent := (BasicAmount / 100) * PurchRecptLine."Line Discount %";
+                            TotalAmount := BasicAmount - BasePercent;
                         end;
+                        INVOICENO := PurchasRecpteHdr."Vendor Invoice No.";  //B2BSCM27SEP2023
+                        INVOICEDate := PurchasRecpteHdr."Vendor Invoice Date";  //B2BSCM27SEP2023
+                        if PurchasRecpteHdr."Import Type" = PurchasRecpteHdr."Import Type"::Import then
+                            ImporType := 'Import';
+                        if PurchasRecpteHdr."Import Type" = PurchasRecpteHdr."Import Type"::Indigenous then
+                            ImporType := 'Indigenous';
+                        SUPPLIERNAME := PurchasRecpteHdr."Buy-from Vendor Name";
+                        GSTSetup.get();  //B2BSCM27SEP2023
+
+                        // repeat
+                        //Clear(IGSSTAmt);
+                        // GetGSTAmounts(TaxTransactionValue, PurchRecptLine, GSTSetup);
+                        // TotalAmount := BasicAmount - PurchRecptLine."Line Discount %";
+
+                        //B2BSSD14APR2023
+                        //  until PurchRecptLine.Next() = 0;
                     end;
+
                     //B2BSSD03APR2023<<
                     if Item.Get("Source No.") then;
                     if PurchasRecpteHdr."No." = '' then
@@ -107,7 +102,7 @@ report 50166 "Inward Receipt Details"
                     //B2BSSD03APR2023>>
                     TempExcelBuffer.AddColumn("Posted Gate Entry Line_B2B"."Unit of Measure", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("Posted Gate Entry Line_B2B".Quantity, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn(PurchRecptLine."Direct Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                    TempExcelBuffer.AddColumn(DirectunitCost, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn(BasePercent, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn(BasicAmount, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn(TotalAmount, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);

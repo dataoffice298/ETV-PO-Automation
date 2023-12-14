@@ -1064,7 +1064,7 @@ codeunit 50026 "PO Automation"
                                 until IndentLineRec.Next() = 0;
                             end;
                         UNTIL PurchaseLine.NEXT() = 0;
-                
+
                 END;
             UNTIL PurchaseHeader.NEXT() = 0;
 

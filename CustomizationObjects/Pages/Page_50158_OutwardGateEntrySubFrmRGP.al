@@ -215,7 +215,6 @@ page 50158 "Outward Gate Entry SubFrm-RGP"
         //ExcelImport: Record "Excel Import Buffer";
         RowNo: Integer;
         ColNo: Integer;
-        LineNo: Integer;
         MaxRow: Integer;
     begin
         RowNo := 0;
@@ -231,36 +230,61 @@ page 50158 "Outward Gate Entry SubFrm-RGP"
         if ExcecllBuffer.FindLast() then begin
             MaxRow := ExcecllBuffer."Row No.";
         end;
+        // LineNo := 10000;
         for RowNo := 2 to MaxRow Do begin
+            //RGpNo
+            Evaluate(RGpNo, GetCellValue(RowNo, 10));
 
-            LineNo += 10000;
             RgpOutwardEntry.Reset();
-            RgpOutwardEntry.SetRange("No.", Rec."Gate Entry No.");
+            RgpOutwardEntry.SetRange("Entry Type", RgpOutwardEntry."Entry Type"::Outward);
+            RgpOutwardEntry.SetRange("No.", RGpNo);
             if RgpOutwardEntry.FindFirst() then begin
                 RGPOutNo := RgpOutwardEntry."No.";
-                repeat
-                    RGPOutwarExcelImport.Init();
-                    RGPOutwarExcelImport."Entry Type" := RgpOutwardEntry."Entry Type"::Outward;
-                    RGPOutwarExcelImport.Type := RgpOutwardEntry.Type::RGP;
-                    RGPOutwarExcelImport."Gate Entry No." := RGPOutNo;
-                    RGPOutwarExcelImport."Line No." := LineNo;
-                    Evaluate(RGPOutwarExcelImport."Source Type", GetCellValue(RowNo, 1));
-                    Evaluate(RGPOutwarExcelImport."Source No.", GetCellValue(RowNo, 2));
-                    RGPOutwarExcelImport.Validate("Source No.");
-                    Evaluate(RGPOutwarExcelImport."Source Name", GetCellValue(RowNo, 3));
-                    Evaluate(RGPOutwarExcelImport.Description, GetCellValue(RowNo, 4));
-                    if RGPOutwarExcelImport."Source Type" = RGPOutwarExcelImport."Source Type"::"Fixed Asset" then begin
-                        //Evaluate(RGPOutwarExcelImport.Quantity, GetCellValue(RowNo, 5));
-                        RGPOutwarExcelImport.Validate(Quantity, 1);
-                    end else
-                        if RGPOutwarExcelImport."Source Type" = RGPOutwarExcelImport."Source Type"::Item then
-                            Evaluate(RGPOutwarExcelImport.Quantity, GetCellValue(RowNo, 5));
-                    Evaluate(RGPOutwarExcelImport."Unit of Measure", GetCellValue(RowNo, 6));
-                    Evaluate(RGPOutwarExcelImport.Variant, GetCellValue(RowNo, 7));
-                    Evaluate(RGPOutwarExcelImport.ModelNo, GetCellValue(RowNo, 8));
-                    Evaluate(RGPOutwarExcelImport.SerialNo, GetCellValue(RowNo, 9));
-                    RGPOutwarExcelImport.Insert();
-                until RGPOutwarExcelImport.Next() = 0;
+                //repeat
+                RGPOutwarExcelImport1.Reset();
+                RGPOutwarExcelImport1.SetRange("Entry Type", RgpOutwardEntry."Entry Type"::Outward);
+                RGPOutwarExcelImport1.SetRange("Gate Entry No.", RGpNo);
+                if RGPOutwarExcelImport1.FindLast() then
+                    LineNo := RGPOutwarExcelImport1."Line No." + 10000
+                else
+                    LineNo := 10000;
+
+                RGPOutwarExcelImport.Init();
+                RGPOutwarExcelImport."Entry Type" := RGPOutwarExcelImport."Entry Type"::Outward;
+                RGPOutwarExcelImport.Type := RgpOutwardEntry.Type::RGP;
+                RGPOutwarExcelImport."Gate Entry No." := RGPOutNo;
+                RGPOutwarExcelImport."Line No." := LineNo;
+                //  LineNo += 10000;
+                Evaluate(RGPOutwarExcelImport."Source Type", GetCellValue(RowNo, 1));
+                RGPOutwarExcelImport.Validate("Source Type");
+                Evaluate(RGPOutwarExcelImport."Source No.", GetCellValue(RowNo, 2));
+                RGPOutwarExcelImport.Validate("Source No.");
+                Evaluate(RGPOutwarExcelImport."Source Name", GetCellValue(RowNo, 3));
+                RGPOutwarExcelImport.Validate("Source Name");
+
+                Evaluate(RGPOutwarExcelImport.Description, GetCellValue(RowNo, 4));
+                if RGPOutwarExcelImport."Source Type" = RGPOutwarExcelImport."Source Type"::"Fixed Asset" then begin
+                    //Evaluate(RGPOutwarExcelImport.Quantity, GetCellValue(RowNo, 5));
+                    RGPOutwarExcelImport.Validate(Quantity, 1);
+                end else
+                    if RGPOutwarExcelImport."Source Type" = RGPOutwarExcelImport."Source Type"::Item then
+                        Evaluate(RGPOutwarExcelImport.Quantity, GetCellValue(RowNo, 5));
+
+                Evaluate(RGPOutwarExcelImport."Unit of Measure", GetCellValue(RowNo, 6));
+                Evaluate(RGPOutwarExcelImport.Variant, GetCellValue(RowNo, 7));
+                RGPOutwarExcelImport.Validate(Variant);
+
+                Evaluate(RGPOutwarExcelImport.ModelNo, GetCellValue(RowNo, 8));
+                RGPOutwarExcelImport.Validate(ModelNo);
+
+                Evaluate(RGPOutwarExcelImport.SerialNo, GetCellValue(RowNo, 9));
+                RGPOutwarExcelImport.Validate(SerialNo);
+
+                //  Evaluate(RGPOutwarExcelImport."Gate Entry No.", GetCellValue(RowNo, 10));
+                //   RGPOutwarExcelImport.Validate("Gate Entry No.");
+
+                RGPOutwarExcelImport.Insert();
+                // until RGPOutwarExcelImport.Next() = 0;
             end;
         end;
         Message(ExcelImportSuccess);
@@ -275,6 +299,10 @@ page 50158 "Outward Gate Entry SubFrm-RGP"
         NoFileMsg: Label 'No excel File Found';
         ExcelImportSuccess: TextConst ENN = 'Excel File Imported Successfully';
         RgpOutwardEntry: Record "Gate Entry Header_B2B";
+        RGPOutwarExcelImport1: Record "Gate Entry Line_B2B";
         RGPOutNo: Code[20];
+        RGpNo: Code[20];
+        LineNo: Integer;
+
 }
 

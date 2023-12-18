@@ -16,19 +16,29 @@ report 50195 QRReport
             { }
             column(Qr_Code; "Qr Code")
             { }
-            column(Serial_No_; "Serial No.")
+            column(Serial_No_; SerialNoGVar)
             { }
-            column(Make_B2B; Make_B2B)
+            column(Make_B2B; MakeB2BGvar)
             { }
-            column(Model_No_; "Model No.")
+            column(Model_No_; ModelNoGVar)
             { }
-            column(Description; Description)
+            column(Description; DescriptionGvar)
             { }
             trigger OnAfterGetRecord()
             begin
                 "Fixed Asset".CalcFields("Qr Code");
+                DescriptionGvar := CopyStr(Description, 1, 30);
+                ModelNoGVar := CopyStr("Model No.", 1, 13);
+                MakeB2BGvar := CopyStr("Model No.", 1, 13);
+                SerialNoGVar := CopyStr("Serial No.", 1, 13);
+
             end;
         }
     }
+    var
+        DescriptionGvar: Text[30];
+        ModelNoGVar: Text[15];
+        MakeB2BGvar: Text[15];
+        SerialNoGVar: Text[15];
 
 }

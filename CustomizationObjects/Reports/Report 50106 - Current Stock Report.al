@@ -32,6 +32,7 @@ report 50106 "Current Stock Report"
                 ItemLedgerEntry1.SetFilter("Posting Date", '%1..%2', StartDate, EndDate);
                 ItemLedgerEntry1.SetCurrentKey("Item No.", "Variant Code");
                 if ItemLedgerEntry1.FindSet() then begin
+                    //repeat
                     Clear(Openingstock);
                     Clear(InwardStock);
                     Clear(OutwardStock);
@@ -126,7 +127,8 @@ report 50106 "Current Stock Report"
                                     UnitRateOutWardStock += ValueEntryGrec."Cost per Unit";
                                 end;
                             until ItemLedgerEntry.Next() = 0;
-                            UnitRateInwardStockNew := Unitrate / ItemLedgerEntryCount;
+                            //UnitRateInwardStockNew := Unitrate / ItemLedgerEntryCount;
+                            UnitRateOutWardStockNew := Unitrate / ItemLedgerEntryCount;
                         end;
                         //B2BSDec152023
                         /* ItemLedgerEntry.RESET;
@@ -161,22 +163,24 @@ report 50106 "Current Stock Report"
                         TempExcelBuffer.AddColumn(Item."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                         TempExcelBuffer.AddColumn(Item.Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                         TempExcelBuffer.AddColumn(Make, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSS19Jan2023
-                        TempExcelBuffer.AddColumn(Item."Base Unit of Measure", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                        TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                        TempExcelBuffer.AddColumn(Openingstock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                        TempExcelBuffer.AddColumn(UnitRateNew, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD15MAY2023
-                        TempExcelBuffer.AddColumn(Round(Openingstock * UnitRateNew, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD15MAY2023
-                        TempExcelBuffer.AddColumn(InwardStock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                        TempExcelBuffer.AddColumn(UnitRateInwardStockNew, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD15MAY2023
-                        TempExcelBuffer.AddColumn(Round(InwardStock * UnitRateInwardStockNew, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD15MAY2023
-                        TempExcelBuffer.AddColumn(OutwardStock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                        TempExcelBuffer.AddColumn(UnitRateOutWardStockNew, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD15MAY2023
-                        TempExcelBuffer.AddColumn(Round(OutwardStock * UnitRateOutWardStockNew, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD15MAY2023
-                        TempExcelBuffer.AddColumn(ClosingStock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                        TempExcelBuffer.AddColumn(unitRateClosingStoc, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD15MAY2023
-                        TempExcelBuffer.AddColumn(Round(unitRateClosingStocNew, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//b2bSSD15MAY2023
+                        TempExcelBuffer.AddColumn(Item."Base Unit of Measure", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(Openingstock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        TempExcelBuffer.AddColumn(UnitRateNew, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//B2BSSD15MAY2023
+                        TempExcelBuffer.AddColumn(Round(Openingstock * UnitRateNew, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//B2BSSD15MAY2023
+                        TempExcelBuffer.AddColumn(InwardStock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        TempExcelBuffer.AddColumn(UnitRateInwardStockNew, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//B2BSSD15MAY2023
+                        TempExcelBuffer.AddColumn(Round(InwardStock * UnitRateInwardStockNew, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//B2BSSD15MAY2023
+                        TempExcelBuffer.AddColumn(OutwardStock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        TempExcelBuffer.AddColumn(UnitRateOutWardStockNew, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//B2BSSD15MAY2023
+                        TempExcelBuffer.AddColumn(Round(OutwardStock * UnitRateOutWardStockNew, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//B2BSSD15MAY2023
+                        TempExcelBuffer.AddColumn(ClosingStock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        TempExcelBuffer.AddColumn(unitRateClosingStoc, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//B2BSSD15MAY2023
+                        TempExcelBuffer.AddColumn(Round(unitRateClosingStocNew, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//b2bSSD15MAY2023
                         TempExcelBuffer.AddColumn(LocationGvar, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD16MAY2023
+
                     end;
+                    //until ItemLedgerEntry1.Next() = 0;
                 end;                                                                                                         //until ItemVariant.Next() = 0;
 
                 /*  end else

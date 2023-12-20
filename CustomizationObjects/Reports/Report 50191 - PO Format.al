@@ -46,7 +46,7 @@ report 50191 "PO FORMAT"
             { }
             column(Subject; Subject)
             { }
-            column(AmountText; AmountText[1])
+            column(AmountText; AmountText[1] + ' ' + AmountText[2])
             { }
             column(TotalOrderAmount; TotalOrderAmount)
             { }
@@ -145,10 +145,16 @@ report 50191 "PO FORMAT"
                     //GSTPertotal := CGSTPer + SGSTPer + IGSTPer;
                     //Message('%1', GstTotal);
                     Clear(AmountVendor1);
+                    Clear(AmountText);
                     AmountVendor += "Line Amount";
                     AmountVendor1 := AmountVendor + GstTotalSum;
-                    GateEntryPostYesNo.InitTextVariable;
-                    GateEntryPostYesNo.FormatNoText(AmountText, Round(AmountVendor1, 1, '='), "Currency Code");
+                    //   GateEntryPostYesNo.InitTextVariable;
+                    //  GateEntryPostYesNo.FormatNoTextInvoice(AmountText, Round(AmountVendor1, 1, '='), "Currency Code");
+                    // GateEntryPostYesNo.FormatNoText(AmountText, AmountVendor1, "Currency Code");
+                    CheckRec.InitTextVariable;
+
+                    CheckRec.FormatNoText(AmountText, AmountVendor1, "Currency Code");
+
 
                 end;
 
@@ -218,6 +224,9 @@ report 50191 "PO FORMAT"
                             end;
                         end;
                     end;
+                    //    AmountVendor += "Line Amount";
+                    //  AmountVendor1 := AmountVendor + GstTotalSum;
+
                     if PurchLineGST.Next() = 0 then
                         CurrReport.Break();
                 end;
@@ -277,6 +286,7 @@ report 50191 "PO FORMAT"
     }
 
     var
+        CheckRec: Codeunit "Check Codeunit";
         transactionspecificTxt: Text[100];
         Transactionspecifcation: Record "Transaction Specification";
         PaymentTerms: Record "Payment Terms";
@@ -321,7 +331,7 @@ report 50191 "PO FORMAT"
         GSTPerText: Text;
         LineSNo: Text;
         AmountText: array[2] of Text;
-        GateEntryPostYesNo: Codeunit "Gate Entry- Post Yes/No";
+        // GateEntryPostYesNo: Codeunit "Global Functions B2B";
         AckLbl: Label 'Please acknowledge the receipt of the order and arrange the material at the earliest.';
         ThankYouLbl: Label 'Thanking you,';
         ETVLbl: Label 'For EENADU TELEVISION PVT. LIMITED';

@@ -235,7 +235,9 @@ table 50203 "Indent Requisitions"
             /*TableRelation = "Item Vendor".Field18043048 WHERE ("Vendor No."=FIELD("Manufacturer Code"),
                                                                "Item No."=FIELD("Item No."));*///Balu
         }
-        field(50007; "Vendor Name"; Text[50])
+
+
+        field(50007; "Vendor Name"; Text[60])
         {
             Caption = 'Vendor Name';
             Description = 'B2B1.3.1';

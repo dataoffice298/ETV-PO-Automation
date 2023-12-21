@@ -81,6 +81,11 @@ table 50209 "Indent Req Header"
             Caption = 'RFQ No.';
             Description = 'B2BESGOn02Jun2022';
         }
+        field(18; "Indent No."; Code[20])
+        {
+
+            TableRelation = "Indent Header";
+        }
         field(50001; "Shortcut Dimension 1 Code"; Code[20])
         {
             CaptionClass = '1,2,1';

@@ -36,6 +36,10 @@ page 50120 "Indent Requisition Document"
                     ApplicationArea = All;
                     //Editable = FieldEditable;
                 }
+                field("Indent No."; Rec."Indent No.") // B2BSCM
+                {
+                    ApplicationArea = all;
+                }
                 field(Type; Rec.Type)
                 {
                     ApplicationArea = All;
@@ -125,6 +129,8 @@ page 50120 "Indent Requisition Document"
                     IndentReqLine.Reset();
                     IndentReqLine.SetRange("Document No.", Rec."No.");
                     if IndentReqLine.FindSet() then begin
+                        rec."Indent No." := IndentReqLine."Indent No."; // B2BSCM
+                        Rec.Modify();
                         repeat
                             IndentLineRec.Reset();
                             IndentLineRec.SetRange("Document No.", IndentReqLine."Indent No.");
@@ -138,6 +144,7 @@ page 50120 "Indent Requisition Document"
                             end;
                         until IndentReqLine.Next() = 0;
                     end;
+
                     Message('Lines Inserted Successfully.');
                 end;
             }

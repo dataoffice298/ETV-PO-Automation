@@ -459,16 +459,6 @@ codeunit 50026 "PO Automation"
                             IndentVendorEnquiry.Quantity := IndentVendorEnquiry.Quantity
 
                         END;
-                        IndentLineRec.Reset();
-                        IndentLineRec.SetRange("Document No.", PurchaseLine."Indent No.");
-                        IndentLineRec.SetRange("Line No.", PurchaseLine."Indent Line No.");
-
-                        if IndentLineRec.FindSet() then begin
-                            repeat
-                                IndentLineRec.Status := IndentLineRec.Status::Enqiury;
-                                IndentLineRec.Modify();
-                            until IndentLineRec.Next() = 0;
-                        end;
 
 
                         //B2BSSD16FEB2023<<
@@ -488,6 +478,18 @@ codeunit 50026 "PO Automation"
                         PurchaseLine."Location Code" := IndentVendorEnquiry."Location Code";
                         PurchaseLine."Sub Location Code" := IndentVendorEnquiry."Sub Location Code";
                         PurchaseLine."Unit of Measure Code" := IndentVendorEnquiry."Unit Of Measure";//B2BSSD20APR2023
+                        IndentLineRec.Reset();
+                        IndentLineRec.SetRange("Document No.", PurchaseLine."Indent No.");
+                        IndentLineRec.SetRange("Line No.", PurchaseLine."Indent Line No.");
+                        if IndentLineRec.FindSet() then begin
+                            repeat
+                                //    SetSelectionFilter(IndentLineRec);
+
+                                IndentLineRec.Status := IndentLineRec.Status::Quote;
+                                IndentLineRec.Modify();
+                            until IndentLineRec.Next() = 0;
+                        end;
+
                         PurchaseLine.VALIDATE("Location Code");
                         CreateIndents4.RESET;
                         CreateIndents4.COPYFILTERS(CreateIndentsQuotes);
@@ -602,6 +604,8 @@ codeunit 50026 "PO Automation"
                         PurchaseHeader.Validate("Shortcut Dimension 9 Code", IndentVendorEnquiry."Shortcut Dimension 9 Code");//B2BSSD14MAR2023
                         PurchaseLine."Location Code" := IndentVendorEnquiry."Location Code";
                         PurchaseLine.VALIDATE("Location Code");
+
+
                         CreateIndents4.RESET;
                         CreateIndents4.COPYFILTERS(CreateIndentsQuotes);
                         IF CreateIndents4.FIND('-') THEN
@@ -1610,19 +1614,6 @@ codeunit 50026 "PO Automation"
                         PurchaseLine."Buy-from Vendor No." := PurchaseHeader."Buy-from Vendor No.";
                         PurchaseLine.VALIDATE("Buy-from Vendor No.");
                         PurchaseLine."Pay-to Vendor No." := PurchaseHeader."Pay-to Vendor No.";//B2BSSD27FEB2023
-                        IndentLineRec.Reset();
-                        IndentLineRec.SetRange("Document No.", PurchaseLine."Indent No.");
-                        IndentLineRec.SetRange("Line No.", PurchaseLine."Indent Line No.");
-                        if IndentLineRec.FindSet() then begin
-                            repeat
-                                //    SetSelectionFilter(IndentLineRec);
-                                IndentLineRec.Status := IndentLineRec.Status::Enqiury;
-                                IndentLineRec.Modify();
-                            until IndentLineRec.Next() = 0;
-                        end;
-
-
-
 
                         //B2BSSD16FEB2023<<
                         if IndentVendorEnquiry."Line Type" = IndentVendorEnquiry."Line Type"::Item then begin
@@ -1671,6 +1662,18 @@ codeunit 50026 "PO Automation"
                         PurchaseLine.Validate("Shortcut Dimension 9 Code", IndentVendorEnquiry."Shortcut Dimension 9 Code");//B2BSSD21FEB2023
                         PurchaseLine."Sub Location Code" := IndentVendorEnquiry."Sub Location Code";
                         PurchaseLine."Spec Id" := IndentVendorEnquiry."Spec Id";
+                        IndentLineRec.Reset();
+                        IndentLineRec.SetRange("Document No.", PurchaseLine."Indent No.");
+                        IndentLineRec.SetRange("Line No.", PurchaseLine."Indent Line No.");
+                        if IndentLineRec.FindSet() then begin
+                            repeat
+                                //    SetSelectionFilter(IndentLineRec);
+
+                                IndentLineRec.Status := IndentLineRec.Status::"Purchase Order";
+                                IndentLineRec.Modify();
+                            until IndentLineRec.Next() = 0;
+                        end;
+
                         CreateIndents5.RESET;
                         CreateIndents5.SETRANGE(CreateIndents5."Document No.", IndentVendorEnquiry."Indent Req No");
                         CreateIndents5.SETRANGE(CreateIndents5."Line No.", IndentVendorEnquiry."Indent Req Line No");

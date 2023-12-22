@@ -36,10 +36,6 @@ page 50120 "Indent Requisition Document"
                     ApplicationArea = All;
                     //Editable = FieldEditable;
                 }
-                field("Indent No."; Rec."Indent No.") // B2BSCM
-                {
-                    ApplicationArea = all;
-                }
                 field(Type; Rec.Type)
                 {
                     ApplicationArea = All;
@@ -129,8 +125,6 @@ page 50120 "Indent Requisition Document"
                     IndentReqLine.Reset();
                     IndentReqLine.SetRange("Document No.", Rec."No.");
                     if IndentReqLine.FindSet() then begin
-                        rec."Indent No." := IndentReqLine."Indent No."; // B2BSCM
-                        Rec.Modify();
                         repeat
                             IndentLineRec.Reset();
                             IndentLineRec.SetRange("Document No.", IndentReqLine."Indent No.");
@@ -144,7 +138,6 @@ page 50120 "Indent Requisition Document"
                             end;
                         until IndentReqLine.Next() = 0;
                     end;
-
                     Message('Lines Inserted Successfully.');
                 end;
             }
@@ -219,9 +212,10 @@ page 50120 "Indent Requisition Document"
 
                 trigger OnAction();
                 var
-                    IndentReqLine: Record "Indent Requisitions";
+                    IndentReqLinerec: Record "Indent Requisitions";
                     IndentLineRec: Record "Indent Line";
                 begin
+                    
                     Rec.TESTFIELD(Status, Rec.Status::Release);
                     Rec.TESTFIELD(Type, Rec.Type::Quote);
                     Carry := 0;
@@ -252,21 +246,21 @@ page 50120 "Indent Requisition Document"
                         END ELSE
                             EXIT;
                     END;
-                    IndentReqLine.Reset();
-                    IndentReqLine.SetRange("Document No.", Rec."No.");
-                    if IndentReqLine.FindSet() then begin
-                        repeat
-                            IndentLineRec.Reset();
-                            IndentLineRec.SetRange("Document No.", IndentReqLine."Indent No.");
-                            IndentLineRec.SetRange("Line No.", IndentReqLine."Indent Line No.");
-                            if IndentLineRec.FindSet() then begin
-                                //  repeat
-                                IndentLineRec.Status := IndentLineRec.Status::Quote;
-                                IndentLineRec.Modify();
-                                ///  until IndentLineRec.Next() = 0;
-                            end;
-                        until IndentReqLine.Next() = 0;
-                    end;
+                    /*  IndentReqLine.Reset();
+                      IndentReqLine.SetRange("Document No.", Rec."No.");
+                      if IndentReqLine.FindSet() then begin
+                          repeat
+                              IndentLineRec.Reset();
+                              IndentLineRec.SetRange("Document No.", IndentReqLine."Indent No.");
+                              IndentLineRec.SetRange("Line No.", IndentReqLine."Indent Line No.");
+                              if IndentLineRec.FindSet() then begin
+                                  //  repeat
+                                  IndentLineRec.Status := IndentLineRec.Status::Quote;
+                                  IndentLineRec.Modify();
+                                  ///  until IndentLineRec.Next() = 0;
+                              end;
+                          until IndentReqLine.Next() = 0;
+                      end;*/
                 end;
             }
             action("Create &Purchase Order")

@@ -74,6 +74,7 @@ page 50023 "Indent Line"
                 field(Status; Status)
                 {
                     ApplicationArea = all;
+                    Editable = false;
                 }
 
                 field(Department; rec.Department)
@@ -159,7 +160,7 @@ page 50023 "Indent Line"
                     //Editable = FieldEditable; //B2BSCM21AUG2023
                     trigger OnValidate()
                     begin
-                      
+
 
                     end;
                 }

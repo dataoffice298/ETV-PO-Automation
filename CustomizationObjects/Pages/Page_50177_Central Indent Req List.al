@@ -36,6 +36,11 @@ page 50177 "Centrak Indent Req List"
                 {
                     ApplicationArea = All;
                 }
+                field("Indent No."; "Indent No.")
+                {
+                    ApplicationArea = all;
+                    Editable = false;
+                }
             }
         }
     }

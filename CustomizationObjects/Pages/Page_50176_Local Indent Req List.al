@@ -36,6 +36,11 @@ page 50176 "Local Indent Req List"
                 {
                     ApplicationArea = All;
                 }
+                field("Indent No."; "Indent No.")
+                {
+                    ApplicationArea = all;
+                    Editable=false;
+                }
             }
         }
     }

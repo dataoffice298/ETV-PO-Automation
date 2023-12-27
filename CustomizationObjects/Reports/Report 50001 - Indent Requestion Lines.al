@@ -107,6 +107,7 @@ report 50001 "Indent Requestion Lines"
                             IndentReqHeaderGRec.Validate("Shortcut Dimension 9 Code", "Shortcut Dimension 9 Code");//B2BSSD21Feb2023
                             IndentReqHeaderGRec."programme Name" := "Indent Header"."programme Name";//B2BSSD20MAR2023
                             IndentReqHeaderGRec.Purpose := "Indent Header".Purpose;//B2BSSD21MAR2023
+                            IndentReqHeaderGRec."Indent No." := IndentRequisitions."Indent No.";
                             IndentReqHeaderGRec.Modify();  //B2BPAV
                         end;
                     end;

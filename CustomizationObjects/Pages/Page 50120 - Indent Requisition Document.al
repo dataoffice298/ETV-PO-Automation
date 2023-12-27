@@ -44,6 +44,11 @@ page 50120 "Indent Requisition Document"
                 {
                     ApplicationArea = All;
                 }
+                field("Indent No."; "Indent No.")
+                {
+                    ApplicationArea = all;
+                    Editable = false;
+                }
                 field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {
                     ApplicationArea = All;

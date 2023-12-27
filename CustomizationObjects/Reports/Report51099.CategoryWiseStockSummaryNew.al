@@ -51,7 +51,7 @@ report 51099 "Category Wise Stock Summary"
                         IF ItemLedgerEntry.FINDSET THEN begin
                             repeat
                                 ItemLedgerEntry.CalcFields("Cost Amount (Actual)");
-                                Openingstock := Openingstock + Abs(ItemLedgerEntry.Quantity);
+                                Openingstock := Openingstock + ItemLedgerEntry.Quantity;
                                 openingStockValue := openingStockValue + abs(ItemLedgerEntry."Cost Amount (Actual)");
                             until ItemLedgerEntry.Next() = 0;
                         end;
@@ -183,7 +183,7 @@ report 51099 "Category Wise Stock Summary"
                     IF ItemLedgerEntry.FINDSET THEN begin
                         repeat
                             ItemLedgerEntry.CalcFields("Cost Amount (Actual)");
-                            Openingstock := Openingstock + Abs(ItemLedgerEntry.Quantity);
+                            Openingstock := Openingstock + ItemLedgerEntry.Quantity;
                             openingStockValue := openingStockValue + Abs(ItemLedgerEntry."Cost Amount (Actual)");
                         until ItemLedgerEntry.Next() = 0;
                     end;

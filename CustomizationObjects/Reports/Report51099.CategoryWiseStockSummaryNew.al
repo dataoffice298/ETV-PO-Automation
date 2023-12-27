@@ -3,7 +3,7 @@ report 51099 "Category Wise Stock Summary"
     UsageCategory = ReportsAndAnalysis;
     ApplicationArea = All;
     ProcessingOnly = true;
-    Caption = 'Category Wise Stock Summary_51099';
+    Caption = 'Category Wise Item Stock Summary_50107';
     dataset
     {
         dataitem(Item; Item)
@@ -32,6 +32,10 @@ report 51099 "Category Wise Stock Summary"
                         Clear(unitRateClosingStoc);
                         Clear(ClosingUnitRate);
                         Clear(CloseUnitrate);
+                        Clear(openingStockValue);
+                        Clear(ClosingStockValue);
+                        Clear(InwardsStockValue);
+                        Clear(OutwardStockalue);
                         Make := ItemVariant.Description;
                         // if (PrevItemNo <> ItemLedgerEntry1."Item No.") or (PrevVariantCode <> ItemLedgerEntry1."Variant Code") then begin
                         variantcode := ItemLedgerEntry1."Variant Code";
@@ -45,18 +49,22 @@ report 51099 "Category Wise Stock Summary"
                         ItemLedgerEntry.SETFILTER("Posting Date", '<%1', StartDate);
                         //ItemLedgerEntry.SetFilter("Posting Date", '%1..%2', StartDate, EndDate);//B2BSSD08JUN2023
                         IF ItemLedgerEntry.FINDSET THEN begin
-                            ItemLedgerEntryCount := ItemLedgerEntry.Count;
-                            ItemLedgerEntry.CalcSums(Quantity);
-                            Openingstock := ItemLedgerEntry.Quantity;
                             repeat
-                                ValueEntryGrec.Reset();
-                                ValueEntryGrec.SetRange("Item Ledger Entry No.", ItemLedgerEntry."Entry No.");
-                                if ValueEntryGrec.FindFirst() then begin
-                                    Unitrate += ValueEntryGrec."Cost per Unit";
-                                end;
+                                ItemLedgerEntry.CalcFields("Cost Amount (Actual)");
+                                Openingstock := Openingstock + Abs(ItemLedgerEntry.Quantity);
+                                openingStockValue := openingStockValue + abs(ItemLedgerEntry."Cost Amount (Actual)");
                             until ItemLedgerEntry.Next() = 0;
-                            UnitRateNew := Unitrate / ItemLedgerEntryCount;
                         end;
+
+                        // ItemLedgerEntryCount := ItemLedgerEntry.Count;
+                        // ItemLedgerEntry.CalcSums(Quantity, "Cost Amount (Actual)");
+                        // Openingstock := ItemLedgerEntry.Quantity;
+                        // // ItemLedgerEntry.CalcSums("Cost Amount (Actual)");
+                        // openingStockValue := ItemLedgerEntry."Cost Amount (Actual)";
+                        if Openingstock <> 0 then
+                            UnitRateNew := openingStockValue / Openingstock
+                        else
+                            UnitRateNew := 0;
                         Clear(ItemLedgerEntryCount);
                         ItemLedgerEntry.RESET;
                         ItemLedgerEntry.SETRANGE("Item No.", Item."No."); //item."No."
@@ -67,18 +75,22 @@ report 51099 "Category Wise Stock Summary"
                         ItemLedgerEntry.SetFilter("Document Type", '%1', ItemLedgerEntry."Document Type"::"Purchase Receipt");
                         ItemLedgerEntry.SetRange("Entry Type", ItemLedgerEntry."Entry Type"::"Positive Adjmt.");
                         IF ItemLedgerEntry.FINDSET THEN begin
-                            ItemLedgerEntry.CalcSums(Quantity);
-                            InwardStock := ItemLedgerEntry.Quantity;
-                            ItemLedgerEntryCount := ItemLedgerEntry.Count;
                             repeat
-                                ValueEntryGrec.Reset();
-                                ValueEntryGrec.SetRange("Item Ledger Entry No.", ItemLedgerEntry."Entry No.");
-                                if ValueEntryGrec.FindFirst() then begin
-                                    UnitRateInwardStock += ValueEntryGrec."Cost per Unit";
-                                end;
+                                ItemLedgerEntry.CalcFields("Cost Amount (Actual)");
+                                InwardStock := InwardStock + Abs(ItemLedgerEntry.Quantity);
+                                InwardsStockValue := InwardsStockValue + Abs(ItemLedgerEntry."Cost Amount (Actual)");
                             until ItemLedgerEntry.Next() = 0;
-                            UnitRateInwardStockNew := UnitRateInwardStock / ItemLedgerEntryCount;
                         end;
+
+                        // ItemLedgerEntry.CalcSums(Quantity, "Cost Amount (Actual)");
+                        // InwardStock := ItemLedgerEntry.Quantity;
+                        // ItemLedgerEntryCount := ItemLedgerEntry.Count;
+                        // //  ItemLedgerEntry.CalcSums("Cost Amount (Actual)");
+                        // InwardsStockValue := ItemLedgerEntry."Cost Amount (Actual)";
+                        if InwardStock <> 0 then
+                            UnitRateInwardStockNew := InwardsStockValue / InwardStock
+                        else
+                            UnitRateInwardStockNew := 0;
 
                         Clear(ItemLedgerEntryCount);
                         ItemLedgerEntry.RESET;
@@ -88,40 +100,49 @@ report 51099 "Category Wise Stock Summary"
                         ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);//B2BSSD16MAY2023
                         ItemLedgerEntry.SetFilter("Entry Type", '%1', ItemLedgerEntry."Entry Type"::"Negative Adjmt.");
                         IF ItemLedgerEntry.FINDSET THEN begin
-                            ItemLedgerEntry.CalcSums(Quantity);
-                            OutwardStock := ABS(ItemLedgerEntry.Quantity);
-                            ItemLedgerEntryCount := ItemLedgerEntry.Count;
                             repeat
-                                ValueEntryGrec.Reset();
-                                ValueEntryGrec.SetRange("Item Ledger Entry No.", ItemLedgerEntry."Entry No.");
-                                if ValueEntryGrec.FindFirst() then begin
-                                    UnitRateOutWardStock += ValueEntryGrec."Cost per Unit";
-                                end;
+                                ItemLedgerEntry.CalcFields("Cost Amount (Actual)");
+                                OutwardStock := OutwardStock + Abs(ItemLedgerEntry.Quantity);
+                                OutwardStockalue := OutwardStockalue + Abs(ItemLedgerEntry."Cost Amount (Actual)");
                             until ItemLedgerEntry.Next() = 0;
-                            UnitRateOutWardStockNew := UnitRateOutWardStock / ItemLedgerEntryCount;
-                        end;
-                        // if ItemVariant.Get(ItemVariant."Item No.") then
-                        // Make := ItemVariant.Description;
-                        Clear(ItemLedgerEntryCount);
-                        ItemLedgerEntry.RESET;
-                        ItemLedgerEntry.SETRANGE("Item No.", Item."No."); //Item."No."
-                        ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);
-                        ItemLedgerEntry.SetRange("Variant Code", ItemVariant.Code);
-                        ItemLedgerEntry.SETFILTER("Posting Date", '<=%1', EndDate);
-                        IF ItemLedgerEntry.FINDSET THEN begin
-                            ItemLedgerEntryCount := ItemLedgerEntry.Count;
-                            repeat
-                                ValueEntryGrec.Reset();
-                                ValueEntryGrec.SetRange("Item Ledger Entry No.", ItemLedgerEntry."Entry No.");
-                                if ValueEntryGrec.FindFirst() then begin
-                                    CloseUnitrate += ValueEntryGrec."Cost per Unit";
-                                end;
-                            until ItemLedgerEntry.Next() = 0;
-                            ClosingUnitRate := CloseUnitrate / ItemLedgerEntryCount;
                         end;
 
+                        // ItemLedgerEntry.CalcSums(Quantity, "Cost Amount (Actual)");
+                        // OutwardStock := ABS(ItemLedgerEntry.Quantity);
+                        // // ItemLedgerEntry.CalcSums("Cost Amount (Actual)");
+                        // OutwardStockalue := ItemLedgerEntry."Cost Amount (Actual)";
+                        // ItemLedgerEntryCount := ItemLedgerEntry.Count;
+                        if OutwardStock <> 0 then
+                            UnitRateOutWardStockNew := OutwardStockalue / OutwardStock
+                        else
+                            UnitRateOutWardStockNew := 0;
+                        // if ItemVariant.Get(ItemVariant."Item No.") then
+                        // Make := ItemVariant.Description;
+                        // Clear(ItemLedgerEntryCount);
+                        // ItemLedgerEntry.RESET;
+                        // ItemLedgerEntry.SETRANGE("Item No.", Item."No."); //Item."No."
+                        // ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);
+                        // ItemLedgerEntry.SetRange("Variant Code", ItemVariant.Code);
+                        // ItemLedgerEntry.SETFILTER("Posting Date", '<=%1', EndDate);
+                        // IF ItemLedgerEntry.FINDSET THEN begin
+                        //     ItemLedgerEntryCount := ItemLedgerEntry.Count;
+                        //     repeat
+                        //         ValueEntryGrec.Reset();
+                        //         ValueEntryGrec.SetRange("Item Ledger Entry No.", ItemLedgerEntry."Entry No.");
+                        //         if ValueEntryGrec.FindFirst() then begin
+                        //             CloseUnitrate += ValueEntryGrec."Cost per Unit";
+                        //         end;
+                        //     until ItemLedgerEntry.Next() = 0;
+                        //     ClosingUnitRate := CloseUnitrate / ItemLedgerEntryCount;
+                        // end;
+
                         ClosingStock := (Openingstock + InwardStock) - OutwardStock;
-                        unitRateClosingStocNew := (Round(Openingstock * UnitRateNew, 0.01) + Round(InwardStock * UnitRateInwardStockNew, 0.01)) - Round(OutwardStock * UnitRateOutWardStockNew, 0.01);
+                        ClosingStockValue := openingStockValue + InwardsStockValue - OutwardStockalue;
+                        if ClosingStock <> 0 then
+                            unitRateClosingStocNew := ClosingStockValue / ClosingStock
+                        else
+                            unitRateClosingStocNew := 0;
+                        // unitRateClosingStocNew := (Round(Openingstock * UnitRateNew, 0.01) + Round(InwardStock * UnitRateInwardStockNew, 0.01)) - Round(OutwardStock * UnitRateOutWardStockNew, 0.01);
                         // if ClosingStock <> 0 then
                         //     unitRateClosingStoc := ((Round(Openingstock * UnitRateNew, 0.01) + Round(InwardStock * UnitRateInwardStockNew, 0.01)) - Round(OutwardStock * UnitRateOutWardStockNew, 0.01)) / ClosingStock
                         // else
@@ -149,6 +170,10 @@ report 51099 "Category Wise Stock Summary"
                     Clear(ItemLedgerEntryCount);
                     Clear(ClosingUnitRate);
                     Clear(CloseUnitrate);
+                    Clear(openingStockValue);
+                    Clear(ClosingStockValue);
+                    Clear(InwardsStockValue);
+                    Clear(OutwardStockalue);
                     ItemLedgerEntry.RESET;
                     ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
                     ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);
@@ -156,98 +181,115 @@ report 51099 "Category Wise Stock Summary"
                     ItemLedgerEntry.SETFILTER("Posting Date", '<%1', StartDate);
                     //ItemLedgerEntry.SetFilter("Posting Date", '%1..%2', StartDate, EndDate);//B2BSSD08JUN2023
                     IF ItemLedgerEntry.FINDSET THEN begin
-                        ItemLedgerEntryCount := ItemLedgerEntry.Count;
-                        ItemLedgerEntry.CalcSums(Quantity);
-                        Openingstock := ItemLedgerEntry.Quantity;
                         repeat
-                            ValueEntryGrec.Reset();
-                            ValueEntryGrec.SetRange("Item Ledger Entry No.", ItemLedgerEntry."Entry No.");
-                            if ValueEntryGrec.FindFirst() then begin
-                                Unitrate += ValueEntryGrec."Cost per Unit";
-                            end;
+                            ItemLedgerEntry.CalcFields("Cost Amount (Actual)");
+                            Openingstock := Openingstock + Abs(ItemLedgerEntry.Quantity);
+                            openingStockValue := openingStockValue + Abs(ItemLedgerEntry."Cost Amount (Actual)");
                         until ItemLedgerEntry.Next() = 0;
-                        UnitRateNew := Unitrate / ItemLedgerEntryCount;
                     end;
 
-
-                    Clear(ItemLedgerEntryCount);
-                    ItemLedgerEntry.RESET;
-                    ItemLedgerEntry.SETRANGE("Item No.", item."No.");
-                    //ItemLedgerEntry.SetRange("Variant Code", ItemLedgerEntry1."Variant Code");
-                    ItemLedgerEntry.SETFILTER("Posting Date", '%1..%2', StartDate, EndDate);
-                    ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);//B2BSSD16MAY2023
-                    ItemLedgerEntry.FilterGroup(-1);
-                    ItemLedgerEntry.SetFilter("Document Type", '%1', ItemLedgerEntry."Document Type"::"Purchase Receipt");
-                    ItemLedgerEntry.SetRange("Entry Type", ItemLedgerEntry."Entry Type"::"Positive Adjmt.");
-                    IF ItemLedgerEntry.FINDSET THEN begin
-                        ItemLedgerEntry.CalcSums(Quantity);
-                        InwardStock := ItemLedgerEntry.Quantity;
-                        ItemLedgerEntryCount := ItemLedgerEntry.Count;
-                        repeat
-                            ValueEntryGrec.Reset();
-                            ValueEntryGrec.SetRange("Item Ledger Entry No.", ItemLedgerEntry."Entry No.");
-                            if ValueEntryGrec.FindFirst() then begin
-                                UnitRateInwardStock += ValueEntryGrec."Cost per Unit";
-                            end;
-                        until ItemLedgerEntry.Next() = 0;
-                        UnitRateInwardStockNew := UnitRateInwardStock / ItemLedgerEntryCount;
-                    end;
-
-                    Clear(ItemLedgerEntryCount);
-                    ItemLedgerEntry.RESET;
-                    ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
-                    //ItemLedgerEntry.SetRange("Variant Code", ItemLedgerEntry1."Variant Code");
-                    ItemLedgerEntry.SETFILTER("Posting Date", '%1..%2', StartDate, EndDate);
-                    ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);//B2BSSD16MAY2023
-                    ItemLedgerEntry.SetFilter("Entry Type", '%1', ItemLedgerEntry."Entry Type"::"Negative Adjmt.");
-                    IF ItemLedgerEntry.FINDSET THEN begin
-                        ItemLedgerEntry.CalcSums(Quantity);
-                        OutwardStock := ABS(ItemLedgerEntry.Quantity);
-                        ItemLedgerEntryCount := ItemLedgerEntry.Count;
-                        repeat
-                            ValueEntryGrec.Reset();
-                            ValueEntryGrec.SetRange("Item Ledger Entry No.", ItemLedgerEntry."Entry No.");
-                            if ValueEntryGrec.FindFirst() then begin
-                                UnitRateOutWardStock += ValueEntryGrec."Cost per Unit";
-                            end;
-                        until ItemLedgerEntry.Next() = 0;
-                        //UnitRateInwardStockNew := Unitrate / ItemLedgerEntryCount;
-                        UnitRateOutWardStockNew := UnitRateOutWardStock / ItemLedgerEntryCount;
-                    end;
-
-                    // if ItemVariant.Get(ItemLedgerEntry1."Variant Code") then
-                    //     Make := ItemVariant.Description;
-
-                    Clear(ItemLedgerEntryCount);
-                    ItemLedgerEntry.RESET;
-                    ItemLedgerEntry.SETRANGE("Item No.", Item."No."); //Item."No."
-                    ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);
-                    ItemLedgerEntry.SetRange("Variant Code", ItemVariant.Code);
-                    ItemLedgerEntry.SETFILTER("Posting Date", '<=%1', EndDate);
-                    IF ItemLedgerEntry.FINDSET THEN begin
-                        ItemLedgerEntryCount := ItemLedgerEntry.Count;
-                        repeat
-                            ValueEntryGrec.Reset();
-                            ValueEntryGrec.SetRange("Item Ledger Entry No.", ItemLedgerEntry."Entry No.");
-                            if ValueEntryGrec.FindFirst() then begin
-                                CloseUnitrate += ValueEntryGrec."Cost per Unit";
-                            end;
-                        until ItemLedgerEntry.Next() = 0;
-                        ClosingUnitRate := CloseUnitrate / ItemLedgerEntryCount;
-                    end;
-
-                    ClosingStock := (Openingstock + InwardStock) - OutwardStock;
-                    unitRateClosingStocNew := (Round(Openingstock * UnitRateNew, 0.01) + Round(InwardStock * UnitRateInwardStockNew, 0.01)) - Round(OutwardStock * UnitRateOutWardStockNew, 0.01);
-                    // if ClosingStock <> 0 then
-                    //     unitRateClosingStoc := ((Round(Openingstock * UnitRateNew, 0.01) + Round(InwardStock * UnitRateInwardStockNew, 0.01)) - Round(OutwardStock * UnitRateOutWardStockNew, 0.01)) / ClosingStock
-                    // else
-                    //     unitRateClosingStoc := 0;
-
-                    SNo += 1;
-                    WindPa.Update(1, Item."No.");
-                    MakeExcelBody();
-
+                    // ItemLedgerEntry.CalcSums(Quantity, "Cost Amount (Actual)");
+                    // Openingstock := ItemLedgerEntry.Quantity;
+                    // // ItemLedgerEntry.CalcSums("Cost Amount (Actual)");
+                    // openingStockValue := ItemLedgerEntry."Cost Amount (Actual)";
+                    if Openingstock <> 0 then
+                        UnitRateNew := openingStockValue / Openingstock
+                    else
+                        UnitRateNew := 0;
                 end;
+
+
+                Clear(ItemLedgerEntryCount);
+                ItemLedgerEntry.RESET;
+                ItemLedgerEntry.SETRANGE("Item No.", item."No.");
+                //ItemLedgerEntry.SetRange("Variant Code", ItemLedgerEntry1."Variant Code");
+                ItemLedgerEntry.SETFILTER("Posting Date", '%1..%2', StartDate, EndDate);
+                ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);//B2BSSD16MAY2023
+                ItemLedgerEntry.FilterGroup(-1);
+                ItemLedgerEntry.SetFilter("Document Type", '%1', ItemLedgerEntry."Document Type"::"Purchase Receipt");
+                ItemLedgerEntry.SetRange("Entry Type", ItemLedgerEntry."Entry Type"::"Positive Adjmt.");
+                IF ItemLedgerEntry.FINDSET THEN begin
+                    repeat
+                        ItemLedgerEntry.CalcFields("Cost Amount (Actual)");
+                        InwardStock := InwardStock + Abs(ItemLedgerEntry.Quantity);
+                        InwardsStockValue := InwardsStockValue + abs(ItemLedgerEntry."Cost Amount (Actual)");
+                    until ItemLedgerEntry.Next() = 0;
+                end;
+
+
+                // ItemLedgerEntry.CalcSums(Quantity, "Cost Amount (Actual)");
+                // InwardStock := ItemLedgerEntry.Quantity;
+                // ItemLedgerEntryCount := ItemLedgerEntry.Count;
+                // ItemLedgerEntry.CalcSums("Cost Amount (Actual)");
+                // InwardsStockValue := ItemLedgerEntry."Cost Amount (Actual)";
+                if InwardStock <> 0 then
+                    UnitRateInwardStockNew := InwardsStockValue / InwardStock
+                else
+                    UnitRateInwardStockNew := 0;
+
+                Clear(ItemLedgerEntryCount);
+                ItemLedgerEntry.RESET;
+                ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
+                //ItemLedgerEntry.SetRange("Variant Code", ItemLedgerEntry1."Variant Code");
+                ItemLedgerEntry.SETFILTER("Posting Date", '%1..%2', StartDate, EndDate);
+                ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);//B2BSSD16MAY2023
+                ItemLedgerEntry.SetFilter("Entry Type", '%1', ItemLedgerEntry."Entry Type"::"Negative Adjmt.");
+                IF ItemLedgerEntry.FINDSET THEN begin
+                    repeat
+                        ItemLedgerEntry.CalcFields("Cost Amount (Actual)");
+                        OutwardStock := OutwardStock + Abs(ItemLedgerEntry.Quantity);
+                        OutwardStockalue := OutwardStockalue + Abs(ItemLedgerEntry."Cost Amount (Actual)");
+                    until ItemLedgerEntry.Next() = 0;
+                end;
+
+
+                // ItemLedgerEntry.CalcSums(Quantity, "Cost Amount (Actual)");
+                // OutwardStock := ABS(ItemLedgerEntry.Quantity);
+                // // ItemLedgerEntry.CalcSums("Cost Amount (Actual)");
+                // OutwardStockalue := ItemLedgerEntry."Cost Amount (Actual)";
+                // ItemLedgerEntryCount := ItemLedgerEntry.Count;
+                if OutwardStock <> 0 then
+                    UnitRateOutWardStockNew := OutwardStockalue / OutwardStock
+                else
+                    UnitRateOutWardStockNew := 0;
+
+                // if ItemVariant.Get(ItemLedgerEntry1."Variant Code") then
+                //     Make := ItemVariant.Description;
+
+                // Clear(ItemLedgerEntryCount);
+                // ItemLedgerEntry.RESET;
+                // ItemLedgerEntry.SETRANGE("Item No.", Item."No."); //Item."No."
+                // ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);
+                // ItemLedgerEntry.SetRange("Variant Code", ItemVariant.Code);
+                // ItemLedgerEntry.SETFILTER("Posting Date", '<=%1', EndDate);
+                // IF ItemLedgerEntry.FINDSET THEN begin
+                //     ItemLedgerEntryCount := ItemLedgerEntry.Count;
+                //     repeat
+                //         ValueEntryGrec.Reset();
+                //         ValueEntryGrec.SetRange("Item Ledger Entry No.", ItemLedgerEntry."Entry No.");
+                //         if ValueEntryGrec.FindFirst() then begin
+                //             CloseUnitrate += ValueEntryGrec."Cost per Unit";
+                //         end;
+                //     until ItemLedgerEntry.Next() = 0;
+                //     ClosingUnitRate := CloseUnitrate / ItemLedgerEntryCount;
+                // end;
+
+                ClosingStock := (Openingstock + InwardStock) - OutwardStock;
+                ClosingStockValue := openingStockValue + InwardsStockValue - OutwardStockalue;
+                if ClosingStock <> 0 then
+                    unitRateClosingStocNew := ClosingStockValue / ClosingStock
+                else
+                    unitRateClosingStocNew := 0;
+                //unitRateClosingStocNew := (Round(Openingstock * UnitRateNew, 0.01) + Round(InwardStock * UnitRateInwardStockNew, 0.01)) - Round(OutwardStock * UnitRateOutWardStockNew, 0.01);
+                // if ClosingStock <> 0 then
+                //     unitRateClosingStoc := ((Round(Openingstock * UnitRateNew, 0.01) + Round(InwardStock * UnitRateInwardStockNew, 0.01)) - Round(OutwardStock * UnitRateOutWardStockNew, 0.01)) / ClosingStock
+                // else
+                //     unitRateClosingStoc := 0;
+
+                SNo += 1;
+                WindPa.Update(1, Item."No.");
+                MakeExcelBody();
+
             end;
 
             trigger OnPreDataItem()
@@ -299,8 +341,8 @@ report 51099 "Category Wise Stock Summary"
     trigger OnPostReport()
     begin
         WindPa.CLOSE();
-        TempExcelBuffer.CreateNewBook('Stock summary Report');
-        TempExcelBuffer.WriteSheet('Stock summary Report', CompanyName(), UserId());
+        TempExcelBuffer.CreateNewBook('Stock Summary Report');
+        TempExcelBuffer.WriteSheet('Stock Summary Report', CompanyName(), UserId());
         TempExcelBuffer.closeBook();
         TempExcelBuffer.OpenExcel();
     end;
@@ -328,6 +370,10 @@ report 51099 "Category Wise Stock Summary"
         InwardStock: Decimal;
         OutwardStock: Decimal;
         ClosingStock: Decimal;
+        openingStockValue: decimal;
+        ClosingStockValue: Decimal;
+        InwardsStockValue: Decimal;
+        OutwardStockalue: Decimal;
         ValuEntryLRec: Record "Value Entry";
         Make: Code[50];
         LocationGvar: Code[10];//B2BSSD16MAY2023
@@ -418,16 +464,16 @@ report 51099 "Category Wise Stock Summary"
         TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn(Openingstock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
         TempExcelBuffer.AddColumn(UnitRateNew, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//B2BSSD15MAY2023
-        TempExcelBuffer.AddColumn(Round(Openingstock * UnitRateNew, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//B2BSSD15MAY2023
+        TempExcelBuffer.AddColumn(openingStockValue, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//B2BSSD15MAY2023
         TempExcelBuffer.AddColumn(InwardStock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
         TempExcelBuffer.AddColumn(UnitRateInwardStockNew, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//B2BSSD15MAY2023
-        TempExcelBuffer.AddColumn(Round(InwardStock * UnitRateInwardStockNew, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//B2BSSD15MAY2023
+        TempExcelBuffer.AddColumn(InwardsStockValue, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//B2BSSD15MAY2023
         TempExcelBuffer.AddColumn(OutwardStock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
         TempExcelBuffer.AddColumn(UnitRateOutWardStockNew, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//B2BSSD15MAY2023
-        TempExcelBuffer.AddColumn(Round(OutwardStock * UnitRateOutWardStockNew, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//B2BSSD15MAY2023
+        TempExcelBuffer.AddColumn(OutwardStockalue, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//B2BSSD15MAY2023
         TempExcelBuffer.AddColumn(ClosingStock, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-        TempExcelBuffer.AddColumn(ClosingUnitRate, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//B2BSSD15MAY2023
-        TempExcelBuffer.AddColumn(Round(unitRateClosingStocNew, 0.01), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//b2bSSD15MAY2023
+        TempExcelBuffer.AddColumn(unitRateClosingStocNew, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//B2BSSD15MAY2023
+        TempExcelBuffer.AddColumn(ClosingStockValue, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);//b2bSSD15MAY2023
         TempExcelBuffer.AddColumn(LocationGvar, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD16MAY2023
     end;
 }

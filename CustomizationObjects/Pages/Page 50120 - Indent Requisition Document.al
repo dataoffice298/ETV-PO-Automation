@@ -215,7 +215,7 @@ page 50120 "Indent Requisition Document"
                     IndentReqLinerec: Record "Indent Requisitions";
                     IndentLineRec: Record "Indent Line";
                 begin
-                    
+
                     Rec.TESTFIELD(Status, Rec.Status::Release);
                     Rec.TESTFIELD(Type, Rec.Type::Quote);
                     Carry := 0;
@@ -709,6 +709,7 @@ page 50120 "Indent Requisition Document"
                     IndentLineRec."Req.Quantity" := IndentLineRec."Req.Quantity" - QuantyLvar;
                     IF IndentLineRec."Req.Quantity" < 0 THEN
                         IndentLineRec."Req.Quantity" := 0;
+                    IndentLineRec."Req.Quantity" := IndentLineRec."Quantity (Base)";//B2BSSD12/26/2023
                     IndentLineRec.MODIFY;
                     CLEAR(QuantyLvar);
                 END ELSE

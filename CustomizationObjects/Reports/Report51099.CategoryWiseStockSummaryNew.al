@@ -36,7 +36,8 @@ report 51099 "Category Wise Stock Summary"
                         Clear(ClosingStockValue);
                         Clear(InwardsStockValue);
                         Clear(OutwardStockalue);
-                        Make := ItemVariant.Description;
+                        Clear(Make);
+                        // Make := ItemVariant.Description;
                         // if (PrevItemNo <> ItemLedgerEntry1."Item No.") or (PrevVariantCode <> ItemLedgerEntry1."Variant Code") then begin
                         variantcode := ItemLedgerEntry1."Variant Code";
                         Itemnumber := ItemLedgerEntry1."Item No.";
@@ -50,6 +51,7 @@ report 51099 "Category Wise Stock Summary"
                         //ItemLedgerEntry.SetFilter("Posting Date", '%1..%2', StartDate, EndDate);//B2BSSD08JUN2023
                         IF ItemLedgerEntry.FINDSET THEN begin
                             repeat
+                                Make := ItemLedgerEntry."Variant Code";
                                 ItemLedgerEntry.CalcFields("Cost Amount (Actual)");
                                 Openingstock := Openingstock + ItemLedgerEntry.Quantity;
                                 openingStockValue := openingStockValue + abs(ItemLedgerEntry."Cost Amount (Actual)");
@@ -76,6 +78,7 @@ report 51099 "Category Wise Stock Summary"
                         ItemLedgerEntry.SetRange("Entry Type", ItemLedgerEntry."Entry Type"::"Positive Adjmt.");
                         IF ItemLedgerEntry.FINDSET THEN begin
                             repeat
+                                Make := ItemLedgerEntry."Variant Code";
                                 ItemLedgerEntry.CalcFields("Cost Amount (Actual)");
                                 InwardStock := InwardStock + Abs(ItemLedgerEntry.Quantity);
                                 InwardsStockValue := InwardsStockValue + Abs(ItemLedgerEntry."Cost Amount (Actual)");
@@ -101,6 +104,7 @@ report 51099 "Category Wise Stock Summary"
                         ItemLedgerEntry.SetFilter("Entry Type", '%1', ItemLedgerEntry."Entry Type"::"Negative Adjmt.");
                         IF ItemLedgerEntry.FINDSET THEN begin
                             repeat
+                                Make := ItemLedgerEntry."Variant Code";
                                 ItemLedgerEntry.CalcFields("Cost Amount (Actual)");
                                 OutwardStock := OutwardStock + Abs(ItemLedgerEntry.Quantity);
                                 OutwardStockalue := OutwardStockalue + Abs(ItemLedgerEntry."Cost Amount (Actual)");
@@ -182,6 +186,7 @@ report 51099 "Category Wise Stock Summary"
                     //ItemLedgerEntry.SetFilter("Posting Date", '%1..%2', StartDate, EndDate);//B2BSSD08JUN2023
                     IF ItemLedgerEntry.FINDSET THEN begin
                         repeat
+                            Make := ItemLedgerEntry."Variant Code";
                             ItemLedgerEntry.CalcFields("Cost Amount (Actual)");
                             Openingstock := Openingstock + ItemLedgerEntry.Quantity;
                             openingStockValue := openingStockValue + Abs(ItemLedgerEntry."Cost Amount (Actual)");
@@ -210,6 +215,7 @@ report 51099 "Category Wise Stock Summary"
                 ItemLedgerEntry.SetRange("Entry Type", ItemLedgerEntry."Entry Type"::"Positive Adjmt.");
                 IF ItemLedgerEntry.FINDSET THEN begin
                     repeat
+                        Make := ItemLedgerEntry."Variant Code";
                         ItemLedgerEntry.CalcFields("Cost Amount (Actual)");
                         InwardStock := InwardStock + Abs(ItemLedgerEntry.Quantity);
                         InwardsStockValue := InwardsStockValue + abs(ItemLedgerEntry."Cost Amount (Actual)");
@@ -236,6 +242,7 @@ report 51099 "Category Wise Stock Summary"
                 ItemLedgerEntry.SetFilter("Entry Type", '%1', ItemLedgerEntry."Entry Type"::"Negative Adjmt.");
                 IF ItemLedgerEntry.FINDSET THEN begin
                     repeat
+                        Make := ItemLedgerEntry."Variant Code";
                         ItemLedgerEntry.CalcFields("Cost Amount (Actual)");
                         OutwardStock := OutwardStock + Abs(ItemLedgerEntry.Quantity);
                         OutwardStockalue := OutwardStockalue + Abs(ItemLedgerEntry."Cost Amount (Actual)");

@@ -31,8 +31,8 @@ tableextension 50051 PurchRcptHdr extends "Purch. Rcpt. Header"
 
         field(50114; "Import Type"; Option)
         {
-            OptionMembers = Import,Indigenous;
-            //  OptionCaption = 'Import,Indigenous';
+            OptionMembers = " ",Import,Indigenous;
+            OptionCaption = ' ,Import,Indigenous'; //B2BVCOn28Dec2023
         }
         //B2BMSOn18Oct2022>>
         Field(50115; "Regularization"; Boolean)

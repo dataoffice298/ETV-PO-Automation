@@ -50,7 +50,6 @@ report 50194 "GRN Register"//B2BSSD14JUN2023
                     end;
 
 
-                    if Item.Get("No.") then;
                     SNo += 1;
                     TempExcelBuffer.NewRow();
                     TempExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
@@ -63,11 +62,25 @@ report 50194 "GRN Register"//B2BSSD14JUN2023
                     TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."Pay-to Name", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."Vendor Invoice No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."Posting Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
-                    TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD03APR2023
-                    TempExcelBuffer.AddColumn(Item."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    if Type = Type::Item then   //B2BDNROn28Dec2023
+                        if Item.Get("No.") then begin
+                            TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD03APR2023
+                            TempExcelBuffer.AddColumn(Item."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn(Item.Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        end;//B2BDNROn28Dec2023
+
+                    //B2BDNROn28Dec2023<<
+                    if type = Type::"Fixed Asset" then
+                        if FiedAssetRec.get("No.") then begin
+                            TempExcelBuffer.AddColumn(FiedAssetRec."FA Class Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BDNROn28Dec2023
+                            TempExcelBuffer.AddColumn(FiedAssetRec."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn(FiedAssetRec.Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        end;
+                    //B2BDNROn28Dec2023>>
+
                     // TempExcelBuffer.AddColumn("Purch. Rcpt. Line".Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSCM19SEP2023
                     // TempExcelBuffer.AddColumn("Purch. Rcpt. Line"."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSCM19SEP2023
-                    TempExcelBuffer.AddColumn(Item.Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+
                     TempExcelBuffer.AddColumn("Purch. Rcpt. Line"."Unit of Measure Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("Purch. Rcpt. Line".Quantity, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn("Purch. Rcpt. Line"."Direct Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
@@ -179,6 +192,7 @@ report 50194 "GRN Register"//B2BSSD14JUN2023
         WindPa: Dialog;
         PurchaseLineGRec: Record "Purchase Line";
         PurchaseHeaderGRec: Record "Purchase Header";
+        FiedAssetRec: Record "Fixed Asset";
         SNo: Integer;
         TotalAmount: Decimal;
         CGSTAmt: Decimal;

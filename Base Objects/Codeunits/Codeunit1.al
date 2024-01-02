@@ -443,7 +443,16 @@ codeunit 50016 "MyBaseSubscr"
 
     Var
         I: Integer;
-}   //B2BPJ 4thOct23 <<<<<<<<
+    //B2BPJ 4thOct23 <<<<<<<<
+
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post (Yes/No)", 'OnAfterConfirmPost', '', false, false)]
+    local procedure OnAfterConfirmPost(var PurchaseHeader: Record "Purchase Header")
+    begin
+        if PurchaseHeader.Invoice then
+            PurchaseHeader.TestField("Posting No. Series");
+    end;
+}
 
 
 

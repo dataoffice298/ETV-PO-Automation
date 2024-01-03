@@ -11,6 +11,14 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 ApplicationArea = all;
             }
         }
+        addafter(Regularization) //B2BAJ02012024
+        {
+            field("PO Narration"; "PO Narration")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the Value of PO Narration';
+            }
+        }
 
         //B2BSSD28FEB2023>>
         addlast("Invoice Details")
@@ -196,7 +204,8 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                             Error(Error002);
                     until PurchLine.Next() = 0;
                 end;
-                //B2BSSD09AUG2023<<
+                //B2BSSD09AUG2023<
+
             end;
 
 

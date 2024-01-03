@@ -80,6 +80,11 @@ tableextension 50049 tableextension70000004 extends "Purch. Inv. Header"
             OptionMembers = ,Open,"Pending Approval",Released;
             OptionCaption = ' ,Open,Pending Approval,Released';
         }
+        field(50120; "PO Narration"; Code[50]) //B2BAJ02012024
+        {
+            Caption = 'PO Narration';
+            DataClassification = CustomerContent;
+        }
     }
 
 

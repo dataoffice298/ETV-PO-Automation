@@ -48,6 +48,11 @@ pageextension 50079 postedPurchInvExt extends "Posted Purchase Invoice"
             {
                 ApplicationArea = All;
             }
+            field("Your Reference"; "Your Reference")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of your Reference';
+            }
         }
         //B2BSSD23MAR2023>>
     }

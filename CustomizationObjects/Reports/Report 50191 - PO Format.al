@@ -48,6 +48,12 @@ report 50191 "PO FORMAT"
             { }
             column(AmountText; AmountText[1] + ' ' + AmountText[2])
             { }
+            //balu
+            column(AmountVendor1; AmountVendor1)
+            {
+
+            }
+            //Balu
             column(TotalOrderAmount; TotalOrderAmount)
             { }
             column(AckLbl; AckLbl)
@@ -117,6 +123,7 @@ report 50191 "PO FORMAT"
                 column(warranty; warranty)//B2BSSD24APR2023
                 { }
 
+
                 trigger OnPreDataItem()
                 begin
                     SetFilter("No.", '<>%1', '');
@@ -137,7 +144,7 @@ report 50191 "PO FORMAT"
 
                     // GetGSTAmounts("Purchase Line");
                     // TotalGSTAmount += CGSTAmt + SGSTAmt + IGSSTAmt;
-                    GetGSTAmounts(PurchLine);
+                    GetGSTAmounts("Purchase Line");//Balu
                     Clear(GstTotal);
                     GstTotal := CGSTAmt + SGSTAmt + IGSSTAmt;
                     GstTotalSum := GstTotalSum + GstTotal;
@@ -194,9 +201,6 @@ report 50191 "PO FORMAT"
                     if PurchLineGST.FindSet() then;
 
                     SetRange(Number, 1, PurchLineGST.Count);
-
-
-
                 end;
 
                 trigger OnAfterGetRecord()
@@ -215,6 +219,10 @@ report 50191 "PO FORMAT"
                                 I += 1;
                                 GSTPerText := StrSubstNo(GSTText, GSTPercent);
                                 repeat
+                                    //Balu
+                                    Clear(SGSTAmt);
+                                    Clear(IGSSTAmt);
+                                    Clear(CGSTAmt);//Balu
                                     GetGSTAmounts(PurchLine);
                                     GSTAmountLine[I] += SGSTAmt + IGSSTAmt + CGSTAmt;
                                     LineSNo := DelChr(Format(PurchLine."Line No."), '>', '0');
@@ -227,8 +235,8 @@ report 50191 "PO FORMAT"
                     //    AmountVendor += "Line Amount";
                     //  AmountVendor1 := AmountVendor + GstTotalSum;
 
-                    if PurchLineGST.Next() = 0 then
-                        CurrReport.Break();
+                    if PurchLineGST.Next() = 0 then;
+                    //CurrReport.Break();//Balu
                 end;
             }
 

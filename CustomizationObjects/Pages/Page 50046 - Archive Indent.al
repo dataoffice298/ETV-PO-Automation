@@ -96,6 +96,13 @@ page 50046 "Archive Indent"
                     ApplicationArea = All;
                     Caption = 'Indent Issued';
                 }
+                //B2BVCOn01Jan2023 >>
+                field(Purpose; Rec.Purpose)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Purpose';
+                }
+                //B2BVCOn01Jan2023 <<
             }
             part(ArchiveIndentSubform; "Archive Indent Subform")
             {

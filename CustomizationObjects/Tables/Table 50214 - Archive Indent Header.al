@@ -116,6 +116,10 @@ table 50214 "Archive Indent Header"
         {
 
         }//B2BPGON6Nov23<<<
+        field(50016; Purpose; Text[250])//B2BVCOn01Jan2023
+        {
+            DataClassification = CustomerContent;
+        }
 
     }
 

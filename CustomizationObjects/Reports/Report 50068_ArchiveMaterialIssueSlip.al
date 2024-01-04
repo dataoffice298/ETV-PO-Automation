@@ -100,6 +100,8 @@ report 50068 "Archive Material Issue Slip"
             }
             column(ISSDate1; ISSDate1)
             { }
+            column(Purpose; Purpose) //B2BVCOn01Jan2023
+            { }
 
 
             dataitem("Archive Indent Line"; "Archive Indent Line")

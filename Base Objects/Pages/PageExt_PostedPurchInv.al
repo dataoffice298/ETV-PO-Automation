@@ -44,6 +44,10 @@ pageextension 50079 postedPurchInvExt extends "Posted Purchase Invoice"
                 ApplicationArea = All;
                 Caption = 'Purpose';
             }
+            field("PO Narration"; "PO Narration")
+            {
+                ApplicationArea = All;
+            }
         }
         //B2BSSD23MAR2023>>
     }

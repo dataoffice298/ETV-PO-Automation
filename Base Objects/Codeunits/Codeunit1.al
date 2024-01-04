@@ -452,6 +452,23 @@ codeunit 50016 "MyBaseSubscr"
         if PurchaseHeader.Invoice then
             PurchaseHeader.TestField("Posting No. Series");
     end;
+
+    //B2BAJ02012024
+
+    [EventSubscriber(ObjectType::Table, Database::"Gen. Journal Line", 'OnAfterCopyGenJnlLineFromPurchHeader', '', false, false)]
+    local procedure OnAfterCopyGenJnlLineFromPurchHeader(PurchaseHeader: Record "Purchase Header"; var GenJournalLine: Record "Gen. Journal Line")
+    begin
+        GenJournalLine."PO Narration" := PurchaseHeader."PO Narration";
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Vendor Ledger Entry", 'OnAfterCopyVendLedgerEntryFromGenJnlLine', '', false, false)]
+    local procedure OnAfterCopyVendLedgerEntryFromGenJnlLine(var VendorLedgerEntry: Record "Vendor Ledger Entry"; GenJournalLine: Record "Gen. Journal Line")
+    begin
+        VendorLedgerEntry."PO Narration" := GenJournalLine."PO Narration";
+    end;
+
+
+
 }
 
 

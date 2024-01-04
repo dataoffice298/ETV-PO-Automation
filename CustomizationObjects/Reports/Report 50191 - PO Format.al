@@ -174,6 +174,17 @@ report 50191 "PO FORMAT"
                     // GateEntryPostYesNo.FormatNoText(AmountText, Round(TotalOrderAmount, 1, '='), "Currency Code");
                 end;
             }
+            dataitem("PO Terms And Conditions"; "PO Terms And Conditions") //B2BAJ02012024
+            {
+                DataItemLink = DocumentNo = field("No.");
+                column(LineType; LineType)
+                {
+                }
+                column(Description11; Description)
+                {
+
+                }
+            }
 
             dataitem(GSTLoop; Integer)
             {

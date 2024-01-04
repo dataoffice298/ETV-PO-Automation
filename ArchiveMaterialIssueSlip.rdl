@@ -661,6 +661,13 @@
                       <FontWeight>Bold</FontWeight>
                     </Style>
                   </TextRun>
+                  <TextRun>
+                    <Value>=Fields!Purpose.Value</Value>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                    </Style>
+                  </TextRun>
                 </TextRuns>
                 <Style>
                   <TextAlign>Left</TextAlign>
@@ -1564,6 +1571,9 @@ End Function
         </Field>
         <Field Name="ISSDate1">
           <DataField>ISSDate1</DataField>
+        </Field>
+        <Field Name="Purpose">
+          <DataField>Purpose</DataField>
         </Field>
         <Field Name="Variant_Code">
           <DataField>Variant_Code</DataField>

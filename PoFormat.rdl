@@ -1699,14 +1699,14 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="TotalOrderAmount">
+                        <Textbox Name="Textbox14">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
+                                  <Value>=LAST(Fields!AmountVendor1.Value)</Value>
                                   <Style>
                                     <FontFamily>Times New Roman</FontFamily>
                                   </Style>
@@ -1717,7 +1717,7 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>TotalOrderAmount</rd:DefaultName>
+                          <rd:DefaultName>Textbox14</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -1734,6 +1734,7 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -3132,6 +3133,12 @@ tm3feuutVVVVplTrkZfykiVLqqurR9WP49VTV1d3ww03HD58ePXq1ZweFZLnecPDw2vWrFm5clUQkJQY
         </Field>
         <Field Name="AmountText">
           <DataField>AmountText</DataField>
+        </Field>
+        <Field Name="AmountVendor1">
+          <DataField>AmountVendor1</DataField>
+        </Field>
+        <Field Name="AmountVendor1Format">
+          <DataField>AmountVendor1Format</DataField>
         </Field>
         <Field Name="TotalOrderAmount">
           <DataField>TotalOrderAmount</DataField>

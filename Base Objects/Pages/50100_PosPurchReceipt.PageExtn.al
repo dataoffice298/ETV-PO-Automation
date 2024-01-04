@@ -58,6 +58,7 @@ pageextension 50100 PosPurchReceipt extends "Posted Purchase Receipt"
             {
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of Your Reference';
+                Editable = false;
             }
         }
 

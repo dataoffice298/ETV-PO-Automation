@@ -38,20 +38,24 @@ pageextension 50079 postedPurchInvExt extends "Posted Purchase Invoice"
             {
                 ApplicationArea = All;
                 Caption = 'Programme Name';
+                Editable = false;
             }
             field(Purpose; Rec.Purpose)
             {
                 ApplicationArea = All;
                 Caption = 'Purpose';
+                Editable = false;
             }
             field("PO Narration"; "PO Narration")
             {
                 ApplicationArea = All;
+                Editable = false;
             }
             field("Your Reference"; "Your Reference")
             {
                 ApplicationArea = All;
                 ToolTip = 'Specifies the value of your Reference';
+                Editable = false;
             }
         }
         //B2BSSD23MAR2023>>

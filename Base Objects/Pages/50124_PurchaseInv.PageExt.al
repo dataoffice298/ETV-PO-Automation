@@ -8,6 +8,7 @@ pageextension 50124 PurchaseInvoice extends "Purchase Invoice"
             {
                 ApplicationArea = All;
                 ToolTip = 'Specifies The Value of Your Reference';
+                Editable = false;
             }
         }
     }

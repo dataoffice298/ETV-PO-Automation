@@ -672,5 +672,100 @@ table 50202 "Indent Line"
     end;
     //B2BSCM24AUG2023<<
 
+    procedure UpdateItemJournals()
+    var
+        ItemLedEntry: Record "Item Ledger Entry";
+        IndentLine: Record "Indent Line";
+        ILEQty: Decimal;
+        ItemJnlLine: Record "Item Journal Line";
+        LastItemJnlLine: Record "Item Journal Line";
+        ItemJnlBatch: Record "Item Journal Batch";
+        ItemJnlTemp: Record "Item Journal Template";
+        Bincontent: Record "Bin Content";
+        PurchPaySetup: Record "Purchases & Payables Setup";
+        DocNo: Code[20];
+        ItemLedgerEntry1: Record "Item Ledger Entry";
+        LineNo: Integer;
+        QTYVar: Integer;
+        IndentLineRec: Record "Indent Line";
+        NoSeriesMgt: Codeunit NoSeriesManagement;
+        Item: Record Item;
+    begin
+        
+        ItemLedEntry.Reset();
+        ItemLedEntry.SetCurrentKey("Entry No.");
+        ItemLedEntry.SetRange("Item No.", Rec."No.");
+        ItemLedEntry.SetRange("Location Code", Rec."Delivery Location");
+        ItemLedEntry.SetRange("Variant Code", Rec."Variant Code");
+        ItemLedEntry.SetRange(Open, true);
+        if ItemLedEntry.FindSet() then begin
+            repeat
+                ILEQty += ItemLedEntry."Remaining Quantity";
+                if rec."Qty To Issue" >= ILEQty then begin
+                    PurchPaySetup.Get();
+                    PurchPaySetup.TestField("Indent Issue Jnl. Batch");
+                    PurchPaySetup.TestField("Indent Issue Jnl. Template");
+
+                    DocNo := NoSeriesMgt.GetNextNo(ItemJnlBatch."No. Series", TODAY(), false);
+
+                    LastItemJnlLine.Reset();
+                    LastItemJnlLine.SetRange(LastItemJnlLine."Journal Template Name", PurchPaySetup."Indent Issue Jnl. Template");
+                    LastItemJnlLine.SetRange(LastItemJnlLine."Journal Batch Name", PurchPaySetup."Indent Issue Jnl. Batch");
+                    if LastItemJnlLine.FindLast() then;
+                    LineNo := LastItemJnlLine."Line No." + 10000;
+
+                    ItemJnlLine.INIT();
+                    ItemJnlLine.VALIDATE("Journal Template Name", PurchPaySetup."Indent Issue Jnl. Template");
+                    ItemJnlLine.VALIDATE("Journal Batch Name", PurchPaySetup."Indent Issue Jnl. Batch");
+                    ItemJnlLine."Line No." := LineNo;
+                    ItemJnlLine.INSERT(true);
+
+                    ItemJnlLine."Source Code" := ItemJnlTemp."Source Code";
+                    ItemJnlLine."Entry Type" := ItemJnlLine."Entry Type"::"Negative Adjmt.";
+                    ItemJnlLine.VALIDATE(ItemJnlLine."Document Type", ItemJnlLine."Document Type"::" ");
+                    ItemJnlLine.VALIDATE(ItemJnlLine."Document No.", DocNo);
+                    ItemJnlLine.VALIDATE(ItemJnlLine."Posting Date", WORKDATE());
+                    ItemJnlLine."Reason Code" := ItemJnlTemp."Reason Code";
+                    ItemJnlLine."No." := "No.";
+                    ItemJnlLine.VALIDATE(ItemJnlLine."Item No.", IndentLineRec."No.");
+                    ItemJnlLine.VALIDATE(ItemJnlLine."Unit of Measure Code", IndentLineRec."Unit of Measure");
+                    ItemJnlLine."Reason Code" := ItemJnlTemp."Reason Code";
+                    ItemJnlLine.VALIDATE(ItemJnlLine."Shortcut Dimension 1 Code", indentlinerec."Shortcut Dimension 1 Code");
+                    ItemJnlLine.VALIDATE(ItemJnlLine."Shortcut Dimension 2 Code", IndentLineRec."Shortcut Dimension 2 Code");
+                    ItemJnlLine.Validate(ItemJnlLine."Shortcut Dimension 9 Code", IndentLineRec."Shortcut Dimension 9 Code");//B2BSSD01MAR2023
+                    ItemJnlLine.VALIDATE(ItemJnlLine.Quantity, ItemLedEntry."Remaining Quantity");
+                    ItemJnlLine.VALIDATE("Location Code", IndentLineRec."Delivery Location");
+                    Item.Get(ItemLedEntry."Item No.");
+                    if item."Item Tracking Code" = '' then
+                        ItemJnlLine."Applies-to Entry" := ItemLedEntry."Entry No.";
+                    //ItemJnlLine.Validate("Issue Location",IndentLineRec."Issue Location");
+                    ItemJnlLine."Issue Location" := IndentLineRec."Issue Location";//BaluOn19Oct2022
+                    ItemJnlLine."Issue Sub Location" := IndentLineRec."Issue Sub Location";//BaluOn19Oct2022
+                    ItemJnlLine."Variant Code" := IndentLineRec."Variant Code";
+                    ItemJnlLine."External Document No." := "No.";
+                    ItemJnlLine."Indent No." := Rec."No.";
+                    ItemJnlLine."Indent Line No." := IndentLineRec."Line No.";
+                    ItemJnlLine."Qty issue&Return" := true;//B2BSSD10JUL2023
+
+                    Bincontent.RESET();
+                    Bincontent.SETRANGE("Item No.", IndentLineRec."No.");
+                    Bincontent.SETRANGE("Location Code", IndentLineRec."Delivery Location");
+                    Bincontent.SETFILTER(Bincontent.Quantity, '<>%1', 0);
+                    if Bincontent.FINDFIRST() then
+                        ItemJnlLine.VALIDATE("Bin Code", Bincontent."Bin Code");
+
+                    ItemJnlLine.MODIFY();
+
+                end
+                else
+                    Error('Nothing to Issue');
+
+            until ItemLedEntry.Next = 0;
+
+        end;
+
+
+    end;
+
 }
 

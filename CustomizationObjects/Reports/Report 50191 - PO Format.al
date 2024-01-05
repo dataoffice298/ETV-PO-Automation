@@ -309,7 +309,7 @@ report 50191 "PO FORMAT"
     }
 
     var
-        W: Label 'Warranty :';
+        W: Label 'Warranty';
         CheckRec: Codeunit "Check Codeunit";
         transactionspecificTxt: Text[100];
         Transactionspecifcation: Record "Transaction Specification";

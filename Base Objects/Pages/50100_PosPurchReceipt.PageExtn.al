@@ -52,6 +52,15 @@ pageextension 50100 PosPurchReceipt extends "Posted Purchase Receipt"
                 Editable = false;
             }
         }
+        addafter("Vendor Shipment No.")
+        {
+            field("Your Reference"; "Your Reference")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of Your Reference';
+                Editable = false;
+            }
+        }
 
         //B2BSSD23MAR2023<<
         addafter("Order No.")
@@ -96,6 +105,6 @@ pageextension 50100 PosPurchReceipt extends "Posted Purchase Receipt"
             }
         }
     }
-var
-purline :Record "Purchase Line";
+    var
+        purline: Record "Purchase Line";
 }

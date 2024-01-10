@@ -16,6 +16,10 @@ report 50191 "PO FORMAT"
             {
 
             }
+            column(Currency_Code; "Currency Code")//B2BAJ01102024
+            {
+
+            }
             column(No_; "No.")
             { }
             column(Picture_CompanyInfo; CompanyInfo.Picture)

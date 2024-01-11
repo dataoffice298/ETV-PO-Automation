@@ -69,6 +69,7 @@ report 50001 "Indent Requestion Lines"
                         IF ItemVendorGvar.FINDFIRST THEN
                             IndentRequisitions.Department := Department;
                         IndentRequisitions."Variant Code" := "Variant Code";
+                        IndentRequisitions."Variant Description" := "Variant Description"; //B2BSCM11JAN2024
                         IndentRequisitions."Indent No." := "Document No.";
                         IndentRequisitions."Indent Line No." := "Line No.";
                         IndentRequisitions."Indent Status" := "Indent Status";

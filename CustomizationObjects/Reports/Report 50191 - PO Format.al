@@ -12,6 +12,14 @@ report 50191 "PO FORMAT"
         dataitem("Purchase Header"; "Purchase Header")
         {
             RequestFilterFields = "No.";
+            column(W; W)
+            {
+
+            }
+            column(Currency_Code; "Currency Code")//B2BAJ01102024
+            {
+
+            }
             column(No_; "No.")
             { }
             column(Picture_CompanyInfo; CompanyInfo.Picture)
@@ -120,7 +128,7 @@ report 50191 "PO FORMAT"
                 { }
                 column(TotalLineAmount; TotalLineAmount)
                 { }
-                column(warranty; warranty)//B2BSSD24APR2023
+                column(warranty1; warranty)//B2BSSD24APR2023
                 { }
 
 
@@ -305,6 +313,7 @@ report 50191 "PO FORMAT"
     }
 
     var
+        W: Label 'Warranty';
         CheckRec: Codeunit "Check Codeunit";
         transactionspecificTxt: Text[100];
         Transactionspecifcation: Record "Transaction Specification";

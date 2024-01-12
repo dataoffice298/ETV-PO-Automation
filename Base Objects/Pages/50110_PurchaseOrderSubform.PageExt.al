@@ -24,6 +24,13 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
 
             }
         }
+        addafter("Variant Code")
+        {
+            field("Variant Description"; Rec."Variant Description") //B2BSCM11JAN2024
+            {
+                ApplicationArea = All;
+            }
+        }
         //B2BSSD16FEB2023<<
         // addafter("Item Reference No.")
         // {

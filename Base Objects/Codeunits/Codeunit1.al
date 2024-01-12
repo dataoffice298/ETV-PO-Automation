@@ -340,7 +340,7 @@ codeunit 50016 "MyBaseSubscr"
         if IndentLine.Get(NewItemLedgEntry."Indent No.", NewItemLedgEntry."Indent Line No.") then
             if INDENTHEADER.Get(IndentLine."Document No.") then
                 if I = 1 then
-                    INDENTHEADER.ArchiveQuantityIssued(INDENTHEADER, IndentLine);
+                    INDENTHEADER.ArchiveQuantityIssued(INDENTHEADER, IndentLine,NewItemLedgEntry);
         if NewItemLedgEntry."Indent Line No." <> 0 then begin
             IndentLine.Get(NewItemLedgEntry."Indent No.", NewItemLedgEntry."Indent Line No.");
             IndentLine.NoHeadStatusCheck(true);

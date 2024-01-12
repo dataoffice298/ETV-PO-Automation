@@ -418,6 +418,30 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         {
             DataClassification = CustomerContent;
         }
+        field(60052; "Variant Description"; Text[100]) //B2BSCM11JAN2024
+        {
+            Caption = 'Variant Description';
+            DataClassification = CustomerContent;
+
+        }
+        modify("Variant Code")  //B2BSCM12JAN2024
+        {
+            trigger OnAfterValidate()
+            var
+                ItemVariant: Record "Item Variant";
+                Item: Record Item;
+            begin
+                if "Variant Code" <> '' then begin
+                    if ItemVariant.Get("No.", "Variant Code") then
+                        "Variant Description" := ItemVariant.Description;
+                    if "No." <> '' then begin
+                        if Item.get("No.") then
+                            Description := Item.Description;
+                    end;
+                end else
+                    "Variant Description" := '';
+            end;
+        }
 
     }
 

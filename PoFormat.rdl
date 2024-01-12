@@ -666,7 +666,23 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Unit Rate</Value>
+                                  <Value>Unit Rate ( </Value>
+                                  <Style>
+                                    <FontStyle>Italic</FontStyle>
+                                    <FontFamily>Times New Roman</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>=Fields!Currency_Code.Value</Value>
+                                  <Style>
+                                    <FontStyle>Italic</FontStyle>
+                                    <FontFamily>Times New Roman</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>)</Value>
                                   <Style>
                                     <FontStyle>Italic</FontStyle>
                                     <FontFamily>Times New Roman</FontFamily>
@@ -722,7 +738,23 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Total Amount</Value>
+                                  <Value>Total Amount ( </Value>
+                                  <Style>
+                                    <FontStyle>Italic</FontStyle>
+                                    <FontFamily>Times New Roman</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>=Fields!Currency_Code.Value</Value>
+                                  <Style>
+                                    <FontStyle>Italic</FontStyle>
+                                    <FontFamily>Times New Roman</FontFamily>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>)</Value>
                                   <Style>
                                     <FontStyle>Italic</FontStyle>
                                     <FontFamily>Times New Roman</FontFamily>
@@ -2512,10 +2544,10 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>2.55625cm</Width>
+                  <Width>2.53969cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>5.88336cm</Width>
+                  <Width>16.21109cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -2614,7 +2646,7 @@
             <Top>13.51527cm</Top>
             <Left>0.63183cm</Left>
             <Height>0.52062cm</Height>
-            <Width>8.43961cm</Width>
+            <Width>18.75078cm</Width>
             <ZIndex>16</ZIndex>
             <Style>
               <Border>

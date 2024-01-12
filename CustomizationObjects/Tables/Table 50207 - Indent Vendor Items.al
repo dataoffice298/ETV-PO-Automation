@@ -111,6 +111,11 @@ table 50207 "Indent Vendor Items"
         {
             DataClassification = CustomerContent;
         }
+        field(50021; "Variant Description"; Text[100]) //B2BSCM11JAN2024
+        {
+            Caption = 'Variant Description';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

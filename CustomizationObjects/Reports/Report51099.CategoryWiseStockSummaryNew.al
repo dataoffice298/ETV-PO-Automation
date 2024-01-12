@@ -239,7 +239,9 @@ report 51099 "Category Wise Stock Summary"
                 //ItemLedgerEntry.SetRange("Variant Code", ItemLedgerEntry1."Variant Code");
                 ItemLedgerEntry.SETFILTER("Posting Date", '%1..%2', StartDate, EndDate);
                 ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);//B2BSSD16MAY2023
-                ItemLedgerEntry.SetFilter("Entry Type", '%1', ItemLedgerEntry."Entry Type"::"Negative Adjmt.");
+                //ItemLedgerEntry.SetFilter("Entry Type", '%1', ItemLedgerEntry."Entry Type"::"Negative Adjmt.");
+                //ItemLedgerEntry.SetRange("Document Type", ItemLedgerEntry."Document Type"::"Sales Invoice");//B2BSCM10JAN2024
+                ItemLedgerEntry.SetFilter("Entry Type", '%1|%2', ItemLedgerEntry."Entry Type"::"Negative Adjmt.", ItemLedgerEntry."Entry Type"::Sale); //B2BSCM10JAN2024
                 IF ItemLedgerEntry.FINDSET THEN begin
                     repeat
                         Make := ItemLedgerEntry."Variant Code";

@@ -197,6 +197,11 @@ table 50205 "Quotation Comparison"
             OptionMembers = " ",Open,"Pending Approval",Released;
             OptionCaption = ' ,Open,Pending Approval,Released';
         }
+        field(50002; "Variant Description"; Text[100]) //B2BSCM11JAN2024
+        {
+            Caption = 'Variant Description';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

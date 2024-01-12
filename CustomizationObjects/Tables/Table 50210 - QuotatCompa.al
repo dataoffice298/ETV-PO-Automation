@@ -489,6 +489,11 @@ table 50210 "Quotation Comparison Test"
         {
             DataClassification = CustomerContent;
         }
+        field(60036; "Variant Description"; Text[100]) //B2BSCM11JAN2024
+        {
+            Caption = 'Variant Description';
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

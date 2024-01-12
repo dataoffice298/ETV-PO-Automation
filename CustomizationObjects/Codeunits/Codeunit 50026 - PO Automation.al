@@ -106,6 +106,7 @@ codeunit 50026 "PO Automation"
                     CreateIndents."Indent Line No." := IndentLine."Line No.";
                     CreateIndents.Description := IndentLine.Description;
                     CreateIndents."Variant Code" := IndentLine."Variant Code";
+                    CreateIndents."Variant Description" := IndentLine."Variant Description"; //B2BSCM11JAN2024
                     CreateIndents."Indent Status" := IndentLine."Indent Status";
                     CreateIndents."Release Status" := IndentLine."Release Status";
                     CreateIndents."Due Date" := IndentLine."Due Date";
@@ -152,6 +153,7 @@ codeunit 50026 "PO Automation"
                         IndentVendorItems."Item No." := CreateIndents."Item No.";
                         IndentVendorItems.Quantity := CreateIndents."Qty. To Order";//B2BSCM12SEP2023
                         IndentVendorItems."Variant Code" := CreateIndents."Variant Code";
+                        IndentVendorItems."Variant Description" := CreateIndents."Variant Description"; //B2BSCM11JAN2024
                         IndentVendorItems."Indent No." := CreateIndents."Indent No.";
                         IndentVendorItems."Indent Line No." := CreateIndents."Indent Line No.";
                         IndentVendorItems."Due Date" := CreateIndents."Due Date";
@@ -206,6 +208,7 @@ codeunit 50026 "PO Automation"
                 IndentVendorItems."Item No." := CreateIndents."Item No.";
                 IndentVendorItems.Quantity := CreateIndents.Quantity;
                 IndentVendorItems."Variant Code" := CreateIndents."Variant Code";
+                IndentVendorItems."Variant Description" := CreateIndents."Variant Description"; //B2BSCM11JAN2024
                 IndentVendorItems."Indent No." := CreateIndents."Indent No.";
                 IndentVendorItems."Indent Line No." := CreateIndents."Indent Line No.";
                 IndentVendorItems."Due Date" := CreateIndents."Due Date";
@@ -305,6 +308,7 @@ codeunit 50026 "PO Automation"
                             PurchaseLine."No." := IndentVendorEnquiry."Item No.";
                             PurchaseLine.VALIDATE(PurchaseLine."No.");
                             PurchaseLine."Variant Code" := IndentVendorEnquiry."Variant Code";
+                            PurchaseLine."Variant Description" := IndentVendorEnquiry."Variant Description"; //B2BSCM11JAN2024
                             IF Item2.GET(PurchaseLine."No.") THEN;
                             IF Item2."Purch. Unit of Measure" <> IndentVendorEnquiry."Unit Of Measure" THEN BEGIN
                                 ItemUnitofMeasure.RESET;
@@ -447,6 +451,7 @@ codeunit 50026 "PO Automation"
                         PurchaseLine."No." := IndentVendorEnquiry."Item No.";
                         PurchaseLine.VALIDATE(PurchaseLine."No.");
                         PurchaseLine.VALIDATE("Variant Code", IndentVendorEnquiry."Variant Code");
+                        PurchaseLine."Variant Description" := IndentVendorEnquiry."Variant Description"; //B2BSCM11JAN2024
                         IF Item2.GET(PurchaseLine."No.") THEN;
                         IF Item2."Purch. Unit of Measure" <> IndentVendorEnquiry."Unit Of Measure" THEN BEGIN
                             ItemUnitofMeasure.RESET;
@@ -581,6 +586,7 @@ codeunit 50026 "PO Automation"
                         PurchaseLine."No." := IndentVendorEnquiry."Item No.";
                         PurchaseLine.VALIDATE(PurchaseLine."No.");
                         PurchaseLine.VALIDATE("Variant Code", IndentVendorEnquiry."Variant Code");
+                        PurchaseLine."Variant Description" := IndentVendorEnquiry."Variant Description"; //B2BSCM11JAN2024
                         IF Item2.GET(PurchaseLine."No.") THEN;
                         /*
                         IF Item2."Purch. Unit of Measure"<>IndentVendorEnquiry."Unit of Measure" THEN BEGIN
@@ -726,6 +732,7 @@ codeunit 50026 "PO Automation"
                         END;
 
                         QuoteCompare."Variant Code" := PurchaseLine."Variant Code";
+                        QuoteCompare."Variant Description" := PurchaseLine."Variant Description"; //B2BSCM11JAN2024
                         Item.GET(PurchaseLine."No.");
                         /*IF Item."Excise Accounting Type" = Item."Excise Accounting Type"::"With CENVAT" THEN
                             QuoteCompare."Excise Duty" := 0
@@ -996,6 +1003,7 @@ codeunit 50026 "PO Automation"
                             //QuoteCompare."Line Discount %" := PurchaseLine."Line Discount %";//B2BSSD15MAR2023
                             QuoteCompare.Validate("Line Discount %", PurchaseLine."Line Discount %");
                             QuoteCompare."Variant Code" := PurchaseLine."Variant Code";
+                            QuoteCompare."Variant Description" := PurchaseLine."Variant Description"; //B2BSCM11JAN2024
                             QuoteCompare."Dimension Set ID" := PurchaseLine."Dimension Set ID";
                             QuoteCompare."Line No." := QuoteCompare."Line No." + 10000;
                             QuoteCompare."Document Date" := PurchaseHeader."Document Date";
@@ -1043,6 +1051,7 @@ codeunit 50026 "PO Automation"
                             END;
 
                             QuoteCompare."Variant Code" := PurchaseLine."Variant Code";
+                            QuoteCompare."Variant Description" := PurchaseLine."Variant Description"; //B2BSCM11JAN2024
                             //QuoteCompare.Amount := (PurchaseLine.Quantity * PurchaseLine."Direct Unit Cost") - QuoteCompare.Discount;
                             Amount := Amount + QuoteCompare.Amount;
 
@@ -1429,6 +1438,7 @@ codeunit 50026 "PO Automation"
                 PurchaseLineQuote."Location Code" := PurchaseLine."Location Code";
                 PurchaseLineQuote.VALIDATE("Location Code");
                 PurchaseLineQuote."Variant Code" := PurchaseLine."Variant Code";
+                PurchaseLineQuote."Variant Description" := PurchaseLine."Variant Description"; //B2BSCM11JAN2024
                 PurchaseLineQuote.modify(true);
 
                 IndentLine.RESET;
@@ -1520,6 +1530,7 @@ codeunit 50026 "PO Automation"
                     CreateIndents."Indent Line No." := IndentLine."Line No.";
                     CreateIndents.Description := IndentLine.Description;
                     CreateIndents."Variant Code" := IndentLine."Variant Code";
+                    CreateIndents."Variant Description" := IndentLine."Variant Description"; //B2BSCM11JAN2024
                     CreateIndents."Indent Status" := IndentLine."Indent Status";
                     CreateIndents."Release Status" := IndentLine."Release Status";
                     CreateIndents."Due Date" := IndentLine."Due Date";
@@ -1648,6 +1659,7 @@ codeunit 50026 "PO Automation"
                         //B2BSSD21APR2023<<
 
                         PurchaseLine."Variant Code" := IndentVendorEnquiry."Variant Code";
+                        PurchaseLine."Variant Code" := IndentVendorEnquiry."Variant Description"; //B2BSCM11JAN2024
                         PurchaseLine.Quantity := IndentVendorEnquiry.Quantity;
                         PurchaseLine."Outstanding Quantity" := PurchaseLine.Quantity;
                         PurchaseLine."Outstanding Qty. (Base)" := PurchaseLine.Quantity;
@@ -1686,6 +1698,7 @@ codeunit 50026 "PO Automation"
                             PurchaseLine.Validate(Quantity, IndentVendorEnquiry.Quantity);//B2BSCM12SEP2023
                             PurchaseLine.Validate("Sub Location Code", CreateIndents5."Sub Location Code");
                             PurchaseLine.Validate("Variant Code", CreateIndents5."Variant Code");
+                            PurchaseLine."Variant Description" := CreateIndents5."Variant Description";//B2BSCM11JAN2024
                             //B2BSSD11Jan2023>>
                             PurchaseLine.Validate("Indentor Description", CreateIndents5."Indentor Description");//B2BSSD02Feb2023
                             CreateIndents5.MODIFY;
@@ -1735,6 +1748,7 @@ codeunit 50026 "PO Automation"
                         CreateIndents.MODIFY;
                     END;
                     IndentVendorItems."Variant Code" := CreateIndents."Variant Code";
+                    IndentVendorItems."Variant Description" := CreateIndents."Variant Description"; //B2BSCM11JAN2024
                     IndentVendorItems."Indent No." := CreateIndents."Indent No.";
                     IndentVendorItems."Indent Line No." := CreateIndents."Indent Line No.";
                     IndentVendorItems."Due Date" := CreateIndents."Due Date";

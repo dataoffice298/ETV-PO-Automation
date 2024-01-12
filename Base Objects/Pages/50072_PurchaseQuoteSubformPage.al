@@ -42,6 +42,13 @@ pageextension 50114 PurchQuoteSubformExtB2B extends "Purchase Quote Subform"
                 ApplicationArea = All;
             }
         }
+        addafter("Variant Code")
+        {
+            field("Variant Description"; "Variant Description") //B2BSCM11JAN2024
+            {
+                ApplicationArea = All;
+            }
+        }
 
     }
     //B2BSSD07Feb2023<<

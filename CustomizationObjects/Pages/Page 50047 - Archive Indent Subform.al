@@ -68,6 +68,7 @@ page 50047 "Archive Indent Subform"
                 {
                     ApplicationArea = All;
                 }
+                
 
             }
         }

@@ -51,6 +51,10 @@ page 50026 "Purchase Enquiry Subform"
                 {
                     ApplicationArea = All;
                 }
+                field("Variant Description"; Rec."Variant Description") //B2BSCM11JAN2024
+                {
+                    ApplicationArea = All;
+                }
                 field(Quantity; Rec.Quantity)
                 {
                     BlankZero = true;

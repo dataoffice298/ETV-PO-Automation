@@ -432,6 +432,11 @@ page 50127 QuotationComparSubForm
                     Editable = false;
                     Visible = false;
                 }
+                field("Variant Description"; rec."Variant Description") //B2BSCM11JAN2024
+                {
+                    Editable = false;
+                    Visible = false;
+                }
                 field("Carry Out Action"; Rec."Carry Out Action")
                 {
                     ApplicationArea = all;
@@ -592,7 +597,7 @@ page 50127 QuotationComparSubForm
             CarryOutEditable := false
         else
             CarryOutEditable := true;
-      
+
     end;
     //B2BSCM19SEP2023<<
     procedure InitTempTable();

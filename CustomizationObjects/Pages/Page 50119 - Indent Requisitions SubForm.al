@@ -61,6 +61,12 @@ page 50119 "Indent Requisitions SubForm"
                     ApplicationArea = all;
                     Editable = FieldEditable;
                 }
+                field("Variant Description"; Rec."Variant Description") //B2BSCM11JAN2024
+                {
+                    ApplicationArea = all;
+                    Editable = FieldEditable;
+                }
+
                 //B2BMSOn01Nov2022<<
                 field("Carry out Action"; Rec."Carry out Action")
                 {

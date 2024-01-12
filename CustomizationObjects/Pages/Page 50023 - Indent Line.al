@@ -236,6 +236,7 @@ page 50023 "Indent Line"
                         ItemJournalLine.SetRange("Journal Batch Name", PurchaseSetup."Indent Issue Jnl. Batch");
                         ItemJournalLine.SetRange("Entry Type", ItemJournalLine."Entry Type"::"Negative Adjmt.");
                         ItemJournalLine.SetRange("Item No.", Rec."No.");
+                        ItemJournalLine.SetRange("Indent Line No.", Rec."Line No.");
                         IF ItemJournalLine.findset then;
                         Page.RunModal(40, ItemJournalLine);
                     END;
@@ -257,6 +258,7 @@ page 50023 "Indent Line"
                         ItemJournalLine.SetRange("Journal Batch Name", PurchaseSetup."Indent Return Jnl. Batch");
                         ItemJournalLine.SetRange("Entry Type", ItemJournalLine."Entry Type"::"Positive Adjmt.");
                         ItemJournalLine.SetRange("Item No.", Rec."No.");
+                        ItemJournalLine.SetRange("Indent Line No.", Rec."Line No.");
                         IF ItemJournalLine.findset then;
                         Page.RunModal(40, ItemJournalLine);
                     END;

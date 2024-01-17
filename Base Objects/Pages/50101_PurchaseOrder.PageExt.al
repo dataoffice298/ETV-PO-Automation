@@ -193,10 +193,13 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 //B2BSSD09AUG2023>>
                 purchaseLinevar.Reset();
                 purchaseLinevar.SetRange("Document No.", Rec."No.");
+                purchaseLinevar.SetRange(Type, purchaseLinevar.Type::Item);
+                purchaseLinevar.SetRange(Type, purchaseLinevar.Type::"Fixed Asset");
+                purchaseLinevar.SetRange(Type, purchaseLinevar.Type::Description);
                 if purchaseLinevar.FindSet() then begin
-                    repeat
-                        purchaseLinevar.TestField("Qty Accepted Inward_B2B");
-                    until purchaseLinevar.Next() = 0;
+                    // repeat
+                    purchaseLinevar.TestField("Qty Accepted Inward_B2B");
+                    //until purchaseLinevar.Next() = 0;
                 end;
                 //B2BSSD09AUG2023<<
 

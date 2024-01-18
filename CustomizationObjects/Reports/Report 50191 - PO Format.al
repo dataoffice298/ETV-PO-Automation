@@ -12,6 +12,10 @@ report 50191 "PO FORMAT"
         dataitem("Purchase Header"; "Purchase Header")
         {
             RequestFilterFields = "No.";
+            column(PaymentDescription; PaymentDescription)
+            {
+
+            }
             column(W; W)
             {
 
@@ -97,7 +101,10 @@ report 50191 "PO FORMAT"
             {
                 DataItemLink = "Document No." = field("No.");
                 DataItemTableView = sorting("Document Type", "Document No.", "Line No.");
+                column(Variant_Description; "Variant Description")
+                {
 
+                }
                 column(Document_No_; "Document No.")
                 { }
                 column(Line_No_; "Line No.")
@@ -307,12 +314,18 @@ report 50191 "PO FORMAT"
                             NextLoop := true;
                     until PurchLine.Next() = 0;
                 end;
+                if "Purchase Header"."Payment Terms Code" <> ' ' then begin
+                    PaymentTermsRec.Get("Purchase Header"."Payment Terms Code");
+                    PaymentDescription := PaymentTermsRec.Description;
+                end;
             end;
         }
 
     }
 
     var
+        PaymentDescription: Text[100];
+        PaymentTermsRec: Record "Payment Terms";
         W: Label 'Warranty';
         CheckRec: Codeunit "Check Codeunit";
         transactionspecificTxt: Text[100];

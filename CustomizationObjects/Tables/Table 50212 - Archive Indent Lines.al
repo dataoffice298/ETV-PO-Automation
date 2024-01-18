@@ -177,14 +177,14 @@ table 50212 "Archive Indent Line"
         {
 
         }
-        field(50012; "Lot No."; code[100])
+        /* field(50012; "Lot No."; code[100])
         {
             DataClassification = ToBeClassified;
         }
         field(50013; "Serial No."; Code[100])
         {
             DataClassification = ToBeClassified;
-        }
+        } */
     }
 
 

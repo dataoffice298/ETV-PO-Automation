@@ -1099,10 +1099,10 @@ table 50201 "Indent Header"
             ArchiveIndLine.SetRange("Document No.", IndentLine."Document No.");
             ArchiveIndLine.SetRange("Line No.", IndentLine."Line No.");
             ArchiveIndLine.SetRange("Archived Qty Issued", IndentLine."Qty To Issue");
-            if ItemledgerEntry."Lot No." <> '' then
+            /* if ItemledgerEntry."Lot No." <> '' then
                 ArchiveIndLine.SetRange("Lot No.", ItemledgerEntry."Lot No.");
             if ItemledgerEntry."Serial No." <> '' then
-                ArchiveIndLine.SetRange("Serial No.", ItemledgerEntry."Serial No.");
+                ArchiveIndLine.SetRange("Serial No.", ItemledgerEntry."Serial No."); */
             if not ArchiveIndLine.FindFirst() then begin
                 ArchiveIndHdr.Reset();
                 ArchiveIndHdr.SetCurrentKey("Archived Version");
@@ -1129,8 +1129,8 @@ table 50201 "Indent Header"
                     repeat
                         ArchiveIndLine.Init();
                         ArchiveIndLine.TransferFields(IndentLine);
-                        ArchiveIndLine."Lot No." := ItemledgerEntry."Lot No.";
-                        ArchiveIndLine."Serial No." := ItemledgerEntry."Serial No.";
+                        /* ArchiveIndLine."Lot No." := ItemledgerEntry."Lot No.";
+                        ArchiveIndLine."Serial No." := ItemledgerEntry."Serial No."; */
                         ArchiveIndLine."Archived Version" := ArchiveVersion;
                         ArchiveIndLine."Archived By" := UserId;
                         ArchiveIndLine."Archived Qty Issued" := IndentLine."Qty To Issue";

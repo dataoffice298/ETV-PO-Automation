@@ -236,6 +236,11 @@ page 50159 "Inward Gate Entry-RGP"
                         RGPLineRec: Record "Gate Entry Line_B2B";
                         PRGPLineRec: Record "Posted Gate Entry Line_B2B";
                         PostCU: Codeunit "Gate Entry- Post Yes/No";
+                        PostedGateEntryLineB2B: Record "Posted Gate Entry Line_B2B";
+                        QtytoReceive: Decimal;
+                        PurchaseLineRec: Record "Purchase Line";
+                        GateEntryHeader: Record "Gate Entry Header_B2B";
+                        PostedGateEntryHeaderB2B: Record "Posted Gate Entry Header_B2B";
                     begin
                         Rec.TestField("Challan No.");//B2BSSD15MAR2023
                         Rec.TestField("Challan Date");//B2BSSD23MAR2023
@@ -260,7 +265,25 @@ page 50159 "Inward Gate Entry-RGP"
                                 end;
                             UNTIL RGPLineRec.NEXT = 0;
                         PostCU.RUN(Rec);
-                    end;
+                        PostedGateEntryLineB2B.Reset();
+                        PostedGateEntryLineB2B.SetRange("Entry Type", PostedGateEntryLineB2B."Entry Type"::Inward);
+                        PostedGateEntryLineB2B.SetRange(Type, PostedGateEntryLineB2B.Type::RGP);
+                        PostedGateEntryLineB2B.SetRange("Purchase Order No.", Rec."Purchase Order No.");
+                        PostedGateEntryLineB2B.SetRange("Purchase Order Line No.", Rec."Purchase Order Line No.");
+                        if PostedGateEntryLineB2B.FindFirst() then begin
+                            repeat
+                                QtytoReceive += PostedGateEntryLineB2B.Quantity;
+                            until PostedGateEntryLineB2B.Next() = 0;
+                            PurchaseLineRec.Reset();
+                            PurchaseLineRec.SetRange("Document No.", PostedGateEntryLineB2B."Purchase Order No.");
+                            PurchaseLineRec.SetRange("Line No.", PostedGateEntryLineB2B."Purchase Order Line No.");
+                            if PurchaseLineRec.FindSet() then begin
+                                PurchaseLineRec."Qty. to Receive" := QtytoReceive;
+                                PurchaseLineRec.Modify();
+                            end;
+                        End;
+                    End;
+                    //End;
                 }
             }
             group(Approval)

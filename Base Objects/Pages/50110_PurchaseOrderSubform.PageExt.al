@@ -413,7 +413,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         ApplicationArea = All;
                         Image = History;
                         Caption = 'Posted Inward/Outward Entries';
-
+        
                         trigger OnAction()
                         var
                             PostedGateEntryHdr: Record "Posted Gate Entry Header_B2B";
@@ -421,7 +421,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                             PostedGateEntryHdr.Reset();
                             PostedGateEntryHdr.FilterGroup(2);
                             PostedGateEntryHdr.SetRange("Purchase Order No.", Rec."Document No.");
-                            //  PostedGateEntryHdr.SetRange("Purchase Order Line No.", Rec."Line No.");
+                            PostedGateEntryHdr.SetRange("Purchase Order Line No.", Rec."Line No.");
                             PostedGateEntryHdr.FilterGroup(0);
                             Page.RunModal(Page::"Posted Gate Entries List", PostedGateEntryHdr);
                         end;

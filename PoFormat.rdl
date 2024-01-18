@@ -913,7 +913,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Description.Value</Value>
+                                  <Value>=Fields!Description1.Value</Value>
                                   <Style>
                                     <FontFamily>Times New Roman</FontFamily>
                                   </Style>
@@ -2040,7 +2040,7 @@
             <Top>6.29345cm</Top>
             <Left>0.63183cm</Left>
             <Height>3cm</Height>
-            <Width>18.75083cm</Width>
+            <Width>18.75085cm</Width>
             <ZIndex>10</ZIndex>
             <Style>
               <Border>
@@ -3481,6 +3481,9 @@ tm3feuutVVVVplTrkZfykiVLqqurR9WP49VTV1d3ww03HD58ePXq1ZweFZLnecPDw2vWrFm5clUQkJQY
         </Field>
         <Field Name="shipmethod">
           <DataField>shipmethod</DataField>
+        </Field>
+        <Field Name="Description1">
+          <DataField>Description1</DataField>
         </Field>
         <Field Name="Variant_Description">
           <DataField>Variant_Description</DataField>

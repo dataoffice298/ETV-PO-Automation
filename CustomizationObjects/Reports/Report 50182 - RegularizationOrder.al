@@ -7,7 +7,7 @@ report 50182 "Regularization Order"
     RDLCLayout = './RegularizationOrder.rdl';
 
 
-   dataset
+    dataset
     {
         dataitem("Purchase Header"; "Purchase Header")
         {
@@ -101,6 +101,10 @@ report 50182 "Regularization Order"
             {
                 DataItemLink = "Document No." = field("No.");
                 DataItemTableView = sorting("Document Type", "Document No.", "Line No.");
+                column(Description1; Description1)
+                {
+
+                }
                 column(Variant_Description; "Variant Description")
                 {
 
@@ -176,6 +180,16 @@ report 50182 "Regularization Order"
                     CheckRec.InitTextVariable;
 
                     CheckRec.FormatNoText(AmountText, AmountVendor1, "Currency Code");
+
+                    //B2BAJ18012024
+                    if ("Purchase Line".Type = "Purchase Line".Type::Item)
+                    or ("Purchase Line".Type = "Purchase Line".Type::"Fixed Asset")
+                    or ("Purchase Line".Type = "Purchase Line".Type::"Charge (Item)") or
+                    ("Purchase Line".Type = "Purchase Line".Type::"G/L Account") then
+                        Description1 := "Purchase Line".Description
+                    Else
+                        if "Purchase Line".Type = "Purchase Line".Type::Description then
+                            Description1 := "Purchase Line"."Indentor Description";
 
 
                 end;
@@ -324,6 +338,7 @@ report 50182 "Regularization Order"
     }
 
     var
+        Description1: Text[100];
         PaymentDescription: Text[100];
         PaymentTermsRec: Record "Payment Terms";
         W: Label 'Warranty';

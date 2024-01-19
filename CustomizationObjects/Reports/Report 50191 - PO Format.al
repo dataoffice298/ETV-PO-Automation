@@ -189,7 +189,7 @@ report 50191 "PO FORMAT"
                         Description1 := "Purchase Line".Description
                     Else
                         if "Purchase Line".Type = "Purchase Line".Type::Description then
-                            Description1 := "Purchase Line"."Indentor Description";
+                            Description1 := "Purchase Line"."Spec Id";
 
 
                 end;

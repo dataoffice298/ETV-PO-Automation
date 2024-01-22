@@ -58,14 +58,22 @@ pageextension 50079 postedPurchInvExt extends "Posted Purchase Invoice"
                 Editable = false;
             }
         }
-        //B2BSSD23MAR2023>>
+        //B2BPROn19JAN2024>>>
+        addafter("Attached Documents") 
+        {
+            part(AttachmentDocPostPurchInv; "Document Attachment Factbox")
+            {
+                ApplicationArea = All;
+                Caption = 'Attachments';
+                Provider = PurchInvLines;
+                SubPageLink = "Table ID" = CONST(50202),
+                "No." = FIELD("Indent No."), "Line No." = field("Indent Line No.");
+            }
+        }
+        modify("Attached Documents")
+        {
+            Visible = false;
+        }//B2BPROn19JAN2024>>>
     }
 
-    actions
-    {
-        // Add changes to page actions here
-    }
-
-    var
-        myInt: Integer;
 }

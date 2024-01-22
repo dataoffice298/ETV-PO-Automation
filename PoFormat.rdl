@@ -725,7 +725,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Unit Rate ( </Value>
+                                  <Value>Unit Rate (  </Value>
                                   <Style>
                                     <FontStyle>Italic</FontStyle>
                                     <FontFamily>Times New Roman</FontFamily>
@@ -733,7 +733,7 @@
                                   </Style>
                                 </TextRun>
                                 <TextRun>
-                                  <Value>=Fields!Currency_Code.Value</Value>
+                                  <Value>=Last(Fields!CurrencyCode.Value)</Value>
                                   <Style>
                                     <FontStyle>Italic</FontStyle>
                                     <FontFamily>Times New Roman</FontFamily>
@@ -805,7 +805,7 @@
                                   </Style>
                                 </TextRun>
                                 <TextRun>
-                                  <Value>=Fields!Currency_Code.Value</Value>
+                                  <Value>=Last(Fields!CurrencyCode.Value)</Value>
                                   <Style>
                                     <FontStyle>Italic</FontStyle>
                                     <FontFamily>Times New Roman</FontFamily>
@@ -952,7 +952,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Variant_Description.Value</Value>
+                                  <Value>=Fields!SpecID.Value</Value>
                                   <Style>
                                     <FontFamily>Times New Roman</FontFamily>
                                   </Style>
@@ -3368,6 +3368,12 @@ tm3feuutVVVVplTrkZfykiVLqqurR9WP49VTV1d3ww03HD58ePXq1ZweFZLnecPDw2vWrFm5clUQkJQY
   <DataSets>
     <DataSet Name="DataSet_Result">
       <Fields>
+        <Field Name="INR">
+          <DataField>INR</DataField>
+        </Field>
+        <Field Name="CurrencyCode">
+          <DataField>CurrencyCode</DataField>
+        </Field>
         <Field Name="PaymentDescription">
           <DataField>PaymentDescription</DataField>
         </Field>
@@ -3481,6 +3487,9 @@ tm3feuutVVVVplTrkZfykiVLqqurR9WP49VTV1d3ww03HD58ePXq1ZweFZLnecPDw2vWrFm5clUQkJQY
         </Field>
         <Field Name="shipmethod">
           <DataField>shipmethod</DataField>
+        </Field>
+        <Field Name="SpecID">
+          <DataField>SpecID</DataField>
         </Field>
         <Field Name="Description1">
           <DataField>Description1</DataField>

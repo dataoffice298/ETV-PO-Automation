@@ -12,6 +12,10 @@ report 50182 "Regularization Order"
         dataitem("Purchase Header"; "Purchase Header")
         {
             RequestFilterFields = "No.";
+            column(CurrencyCode; CurrencyCode)
+            {
+
+            }
             column(PaymentDescription; PaymentDescription)
             {
 
@@ -101,6 +105,10 @@ report 50182 "Regularization Order"
             {
                 DataItemLink = "Document No." = field("No.");
                 DataItemTableView = sorting("Document Type", "Document No.", "Line No.");
+                column(SpecID; SpecID)
+                {
+
+                }
                 column(Description1; Description1)
                 {
 
@@ -181,15 +189,20 @@ report 50182 "Regularization Order"
 
                     CheckRec.FormatNoText(AmountText, AmountVendor1, "Currency Code");
 
-                    //B2BAJ18012024
                     if ("Purchase Line".Type = "Purchase Line".Type::Item)
-                    or ("Purchase Line".Type = "Purchase Line".Type::"Fixed Asset")
-                    or ("Purchase Line".Type = "Purchase Line".Type::"Charge (Item)") or
-                    ("Purchase Line".Type = "Purchase Line".Type::"G/L Account") then
-                        Description1 := "Purchase Line".Description
+                       or ("Purchase Line".Type = "Purchase Line".Type::"Fixed Asset")
+                       or ("Purchase Line".Type = "Purchase Line".Type::"Charge (Item)") or
+                       ("Purchase Line".Type = "Purchase Line".Type::"G/L Account") then begin
+                        Description1 := "Purchase Line".Description;
+                        SpecID := "Purchase Line"."Variant Description";
+
+                    end
                     Else
-                        if "Purchase Line".Type = "Purchase Line".Type::Description then
-                            Description1 := "Purchase Line"."Spec Id";
+                        if "Purchase Line".Type = "Purchase Line".Type::Description then begin
+                            Description1 := "Purchase Line"."Indentor Description";
+                            SpecID := "Purchase Line"."Spec Id";
+                        End;
+
 
 
                 end;
@@ -332,12 +345,19 @@ report 50182 "Regularization Order"
                     PaymentTermsRec.Get("Purchase Header"."Payment Terms Code");
                     PaymentDescription := PaymentTermsRec.Description;
                 end;
+                IF "Purchase Header"."Currency Code" = '' then
+                    CurrencyCode := 'INR'
+                ELSE
+                    CurrencyCode := "Purchase Header"."Currency Code";
+
             end;
         }
 
     }
 
     var
+        SpecID: Text[250];
+        CurrencyCode: Code[10];
         Description1: Text[100];
         PaymentDescription: Text[100];
         PaymentTermsRec: Record "Payment Terms";

@@ -59,10 +59,11 @@ pageextension 50079 postedPurchInvExt extends "Posted Purchase Invoice"
             }
         }
         //B2BPROn19JAN2024>>>
-        addafter("Attached Documents") 
+        addafter("Attached Documents")
         {
             part(AttachmentDocPostPurchInv; "Document Attachment Factbox")
             {
+                Editable = false;
                 ApplicationArea = All;
                 Caption = 'Attachments';
                 Provider = PurchInvLines;

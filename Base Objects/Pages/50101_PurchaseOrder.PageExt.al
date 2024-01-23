@@ -143,7 +143,9 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 ApplicationArea = All;
                 Caption = 'Attachments';
                 Provider = PurchLines;
-                SubPageLink = "Table ID" = CONST(50202),
+                /* SubPageLink = "Table ID" = CONST(50202),
+                "No." = FIELD("Indent No."), "Line No." = field("Indent Line No."); */
+                SubPageLink =
                 "No." = FIELD("Indent No."), "Line No." = field("Indent Line No.");
             }
         }

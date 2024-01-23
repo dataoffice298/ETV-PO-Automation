@@ -277,6 +277,18 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
 
             end;
         }
+        modify(Type)
+        {
+            trigger OnAfterValidate()
+            var
+                myInt: Integer;
+            begin
+                if Rec.Type = Rec.Type::Description then
+                    Rec."No." := '01'
+                Else
+                    exit;
+            end;
+        }
     }
 
 
@@ -413,7 +425,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         ApplicationArea = All;
                         Image = History;
                         Caption = 'Posted Inward/Outward Entries';
-        
+
                         trigger OnAction()
                         var
                             PostedGateEntryHdr: Record "Posted Gate Entry Header_B2B";

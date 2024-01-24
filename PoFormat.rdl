@@ -811,6 +811,7 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -1755,13 +1756,8 @@
                 <TablixMember />
                 <TablixMember>
                   <Group Name="Details" />
-                  <Visibility>
-                    <Hidden>=iif(Fields!No_PurchLine.Value &lt;&gt; "", false, true)</Hidden>
-                  </Visibility>
                 </TablixMember>
-                <TablixMember>
-                  <KeepWithGroup>After</KeepWithGroup>
-                </TablixMember>
+                <TablixMember />
                 <TablixMember>
                   <Group Name="Number_GSTLoop">
                     <GroupExpressions>
@@ -2626,7 +2622,7 @@
         <Height>18.41983cm</Height>
         <Style />
       </Body>
-      <Width>19.56329cm</Width>
+      <Width>21.88266cm</Width>
       <Page>
         <PageHeader>
           <Height>4.19351cm</Height>

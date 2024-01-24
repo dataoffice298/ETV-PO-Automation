@@ -54,6 +54,17 @@ page 50127 QuotationComparSubForm
                     Editable = false;
                     ApplicationArea = all;
                 }
+                
+                field("Variant Code"; Rec."Variant Code")
+                {
+                    Editable = false;
+                    // Visible = false;
+                }
+                field("Variant Description"; rec."Variant Description") //B2BSCM11JAN2024
+                {
+                    Editable = false;
+                    //Visible = false;
+                }
                 field(Quality; Rec.Quality)
                 {
                     Caption = 'Quality weight';
@@ -427,16 +438,6 @@ page 50127 QuotationComparSubForm
                     ApplicationArea = all;
                 }
 
-                field("Variant Code"; Rec."Variant Code")
-                {
-                    Editable = false;
-                    Visible = false;
-                }
-                field("Variant Description"; rec."Variant Description") //B2BSCM11JAN2024
-                {
-                    Editable = false;
-                    Visible = false;
-                }
                 field("Carry Out Action"; Rec."Carry Out Action")
                 {
                     ApplicationArea = all;

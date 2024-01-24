@@ -13,11 +13,4 @@ pageextension 50124 PurchaseInvoice extends "Purchase Invoice"
         }
     }
 
-    actions
-    {
-        // Add changes to page actions here
-    }
-
-    var
-        myInt: Integer;
 }

@@ -131,6 +131,7 @@ report 50076 "Purchase Order Creation New"
                                 PurchaseLineOrder.VALIDATE(Quantity, "Quotation Comparison1".Quantity);
                                 PurchaseLineOrder.Validate("Direct Unit Cost", "Quotation Comparison1".Rate);
                                 PurchaseLineOrder."Variant Code" := "Quotation Comparison1"."Variant Code";
+                                PurchaseLineOrder."Variant Description" := "Quotation Comparison1"."Variant Description";
                                 PurchaseLineOrder."Location Code" := "Quotation Comparison1"."Location Code";
                                 PurchaseLineOrder."Sub Location Code" := "Quotation Comparison1"."Sub Location Code";
                                 PurchaseLineOrder."Shortcut Dimension 1 Code" := "Quotation Comparison1"."Shortcut Dimension 1 Code";//B2BPAV

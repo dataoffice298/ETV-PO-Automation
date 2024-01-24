@@ -12,6 +12,18 @@ report 50191 "PO FORMAT"
         dataitem("Purchase Header"; "Purchase Header")
         {
             RequestFilterFields = "No.";
+            column(INR; INR)
+            {
+
+            }
+            column(CurrencyCode; CurrencyCode)
+            {
+
+            }
+            column(PaymentDescription; PaymentDescription)
+            {
+
+            }
             column(W; W)
             {
 
@@ -97,7 +109,18 @@ report 50191 "PO FORMAT"
             {
                 DataItemLink = "Document No." = field("No.");
                 DataItemTableView = sorting("Document Type", "Document No.", "Line No.");
+                column(SpecID; SpecID)
+                {
 
+                }
+                column(Description1; Description1)
+                {
+
+                }
+                column(Variant_Description; "Variant Description")
+                {
+
+                }
                 column(Document_No_; "Document No.")
                 { }
                 column(Line_No_; "Line No.")
@@ -169,6 +192,21 @@ report 50191 "PO FORMAT"
                     CheckRec.InitTextVariable;
 
                     CheckRec.FormatNoText(AmountText, AmountVendor1, "Currency Code");
+
+                    //B2BAJ18012024
+                    if ("Purchase Line".Type = "Purchase Line".Type::Item)
+                    or ("Purchase Line".Type = "Purchase Line".Type::"Fixed Asset")
+                    or ("Purchase Line".Type = "Purchase Line".Type::"Charge (Item)") or
+                    ("Purchase Line".Type = "Purchase Line".Type::"G/L Account") then begin
+                        Description1 := "Purchase Line".Description;
+                        SpecID := "Purchase Line"."Variant Description";
+
+                    end
+                    Else
+                        if "Purchase Line".Type = "Purchase Line".Type::Description then begin
+                            Description1 := "Purchase Line"."Indentor Description";
+                            SpecID := "Purchase Line"."Spec Id";
+                        End;
 
 
                 end;
@@ -307,12 +345,28 @@ report 50191 "PO FORMAT"
                             NextLoop := true;
                     until PurchLine.Next() = 0;
                 end;
-            end;
+                if "Purchase Header"."Payment Terms Code" <> ' ' then begin //B2BAJ18012024
+                    PaymentTermsRec.Get("Purchase Header"."Payment Terms Code");
+                    PaymentDescription := PaymentTermsRec.Description;
+                end;
+
+                IF "Purchase Header"."Currency Code" = '' then
+                    CurrencyCode := 'INR'
+                ELSE
+                    CurrencyCode := "Purchase Header"."Currency Code";
+            END;
         }
 
     }
 
     var
+        INR: Label 'INR';
+        Currency: Record Currency;
+        CurrencyCode: Code[10];
+        SpecID: Text[250];
+        Description1: Text[100];
+        PaymentDescription: Text[100];
+        PaymentTermsRec: Record "Payment Terms";
         W: Label 'Warranty';
         CheckRec: Codeunit "Check Codeunit";
         transactionspecificTxt: Text[100];

@@ -33,7 +33,7 @@ report 50194 "GRN Register"//B2BSSD14JUN2023
                             GRNDate := PostedPurchRcptGRec."Document Date";
                             GSTSetup.Get();
                             GetGSTAmounts("Purch. Rcpt. Line", GSTSetup);
-                            TotalAmount := TotalGSTAmount + ("Purch. Rcpt. Line".Quantity * "Purch. Rcpt. Line"."Direct Unit Cost");
+                            TotalAmount := TotalGSTAmount + ("Purch. Rcpt. Line".Quantity * "Purch. Rcpt. Line"."Direct Unit Cost") - (("Purch. Rcpt. Line".Quantity * "Purch. Rcpt. Line"."Direct Unit Cost" * "Purch. Rcpt. Line"."Line Discount %") / 100);//B2BAJ12012024
                         until PostedPurchRcptGRec.Next() = 0;
                         PostedRGPInwardGRec.Reset();
                         PostedRGPInwardGRec.SetRange("Purchase Order No.", PostedPurchRcptGRec."Order No.");

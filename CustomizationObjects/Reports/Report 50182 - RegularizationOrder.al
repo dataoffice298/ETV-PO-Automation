@@ -11,6 +11,23 @@ report 50182 "Regularization Order"
     {
         dataitem("Purchase Header"; "Purchase Header")
         {
+            RequestFilterFields = "No.";
+            column(CurrencyCode; CurrencyCode)
+            {
+
+            }
+            column(PaymentDescription; PaymentDescription)
+            {
+
+            }
+            column(W; W)
+            {
+
+            }
+            column(Currency_Code; "Currency Code")//B2BAJ01102024
+            {
+
+            }
             column(No_; "No.")
             { }
             column(Picture_CompanyInfo; CompanyInfo.Picture)
@@ -45,8 +62,14 @@ report 50182 "Regularization Order"
             { }
             column(Subject; Subject)
             { }
-            column(AmountText; AmountText[1])
+            column(AmountText; AmountText[1] + ' ' + AmountText[2])
             { }
+            //balu
+            column(AmountVendor1; AmountVendor1)
+            {
+
+            }
+            //Balu
             column(TotalOrderAmount; TotalOrderAmount)
             { }
             column(AckLbl; AckLbl)
@@ -55,25 +78,54 @@ report 50182 "Regularization Order"
             { }
             column(ETVLbl; ETVLbl)
             { }
+            //B2BSSD24APR2023>>
+            column(Transaction_Specification; "Transaction Specification")
+            { }
+            column(Transaction_Type; "Transaction Type")
+            { }
+            column(Shipment_Method_Code; "Shipment Method Code")
+            { }
+            column(Transport_Method; "Transport Method")
+            { }
+            column(Payment_Terms_Code; "Payment Terms Code")
+            { }
+            column(TransportMethodDes; TransportMethodDes)//B2BSSD25APR2023
+            { }
+            column(TransactionTypeDES; TransactionTypeDES)//B2BSSD25APR2023
+            { }
+            column(PaymentTermsText; PaymentTermsText)//B2BSSD25APR2023
+            { }
+            column(transactionspecificTxt; transactionspecificTxt)//B2BSSD25APR2023
+            { }
+            column(shipmethod; shipmethod)//B2BSSD25APR2023
+            { }
+            //B2BSSD24APR2023<<
 
             dataitem("Purchase Line"; "Purchase Line")
             {
-                DataItemLinkReference = "Purchase Header";
                 DataItemLink = "Document No." = field("No.");
-                //DataItemLink = "Document Type" = field("Document Type"), "Document No." = field("No.");
                 DataItemTableView = sorting("Document Type", "Document No.", "Line No.");
+                column(SpecID; SpecID)
+                {
 
+                }
+                column(Description1; Description1)
+                {
+
+                }
+                column(Variant_Description; "Variant Description")
+                {
+
+                }
                 column(Document_No_; "Document No.")
                 { }
                 column(Line_No_; "Line No.")
                 { }
+                column(SNo; SNo)
+                { }
                 column(No_PurchLine; "No.")
                 { }
-                column(Description1; Description)
-                {
-
-                }
-                column(SNo; SNo)
+                column(Description; Description)
                 { }
                 column(HSN_SAC_Code; "HSN/SAC Code")
                 { }
@@ -95,6 +147,9 @@ report 50182 "Regularization Order"
                 { }
                 column(TotalLineAmount; TotalLineAmount)
                 { }
+                column(warranty1; warranty)//B2BSSD24APR2023
+                { }
+
 
                 /* trigger OnPreDataItem()
                 begin
@@ -103,38 +158,74 @@ report 50182 "Regularization Order"
 
                 trigger OnAfterGetRecord()
                 var
-                    purOr: Record "Purchase Header";
+
+
                 begin
                     SNo += 1;
                     Clear(CGSTAmt);
                     Clear(SGSTAmt);
                     Clear(IGSSTAmt);
 
+
                     // TotalLineAmount += "Purchase Line"."Line Amount";
 
                     // GetGSTAmounts("Purchase Line");
                     // TotalGSTAmount += CGSTAmt + SGSTAmt + IGSSTAmt;
+                    GetGSTAmounts("Purchase Line");//Balu
                     Clear(GstTotal);
-
                     GstTotal := CGSTAmt + SGSTAmt + IGSSTAmt;
                     GstTotalSum := GstTotalSum + GstTotal;
                     //GSTPerQTY := GstTotal / Quantity;
                     //GSTPertotal := CGSTPer + SGSTPer + IGSTPer;
                     //Message('%1', GstTotal);
                     Clear(AmountVendor1);
+                    Clear(AmountText);
                     AmountVendor += "Line Amount";
                     AmountVendor1 := AmountVendor + GstTotalSum;
-                    GateEntryPostYesNo.InitTextVariable;
-                    GateEntryPostYesNo.FormatNoText(AmountText, Round(AmountVendor1, 1, '='), "Currency Code");
+                    //   GateEntryPostYesNo.InitTextVariable;
+                    //  GateEntryPostYesNo.FormatNoTextInvoice(AmountText, Round(AmountVendor1, 1, '='), "Currency Code");
+                    // GateEntryPostYesNo.FormatNoText(AmountText, AmountVendor1, "Currency Code");
+                    CheckRec.InitTextVariable;
+
+                    CheckRec.FormatNoText(AmountText, AmountVendor1, "Currency Code");
+
+                    if ("Purchase Line".Type = "Purchase Line".Type::Item)
+                       or ("Purchase Line".Type = "Purchase Line".Type::"Fixed Asset")
+                       or ("Purchase Line".Type = "Purchase Line".Type::"Charge (Item)") or
+                       ("Purchase Line".Type = "Purchase Line".Type::"G/L Account") then begin
+                        Description1 := "Purchase Line".Description;
+                        SpecID := "Purchase Line"."Variant Description";
+
+                    end
+                    Else
+                        if "Purchase Line".Type = "Purchase Line".Type::Description then begin
+                            Description1 := "Purchase Line"."Indentor Description";
+                            SpecID := "Purchase Line"."Spec Id";
+                        End;
+
+
+
                 end;
 
                 trigger OnPostDataItem()
                 begin
-                    /*TotalOrderAmount := TotalLineAmount + TotalGSTAmount;
-                    Clear(AmountText);
-                    GateEntryPostYesNo.InitTextVariable;
-                    GateEntryPostYesNo.FormatNoText(AmountText, Round(TotalOrderAmount, 1, '='), "Currency Code");*/
+
+                    // TotalOrderAmount := TotalLineAmount + TotalGSTAmount;
+                    // Clear(AmountText);
+                    // GateEntryPostYesNo.InitTextVariable;
+                    // GateEntryPostYesNo.FormatNoText(AmountText, Round(TotalOrderAmount, 1, '='), "Currency Code");
                 end;
+            }
+            dataitem("PO Terms And Conditions"; "PO Terms And Conditions") //B2BAJ02012024
+            {
+                DataItemLink = DocumentNo = field("No.");
+                column(LineType; LineType)
+                {
+                }
+                column(Description11; Description)
+                {
+
+                }
             }
 
             dataitem(GSTLoop; Integer)
@@ -181,6 +272,10 @@ report 50182 "Regularization Order"
                                 I += 1;
                                 GSTPerText := StrSubstNo(GSTText, GSTPercent);
                                 repeat
+                                    //Balu
+                                    Clear(SGSTAmt);
+                                    Clear(IGSSTAmt);
+                                    Clear(CGSTAmt);//Balu
                                     GetGSTAmounts(PurchLine);
                                     GSTAmountLine[I] += SGSTAmt + IGSSTAmt + CGSTAmt;
                                     LineSNo := DelChr(Format(PurchLine."Line No."), '>', '0');
@@ -190,12 +285,17 @@ report 50182 "Regularization Order"
                             end;
                         end;
                     end;
-                    if PurchLineGST.Next() = 0 then
-                        CurrReport.Break();
+                    //    AmountVendor += "Line Amount";
+                    //  AmountVendor1 := AmountVendor + GstTotalSum;
+
+                    if PurchLineGST.Next() = 0 then;
+                    //CurrReport.Break();//Balu
                 end;
             }
 
             trigger OnAfterGetRecord()
+            var
+
             begin
                 Clear(SNo);
                 Clear(TotalGSTAmount);
@@ -209,6 +309,19 @@ report 50182 "Regularization Order"
                 if VendorGRec.Get("Buy-from Vendor No.") then;
 
                 if PurchaseHdr.Get(PurchaseHdr."Document Type"::Quote, "Quote No.") then;
+
+                //B2BSSD25APR2023>>
+                if TransportMethod.Get("Transport Method") then
+                    TransportMethodDes := TransportMethod.Description;
+                if TransactionTypeRec.Get("Transaction Type") then
+                    TransactionTypeDES := TransactionTypeRec.Description;
+                if Shipments.get("Shipment Method Code") then
+                    shipmethod := Shipments.Description;
+                if Shipments.get("Payment Terms Code") then
+                    shipmethod := Shipments.Description;
+                if Transactionspecifcation.get("Transaction Specification") then
+                    transactionspecificTxt := Transactionspecifcation.Text;
+                //B2bssd25apr2023<<
 
                 PurchLine.Reset();
                 PurchLine.SetRange("Document No.", "No.");
@@ -228,27 +341,57 @@ report 50182 "Regularization Order"
                             NextLoop := true;
                     until PurchLine.Next() = 0;
                 end;
+                if "Purchase Header"."Payment Terms Code" <> ' ' then begin
+                    PaymentTermsRec.Get("Purchase Header"."Payment Terms Code");
+                    PaymentDescription := PaymentTermsRec.Description;
+                end;
+                IF "Purchase Header"."Currency Code" = '' then
+                    CurrencyCode := 'INR'
+                ELSE
+                    CurrencyCode := "Purchase Header"."Currency Code";
+
             end;
         }
+
     }
 
     var
+        SpecID: Text[250];
+        CurrencyCode: Code[10];
+        Description1: Text[100];
+        PaymentDescription: Text[100];
+        PaymentTermsRec: Record "Payment Terms";
+        W: Label 'Warranty';
+        CheckRec: Codeunit "Check Codeunit";
+        transactionspecificTxt: Text[100];
+        Transactionspecifcation: Record "Transaction Specification";
+        PaymentTerms: Record "Payment Terms";
+        PaymentTermsText: Text[100];
+        Shipments: Record "Shipment Method";
+        shipmethod: Text[50];
+        TransactionTypeDES: Text[50];
+        TransportMethodDes: Text[100];
+        TransportMethod: Record "Transport Method";
+        TransactionTypeRec: Record "Transaction Type";
+
         CompanyInfo: Record "Company Information";
         StateGRec: Record State;
         VendorGRec: Record Vendor;
+        GstTotal: Decimal;
         PurchaseHdr: Record "Purchase Header";
         PurchLine: Record "Purchase Line";
         PurchLineGST: Record "Purchase Line";
         IndentHdr: Record "Indent Header";
         Dear_CaptionLbl: Label 'Dear Sir,';
+        AmountVendor: Decimal;
         Subject: Text;
         Subject1: Label 'With reference to your Quotation No. %1/dt. %2 and subsequent discussion we had with you, ';
         Subject2: Label 'We would like to place order on you for the following lines against the Indent No. %1/dt. %2';
         IGSTLbl: Label 'IGST';
         SGSTLbl: Label 'SGST';
+        AmountVendor1: Decimal;
         CGSTLbl: Label 'CGST';
         GSTLbl: Label 'GST';
-        AmountVendor: Decimal;
         GstTotalSum: Decimal;
         CGSTAmt: Decimal;
         SGSTAmt: Decimal;
@@ -264,16 +407,14 @@ report 50182 "Regularization Order"
         GSTPerText: Text;
         LineSNo: Text;
         AmountText: array[2] of Text;
-        AmountVendor1: Decimal;
-        GateEntryPostYesNo: Codeunit "Gate Entry- Post Yes/No";
+        // GateEntryPostYesNo: Codeunit "Global Functions B2B";
         AckLbl: Label 'Please acknowledge the receipt of the order and arrange the material at the earliest.';
         ThankYouLbl: Label 'Thanking you,';
         ETVLbl: Label 'For EENADU TELEVISION PVT. LIMITED';
         GSTAmountLine: array[10] of Decimal;
         I: Integer;
         PONumber: Code[50];//B2BSSD28MAR2023
-        purcahseOrder: Record "Purchase Header";
-        GstTotal: Decimal;
+        PurchaseHeader: Record "Purchase Header";
 
     //GST Starts>>
     local procedure GetGSTAmounts(PurchaseLine: Record "Purchase Line")
@@ -360,4 +501,5 @@ report 50182 "Regularization Order"
         end;
     end;
     //GST Ends<<
+
 }

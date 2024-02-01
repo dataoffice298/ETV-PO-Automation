@@ -713,7 +713,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                     GateEntryLine."Source Name" := ItemLRec.Description;
                     GateEntryLine.Description := ItemLRec.Description;
                     GateEntryLine.Variant := PurchLine."Variant Code";//B2BSSDOn13Dec2022
-                    GateEntryLine."Unit of Measure" := Rec."Unit of Measure Code";
+                    GateEntryLine."Unit of Measure" := PurchLine."Unit of Measure Code"; //B2BSCM01FEB2024
                     GateEntryLine."Purchase Order No." := PurchLine."Document No.";
                     GateEntryLine."Purchase Order Line No." := PurchLine."Line No.";
                     //GateEntryLine.Validate(Quantity, ReservationEntry.Quantity);

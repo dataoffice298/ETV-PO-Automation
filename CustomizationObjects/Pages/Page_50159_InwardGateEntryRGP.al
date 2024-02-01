@@ -265,7 +265,7 @@ page 50159 "Inward Gate Entry-RGP"
                                 end;
                             UNTIL RGPLineRec.NEXT = 0;
                         PostCU.RUN(Rec);
-                        PostedGateEntryLineB2B.Reset();
+                        /* PostedGateEntryLineB2B.Reset();
                         PostedGateEntryLineB2B.SetRange("Entry Type", PostedGateEntryLineB2B."Entry Type"::Inward);
                         PostedGateEntryLineB2B.SetRange(Type, PostedGateEntryLineB2B.Type::RGP);
                         PostedGateEntryLineB2B.SetRange("Purchase Order No.", Rec."Purchase Order No.");
@@ -281,7 +281,7 @@ page 50159 "Inward Gate Entry-RGP"
                                 PurchaseLineRec."Qty. to Receive" := QtytoReceive;
                                 PurchaseLineRec.Modify();
                             end;
-                        End;
+                        End; */
                     End;
                     //End;
                 }

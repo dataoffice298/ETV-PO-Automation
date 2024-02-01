@@ -151,10 +151,10 @@ report 50182 "Regularization Order"
                 { }
 
 
-                trigger OnPreDataItem()
+                /* trigger OnPreDataItem()
                 begin
                     SetFilter("No.", '<>%1', '');
-                end;
+                end; */
 
                 trigger OnAfterGetRecord()
                 var

@@ -411,12 +411,35 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         trigger OnAction()
                         var
                             GateEntryHdr: Record "Gate Entry Header_B2B";
+                            GateEntryHdr1: Record "Gate Entry Header_B2B";
+                            GateEntryLine: Record "Gate Entry Line_B2B";
+                            I: Integer;
+                            No: text[500];
                         begin
+                            Clear(No);
+                            i := 1;
+                            GateEntryLine.Reset();
+                            GateEntryLine.SetRange("Purchase Order No.", Rec."Document No.");
+                            GateEntryLine.SetRange("Purchase Order Line No.", Rec."Line No.");
+                            if GateEntryLine.FindSet() then
+                                repeat
+                                    if i = 1 then begin
+                                        i := i + 1;
+                                        No := GateEntryLine."Gate Entry No."
+                                    end else
+                                        No := No + '|' + GateEntryLine."Gate Entry No.";
+
+                                until GateEntryLine.Next() = 0;
+
                             GateEntryHdr.Reset();
-                            GateEntryHdr.FilterGroup(2);
-                            GateEntryHdr.SetRange("Purchase Order No.", Rec."Document No.");
+                            //GateEntryHdr.FilterGroup(2);
+                            if No <> '' then
+                                GateEntryHdr.SetFilter("No.", No)
+                            else
+                                GateEntryHdr.SetRange("No.", No);
                             // GateEntryHdr.SetRange("Purchase Order Line No.", Rec."Line No.");
-                            GateEntryHdr.FilterGroup(0);
+                            // GateEntryHdr.FilterGroup(0);
+                            //GateEntryHdr.FindSet();
                             Page.RunModal(Page::"Gate Entry List", GateEntryHdr);
                         end;
                     }
@@ -429,12 +452,35 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         trigger OnAction()
                         var
                             PostedGateEntryHdr: Record "Posted Gate Entry Header_B2B";
+                            PostedGateEntryLine: Record "Posted Gate Entry Line_B2B";
+                            I: Integer;
+                            No: text[500];
                         begin
+                            Clear(No);
+                            i := 1;
+                            PostedGateEntryLine.Reset();
+                            PostedGateEntryLine.SetRange("Purchase Order No.", Rec."Document No.");
+                            PostedGateEntryLine.SetRange("Purchase Order Line No.", Rec."Line No.");
+                            if PostedGateEntryLine.FindSet() then
+                                repeat
+                                    if i = 1 then begin
+                                        No := PostedGateEntryLine."Gate Entry No.";
+                                        i := i + 1;
+                                    end else
+                                        No := No + '|' + PostedGateEntryLine."Gate Entry No.";
+
+                                until PostedGateEntryLine.Next() = 0;
+
                             PostedGateEntryHdr.Reset();
-                            PostedGateEntryHdr.FilterGroup(2);
-                            PostedGateEntryHdr.SetRange("Purchase Order No.", Rec."Document No.");
-                            PostedGateEntryHdr.SetRange("Purchase Order Line No.", Rec."Line No.");
-                            PostedGateEntryHdr.FilterGroup(0);
+                            if No <> '' then
+                                PostedGateEntryHdr.SetFilter("No.", No)
+                            else
+                                PostedGateEntryHdr.SetRange("No.", No);
+                            // PostedGateEntryHdr.FilterGroup(2);
+                            // PostedGateEntryHdr.SetFilter("No.", No);
+                            // PostedGateEntryHdr.SetRange("Purchase Order No.", Rec."Document No.");
+                            // PostedGateEntryHdr.SetRange("Purchase Order Line No.", Rec."Line No.");
+                            //  PostedGateEntryHdr.FilterGroup(0);
                             Page.RunModal(Page::"Posted Gate Entries List", PostedGateEntryHdr);
                         end;
                     }
@@ -636,11 +682,14 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         PurchHeader: Record "Purchase Header";
         purchaseline1: Record "Purchase Line";
         Inwardqty: Decimal;
+        InwardQtyGVar: Decimal;
+
     begin
         //B2BSSD27APR2023>>
         if PurchHeader.get(Rec."Document Type", Rec."Document No.") then
             PurchHeader.TestField(Status, PurchHeader.status::Released);
         //B2BSSD27APR2023<<
+
 
         //Clear(ReservationEntry);
         LineNo := 10000;
@@ -735,8 +784,9 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                     PurchLine."Qty Accepted Inward_B2B" := Inwardqty;
                     PurchLine."Qty. to Receive (Base)" := 0;
                     PurchLine."Qty. to Invoice (Base)" := 0;
-                    PurchLine."Qty. to Receive" := PurchLine."Qty to Inward_B2B";//B2BSSD09AUG2023
-                    PurchLine."Qty. to Invoice" := PurchLine."Qty to Inward_B2B";
+                    /* PurchLine."Qty. to Receive" := PurchLine."Qty to Inward_B2B" + PurchLine."Inward Qty";//B2BVCOn01Feb2024
+                    PurchLine."Qty. to Invoice" := PurchLine."Qty to Inward_B2B" + PurchLine."Inward Qty"; //B2BVCOn01Feb2024
+                    PurchLine."Inward Qty" := PurchLine."Qty. to Receive"; */ //B2BVCOn01Feb2024
                     PurchLine."Qty to Inward_B2B" := 0;
                     PurchLine.Modify();
                     //B2BSSD15MAY2023<<

@@ -424,6 +424,11 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             DataClassification = CustomerContent;
 
         }
+        field(60053; "Inward Qty"; Decimal) //B2BVCOn01Feb2024
+        {
+            Caption = 'Inward Qty';
+            DataClassification = CustomerContent;
+        }
         modify("Variant Code")  //B2BSCM12JAN2024
         {
             trigger OnAfterValidate()

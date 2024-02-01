@@ -155,11 +155,11 @@ report 50191 "PO FORMAT"
                 { }
 
 
-                trigger OnPreDataItem()
-                begin
-                    SetFilter("No.", '<>%1', '');
-                end;
-
+                /*  trigger OnPreDataItem()
+                 begin
+                     SetFilter("No.", '<>%1', '');
+                 end;
+                 */
                 trigger OnAfterGetRecord()
                 var
 

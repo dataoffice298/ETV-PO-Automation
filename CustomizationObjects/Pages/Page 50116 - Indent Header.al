@@ -584,6 +584,8 @@ page 50116 "Indent Header"
                         if IndentLine.FindSet() then begin
                             repeat
                                 IndentLine.TestField("Unit of Measure");
+                                IndentLine.TestField("Issue Location"); //B2BVCOn01Feb2024
+                                IndentLine.TestField("Issue Sub Location"); //B2BVCOn01Feb2024
                             until IndentLine.Next() = 0;
                         end;
 

@@ -47,7 +47,6 @@ page 50157 "Outward Gate Entry - RGP"
                 field("No."; Rec."No.")
                 {
                     ApplicationArea = ALL;
-
                     trigger OnAssistEdit();
                     begin
                         if Rec.AssistEdit(xRec) then
@@ -308,7 +307,9 @@ page 50157 "Outward Gate Entry - RGP"
         OpenApprEntrEsists := approvalmngmt.HasOpenApprovalEntries(Rec.RecordId());
         CanCancelapprovalforrecord := approvalmngmt.CanCancelApprovalForRecord(Rec.RecordId());
         workflowwebhookmangt.GetCanRequestAndCanCancel(Rec.RecordId(), CanrequestApprovForFlow, CanCancelapprovalforflow);
+
     END;
+
 
     trigger OnModifyRecord(): Boolean
     BEGIN

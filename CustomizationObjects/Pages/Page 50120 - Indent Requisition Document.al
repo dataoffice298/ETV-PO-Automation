@@ -178,9 +178,10 @@ page 50120 "Indent Requisition Document"
                         // CreateIndents.SETRANGE("Carry out Action", TRUE);
                         CurrPage.Indentrequisations.Page.SetSelectionFilter(CreateIndents);//B2BSSD18APR2023
                         CLEAR(VendorList);
+                        VendorList.Editable(false);
                         VendorList.LOOKUPMODE(TRUE);
                         IF VendorList.RUNMODAL = ACTION::LookupOK THEN BEGIN
-                            VendorList.SetSelection(Vendor);
+                            VendorList.SetSelectionFilter(Vendor);
                             IF Vendor.COUNT >= 1 THEN BEGIN
                                 POAutomation.CreateEnquiries(CreateIndents, Vendor, Rec."No.Series");
                                 MESSAGE(Text0010);

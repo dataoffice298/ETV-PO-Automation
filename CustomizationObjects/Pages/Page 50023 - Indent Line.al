@@ -199,7 +199,7 @@ page 50023 "Indent Line"
                 {
                     ApplicationArea = all;
                     Caption = 'To Location';//B2BSSD05APR2023
-                    Editable = FieldEditable; //B2BSCM21AUG2023
+                    //Editable = FieldEditable; //B2BSCM21AUG2023 //B2BVCOn01Feb2024 Comment
                 }
                 field("Archive Indent"; "Archive Indent")
                 {

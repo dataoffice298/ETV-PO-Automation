@@ -96,7 +96,7 @@ table 50220 "Posted Gate Entry Line_B2B"
             DataClassification = CustomerContent;
             Caption = 'Model No';
         }
-        field(33; SerialNo; Code[20])
+        field(33; SerialNo; Code[30]) //B2BSCM02FEB2024
         {
             DataClassification = CustomerContent;
             Caption = 'Serial No';
@@ -112,7 +112,7 @@ table 50220 "Posted Gate Entry Line_B2B"
         field(36; "Purchase Order No."; code[20])
         {
             DataClassification = ToBeClassified;
-           
+
         }
         field(37; "Purchase Order Line No."; Integer)
         {

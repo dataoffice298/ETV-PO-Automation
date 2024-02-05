@@ -340,12 +340,20 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         trigger OnAction()
                         var
                             PurChaseHeader: Record "Purchase Header";//B2BSSDJan2023
+                            PurchLineLRec: Record "Purchase Line";
                         begin
-                            //B2BSSD15MAY2023>>
-                            if Rec.Quantity = Rec."Quantity Accepted B2B" then
-                                Error('Rgp Inward Already Created');
-                            Rec.TestField("Qty to Inward_B2B");
-                            //B2BSSD15MAY2023<<
+                            PurchLineLRec.Reset();
+                            PurchLineLRec.SetRange("Document No.", "Document No.");
+                            PurchLineLRec.SetRange(Select, true);
+                            if PurchLineLRec.FindSet() then begin
+                                repeat
+
+                                    //B2BSSD15MAY2023>>
+                                    if PurchLineLRec.Quantity = PurchLineLRec."Quantity Accepted B2B" then
+                                        Error('Rgp Inward Already Created');
+                                    PurchLineLRec.TestField("Qty to Inward_B2B");
+                                until PurchLineLRec.Next() = 0;
+                            end;                                    //B2BSSD15MAY2023<<
 
                             //B2BSSDJan2023<<
                             PurChaseHeader.Reset();

@@ -163,10 +163,10 @@ codeunit 50019 "Gate Entry- Post"
                 if PurchLineGRec.FindFirst() then begin
                     PurchLineGRec."Posted Gate Entry No." := PostedGateEntryLine."Gate Entry No.";
                     PurchLineGRec."Posted Gate Entry Line No." := PostedGateEntryLine."Line No.";
-                    PurchLineGRec."Qty. to Receive" := (PostedGateEntryLine.Quantity + PurchLineGRec."Inward Qty") - PurchLineGRec."Quantity Received"; //B2BVCOn01Feb2024
+                    PurchLineGRec.validate("Qty. to Receive", (PostedGateEntryLine.Quantity + PurchLineGRec."Inward Qty") - PurchLineGRec."Quantity Received"); //B2BVCOn01Feb2024
 
-                    PurchLineGRec."Qty. to Invoice" := (PostedGateEntryLine.Quantity + PurchLineGRec."Inward Qty") - PurchLineGRec."Quantity Invoiced"; //B2BVCOn01Feb2024
-                    PurchLineGRec."Inward Qty" := PurchLineGRec."Qty. to Receive"; //B2BVCOn01Feb2024
+                    PurchLineGRec.Validate("Qty. to Invoice", (PostedGateEntryLine.Quantity + PurchLineGRec."Inward Qty") - PurchLineGRec."Quantity Invoiced"); //B2BVCOn01Feb2024
+                    PurchLineGRec."Inward Qty" += PurchLineGRec."Qty. to Receive"; //B2BVCOn01Feb2024
                     PurchLineGRec.Modify();
                 end;
             //B2BVCOn09Nov2023 <<

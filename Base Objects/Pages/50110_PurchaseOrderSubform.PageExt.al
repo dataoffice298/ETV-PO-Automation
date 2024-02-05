@@ -344,7 +344,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         begin
                             PurchLineLRec.Reset();
                             PurchLineLRec.SetRange("Document No.", "Document No.");
-                            PurchLineLRec.SetRange(Select, true);
+                            PurchLineLRec.SetRange(Select,true);
                             if PurchLineLRec.FindSet() then begin
                                 repeat
 

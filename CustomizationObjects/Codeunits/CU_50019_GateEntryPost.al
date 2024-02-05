@@ -163,8 +163,9 @@ codeunit 50019 "Gate Entry- Post"
                 if PurchLineGRec.FindFirst() then begin
                     PurchLineGRec."Posted Gate Entry No." := PostedGateEntryLine."Gate Entry No.";
                     PurchLineGRec."Posted Gate Entry Line No." := PostedGateEntryLine."Line No.";
-                    PurchLineGRec."Qty. to Receive" := PostedGateEntryLine.Quantity + PurchLineGRec."Inward Qty"; //B2BVCOn01Feb2024
-                    PurchLineGRec."Qty. to Invoice" := PostedGateEntryLine.Quantity + PurchLineGRec."Inward Qty"; //B2BVCOn01Feb2024
+                    PurchLineGRec."Qty. to Receive" := (PostedGateEntryLine.Quantity + PurchLineGRec."Inward Qty") - PurchLineGRec."Quantity Received"; //B2BVCOn01Feb2024
+
+                    PurchLineGRec."Qty. to Invoice" := (PostedGateEntryLine.Quantity + PurchLineGRec."Inward Qty") - PurchLineGRec."Quantity Invoiced"; //B2BVCOn01Feb2024
                     PurchLineGRec."Inward Qty" := PurchLineGRec."Qty. to Receive"; //B2BVCOn01Feb2024
                     PurchLineGRec.Modify();
                 end;
@@ -195,6 +196,10 @@ codeunit 50019 "Gate Entry- Post"
     end;
 
     var
+        QtyRECIVEvAR: Decimal;
+        QtyRECIVEvAR1: Decimal;
+        QtyRECIVEvAR2: Decimal;
+
         PostdLoadSlpNoGVar: Code[20];
         GateEntType: integer;
         GateEntryHeader: Record "Gate Entry Header_B2B";

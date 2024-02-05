@@ -165,6 +165,18 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 ImportTypeError: TextConst ENN = 'Import type Must have value in Invoice details Tab';//B2BSCM25SEP2023
             begin
 
+                //B2BSSD09AUG2023>>
+                purchaseLinevar.Reset();
+                purchaseLinevar.SetRange("Document No.", Rec."No.");
+                if purchaseLinevar.FindSet() then begin
+                    repeat
+                        if purchaseLinevar."Qty. to Receive" > purchaseLinevar."Quantity Accepted B2B" then
+                            Error(Error002);
+                    until PurchLine.Next() = 0;
+                end;
+                //B2BSSD09AUG2023<
+
+
                 Rec.TestField("Import Type", ErrorInfo.Create(ImportTypeError, true, PurchaseHeader));//B2BSCM25SEP2023
                 if rec."EPCG Scheme" = rec."EPCG Scheme"::"Under EPCG" then
                     Rec.TestField("EPCG No.");
@@ -204,17 +216,6 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                     //until purchaseLinevar.Next() = 0;
                 end;
                 //B2BSSD09AUG2023<<
-
-                //B2BSSD09AUG2023>>
-                purchaseLinevar.Reset();
-                purchaseLinevar.SetRange("Document No.", Rec."No.");
-                if purchaseLinevar.FindSet() then begin
-                    repeat
-                        if purchaseLinevar."Qty. to Receive" > purchaseLinevar."Quantity Accepted B2B" then
-                            Error(Error002);
-                    until PurchLine.Next() = 0;
-                end;
-                //B2BSSD09AUG2023<
 
             end;
 

@@ -44,12 +44,17 @@ pageextension 50102 FixedAssetCard extends "Fixed Asset Card"
                 Caption = 'Avail / Unavail';
             }
         }
+
         addafter("FA Location Code")//B2BSS15JUN2023
         {
             field("FA Sub Location"; Rec."FA Sub Location")
             {
                 ApplicationArea = All;
                 Caption = 'FA Sub Location';
+            }
+            field("Physical-Location"; "Physical-Location")
+            {
+                ApplicationArea = all;
             }
         }
         modify(FAPostingGroup)

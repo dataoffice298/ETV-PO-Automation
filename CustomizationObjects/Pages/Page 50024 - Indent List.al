@@ -27,6 +27,11 @@ page 50024 "Indent List"
                 field(Description; rec.Description)
                 {
                     ApplicationArea = all;
+                    Visible = false;
+                }
+                field(Purpose; Rec.Purpose)
+                {
+                    ApplicationArea = all;
                 }
                 field("Due Date"; rec."Due Date")
                 {

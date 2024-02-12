@@ -277,18 +277,18 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
 
             end;
         }
-        modify(Type)
-        {
-            trigger OnAfterValidate()
-            var
-                myInt: Integer;
-            begin
-                if Rec.Type = Rec.Type::Description then
-                    Rec."No." := '01'
-                Else
-                    exit;
-            end;
-        }
+        /*  modify(Type)
+         {
+             trigger OnAfterValidate()
+             var
+                 myInt: Integer;
+             begin
+                 if Rec.Type = Rec.Type::Description then
+                     Rec."No." := '01'
+                 Else
+                     exit;
+             end;
+         } */
     }
 
 
@@ -344,7 +344,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         begin
                             PurchLineLRec.Reset();
                             PurchLineLRec.SetRange("Document No.", "Document No.");
-                            PurchLineLRec.SetRange(Select,true);
+                            PurchLineLRec.SetRange(Select, true);
                             if PurchLineLRec.FindSet() then begin
                                 repeat
 

@@ -1,17 +1,30 @@
-report 50182 "Regularization Order"
+report 50042 "Ammendement Order"
 {
-    Caption = 'Regularization Order_50182';
+    Caption = 'Ammendement Order';
     UsageCategory = ReportsAndAnalysis;
     ApplicationArea = All;
     DefaultLayout = RDLC;
-    RDLCLayout = './RegularizationOrder.rdl';
+    RDLCLayout = './AmmendementOrder.rdl';
 
 
     dataset
     {
-        dataitem("Purchase Header"; "Purchase Header")
+        dataitem("Purchase Header Archive"; "Purchase Header Archive")
         {
             RequestFilterFields = "No.";
+
+            column(INR; INR)
+            {
+
+            }
+            column(Version_No_; "Version No.")
+            {
+
+            }
+            column(Date_Archived; "Date Archived")
+            {
+
+            }
             column(CurrencyCode; CurrencyCode)
             {
 
@@ -58,7 +71,7 @@ report 50182 "Regularization Order"
             { }
             column(Dear_CaptionLbl; Dear_CaptionLbl)
             { }
-            column(Quote_No_; "Quote No.")
+            column(Quote_No_; "Purchase Quote No.")
             { }
             column(Subject; Subject)
             { }
@@ -97,13 +110,14 @@ report 50182 "Regularization Order"
             { }
             column(transactionspecificTxt; transactionspecificTxt)//B2BSSD25APR2023
             { }
-            column(shipmethod; shipmethod)//B2BSSD25APR2023
+            column(shipmethod; shipmethod)
             { }
-            //B2BSSD24APR2023<<
+            column(Ammendent_Comments; "Ammendent Comments")
+            { }
 
-            dataitem("Purchase Line"; "Purchase Line")
+            dataitem("Purchase Line Archive"; "Purchase Line Archive")
             {
-                DataItemLink = "Document No." = field("No.");
+                DataItemLink = "Document No." = field("No."), "Version No." = field("Version No.");
                 DataItemTableView = sorting("Document Type", "Document No.", "Line No.");
                 column(SpecID; SpecID)
                 {
@@ -147,15 +161,15 @@ report 50182 "Regularization Order"
                 { }
                 column(TotalLineAmount; TotalLineAmount)
                 { }
-                column(warranty1; warranty)//B2BSSD24APR2023
+                column(warranty1; warranty)
                 { }
 
 
-                /* trigger OnPreDataItem()
-                begin
-                    SetFilter("No.", '<>%1', '');
-                end; */
-
+                /*  trigger OnPreDataItem()
+                 begin
+                     SetFilter("No.", '<>%1', '');
+                 end;
+                 */
                 trigger OnAfterGetRecord()
                 var
 
@@ -167,11 +181,11 @@ report 50182 "Regularization Order"
                     Clear(IGSSTAmt);
 
 
-                    // TotalLineAmount += "Purchase Line"."Line Amount";
+                    // TotalLineAmount += "Purchase Line Archive"."Line Amount";
 
-                    // GetGSTAmounts("Purchase Line");
+                    // GetGSTAmounts("Purchase Line Archive");
                     // TotalGSTAmount += CGSTAmt + SGSTAmt + IGSSTAmt;
-                    GetGSTAmounts("Purchase Line");//Balu
+                    GetGSTAmounts("Purchase Line Archive");//Balu
                     Clear(GstTotal);
                     GstTotal := CGSTAmt + SGSTAmt + IGSSTAmt;
                     GstTotalSum := GstTotalSum + GstTotal;
@@ -189,20 +203,20 @@ report 50182 "Regularization Order"
 
                     CheckRec.FormatNoText(AmountText, AmountVendor1, "Currency Code");
 
-                    if ("Purchase Line".Type = "Purchase Line".Type::Item)
-                       or ("Purchase Line".Type = "Purchase Line".Type::"Fixed Asset")
-                       or ("Purchase Line".Type = "Purchase Line".Type::"Charge (Item)") or
-                       ("Purchase Line".Type = "Purchase Line".Type::"G/L Account") then begin
-                        Description1 := "Purchase Line".Description;
-                        SpecID := "Purchase Line"."Variant Description";
+                    //B2BAJ18012024
+                    if ("Purchase Line Archive".Type = "Purchase Line Archive".Type::Item)
+                    or ("Purchase Line Archive".Type = "Purchase Line Archive".Type::"Fixed Asset")
+                    or ("Purchase Line Archive".Type = "Purchase Line Archive".Type::"Charge (Item)") or
+                    ("Purchase Line Archive".Type = "Purchase Line Archive".Type::"G/L Account") then begin
+                        Description1 := "Purchase Line Archive".Description;
+                        SpecID := "Purchase Line Archive"."Variant Description";
 
                     end
                     Else
-                        if "Purchase Line".Type = "Purchase Line".Type::Description then begin
-                            Description1 := "Purchase Line"."Indentor Description";
-                            SpecID := "Purchase Line"."Spec Id";
+                        if "Purchase Line Archive".Type = "Purchase Line Archive".Type::Description then begin
+                            Description1 := "Purchase Line Archive"."Indentor Description";
+                            SpecID := "Purchase Line Archive"."Spec Id";
                         End;
-
 
 
                 end;
@@ -245,12 +259,13 @@ report 50182 "Regularization Order"
                         Line_Type := Line_Type + ' ' + UPPERCASE(COPYSTR(MidString[i], 1, 1)) + LOWERCASE(COPYSTR(MidString[i], 2));
                     END;
                 end;
+
             }
 
             dataitem(GSTLoop; Integer)
             {
                 DataItemTableView = sorting(Number);
-                DataItemLinkReference = "Purchase Header";
+                DataItemLinkReference = "Purchase Header Archive";
 
                 column(Number_GSTLoop; Number)
                 { }
@@ -261,18 +276,18 @@ report 50182 "Regularization Order"
                 column(GSTAmountLine; GSTAmountLine[I])
                 { }
 
-
                 trigger OnPreDataItem()
                 begin
                     Clear(GSTGroupCode);
                     I := 1;
                     PurchLineGST.Reset();
-                    PurchLineGST.SetCurrentKey("GST Group Code");
-                    PurchLineGST.SetRange("Document No.", "Purchase Header"."No.");
+                    PurchLineGST.SetCurrentKey("Line No.", "GST Group Code");
+                    PurchLineGST.SetRange("Document No.", "Purchase Header Archive"."No.");
+                    PurchLineGST.SetRange("Version No.", "Purchase Header Archive"."Version No.");
                     PurchLineGST.SetFilter("GST Group Code", '<>%1', '');
                     PurchLineGST.SetFilter("No.", '<>%1', '');
                     if PurchLineGST.FindSet() then;
-                    PurchLineGST.SetAscending("GST Group Code", true);
+
                     SetRange(Number, 1, PurchLineGST.Count);
                 end;
 
@@ -282,12 +297,13 @@ report 50182 "Regularization Order"
                     Clear(GSTPercent);
                     if GSTGroupCode <> PurchLineGST."GST Group Code" then begin
                         GSTGroupCode := PurchLineGST."GST Group Code";
-                        PurchLine.Reset();
-                        PurchLine.SetCurrentKey("GST Group Code");
-                        PurchLine.SetRange("Document No.", PurchLineGST."Document No.");
-                        PurchLine.SetFilter("GST Group Code", PurchLineGST."GST Group Code");
-                        if PurchLine.FindSet() then begin
-                            GetGSTPercents(PurchLine);
+                        PurchLineArch.Reset();
+                        PurchLineArch.SetCurrentKey("GST Group Code");
+                        PurchLineArch.SetRange("Document No.", PurchLineGST."Document No.");
+                        PurchLineArch.SetRange("Version No.", PurchLineGST."Version No.");
+                        PurchLineArch.SetFilter("GST Group Code", PurchLineGST."GST Group Code");
+                        if PurchLineArch.FindSet() then begin
+                            GetGSTPercents(PurchLineArch);
                             if GSTPercent <> 0 then begin
                                 I += 1;
                                 GSTPerText := StrSubstNo(GSTText, GSTPercent);
@@ -296,11 +312,11 @@ report 50182 "Regularization Order"
                                     Clear(SGSTAmt);
                                     Clear(IGSSTAmt);
                                     Clear(CGSTAmt);//Balu
-                                    GetGSTAmounts(PurchLine);
+                                    GetGSTAmounts(PurchLineArch);
                                     GSTAmountLine[I] += SGSTAmt + IGSSTAmt + CGSTAmt;
-                                    LineSNo := DelChr(Format(PurchLine."Line No."), '>', '0');
+                                    LineSNo := DelChr(Format(PurchLineArch."Line No."), '>', '0');
                                     GSTPerText += LineSNo + ' & ';
-                                until PurchLine.Next() = 0;
+                                until PurchLineArch.Next() = 0;
                                 GSTPerText := DelChr(GSTPerText, '>', ' &');
                             end;
                         end;
@@ -328,7 +344,7 @@ report 50182 "Regularization Order"
 
                 if VendorGRec.Get("Buy-from Vendor No.") then;
 
-                if PurchaseHdr.Get(PurchaseHdr."Document Type"::Quote, "Quote No.") then;
+                if PurchaseHdr.Get(PurchaseHdr."Document Type"::Quote, "Purchase Quote No.") then;
 
                 //B2BSSD25APR2023>>
                 if TransportMethod.Get("Transport Method") then
@@ -343,41 +359,46 @@ report 50182 "Regularization Order"
                     transactionspecificTxt := Transactionspecifcation.Text;
                 //B2bssd25apr2023<<
 
-                PurchLine.Reset();
-                PurchLine.SetRange("Document No.", "No.");
-                PurchLine.SetFilter("No.", '<>%1', '');
-                if PurchLine.FindFirst() then
-                    if IndentHdr.Get(PurchLine."Indent No.") then;
-                Subject := StrSubstNo(Subject1, "Quote No.", "Purchase Header"."Document Date");
+                PurchLineArch.Reset();
+                PurchLineArch.SetRange("Document No.", "No.");
+                PurchLineArch.SetRange("Version No.", "Version No.");
+                PurchLineArch.SetFilter("No.", '<>%1', '');
+                if PurchLineArch.FindFirst() then
+                    if IndentHdr.Get(PurchLineArch."Indent No.") then;
+                Subject := StrSubstNo(Subject1, "Purchase Quote No.", "Purchase Header Archive"."Document Date");
                 Subject := Subject + StrSubstNo(Subject2, IndentHdr."No.", IndentHdr."Document Date");
-                PurchLine.Reset();
-                PurchLine.SetCurrentKey("GST Group Code");
-                PurchLine.SetRange("Document No.", "No.");
-                PurchLine.SetFilter("GST Group Code", '<>%1', '');
-                if PurchLine.FindSet() then begin
-                    GSTGroupCode := PurchLine."GST Group Code";
+                PurchLineArch.Reset();
+                PurchLineArch.SetCurrentKey("GST Group Code");
+                PurchLineArch.SetRange("Document No.", "No.");
+                PurchLineArch.SetRange("Version No.", "Version No.");
+                PurchLineArch.SetFilter("GST Group Code", '<>%1', '');
+                if PurchLineArch.FindSet() then begin
+                    GSTGroupCode := PurchLineArch."GST Group Code";
                     repeat
-                        if GSTGroupCode <> PurchLine."GST Group Code" then
+                        if GSTGroupCode <> PurchLineArch."GST Group Code" then
                             NextLoop := true;
-                    until PurchLine.Next() = 0;
+                    until PurchLineArch.Next() = 0;
                 end;
-                if "Purchase Header"."Payment Terms Code" <> ' ' then begin
-                    PaymentTermsRec.Get("Purchase Header"."Payment Terms Code");
+                if "Purchase Header Archive"."Payment Terms Code" <> ' ' then begin //B2BAJ18012024
+                    PaymentTermsRec.Get("Purchase Header Archive"."Payment Terms Code");
                     PaymentDescription := PaymentTermsRec.Description;
                 end;
-                IF "Purchase Header"."Currency Code" = '' then
+
+                IF "Purchase Header Archive"."Currency Code" = '' then
                     CurrencyCode := 'INR'
                 ELSE
-                    CurrencyCode := "Purchase Header"."Currency Code";
+                    CurrencyCode := "Purchase Header Archive"."Currency Code";
+            END;
 
-            end;
         }
 
     }
 
     var
-        SpecID: Text[250];
+        INR: Label 'INR';
+        Currency: Record Currency;
         CurrencyCode: Code[10];
+        SpecID: Text[250];
         Description1: Text[100];
         PaymentDescription: Text[100];
         PaymentTermsRec: Record "Payment Terms";
@@ -398,9 +419,9 @@ report 50182 "Regularization Order"
         StateGRec: Record State;
         VendorGRec: Record Vendor;
         GstTotal: Decimal;
-        PurchaseHdr: Record "Purchase Header";
-        PurchLine: Record "Purchase Line";
-        PurchLineGST: Record "Purchase Line";
+        PurchaseHdr: Record "Purchase Header Archive";
+        PurchLineArch: Record "Purchase Line Archive";
+        PurchLineGST: Record "Purchase Line Archive";
         IndentHdr: Record "Indent Header";
         Dear_CaptionLbl: Label 'Dear Sir,';
         AmountVendor: Decimal;
@@ -437,18 +458,18 @@ report 50182 "Regularization Order"
         PurchaseHeader: Record "Purchase Header";
 
     //GST Starts>>
-    local procedure GetGSTAmounts(PurchaseLine: Record "Purchase Line")
+    local procedure GetGSTAmounts(PurchaseLineArch: Record "Purchase Line Archive")
     var
         TaxTransactionValue: Record "Tax Transaction Value";
         GSTSetup: Record "GST Setup";
         ComponentName: Code[30];
     begin
         GSTSetup.Get();
-        ComponentName := GetComponentName("Purchase Line", GSTSetup);
+        ComponentName := GetComponentName("Purchase Line Archive", GSTSetup);
 
-        if (PurchaseLine.Type <> PurchaseLine.Type::" ") then begin
+        if (PurchaseLineArch.Type <> PurchaseLineArch.Type::" ") then begin
             TaxTransactionValue.Reset();
-            TaxTransactionValue.SetRange("Tax Record ID", PurchaseLine.RecordId);
+            TaxTransactionValue.SetRange("Tax Record ID", PurchaseLineArch.RecordId);
             TaxTransactionValue.SetRange("Tax Type", GSTSetup."GST Tax Type");
             TaxTransactionValue.SetRange("Value Type", TaxTransactionValue."Value Type"::COMPONENT);
             TaxTransactionValue.SetFilter(Percent, '<>%1', 0);
@@ -466,13 +487,13 @@ report 50182 "Regularization Order"
         end;
     end;
 
-    local procedure GetComponentName(PurchaseLine: Record "Purchase Line";
+    local procedure GetComponentName(PurchaseLineArch: Record "Purchase Line Archive";
         GSTSetup: Record "GST Setup"): Code[30]
     var
         ComponentName: Code[30];
     begin
         if GSTSetup."GST Tax Type" = GSTLbl then
-            if PurchaseLine."GST Jurisdiction Type" = PurchaseLine."GST Jurisdiction Type"::Interstate then
+            if PurchaseLineArch."GST Jurisdiction Type" = PurchaseLineArch."GST Jurisdiction Type"::Interstate then
                 ComponentName := IGSTLbl
             else
                 ComponentName := CGSTLbl;
@@ -499,18 +520,18 @@ report 50182 "Regularization Order"
         exit(GSTRoundingPrecision);
     end;
 
-    local procedure GetGSTPercents(PurchaseLine: Record "Purchase Line")
+    local procedure GetGSTPercents(PurchaseLineArch: Record "Purchase Line Archive")
     var
         TaxTransactionValue: Record "Tax Transaction Value";
         GSTSetup: Record "GST Setup";
         ComponentName: Code[30];
     begin
         GSTSetup.Get();
-        ComponentName := GetComponentName("Purchase Line", GSTSetup);
+        ComponentName := GetComponentName("Purchase Line Archive", GSTSetup);
 
-        if (PurchaseLine.Type <> PurchaseLine.Type::" ") then begin
+        if (PurchaseLineArch.Type <> PurchaseLineArch.Type::" ") then begin
             TaxTransactionValue.Reset();
-            TaxTransactionValue.SetRange("Tax Record ID", PurchaseLine.RecordId);
+            TaxTransactionValue.SetRange("Tax Record ID", PurchaseLineArch.RecordId);
             TaxTransactionValue.SetRange("Tax Type", GSTSetup."GST Tax Type");
             TaxTransactionValue.SetRange("Value Type", TaxTransactionValue."Value Type"::COMPONENT);
             TaxTransactionValue.SetFilter(Percent, '<>%1', 0);
@@ -520,7 +541,6 @@ report 50182 "Regularization Order"
                 until TaxTransactionValue.Next() = 0;
         end;
     end;
-
     //GST Ends<<
     procedure SplitStrings(VAR String: Text[1024]; Separator: Text[1]) SplitedString: Text[1024]
     var
@@ -539,4 +559,6 @@ report 50182 "Regularization Order"
             Clear(String);
         end;
     end;
+
+
 }

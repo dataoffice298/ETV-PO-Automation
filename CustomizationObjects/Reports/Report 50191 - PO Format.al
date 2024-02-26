@@ -186,7 +186,7 @@ report 50191 "PO FORMAT"
                     Clear(AmountText);
                     AmountVendor += "Line Amount";
                     AmountVendor1 := AmountVendor + GstTotalSum;
-                    //   GateEntryPostYesNo.InitTextVariable;
+                    //   GateEntryPostYesNo.I   nitTextVariable;
                     //  GateEntryPostYesNo.FormatNoTextInvoice(AmountText, Round(AmountVendor1, 1, '='), "Currency Code");
                     // GateEntryPostYesNo.FormatNoText(AmountText, AmountVendor1, "Currency Code");
                     CheckRec.InitTextVariable;
@@ -230,6 +230,26 @@ report 50191 "PO FORMAT"
                 {
 
                 }
+                column(Line_Type; Line_Type)
+                {
+
+                }
+                trigger OnAfterGetRecord()
+                var
+                    i: Integer;
+                    MidString: array[100] of Text[1024];
+                begin
+                    Clear(i);
+                    Clear(Line_Type);
+                    Clear(ListTypeNew);
+                    ListTypeNew := "PO Terms And Conditions".LineType;
+                    WHILE STRLEN(ListTypeNew) > 0 DO BEGIN
+                        i := i + 1;
+                        MidString[i] := SplitStrings(ListTypeNew, ' ');
+                        Line_Type := Line_Type + ' ' + UPPERCASE(COPYSTR(MidString[i], 1, 1)) + LOWERCASE(COPYSTR(MidString[i], 2));
+                    END;
+                end;
+
             }
 
             dataitem(GSTLoop; Integer)
@@ -249,14 +269,14 @@ report 50191 "PO FORMAT"
                 trigger OnPreDataItem()
                 begin
                     Clear(GSTGroupCode);
-                    I := 1;
+                    // I := 1;
                     PurchLineGST.Reset();
-                    PurchLineGST.SetCurrentKey("Line No.", "GST Group Code");
+                    PurchLineGST.SetCurrentKey("GST Group Code");
                     PurchLineGST.SetRange("Document No.", "Purchase Header"."No.");
                     PurchLineGST.SetFilter("GST Group Code", '<>%1', '');
                     PurchLineGST.SetFilter("No.", '<>%1', '');
                     if PurchLineGST.FindSet() then;
-
+                    PurchLineGST.SetAscending("GST Group Code", true);
                     SetRange(Number, 1, PurchLineGST.Count);
                 end;
 
@@ -264,6 +284,7 @@ report 50191 "PO FORMAT"
                 begin
                     Clear(GSTPerText);
                     Clear(GSTPercent);
+
                     if GSTGroupCode <> PurchLineGST."GST Group Code" then begin
                         GSTGroupCode := PurchLineGST."GST Group Code";
                         PurchLine.Reset();
@@ -362,6 +383,7 @@ report 50191 "PO FORMAT"
     var
         INR: Label 'INR';
         Currency: Record Currency;
+        S_No: Integer;
         CurrencyCode: Code[10];
         SpecID: Text[250];
         Description1: Text[100];
@@ -409,9 +431,9 @@ report 50191 "PO FORMAT"
         GSTPercent: Decimal;
         GSTGroupCode: Code[50];//B2BSSD28MAR2023 (Length Incre)
         NextLoop: Boolean;
-        GSTText: Label 'GST @%1% on S.No. ';
+        GSTText: Label 'GST @%1% on Line.No. ';
         GSTPerText: Text;
-        LineSNo: Text;
+        LineSNo, Line_Type, ListTypeNew : Text;
         AmountText: array[2] of Text;
         // GateEntryPostYesNo: Codeunit "Global Functions B2B";
         AckLbl: Label 'Please acknowledge the receipt of the order and arrange the material at the earliest.';
@@ -507,5 +529,23 @@ report 50191 "PO FORMAT"
         end;
     end;
     //GST Ends<<
+    procedure SplitStrings(VAR String: Text[1024]; Separator: Text[1]) SplitedString: Text[1024]
+    var
+        Pos: Integer;
+    begin
+        Clear(Pos);
+        Pos := STRPOS(String, Separator);
+        if Pos > 0 then begin
+            SplitedString := COPYSTR(String, 1, Pos - 1);
+            if Pos + 1 <= STRLEN(String) then
+                String := COPYSTR(String, Pos + 1)
+            else
+                Clear(String);
+        end else begin
+            SplitedString := String;
+            Clear(String);
+        end;
+    end;
+
 
 }

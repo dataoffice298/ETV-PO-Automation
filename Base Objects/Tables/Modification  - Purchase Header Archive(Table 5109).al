@@ -23,6 +23,12 @@ tableextension 50053 tableextension70000014 extends "Purchase Header Archive"
         {
             Caption = 'EPCG No';
         }
+        Field(50115; "Regularization"; Boolean)
+        {
+            Caption = 'Regularization';
+
+            DataClassification = CustomerContent;
+        }
         field(50119; "Ammendent Comments"; code[500])//B2BSSD29JUN2023
         {
             DataClassification = CustomerContent;

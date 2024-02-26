@@ -1,4 +1,4 @@
-pageextension 50046 "Purchase Order Archive Ext" extends "Purchase Order Archive"
+pageextension 50140 "Purchase Order Archive Ext" extends "Purchase Order Archive"
 {
     layout
     {

@@ -119,6 +119,29 @@ tableextension 50055 tableextension70000016 extends "Purchase Line Archive"
             Enabled = false;
             TableRelation = "Routing Line"."Routing No.";
         }
+        field(60024; "Spec Id"; Text[250])
+        {
+            Caption = 'Spec Id';
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
+        field(60025; warranty; Code[50])//B2BSSD08Feb2023
+        {
+            DataClassification = CustomerContent;
+        }
+        field(60026; "Qty to Inward_B2B"; Decimal)
+        {
+            Caption = 'Qty to Inward';
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
+        field(60052; "Variant Description"; Text[100])
+        {
+            Caption = 'Variant Description';
+            Editable = false;
+            DataClassification = CustomerContent;
+
+        }
         field(33002900; "Indent No."; Code[20])
         {
             Description = 'B2B1.0';
@@ -142,6 +165,11 @@ tableextension 50055 tableextension70000016 extends "Purchase Line Archive"
             Editable = false;
         }
         field(33002905; "Indent Req Line No"; Integer)
+        {
+            Description = 'PO1.0';
+            Editable = false;
+        }
+        field(33002906; "Indentor Description"; Code[100])//B2BSSD02Feb2023
         {
             Description = 'PO1.0';
             Editable = false;

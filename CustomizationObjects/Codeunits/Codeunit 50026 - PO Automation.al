@@ -366,6 +366,8 @@ codeunit 50026 "PO Automation"
                                 REPEAT
                                     CreateIndents4."Document Type" := PurchaseLine."Document Type"::Enquiry.AsInteger();
                                     CreateIndents4."Order No" := PurchaseLine."Document No.";
+                                    CreateIndents4.Select := false;
+                                    CreateIndents4."Requisition Type" := CreateIndents4."Requisition Type"::Enquiry;
                                     CreateIndents4.MODIFY;
                                 UNTIL CreateIndents4.NEXT = 0;
                             PurchaseLine.INSERT;
@@ -394,7 +396,8 @@ codeunit 50026 "PO Automation"
         PurchUOMQtyMeasure: Decimal;
     begin
         CreateIndents4.COPYFILTERS(CreateIndentsQuotes);
-        InsertIndentItemvendor(CreateIndents4, Vendor);
+        //InsertIndentItemvendor(CreateIndents4, Vendor);
+        InsertIndentItemvendor(CreateIndentsQuotes, Vendor);
         IndentVendorItems.RESET;
         IndentVendorItems.SETRANGE(Check, FALSE);
         IF IndentVendorItems.FIND('-') THEN
@@ -502,6 +505,8 @@ codeunit 50026 "PO Automation"
                             REPEAT
                                 CreateIndents4."Document Type" := PurchaseLine."Document Type"::Quote.AsInteger();
                                 CreateIndents4."Order No" := PurchaseLine."Document No.";
+                                CreateIndents4.Select := false;
+                                CreateIndents4."Requisition Type" := CreateIndents4."Requisition Type"::Quote;
                                 CreateIndents4.MODIFY;
                             UNTIL CreateIndents4.NEXT = 0;
                         PurchaseLine.INSERT;
@@ -899,6 +904,7 @@ codeunit 50026 "PO Automation"
         PurchaseHeader: Record "Purchase Header";
         QuoCompHdr: Record QuotCompHdr;
         IndentLineRec: Record "Indent Line";
+        IndentReqLine: Record "Indent Requisitions";
     begin
         clear(TotalWeightage);
         PurchaseHeader.RESET();
@@ -1075,6 +1081,15 @@ codeunit 50026 "PO Automation"
                                     IndentLineRec.Status := IndentLineRec.Status::"Quotation Comparsion";
                                     IndentLineRec.Modify();
                                 until IndentLineRec.Next() = 0;
+                            end;
+                            IndentReqLine.Reset();
+                            IndentReqLine.SetRange("Document No.", PurchaseLine."Indent Req No");
+                            IndentReqLine.SetRange("Indent No.", PurchaseLine."Indent No.");
+                            IndentReqLine.SetRange("Line No.", PurchaseLine."Indent Req Line No");
+                            IndentReqLine.SetRange("Indent Line No.", PurchaseLine."Indent Line No.");
+                            if IndentReqLine.FindFirst() then begin
+                                IndentReqLine."Requisition Type" := IndentReqLine."Requisition Type"::"Quotation Comparsion";
+                                IndentReqLine.Modify();
                             end;
                         UNTIL PurchaseLine.NEXT() = 0;
 
@@ -1372,6 +1387,7 @@ codeunit 50026 "PO Automation"
         IndentLine: Record "Indent Line";
         DimentionSetEntry: Record "Dimension Set Entry";//B2BSSD20Feb2023
         IndentLineRec: Record "Indent Line";
+        IndentReqLine: Record "Indent Requisitions";
     begin
         PurchaseHeader.INIT;
         PurchaseHeader."Document Type" := PurchaseHeader."Document Type"::Quote;
@@ -1461,6 +1477,15 @@ codeunit 50026 "PO Automation"
                         IndentLineRec.Status := IndentLineRec.Status::Quote;
                         IndentLineRec.Modify();
                     until IndentLineRec.Next() = 0;
+                end;
+                IndentReqLine.Reset();
+                IndentReqLine.SetRange("Document No.", PurchaseLine."Indent Req No");
+                IndentReqLine.SetRange("Indent No.", PurchaseLine."Indent No.");
+                IndentReqLine.SetRange("Line No.", PurchaseLine."Indent Req Line No");
+                IndentReqLine.SetRange("Indent Line No.", PurchaseLine."Indent Line No.");
+                if IndentReqLine.FindFirst() then begin
+                    IndentReqLine."Requisition Type" := IndentReqLine."Requisition Type"::Quote;
+                    IndentReqLine.Modify();
                 end;
 
             UNTIL PurchaseLine.NEXT = 0;
@@ -1578,7 +1603,7 @@ codeunit 50026 "PO Automation"
         VendorNo: Code[20];
         indentRequisitions: Record "Indent Requisitions";
     begin
-        CreateIndents4.COPYFILTERS(CreateIndentsQuotes);
+        //CreateIndents4.COPYFILTERS(CreateIndentsQuotes);
         InsertIndentItemvendor2(CreateIndents4, Vendor);
         IndentVendorItems.RESET;
         IndentVendorItems.SETRANGE(Check, FALSE);
@@ -1691,7 +1716,10 @@ codeunit 50026 "PO Automation"
                         CreateIndents5.SETRANGE(CreateIndents5."Line No.", IndentVendorEnquiry."Indent Req Line No");
                         IF CreateIndents5.FINDFIRST THEN BEGIN
                             CreateIndents5."Document Type" := PurchaseLine."Document Type"::Order.AsInteger();
-                            CreateIndents5."Order No" := PurchaseLine."Document No.";
+                            //CreateIndents5."Order No" := PurchaseLine."Document No.";
+                            CreateIndents5."Purch Order No." := PurchaseLine."Document No.";
+                            CreateIndents5.Select := false;
+                            CreateIndents5."Requisition Type" := CreateIndents5."Requisition Type"::"Purch Order";
                             PurchaseLine.VALIDATE("Direct Unit Cost", CreateIndents5."Unit Cost");
                             //B2BSSD11Jan2023<<
                             PurchaseLine.Validate("Spec Id", CreateIndents5."Spec Id");
@@ -1723,7 +1751,9 @@ codeunit 50026 "PO Automation"
     begin
         //B2B.1.3 s
         IndentVendorItems.DELETEALL;
-        CreateIndents.COPYFILTERS(CreateIndentsLocal);
+        //CreateIndents.COPYFILTERS(CreateIndentsLocal);
+        CreateIndents.Reset();
+        CreateIndents.SetRange(Select, true);
         IF CreateIndents.FIND('-') THEN
             REPEAT
                 IF CreateIndents."Remaining Quantity" <> 0 THEN BEGIN

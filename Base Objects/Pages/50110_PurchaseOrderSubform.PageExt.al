@@ -991,6 +991,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         purchaseHeader: Record "Purchase Header";
         DocumentNo: Code[20];
         Error1: Label 'Quantity to Accept B2B is less than the excel rows %1';
+        FixedAsset: Record "Fixed Asset";
     begin
         RowNo := 0;
         ColNo := 0;
@@ -1123,6 +1124,16 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         //B2BVCOn14Nov2023 <<
                         PurchaseLine.validate("Qty. to Accept B2B", 0);
                         PurchaseLine.Modify(true);
+
+                        if FixedAsset.Get(PurchaseLine."No.") then begin
+                            FixedAsset."Serial No." := PurchaseLine."Serial No.";
+                            FixedAsset.Make_B2B := PurchaseLine.Make_B2B;
+                            FixedAsset."Model No." := PurchaseLine."Model No.";
+                            FixedAsset."HSN/SAC Code" := PurchaseLine."HSN/SAC Code";
+                            FixedAsset."GST Group Code" := PurchaseLine."GST Group Code";
+                            FixedAsset."GST Credit" := PurchaseLine."GST Credit";
+                            FixedAsset.Modify();
+                        end;
 
                     end;
                 end;

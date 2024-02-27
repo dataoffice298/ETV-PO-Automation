@@ -327,7 +327,7 @@ table 50203 "Indent Requisitions"
             Caption = 'Shortcut Dimension 9 Code';
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(9),
             Blocked = CONST(false));
-        } 
+        }
         //B2BSCM11JAN2024<<
         field(50020; "Variant Description"; Text[100])
         {
@@ -336,6 +336,19 @@ table 50203 "Indent Requisitions"
 
         }  //B2BSCM11JAN2024>>
         //B2BSSD20Feb2023>>
+        field(50021; Select; Boolean)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50022; "Purch Order No."; Code[20])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50023; "Requisition Type"; Option)
+        {
+            OptionCaption = 'Indent Requisition,Enquiry,Quote,Purch Order,Quotation Comparsion';
+            OptionMembers = "Indent Requisition",Enquiry,Quote,"Purch Order","Quotation Comparsion";
+        }
     }
     //B2BSSD17FEB2023>>
 

@@ -157,6 +157,7 @@ page 50120 "Indent Requisition Document"
                 var
                     IndentReqLine: Record "Indent Requisitions";
                     IndentLineRec: Record "Indent Line";
+
                 begin
                     Rec.TESTFIELD(Status, Rec.Status::Release);
                     Rec.TESTFIELD(Type, Rec.Type::Enquiry);
@@ -177,6 +178,11 @@ page 50120 "Indent Requisition Document"
                         // CreateIndents.SETRANGE("Document No.", Rec."No.");
                         // CreateIndents.SETRANGE("Carry out Action", TRUE);
                         CurrPage.Indentrequisations.Page.SetSelectionFilter(CreateIndents);//B2BSSD18APR2023
+                        if CreateIndents.Find('-') then
+                            repeat
+                                if CreateIndents."Purch Order No." <> '' then
+                                    Error('Purchase Order Already Created,Indent Line No.%1', CreateIndents."Line No.");
+                            until CreateIndents.Next = 0;
                         CLEAR(VendorList);
                         VendorList.Editable(false);
                         VendorList.LOOKUPMODE(TRUE);
@@ -239,18 +245,26 @@ page 50120 "Indent Requisition Document"
                     IF Indentreqline.FIND('-') THEN BEGIN
                         IF NOT CONFIRM(Text004) THEN
                             EXIT;
-                        CreateIndents.RESET;
-                        CreateIndents.SETRANGE("Document No.", Rec."No.");
-                        CreateIndents.SETRANGE("Carry out Action", TRUE);
+                        //CreateIndents.RESET;
+                        //CreateIndents.SETRANGE("Document No.", Rec."No.");
+                        //CreateIndents.SETRANGE("Carry out Action", TRUE);
+                        CurrPage.Indentrequisations.Page.SetSelectionFilter(CreateIndents);
+                        if CreateIndents.Find('-') then
+                            repeat
+                                if CreateIndents."Purch Order No." <> '' then
+                                    Error('Purchase Order Already Created,Indent Line No.%1', CreateIndents."Line No.");
+                            until CreateIndents.Next = 0;
                         CLEAR(VendorList);
+                        VendorList.Editable(false);
                         VendorList.LOOKUPMODE(TRUE);
-                        VendorList.RUNMODAL;
-                        VendorList.SetSelection(Vendor);
-                        IF Vendor.COUNT >= 1 THEN BEGIN
-                            POAutomation.CreateQuotes(CreateIndents, Vendor, Rec."No.Series");
-                            MESSAGE(Text0011);
-                        END ELSE
-                            EXIT;
+                        IF VendorList.RUNMODAL = ACTION::LookupOK THEN BEGIN
+                            VendorList.SetSelectionFilter(Vendor);
+                            IF Vendor.COUNT >= 1 THEN BEGIN
+                                POAutomation.CreateQuotes(CreateIndents, Vendor, Rec."No.Series");
+                                MESSAGE(Text0011);
+                            END ELSE
+                                EXIT;
+                        end;
                     END;
                     /*  IndentReqLine.Reset();
                       IndentReqLine.SetRange("Document No.", Rec."No.");
@@ -280,15 +294,21 @@ page 50120 "Indent Requisition Document"
                 var
                     IndentReqLine: Record "Indent Requisitions";
                     IndentLineRec: Record "Indent Line";
+                    IndentReqLineRec: Record "Indent Requisitions";
+                    Count: Integer;
                 begin
-                    //B2BSSD09MAY2023>>
-                    if Rec."Create Purchase Order" = true then
-                        Error('Purchase Order already created');
-                    //B2BSSD09MAY2023<<
                     Rec.TESTFIELD(Status, Rec.Status::Release);
                     Rec.TESTFIELD(Type, Rec.Type::Order);
                     Carry := 0;
                     CheckRemainingQuantity;
+                    IndentReqLine.Reset();
+                    IndentReqLine.SetRange("Document No.", Rec."No.");
+                    IndentReqLine.SetRange(Select, true);
+                    if IndentReqLine.Find('-') then
+                        repeat
+                            if IndentReqLine."Purch Order No." <> '' then
+                                Error('Purchase Order already Created, Indent Line No. %1', IndentReqLine."Indent Line No.");
+                        until IndentReqLine.Next = 0;
                     Indentreqline.RESET;
                     Indentreqline.SETRANGE("Document No.", Rec."No.");
                     IF Indentreqline.FIND('-') THEN
@@ -304,14 +324,23 @@ page 50120 "Indent Requisition Document"
                         CreateIndents.RESET;
                         CreateIndents.SETRANGE("Document No.", Rec."No.");
                         CreateIndents.SETRANGE("Carry out Action", TRUE);
+                        //CurrPage.Indentrequisations.Page.SetSelectionFilter(CreateIndents);
                         UpdateReqQty;
                         POAutomation.CreateOrder2(CreateIndents, Vendor, Rec."No.Series");
-                        //B2BSSD09MAY2023>>
-                        Rec."Create Purchase Order" := true;
-                        CurrPage.Update();
-                        //B2BSSD09MAY2023<<
                         MESSAGE(Text001);
+                        IndentReqLineRec.Reset();
+                        IndentReqLineRec.SetRange("Document No.", Rec."No.");
+                        IndentReqLineRec.SetFilter("Purch Order No.", '<>%1', '');
+                        if IndentReqLineRec.Find('-') then
+                            repeat
+                                Count += 1;
+                            until IndentReqLineRec.Next = 0;
+                        if Count = Carry then begin
+                            Rec."Create Purchase Order" := true;
+                            CurrPage.Update();
+                        end;
                     END;
+
                     /*  IndentReqLine.Reset();
                       IndentReqLine.SetRange("Document No.", Rec."No.");
                       if IndentReqLine.FindSet() then begin

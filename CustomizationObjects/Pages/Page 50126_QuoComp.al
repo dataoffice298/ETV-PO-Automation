@@ -214,6 +214,7 @@ page 50126 "Quotation Comparision Doc"
                     PurchaseHeader: Record "Purchase Header";
                     PurchaseLine: Record "Purchase Line";
                     IndentLineRec: Record "Indent Line";
+                    IndentReqLine: Record "Indent Requisitions";
 
                 begin
                     Rec.TestField("Orders Created", false);
@@ -276,6 +277,13 @@ page 50126 "Quotation Comparision Doc"
                                             IndentLineRec.Modify();
                                         until IndentLineRec.Next() = 0;
                                     end;
+                                    IndentReqLine.Reset();
+                                    IndentReqLine.SetRange("Document No.", PurchaseLine."Indent Req No");
+                                    IndentReqLine.SetRange("Line No.", PurchaseLine."Indent Req Line No");
+                                    if IndentReqLine.FindFirst() then begin
+                                        IndentReqLine."Requisition Type" := IndentReqLine."Requisition Type"::"Purch Order";
+                                        IndentReqLine.Modify();
+                                    end;
                                 until PurchaseLine.Next() = 0;
                             end;
 
@@ -327,7 +335,7 @@ page 50126 "Quotation Comparision Doc"
             {
                 ApplicationArea = All;
                 Image = SendApprovalRequest;
-              //  Visible = Not OpenApprEntrEsists and CanrequestApprovForFlow;
+                //  Visible = Not OpenApprEntrEsists and CanrequestApprovForFlow;
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedCategory = Process;

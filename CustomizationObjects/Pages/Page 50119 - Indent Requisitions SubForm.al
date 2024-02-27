@@ -32,6 +32,12 @@ page 50119 "Indent Requisitions SubForm"
                         //B2B.1.3
                     end;
                 }
+                field(Select; Rec.Select)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Select';
+                    Editable = FieldEditableGVar;
+                }
                 field("Line Type"; Rec."Line Type")
                 {
                     ApplicationArea = all;
@@ -201,6 +207,18 @@ page 50119 "Indent Requisitions SubForm"
                     Caption = 'Shortcut Dimension 9 Code';
                     Editable = false;
                 }
+                field("Requisition Type"; Rec."Requisition Type")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Requisition Status';
+                    Editable = false;
+                }
+                field("Purch Order No."; Rec."Purch Order No.")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Purch Order No.';
+                    Editable = false;
+                }
                 field("Indent No."; Rec."Indent No.")
                 {
                     ApplicationArea = all;
@@ -211,6 +229,7 @@ page 50119 "Indent Requisitions SubForm"
                     ApplicationArea = all;
                     Editable = false;
                 }
+
             }
         }
     }
@@ -272,6 +291,18 @@ page 50119 "Indent Requisitions SubForm"
                 FieldEditable := false
             else
                 FieldEditable := true;
+        if IndentReqHdr.Get(Rec."Document No.") then
+            if IndentReqHdr.Type = IndentReqHdr.Type::Order then
+                FieldEditableGVar := true
+            else
+                FieldEditableGVar := false;
+    end;
+
+    trigger OnAfterGetCurrRecord()
+    var
+        IndentReqHeader: Record "Indent Req Header";
+    begin
+
     end;
 
     var
@@ -282,5 +313,6 @@ page 50119 "Indent Requisitions SubForm"
         PurchaseOrder: Record 38;
         Vendor: Record 99;
         FieldEditable: Boolean;
+        FieldEditableGVar: Boolean;
 }
 

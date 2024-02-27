@@ -1684,7 +1684,7 @@ codeunit 50026 "PO Automation"
                         //B2BSSD21APR2023<<
 
                         PurchaseLine."Variant Code" := IndentVendorEnquiry."Variant Code";
-                        PurchaseLine."Variant Code" := IndentVendorEnquiry."Variant Description"; //B2BSCM11JAN2024
+                        PurchaseLine."Variant Description" := IndentVendorEnquiry."Variant Description"; //B2BSCM11JAN2024
                         PurchaseLine.Quantity := IndentVendorEnquiry.Quantity;
                         PurchaseLine."Outstanding Quantity" := PurchaseLine.Quantity;
                         PurchaseLine."Outstanding Qty. (Base)" := PurchaseLine.Quantity;

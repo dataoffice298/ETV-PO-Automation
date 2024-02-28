@@ -282,6 +282,7 @@ page 50126 "Quotation Comparision Doc"
                                     IndentReqLine.SetRange("Line No.", PurchaseLine."Indent Req Line No");
                                     if IndentReqLine.FindFirst() then begin
                                         IndentReqLine."Requisition Type" := IndentReqLine."Requisition Type"::"Purch Order";
+                                        IndentReqLine."Purch Order No." := PurchaseLine."Document No.";
                                         IndentReqLine.Modify();
                                     end;
                                 until PurchaseLine.Next() = 0;

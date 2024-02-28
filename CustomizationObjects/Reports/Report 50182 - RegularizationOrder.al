@@ -100,6 +100,20 @@ report 50182 "Regularization Order"
             column(shipmethod; shipmethod)//B2BSSD25APR2023
             { }
             //B2BSSD24APR2023<<
+            column(AmendmentText; AmendmentText)
+            { }
+            column(AmendmentDate; AmendmentDate)
+            { }
+            column(EmailId; EmailId)
+            { }
+            column(PhoneNo; PhoneNo)
+            { }
+            column(PurchName; PurchName)
+            { }
+            column(Amendment; Amendment)
+            { }
+            column(Purpose; Purpose)
+            { }
 
             dataitem("Purchase Line"; "Purchase Line")
             {
@@ -230,6 +244,8 @@ report 50182 "Regularization Order"
                 {
 
                 }
+                column(LineNo; LineNo)
+                { }
                 trigger OnAfterGetRecord()
                 var
                     i: Integer;
@@ -298,8 +314,8 @@ report 50182 "Regularization Order"
                                     Clear(CGSTAmt);//Balu
                                     GetGSTAmounts(PurchLine);
                                     GSTAmountLine[I] += SGSTAmt + IGSSTAmt + CGSTAmt;
-                                    LineSNo := DelChr(Format(PurchLine."Line No."), '>', '0');
-                                    GSTPerText += LineSNo + ' & ';
+                                    //LineSNo := DelChr(Format(PurchLine."Line No."), '>', '0');
+                                    GSTPerText += PurchLine."HSN/SAC Code" + ' & ';
                                 until PurchLine.Next() = 0;
                                 GSTPerText := DelChr(GSTPerText, '>', ' &');
                             end;
@@ -370,9 +386,46 @@ report 50182 "Regularization Order"
                 ELSE
                     CurrencyCode := "Purchase Header"."Currency Code";
 
+                if Amendment then
+                    AmendmentText := 'Amendment Cum Regularization  Order'
+                else
+                    AmendmentText := 'Regularization Order';
+                Clear(AmendmentDate);
+                Clear(PurchName);
+                Clear(EmailId);
+                Clear(PhoneNo);
+                PurchaseHdrArchive.Reset();
+                PurchaseHdrArchive.SetRange("No.", "Purchase Header"."No.");
+                PurchaseHdrArchive.SetRange("Document Type", "Document Type"::Order);
+                PurchaseHdrArchive.SetRange("Doc. No. Occurrence", "Purchase Header"."Doc. No. Occurrence");
+                if PurchaseHdrArchive.FindLast() then begin
+                    AmendmentDate := PurchaseHdrArchive."Date Archived";
+                end;
+                PurchaseCode.Reset();
+                PurchaseCode.setrange(Code, "Purchase Header"."Purchaser Code");
+                if PurchaseCode.FindFirst() then begin
+                    PurchName := PurchaseCode.Name;
+                    EmailId := PurchaseCode."E-Mail";
+                    PhoneNo := PurchaseCode."Phone No.";
+                end;
+
             end;
         }
 
+    }
+    requestpage
+    {
+        layout
+        {
+            area(Content)
+            {
+                field(Amendment; Amendment)
+                {
+                    ApplicationArea = All;
+                }
+
+            }
+        }
     }
 
     var
@@ -380,6 +433,14 @@ report 50182 "Regularization Order"
         CurrencyCode: Code[10];
         Description1: Text[100];
         PaymentDescription: Text[100];
+        Amendment: Boolean;
+        AmendmentText: Text;
+        AmendmentDate: Date;
+        PurchName: Text;
+        EmailId: Text;
+        PhoneNo: Text;
+        PurchaseHdrArchive: Record "Purchase Header Archive";
+        PurchaseCode: Record "Salesperson/Purchaser";
         PaymentTermsRec: Record "Payment Terms";
         W: Label 'Warranty';
         CheckRec: Codeunit "Check Codeunit";
@@ -423,7 +484,7 @@ report 50182 "Regularization Order"
         GSTPercent: Decimal;
         GSTGroupCode: Code[50];//B2BSSD28MAR2023 (Length Incre)
         NextLoop: Boolean;
-        GSTText: Label 'GST @%1% on Line.No. ';
+        GSTText: Label 'GST @%1% on HSN Code. ';
         GSTPerText: Text;
         LineSNo, Line_Type, ListTypeNew : Text;
         AmountText: array[2] of Text;

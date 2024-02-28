@@ -340,7 +340,7 @@ codeunit 50016 "MyBaseSubscr"
         if IndentLine.Get(NewItemLedgEntry."Indent No.", NewItemLedgEntry."Indent Line No.") then
             if INDENTHEADER.Get(IndentLine."Document No.") then
                 if I = 1 then
-                    INDENTHEADER.ArchiveQuantityIssued(INDENTHEADER, IndentLine,NewItemLedgEntry);
+                    INDENTHEADER.ArchiveQuantityIssued(INDENTHEADER, IndentLine, NewItemLedgEntry);
         if NewItemLedgEntry."Indent Line No." <> 0 then begin
             IndentLine.Get(NewItemLedgEntry."Indent No.", NewItemLedgEntry."Indent Line No.");
             IndentLine.NoHeadStatusCheck(true);
@@ -467,7 +467,20 @@ codeunit 50016 "MyBaseSubscr"
         VendorLedgerEntry."PO Narration" := GenJournalLine."PO Narration";
     end;
 
-
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Quote to Order", 'OnBeforeInsertPurchOrderLine', '', false, false)]
+    local procedure OnBeforeInsertPurchOrderLine(var PurchOrderLine: Record "Purchase Line"; PurchOrderHeader: Record "Purchase Header"; PurchQuoteLine: Record "Purchase Line"; PurchQuoteHeader: Record "Purchase Header")
+    var
+        IndentRequisition: Record "Indent Requisitions";
+    begin
+        IndentRequisition.Reset();
+        IndentRequisition.SetRange("Document No.", PurchOrderLine."Indent Req No");
+        IndentRequisition.SetRange("Line No.", PurchOrderLine."Indent Req Line No");
+        if IndentRequisition.FindFirst() then begin
+            IndentRequisition."Requisition Type" := IndentRequisition."Requisition Type"::"Purch Order";
+            IndentRequisition."Purch Order No." := PurchOrderLine."Document No.";
+            IndentRequisition.Modify;
+        end;
+    end;
 
 }
 

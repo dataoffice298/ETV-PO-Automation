@@ -301,14 +301,6 @@ page 50120 "Indent Requisition Document"
                     Rec.TESTFIELD(Type, Rec.Type::Order);
                     Carry := 0;
                     CheckRemainingQuantity;
-                    IndentReqLine.Reset();
-                    IndentReqLine.SetRange("Document No.", Rec."No.");
-                    IndentReqLine.SetRange(Select, true);
-                    if IndentReqLine.Find('-') then
-                        repeat
-                            if IndentReqLine."Purch Order No." <> '' then
-                                Error('Purchase Order already Created, Indent Line No. %1', IndentReqLine."Indent Line No.");
-                        until IndentReqLine.Next = 0;
                     Indentreqline.RESET;
                     Indentreqline.SETRANGE("Document No.", Rec."No.");
                     IF Indentreqline.FIND('-') THEN
@@ -324,7 +316,12 @@ page 50120 "Indent Requisition Document"
                         CreateIndents.RESET;
                         CreateIndents.SETRANGE("Document No.", Rec."No.");
                         CreateIndents.SETRANGE("Carry out Action", TRUE);
-                        //CurrPage.Indentrequisations.Page.SetSelectionFilter(CreateIndents);
+                        CurrPage.Indentrequisations.Page.SetSelectionFilter(CreateIndents);
+                        if CreateIndents.Find('-') then
+                            repeat
+                                if CreateIndents."Purch Order No." <> '' then
+                                    Error('Purchase Order Already Created,Indent Line No.%1', CreateIndents."Line No.");
+                            until CreateIndents.Next = 0;
                         UpdateReqQty;
                         POAutomation.CreateOrder2(CreateIndents, Vendor, Rec."No.Series");
                         MESSAGE(Text001);

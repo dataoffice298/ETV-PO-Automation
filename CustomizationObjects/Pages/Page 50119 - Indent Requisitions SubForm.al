@@ -37,6 +37,7 @@ page 50119 "Indent Requisitions SubForm"
                     ApplicationArea = All;
                     Caption = 'Select';
                     Editable = FieldEditableGVar;
+                    Visible = false;
                 }
                 field("Line Type"; Rec."Line Type")
                 {

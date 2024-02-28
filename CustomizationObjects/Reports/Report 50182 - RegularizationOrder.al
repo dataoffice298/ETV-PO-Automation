@@ -314,10 +314,11 @@ report 50182 "Regularization Order"
                                     Clear(CGSTAmt);//Balu
                                     GetGSTAmounts(PurchLine);
                                     GSTAmountLine[I] += SGSTAmt + IGSSTAmt + CGSTAmt;
-                                    //LineSNo := DelChr(Format(PurchLine."Line No."), '>', '0');
-                                    GSTPerText += PurchLine."HSN/SAC Code" + ' & ';
+                                //LineSNo := DelChr(Format(PurchLine."Line No."), '>', '0');
+                                //GSTPerText += PurchLine."HSN/SAC Code";
                                 until PurchLine.Next() = 0;
-                                GSTPerText := DelChr(GSTPerText, '>', ' &');
+                                //GSTPerText := DelChr(GSTPerText, '>', ' &');
+                                GSTPerText += PurchLine."HSN/SAC Code";
                             end;
                         end;
                     end;
@@ -449,7 +450,7 @@ report 50182 "Regularization Order"
         PaymentTerms: Record "Payment Terms";
         PaymentTermsText: Text[100];
         Shipments: Record "Shipment Method";
-        shipmethod: Text[50];
+        shipmethod: Text[100];
         TransactionTypeDES: Text[50];
         TransportMethodDes: Text[100];
         TransportMethod: Record "Transport Method";

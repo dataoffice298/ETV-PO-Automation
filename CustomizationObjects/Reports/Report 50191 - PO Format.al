@@ -318,10 +318,11 @@ report 50191 "PO FORMAT"
                                     GetGSTAmounts(PurchLine);
                                     GSTAmountLine[I] += SGSTAmt + IGSSTAmt + CGSTAmt;
                                     LineSNo := DelChr(Format(PurchLine."Line No."), '>', '0');
-                                    //GSTPerText += LineSNo + ' & ';
-                                    GSTPerText += PurchLine."HSN/SAC Code" + '&';
+                                //GSTPerText += LineSNo + ' & ';
+                                //GSTPerText += PurchLine."HSN/SAC Code" + '&';
                                 until PurchLine.Next() = 0;
-                                GSTPerText := DelChr(GSTPerText, '>', ' &');
+                                //GSTPerText := DelChr(GSTPerText, '>', ' &');
+                                GSTPerText += PurchLine."HSN/SAC Code";
                             end;
                         end;
                     end;
@@ -457,7 +458,7 @@ report 50191 "PO FORMAT"
         PaymentTerms: Record "Payment Terms";
         PaymentTermsText: Text[100];
         Shipments: Record "Shipment Method";
-        shipmethod: Text[50];
+        shipmethod: Text[100];
         TransactionTypeDES: Text[50];
         TransportMethodDes: Text[100];
         TransportMethod: Record "Transport Method";

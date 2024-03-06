@@ -71,10 +71,11 @@ pageextension 50079 postedPurchInvExt extends "Posted Purchase Invoice"
                 "No." = FIELD("Indent No."), "Line No." = field("Indent Line No.");
             }
         }
-        modify("Attached Documents")
+        /*modify("Attached Documents")
         {
             Visible = false;
         }//B2BPROn19JAN2024>>>
+        */
     }
 
 }

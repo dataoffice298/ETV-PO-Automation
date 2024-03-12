@@ -50,7 +50,7 @@ codeunit 50016 "MyBaseSubscr"
                     RecNo := FieldRef.Value;
                     DocumentAttachment.SetRange("No.", RecNo);
 
-                    FlowFieldsEditable := false;
+                    // FlowFieldsEditable := false;
                 end;
         end;
     end;
@@ -92,6 +92,46 @@ codeunit 50016 "MyBaseSubscr"
         if ToRecRef.Number > 0 then
             CopyAttachmentsForPostedDocs(FromRecRef, ToRecRef, IsHandled);
     end;
+    //Invoice>>
+    [EventSubscriber(ObjectType::Table, Database::"Document Attachment", 'OnAfterInitFieldsFromRecRef', '', false, false)]
+    local procedure OnAfterInitFieldsFromRecInv(var DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef)
+    var
+        FieldRef: FieldRef;
+        RecNo: Code[20];
+    begin
+        case RecRef.Number of
+            DATABASE::"Purch. Inv. Header":
+                begin
+                    FieldRef := RecRef.Field(3);
+                    RecNo := FieldRef.Value;
+                    DocumentAttachment.Validate("No.", RecNo);
+                end;
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPurchInvHeaderInsert', '', false, false)]
+    //local procedure OnAfterPurchRcptHeaderInsert(var PurchRcptHeader: Record "Purch. Rcpt. Header"; var PurchaseHeader: Record "Purchase Header"; CommitIsSupressed: Boolean)
+    local procedure OnAfterPurchInvHeaderInsert(var PurchInvHeader: Record "Purch. Inv. Header"; var PurchHeader: Record "Purchase Header"; PreviewMode: Boolean)
+    var
+        FromRecRef: RecordRef;
+        ToRecRef: RecordRef;
+        IsHandled: Boolean;
+    begin
+        // Triggered when a posted purchase cr. memo / posted purchase invoice is created
+        if PurchInvHeader.IsTemporary() then
+            exit;
+
+        if PurchHeader.IsTemporary() then
+            exit;
+
+        ToRecRef.GetTable(PurchInvHeader); //B2BMSOn06Oct2022
+
+        FromRecRef.GetTable(PurchHeader);
+
+        if ToRecRef.Number > 0 then
+            CopyAttachmentsForPostedDocs(FromRecRef, ToRecRef, IsHandled);
+    end;
+    //invoice end<<
 
     local procedure CopyAttachmentsForPostedDocs(var FromRecRef: RecordRef; var ToRecRef: RecordRef; var IsHandled: Boolean)
     var
@@ -467,21 +507,81 @@ codeunit 50016 "MyBaseSubscr"
         VendorLedgerEntry."PO Narration" := GenJournalLine."PO Narration";
     end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Quote to Order", 'OnBeforeInsertPurchOrderLine', '', false, false)]
-    local procedure OnBeforeInsertPurchOrderLine(var PurchOrderLine: Record "Purchase Line"; PurchOrderHeader: Record "Purchase Header"; PurchQuoteLine: Record "Purchase Line"; PurchQuoteHeader: Record "Purchase Header")
+    [EventSubscriber(ObjectType::Table, 1173, 'OnAfterInitFieldsFromRecRef', '', false, false)]
+    local procedure OnAfterInitFieldsFromRecRefRecpt(var DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef)
     var
-        IndentRequisition: Record "Indent Requisitions";
+        FieldRef: FieldRef;
+        RecNo: Code[20];
     begin
-        IndentRequisition.Reset();
-        IndentRequisition.SetRange("Document No.", PurchOrderLine."Indent Req No");
-        IndentRequisition.SetRange("Line No.", PurchOrderLine."Indent Req Line No");
-        if IndentRequisition.FindFirst() then begin
-            IndentRequisition."Requisition Type" := IndentRequisition."Requisition Type"::"Purch Order";
-            IndentRequisition."Purch Order No." := PurchOrderLine."Document No.";
-            IndentRequisition.Modify;
+        case RecRef.Number of
+            DATABASE::"Purch. Rcpt. Header":
+                begin
+                    FieldRef := RecRef.Field(3);
+                    RecNo := FieldRef.Value;
+                    DocumentAttachment.Validate("No.", RecNo);
+                end;
+            DATABASE::"Purch. Inv. Header":
+                begin
+                    FieldRef := RecRef.Field(3);
+                    RecNo := FieldRef.Value;
+                    DocumentAttachment.Validate("No.", RecNo);
+                end;
         end;
         PurchOrderHeader."Vendor Quotation No." := PurchQuoteHeader."Vendor Quotation No.";
     end;
+
+    [EventSubscriber(ObjectType::Page, PAGE::"Document Attachment Details", 'OnAfterOpenForRecRef', '', false, false)]
+    local procedure OnAfterOpenForRecRefRecpt(var DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef; var FlowFieldsEditable: Boolean)
+    var
+        FieldRef: FieldRef;
+        RecNo: Code[20];
+    begin
+        case RecRef.Number of
+            DATABASE::"Purch. Rcpt. Header":
+                begin
+                    FieldRef := RecRef.Field(3);
+                    RecNo := FieldRef.Value;
+                    DocumentAttachment.SetRange("No.", RecNo);
+
+                    FlowFieldsEditable := false;
+                end;
+            DATABASE::"Purch. Inv. Header":
+                begin
+                    FieldRef := RecRef.Field(3);
+                    RecNo := FieldRef.Value;
+                    DocumentAttachment.SetRange("No.", RecNo);
+
+                    FlowFieldsEditable := false;
+                end;
+
+        end;
+    end;
+
+
+    /* [EventSubscriber(ObjectType::Table, 1173, 'OnAfterInitFieldsFromRecRef', '', false, false)]
+     local procedure OnAfterInitFieldsFromRecRefInv(var DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef)
+     var
+         FieldRef: FieldRef;
+         RecNo: Code[20];
+     begin
+         case RecRef.Number of
+
+         end;
+     end;
+
+     [EventSubscriber(ObjectType::Page, PAGE::"Document Attachment Details", 'OnAfterOpenForRecRef', '', false, false)]
+     local procedure OnAfterOpenForRecRefInv(var DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef; var FlowFieldsEditable: Boolean)
+     var
+         FieldRef: FieldRef;
+         RecNo: Code[20];
+     begin
+         case RecRef.Number of
+
+         end;
+     end;*/
+
+
+
 
 }
 

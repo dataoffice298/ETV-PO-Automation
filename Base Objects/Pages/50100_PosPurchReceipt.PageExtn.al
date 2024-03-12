@@ -103,6 +103,25 @@ pageextension 50100 PosPurchReceipt extends "Posted Purchase Receipt"
                 end;
                 //B2BMMOn06Oct2022<<
             }
+            action(DocAttach)
+            {
+                ApplicationArea = All;
+                Caption = 'Attachments';
+                Image = Attach;
+                Promoted = true;
+                PromotedCategory = Process;
+                ToolTip = 'Add a file as an attachment. You can attach images as well as documents.';
+
+                trigger OnAction()
+                var
+                    DocumentAttachmentDetails: Page "Document Attachment Details";
+                    RecRef: RecordRef;
+                begin
+                    RecRef.GetTable(Rec);
+                    DocumentAttachmentDetails.OpenForRecRef(RecRef);
+                    DocumentAttachmentDetails.RunModal;
+                end;
+            }
         }
     }
     var

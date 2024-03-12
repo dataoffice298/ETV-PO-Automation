@@ -360,15 +360,14 @@ codeunit 50026 "PO Automation"
                             PurchaseLine."Shortcut Dimension 1 Code" := IndentVendorEnquiry."Shortcut Dimension 1 Code";
                             PurchaseLine."Shortcut Dimension 2 Code" := IndentVendorEnquiry."Shortcut Dimension 2 Code";
                             PurchaseLine."Shortcut Dimension 9 Code" := IndentVendorEnquiry."Shortcut Dimension 9 Code";//B2BSSD21FEB2023
-                            //CreateIndents4.RESET;
-                            //CreateIndents4.COPYFILTERS(CreateIndentsEnquiry);
-                            IF CreateIndentsEnquiry.FINDFIRST THEN
+                            CreateIndents4.RESET;
+                            CreateIndents4.COPYFILTERS(CreateIndentsEnquiry);
+                            IF CreateIndents4.FINDFIRST THEN
                                 REPEAT
-                                    CreateIndentsEnquiry."Document Type" := PurchaseLine."Document Type"::Enquiry.AsInteger();
-                                    CreateIndentsEnquiry."Order No" := PurchaseLine."Document No.";
-                                    CreateIndentsEnquiry."Requisition Type" := CreateIndents4."Requisition Type"::Enquiry;
-                                    CreateIndentsEnquiry.MODIFY;
-                                UNTIL CreateIndentsEnquiry.NEXT = 0;
+                                    CreateIndents4."Document Type" := PurchaseLine."Document Type"::Enquiry.AsInteger();
+                                    CreateIndents4."Order No" := PurchaseLine."Document No.";
+                                    CreateIndents4.MODIFY;
+                                UNTIL CreateIndents4.NEXT = 0;
                             PurchaseLine.INSERT;
                             IndentVendorEnquiry.Check := TRUE;
                             IndentVendorEnquiry.MODIFY;
@@ -395,8 +394,7 @@ codeunit 50026 "PO Automation"
         PurchUOMQtyMeasure: Decimal;
     begin
         CreateIndents4.COPYFILTERS(CreateIndentsQuotes);
-        //InsertIndentItemvendor(CreateIndents4, Vendor);
-        InsertIndentItemvendor(CreateIndentsQuotes, Vendor);
+        InsertIndentItemvendor(CreateIndents4, Vendor);
         IndentVendorItems.RESET;
         IndentVendorItems.SETRANGE(Check, FALSE);
         IF IndentVendorItems.FIND('-') THEN
@@ -498,16 +496,14 @@ codeunit 50026 "PO Automation"
                         end;
 
                         PurchaseLine.VALIDATE("Location Code");
-                        //CreateIndents4.RESET;
-                        //CreateIndents4.COPYFILTERS(CreateIndentsQuotes);
-                        IF CreateIndentsQuotes.FIND('-') THEN
+                        CreateIndents4.RESET;
+                        CreateIndents4.COPYFILTERS(CreateIndentsQuotes);
+                        IF CreateIndents4.FIND('-') THEN
                             REPEAT
-                                CreateIndentsQuotes."Document Type" := PurchaseLine."Document Type"::Quote.AsInteger();
-                                CreateIndentsQuotes."Order No" := PurchaseLine."Document No.";
-                                CreateIndentsQuotes.Select := false;
-                                CreateIndentsQuotes."Requisition Type" := CreateIndents4."Requisition Type"::Quote;
-                                CreateIndentsQuotes.MODIFY;
-                            UNTIL CreateIndentsQuotes.NEXT = 0;
+                                CreateIndents4."Document Type" := PurchaseLine."Document Type"::Quote.AsInteger();
+                                CreateIndents4."Order No" := PurchaseLine."Document No.";
+                                CreateIndents4.MODIFY;
+                            UNTIL CreateIndents4.NEXT = 0;
                         PurchaseLine.INSERT;
                         // Message('Indent Line %1', IndentVendorEnquiry."Shortcut Dimension 1 Code");
                         PurchaseLine.Validate("Shortcut Dimension 1 Code", IndentVendorEnquiry."Shortcut Dimension 1 Code");//B2BPAV
@@ -652,6 +648,7 @@ codeunit 50026 "PO Automation"
         ColourCode: Code[20];
         Text0011: Label 'Quantity should  not be Zero in Quotation No. %1';
         PreviousItemSize: Code[20];
+        Q:Record "QuotCompHdr";
     begin
         QuoteCompare.DELETEALL;
         PurchaseHeader.SETRANGE("Document Type", PurchaseHeader."Document Type"::Quote);
@@ -676,6 +673,7 @@ codeunit 50026 "PO Automation"
                 QuoteCompare."Approval Status" := PurchaseHeader."Approval Status";
                 QuoteCompare."Line No." := QuoteCompare."Line No." + 10000;
                 QuoteCompare."Location Code" := PurchaseHeader."Location Code";
+                
 
                 QuoteCompare.INSERT;
                 Amount := 0;
@@ -903,7 +901,6 @@ codeunit 50026 "PO Automation"
         PurchaseHeader: Record "Purchase Header";
         QuoCompHdr: Record QuotCompHdr;
         IndentLineRec: Record "Indent Line";
-        IndentReqLine: Record "Indent Requisitions";
     begin
         clear(TotalWeightage);
         PurchaseHeader.RESET();
@@ -1081,15 +1078,6 @@ codeunit 50026 "PO Automation"
                                     IndentLineRec.Status := IndentLineRec.Status::"Quotation Comparsion";
                                     IndentLineRec.Modify();
                                 until IndentLineRec.Next() = 0;
-                            end;
-                            IndentReqLine.Reset();
-                            IndentReqLine.SetRange("Document No.", PurchaseLine."Indent Req No");
-                            IndentReqLine.SetRange("Indent No.", PurchaseLine."Indent No.");
-                            IndentReqLine.SetRange("Line No.", PurchaseLine."Indent Req Line No");
-                            IndentReqLine.SetRange("Indent Line No.", PurchaseLine."Indent Line No.");
-                            if IndentReqLine.FindFirst() then begin
-                                IndentReqLine."Requisition Type" := IndentReqLine."Requisition Type"::"Quotation Comparsion";
-                                IndentReqLine.Modify();
                             end;
                         UNTIL PurchaseLine.NEXT() = 0;
 
@@ -1387,7 +1375,6 @@ codeunit 50026 "PO Automation"
         IndentLine: Record "Indent Line";
         DimentionSetEntry: Record "Dimension Set Entry";//B2BSSD20Feb2023
         IndentLineRec: Record "Indent Line";
-        IndentReqLine: Record "Indent Requisitions";
     begin
         PurchaseHeader.INIT;
         PurchaseHeader."Document Type" := PurchaseHeader."Document Type"::Quote;
@@ -1477,15 +1464,6 @@ codeunit 50026 "PO Automation"
                         IndentLineRec.Status := IndentLineRec.Status::Quote;
                         IndentLineRec.Modify();
                     until IndentLineRec.Next() = 0;
-                end;
-                IndentReqLine.Reset();
-                IndentReqLine.SetRange("Document No.", PurchaseLine."Indent Req No");
-                IndentReqLine.SetRange("Indent No.", PurchaseLine."Indent No.");
-                IndentReqLine.SetRange("Line No.", PurchaseLine."Indent Req Line No");
-                IndentReqLine.SetRange("Indent Line No.", PurchaseLine."Indent Line No.");
-                if IndentReqLine.FindFirst() then begin
-                    IndentReqLine."Requisition Type" := IndentReqLine."Requisition Type"::Quote;
-                    IndentReqLine.Modify();
                 end;
 
             UNTIL PurchaseLine.NEXT = 0;
@@ -1604,7 +1582,7 @@ codeunit 50026 "PO Automation"
         indentRequisitions: Record "Indent Requisitions";
     begin
         CreateIndents4.COPYFILTERS(CreateIndentsQuotes);
-        InsertIndentItemvendor2(CreateIndentsQuotes, Vendor);
+        InsertIndentItemvendor2(CreateIndents4, Vendor);
         IndentVendorItems.RESET;
         IndentVendorItems.SETRANGE(Check, FALSE);
         IF IndentVendorItems.FIND('-') THEN
@@ -1684,7 +1662,7 @@ codeunit 50026 "PO Automation"
                         //B2BSSD21APR2023<<
 
                         PurchaseLine."Variant Code" := IndentVendorEnquiry."Variant Code";
-                        PurchaseLine."Variant Description" := IndentVendorEnquiry."Variant Description"; //B2BSCM11JAN2024
+                        PurchaseLine."Variant Code" := IndentVendorEnquiry."Variant Description"; //B2BSCM11JAN2024
                         PurchaseLine.Quantity := IndentVendorEnquiry.Quantity;
                         PurchaseLine."Outstanding Quantity" := PurchaseLine.Quantity;
                         PurchaseLine."Outstanding Qty. (Base)" := PurchaseLine.Quantity;
@@ -1711,26 +1689,22 @@ codeunit 50026 "PO Automation"
                             until IndentLineRec.Next() = 0;
                         end;
 
-                        //CreateIndents5.RESET;
-                        //CreateIndents5.SETRANGE(CreateIndents5."Document No.", IndentVendorEnquiry."Indent Req No");
-                        //CreateIndents5.SETRANGE(CreateIndents5."Line No.", IndentVendorEnquiry."Indent Req Line No");
-                        IF CreateIndentsQuotes.FIND('-') THEN BEGIN
-                            repeat
-                                CreateIndentsQuotes."Document Type" := PurchaseLine."Document Type"::Order.AsInteger();
-                                //CreateIndents5."Order No" := PurchaseLine."Document No.";
-                                CreateIndentsQuotes."Purch Order No." := PurchaseLine."Document No.";
-                                CreateIndentsQuotes."Requisition Type" := CreateIndentsQuotes."Requisition Type"::"Purch Order";
-                                PurchaseLine.VALIDATE("Direct Unit Cost", CreateIndentsQuotes."Unit Cost");
-                                //B2BSSD11Jan2023<<
-                                PurchaseLine.Validate("Spec Id", CreateIndentsQuotes."Spec Id");
-                                PurchaseLine.Validate(Quantity, IndentVendorEnquiry.Quantity);//B2BSCM12SEP2023
-                                PurchaseLine.Validate("Sub Location Code", CreateIndentsQuotes."Sub Location Code");
-                                PurchaseLine.Validate("Variant Code", CreateIndentsQuotes."Variant Code");
-                                PurchaseLine."Variant Description" := CreateIndentsQuotes."Variant Description";//B2BSCM11JAN2024
-                                                                                                                //B2BSSD11Jan2023>>
-                                PurchaseLine.Validate("Indentor Description", CreateIndentsQuotes."Indentor Description");//B2BSSD02Feb2023
-                                CreateIndentsQuotes.MODIFY;
-                            until CreateIndentsQuotes.Next = 0;
+                        CreateIndents5.RESET;
+                        CreateIndents5.SETRANGE(CreateIndents5."Document No.", IndentVendorEnquiry."Indent Req No");
+                        CreateIndents5.SETRANGE(CreateIndents5."Line No.", IndentVendorEnquiry."Indent Req Line No");
+                        IF CreateIndents5.FINDFIRST THEN BEGIN
+                            CreateIndents5."Document Type" := PurchaseLine."Document Type"::Order.AsInteger();
+                            CreateIndents5."Order No" := PurchaseLine."Document No.";
+                            PurchaseLine.VALIDATE("Direct Unit Cost", CreateIndents5."Unit Cost");
+                            //B2BSSD11Jan2023<<
+                            PurchaseLine.Validate("Spec Id", CreateIndents5."Spec Id");
+                            PurchaseLine.Validate(Quantity, IndentVendorEnquiry.Quantity);//B2BSCM12SEP2023
+                            PurchaseLine.Validate("Sub Location Code", CreateIndents5."Sub Location Code");
+                            PurchaseLine.Validate("Variant Code", CreateIndents5."Variant Code");
+                            PurchaseLine."Variant Description" := CreateIndents5."Variant Description";//B2BSCM11JAN2024
+                            //B2BSSD11Jan2023>>
+                            PurchaseLine.Validate("Indentor Description", CreateIndents5."Indentor Description");//B2BSSD02Feb2023
+                            CreateIndents5.MODIFY;
                         END;
                         PurchaseLine.Modify(true);
                         IndentVendorEnquiry.Check := TRUE;
@@ -1752,46 +1726,44 @@ codeunit 50026 "PO Automation"
     begin
         //B2B.1.3 s
         IndentVendorItems.DELETEALL;
-        //CreateIndents.COPYFILTERS(CreateIndentsLocal);
-        //CreateIndents.Reset();
-        //CreateIndents.SetRange(Select, true);
-        IF CreateIndentsLocal.FIND('-') THEN
+        CreateIndents.COPYFILTERS(CreateIndentsLocal);
+        IF CreateIndents.FIND('-') THEN
             REPEAT
-                IF CreateIndentsLocal."Remaining Quantity" <> 0 THEN BEGIN
-                    IF CreateIndentsLocal."Manufacturer Code" = '' THEN
+                IF CreateIndents."Remaining Quantity" <> 0 THEN BEGIN
+                    IF CreateIndents."Manufacturer Code" = '' THEN
                         ERROR(TEXT50050);
                     IndentVendorItems.INIT;
-                    IndentVendorItems."Line Type" := CreateIndentsLocal."Line Type";//B2BSSD14APR2023
-                    IndentVendorItems."Item No." := CreateIndentsLocal."Item No.";
-                    IF CreateIndentsLocal."Qty. To Order" >= CreateIndentsLocal."Vendor Min.Ord.Qty" THEN BEGIN
-                        IndentVendorItems.Quantity := CreateIndentsLocal."Qty. To Order";
-                        CreateIndentsLocal."Remaining Quantity" -= CreateIndentsLocal."Qty. To Order";
-                        CreateIndentsLocal.VALIDATE(CreateIndentsLocal."Remaining Quantity");
-                        CreateIndentsLocal."Qty. Ordered" += IndentVendorItems.Quantity;
-                        CreateIndentsLocal.MODIFY;
+                    IndentVendorItems."Line Type" := CreateIndents."Line Type";//B2BSSD14APR2023
+                    IndentVendorItems."Item No." := CreateIndents."Item No.";
+                    IF CreateIndents."Qty. To Order" >= CreateIndents."Vendor Min.Ord.Qty" THEN BEGIN
+                        IndentVendorItems.Quantity := CreateIndents."Qty. To Order";
+                        CreateIndents."Remaining Quantity" -= CreateIndents."Qty. To Order";
+                        CreateIndents.VALIDATE(CreateIndents."Remaining Quantity");
+                        CreateIndents."Qty. Ordered" += IndentVendorItems.Quantity;
+                        CreateIndents.MODIFY;
                     END ELSE BEGIN
-                        IndentVendorItems.Quantity := CreateIndentsLocal."Vendor Min.Ord.Qty";
-                        CreateIndentsLocal."Remaining Quantity" -= CreateIndentsLocal."Vendor Min.Ord.Qty";
-                        IF CreateIndentsLocal."Remaining Quantity" < 0 THEN
-                            CreateIndentsLocal."Remaining Quantity" := 0;
-                        CreateIndentsLocal.VALIDATE(CreateIndentsLocal."Remaining Quantity");
-                        CreateIndentsLocal."Qty. Ordered" += IndentVendorItems.Quantity;
-                        CreateIndentsLocal.MODIFY;
+                        IndentVendorItems.Quantity := CreateIndents."Vendor Min.Ord.Qty";
+                        CreateIndents."Remaining Quantity" -= CreateIndents."Vendor Min.Ord.Qty";
+                        IF CreateIndents."Remaining Quantity" < 0 THEN
+                            CreateIndents."Remaining Quantity" := 0;
+                        CreateIndents.VALIDATE(CreateIndents."Remaining Quantity");
+                        CreateIndents."Qty. Ordered" += IndentVendorItems.Quantity;
+                        CreateIndents.MODIFY;
                     END;
-                    IndentVendorItems."Variant Code" := CreateIndentsLocal."Variant Code";
-                    IndentVendorItems."Variant Description" := CreateIndentsLocal."Variant Description"; //B2BSCM11JAN2024
-                    IndentVendorItems."Indent No." := CreateIndentsLocal."Indent No.";
-                    IndentVendorItems."Indent Line No." := CreateIndentsLocal."Indent Line No.";
-                    IndentVendorItems."Due Date" := CreateIndentsLocal."Due Date";
-                    IndentVendorItems."Indent Line No." := CreateIndentsLocal."Indent Line No.";
-                    IndentVendorItems."Location Code" := CreateIndentsLocal."Location Code";
-                    IndentVendorItems."Unit Of Measure" := CreateIndentsLocal."Unit of Measure";//B2BSSD14APR2023
-                    IndentVendorItems."Shortcut Dimension 1 Code" := CreateIndentsLocal."Shortcut Dimension 1 Code";//B2BPAV
-                    IndentVendorItems."Shortcut Dimension 2 Code" := CreateIndentsLocal."Shortcut Dimension 2 Code";//B2BPAV
-                    IndentVendorItems."Shortcut Dimension 9 Code" := CreateIndentsLocal."Shortcut Dimension 9 Code";//B2BSSD20Feb2023
+                    IndentVendorItems."Variant Code" := CreateIndents."Variant Code";
+                    IndentVendorItems."Variant Description" := CreateIndents."Variant Description"; //B2BSCM11JAN2024
+                    IndentVendorItems."Indent No." := CreateIndents."Indent No.";
+                    IndentVendorItems."Indent Line No." := CreateIndents."Indent Line No.";
+                    IndentVendorItems."Due Date" := CreateIndents."Due Date";
+                    IndentVendorItems."Indent Line No." := CreateIndents."Indent Line No.";
+                    IndentVendorItems."Location Code" := CreateIndents."Location Code";
+                    IndentVendorItems."Unit Of Measure" := CreateIndents."Unit of Measure";//B2BSSD14APR2023
+                    IndentVendorItems."Shortcut Dimension 1 Code" := CreateIndents."Shortcut Dimension 1 Code";//B2BPAV
+                    IndentVendorItems."Shortcut Dimension 2 Code" := CreateIndents."Shortcut Dimension 2 Code";//B2BPAV
+                    IndentVendorItems."Shortcut Dimension 9 Code" := CreateIndents."Shortcut Dimension 9 Code";//B2BSSD20Feb2023
                     //B2BSSD29MAR2023<<
                     IndentReqHed.Reset();
-                    IndentReqHed.SetRange("No.", CreateIndentsLocal."Document No.");
+                    IndentReqHed.SetRange("No.", CreateIndents."Document No.");
                     if IndentReqHed.FindFirst() then begin
                         IndentVendorItems."Programme Name" := IndentReqHed."programme Name";
                         IndentVendorItems.Purpose := IndentReqHed.Purpose;
@@ -1799,19 +1771,19 @@ codeunit 50026 "PO Automation"
                     //B2BSSD29MAR2023>>
                     IndentVendorItems.Check := FALSE;
                     //VendorGrec.RESET;
-                    IF VendorGrec.GET(CreateIndentsLocal."Manufacturer Code") THEN;
+                    IF VendorGrec.GET(CreateIndents."Manufacturer Code") THEN;
                     // IndentVendorItems."Location Code" := VendorGrec."Location Code";
-                    IndentVendorItems."Sub Location Code" := CreateIndentsLocal."Sub Location Code";
-                    IndentVendorItems."Unit Of Measure" := CreateIndentsLocal."Unit of Measure";
-                    IndentVendorItems.Department := CreateIndentsLocal.Department;
-                    IndentVendorItems."Indent Req No" := CreateIndentsLocal."Document No.";
-                    IndentVendorItems."Vendor No." := CreateIndentsLocal."Vendor No.";
-                    IndentVendorItems."Indent Req Line No" := CreateIndentsLocal."Line No.";
-                    IndentVendorItems."Vendor No." := CreateIndentsLocal."Manufacturer Code";
-                    IndentVendorItems."Item No." := CreateIndentsLocal."Item No.";
+                    IndentVendorItems."Sub Location Code" := CreateIndents."Sub Location Code";
+                    IndentVendorItems."Unit Of Measure" := CreateIndents."Unit of Measure";
+                    IndentVendorItems.Department := CreateIndents.Department;
+                    IndentVendorItems."Indent Req No" := CreateIndents."Document No.";
+                    IndentVendorItems."Vendor No." := CreateIndents5."Vendor No.";
+                    IndentVendorItems."Indent Req Line No" := CreateIndents."Line No.";
+                    IndentVendorItems."Vendor No." := CreateIndents."Manufacturer Code";
+                    IndentVendorItems."Item No." := CreateIndents."Item No.";
                     IndentVendorItems.INSERT;
                 END;
-            UNTIL CreateIndentsLocal.NEXT = 0;
+            UNTIL CreateIndents.NEXT = 0;
         //B2B.1.3 E
     end;
 
@@ -1881,7 +1853,6 @@ codeunit 50026 "PO Automation"
         FixedAssets.Reset();
         FixedAssets.SetRange("No.", PurchLine."No.");
         FixedAssets.SetFilter(Acquired, '%1', true);
-        FixedAssets.SetFilter("FA Posting Group", '<>CWIP & <>WIP');
         if FixedAssets.FindSet() then
             Error('Fixed Asset Already Acquired %1 Use Another One', FixedAssets."No.");
         //B2BSSD28FEB2023>>

@@ -103,10 +103,10 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         //B2BSSD25Jan2023>>
 
         //B2BSSD14FEB2023<<
-        modify("Attached Documents")
-        {
-            Visible = false;
-        }
+        /*  modify("Attached Documents")
+           {
+               Visible = false;
+           }*/
         modify("Ship-to Name")//B2BSSD27MAR2023
         {
             Editable = true;
@@ -141,12 +141,14 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             part(AttachmentDocPurOrd; "Document Attachment Factbox")
             {
                 ApplicationArea = All;
-                Caption = 'Attachments';
+                Caption = 'Attachments1';
                 Provider = PurchLines;
                 /* SubPageLink = "Table ID" = CONST(50202),
                 "No." = FIELD("Indent No."), "Line No." = field("Indent Line No."); */
                 SubPageLink =
-                "No." = FIELD("Indent No."), "Line No." = field("Indent Line No.");
+                "No." = FIELD("Indent No."), "Line No." = field("Indent Line No."),
+                  "Document Type" = FIELD("Document Type");
+                ;
             }
         }
         //B2BSSD14FEB2023>>

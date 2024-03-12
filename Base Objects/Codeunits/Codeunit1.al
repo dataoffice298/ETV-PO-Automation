@@ -480,6 +480,7 @@ codeunit 50016 "MyBaseSubscr"
             IndentRequisition."Purch Order No." := PurchOrderLine."Document No.";
             IndentRequisition.Modify;
         end;
+        PurchOrderHeader."Vendor Quotation No." := PurchQuoteHeader."Vendor Quotation No.";
     end;
 
 }

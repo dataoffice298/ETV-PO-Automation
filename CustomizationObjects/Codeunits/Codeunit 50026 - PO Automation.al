@@ -939,6 +939,7 @@ codeunit 50026 "PO Automation"
                     QuoteCompare."Line No." := Line + 10000;
                     QuoteCompare."Location Code" := PurchaseHeader."Location Code";
                     QuoteCompare."Parent Quote No." := PurchaseHeader."No.";
+                    QuoteCompare."Vendor Quotation No." := PurchaseHeader."Vendor Quotation No."; //B2BVCOn11Mar2024
                     QuoteCompare.Status := QuoteCompare.Status::Open;
                     QuoteCompare.INSERT();
                     Amount := 0;

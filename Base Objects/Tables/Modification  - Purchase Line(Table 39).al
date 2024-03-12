@@ -139,6 +139,28 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             end;
         }
         //B2BVCOn03Oct22<<<
+        //B2BVCOn12Mar2024 >>
+        field(65000; "Short Close Quantity"; Decimal)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(65001; "Short Closed by"; Code[50])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(65002; "Short Closed Date & Time"; DateTime)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(65003; "ShortClosed"; Boolean)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(65004; "CancelOrder"; Boolean)
+        {
+            DataClassification = CustomerContent;
+        }
+        //B2BVCOn12Mar2024<<
         field(33002900; "Indent No."; Code[20])
         {
             Description = 'B2B1.0';

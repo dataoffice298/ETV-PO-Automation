@@ -74,6 +74,26 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
         {
             DataClassification = CustomerContent;
         }
+        field(50148; "Short Closed by"; Code[50])
+        {
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+        field(50149; "Short Closed Date & Time"; DateTime)
+        {
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+        field(50150; ShortClosed; Boolean) //B2BVCOn12Mar2024
+        {
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+        field(50151; "Cancelled Order"; Boolean)
+        {
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
         field(33002900; "RFQ No."; Code[20])
         {
             NotBlank = true;//B2BSSD08Feb2023
@@ -117,6 +137,10 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
         field(50120; "PO Narration"; Code[50]) //B2BAJ02012024
         {
             Caption = 'PO Narration';
+            DataClassification = CustomerContent;
+        }
+        field(50121; "Vendor Quotation No."; Code[50])
+        {
             DataClassification = CustomerContent;
         }
     }

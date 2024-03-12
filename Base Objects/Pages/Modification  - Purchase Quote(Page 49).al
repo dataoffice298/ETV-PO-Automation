@@ -88,6 +88,20 @@ pageextension 50073 pageextension70000001 extends "Purchase Quote"
                 Caption = 'Purpose';
             }
         }
+        addafter("Vendor Shipment No.")
+        {
+            field("Vendor Quotation No."; Rec."Vendor Quotation No.") //B2BVCOn12Mar2024
+            {
+                ApplicationArea = All;
+                Caption = 'Vendor Quotation No.';
+            }
+
+            field("Ammendent Comments"; Rec."Ammendent Comments") //B2BVCOn12Mar2024
+            {
+                ApplicationArea = All;
+                Caption = 'Ammendent Comments';
+            }
+        }
     }
     //B2BSSD017Feb2023<<
     actions
@@ -112,6 +126,27 @@ pageextension 50073 pageextension70000001 extends "Purchase Quote"
             begin
                 Rec.TestField("RFQ No.");
                 Rec.TestField("Payment Terms Code");
+                Rec.TestField("Vendor Quotation No."); //B2BVCOn12Mar2024
+            end;
+        }
+        modify(Reopen)
+        {
+            trigger OnBeforeAction()
+            var
+                PurchaseHeadArchive: Record "Purchase Header Archive";
+                ArchiveManagement: Codeunit ArchiveManagement;
+                ReleasePurchDoc: Codeunit "Release Purchase Document";
+
+            begin
+                //B2BVCOn12Mar2024 >>
+                if Rec.Status = rec.Status::Released then begin
+                    Rec.TestField("Ammendent Comments");
+
+                end;
+                ArchiveManagement.ArchivePurchDocument(Rec);
+                ReleasePurchDoc.PerformManualReopen(Rec);
+                Rec."Ammendent Comments" := '';
+                //B2BVCOn12Mar2024 <<
             end;
         }
 

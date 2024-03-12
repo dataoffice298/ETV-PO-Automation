@@ -43,6 +43,8 @@ report 50076 "Purchase Order Creation New"
                 GLAccBool: Boolean;
                 FADepBook: Record "FA Depreciation Book";
                 QuotCompHdr: Record QuotCompHdr; //B2BMSOn18Oct2022
+                PurchaseHead: Record "Purchase Header"; //B2BVCOn03Mar2024
+                IndentReqLine: Record "Indent Requisitions";
             begin
 
                 PurchaseHeader.RESET;
@@ -88,6 +90,7 @@ report 50076 "Purchase Order Creation New"
                         PurchaseHeaderOrder.Validate("Transport Method", "Quotation Comparison1"."Transport Method");
                         //B2BSSD16FEB2023
                         PurchaseHeader.Purpose := "Quotation Comparison1".Purpose;//B2BSSD23MAR2023
+                        PurchaseHeaderOrder."Vendor Quotation No." := "Quotation Comparison1"."Vendor Quotation No."; //B2BVCOn11Mar2024
                         //B2BMSOn18Oct2022>>
                         if QuotCompHdr.Get("Quotation Comparison1"."Quot Comp No.") then
                             PurchaseHeaderOrder.Regularization := QuotCompHdr.Regularization;
@@ -162,6 +165,16 @@ report 50076 "Purchase Order Creation New"
                                 PurchaseLineOrder.Modify();
                                 LneLVar += 10000;
                             end;
+                            //B2BVCOn12Mar2024 >>
+                            IndentReqLine.Reset();
+                            IndentReqLine.SetRange("Document No.", PurchaseLineOrder."Indent Req No");
+                            IndentReqLine.SetRange("Line No.", PurchaseLineOrder."Indent Req Line No");
+                            if IndentReqLine.FindFirst() then begin
+                                IndentReqLine."Requisition Type" := IndentReqLine."Requisition Type"::"Purch Order";
+                                IndentReqLine."Purch Order No." := PurchaseLineOrder."Document No.";
+                                IndentReqLine.Modify();
+                            end;
+                        //B2BVCOn12Mar2024 <<
                         until PurchaseLine.Next() = 0;
                     END;
                 end;
@@ -216,6 +229,7 @@ report 50076 "Purchase Order Creation New"
         QutComLine: Record "Quotation Comparison Test";
         invposset: Record "Inventory Posting Setup";
         itemgv: Record Item;
+
 
 
     procedure GetValues(RFQNUmbr: code[20]);

@@ -432,17 +432,17 @@ report 50182 "Regularization Order"
                     PhoneNo := PurchaseCode."Phone No.";
                 end;
 
-                Contact.Reset();
-                Contact.SetRange("Company No.", "Purchase Header"."Buy-from Vendor No.");
-                if Contact.FindSet() then begin
+                OrderAddress.Reset();
+                OrderAddress.SetRange("Vendor No.", "Purchase Header"."Buy-from Vendor No.");
+                if OrderAddress.FindSet() then begin
                     repeat
-                        if Contact.Name <> '' then
-                            ContactName := ContactName + Contact.Name + ',';
-                        if Contact."E-Mail" <> '' then
-                            ContactEmail := ContactEmail + Contact."E-Mail" + ',';
-                        if Contact."Mobile Phone No." <> '' then
-                            ContactPhNo := ContactPhNo + Contact."Mobile Phone No." + ',';
-                    until Contact.Next = 0;
+                        if OrderAddress.Name <> '' then
+                            ContactName := ContactName + OrderAddress.Name + ',';
+                        if OrderAddress."E-Mail" <> '' then
+                            ContactEmail := ContactEmail + OrderAddress."E-Mail" + ',';
+                        if OrderAddress."Phone No." <> '' then
+                            ContactPhNo := ContactPhNo + OrderAddress."Phone No." + ',';
+                    until OrderAddress.Next = 0;
                     ContactName := DelChr(ContactName, '<>', ',');
                     ContactEmail := DelChr(ContactEmail, '<>', ',');
                     ContactPhNo := DelChr(ContactPhNo, '<>', ',');
@@ -542,7 +542,7 @@ report 50182 "Regularization Order"
         ContactName: Text;
         ContactPhNo: Text;
         ContactEmail: Text;
-        Contact: Record Contact;
+        OrderAddress: Record "Order Address";
 
     //GST Starts>>
     local procedure GetGSTAmounts(PurchaseLine: Record "Purchase Line")

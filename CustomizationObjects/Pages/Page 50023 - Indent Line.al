@@ -33,6 +33,19 @@ page 50023 "Indent Line"
                 {
                     ApplicationArea = All;
                     Editable = FieldEditable;
+
+                    //B2BSSD13MARCH2024 >>
+
+                    trigger OnValidate()
+                    var
+                        IndentHeaderL: Record "Indent Header";
+                    begin
+                        if IndentHeaderL.Get(Rec."Document No.") then begin
+                            Rec."Issue Location" := IndentHeaderL."Delivery Location";
+                            Rec."Issue Sub Location" := IndentHeaderL."Delivery Location";
+                        end;
+                    end;
+                    //B2BSSD13MARCH2024 <<
                 }
                 field(Select; Rec.Select)//B2BSSD30Jan2023
                 {
@@ -814,6 +827,11 @@ page 50023 "Indent Line"
         if rec."Qty To Issue" = 0 then
             Rec.QTyToIssueEditable := true;
     end;
+
+
+
+
+
     //B2BSSD22MAY2023<<
 
 

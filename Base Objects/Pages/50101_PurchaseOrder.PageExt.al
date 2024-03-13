@@ -10,6 +10,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             {
                 ApplicationArea = all;
             }
+
         }
         addafter(Regularization) //B2BAJ02012024
         {
@@ -88,6 +89,12 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 ApplicationArea = All;
                 Caption = 'Ammendent Comments';
             }
+            field("Vendor Quotation No."; Rec."Vendor Quotation No.")
+            {
+                ApplicationArea = All;
+                Caption = 'Vendor Quotation No.';
+                Editable = false;
+            }
         }
 
         //B2BSSD25Jan2023<<
@@ -165,6 +172,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 Err001: Label 'Qty. to Accept and Qty. to Reject must not be greater than Quantity.';
                 Error002: TextConst ENN = 'Quantity Receive can not be Grater then QC Accepted Quantity';
                 ImportTypeError: TextConst ENN = 'Import type Must have value in Invoice details Tab';//B2BSCM25SEP2023
+                Text0001: Label 'This Purchase Order has been Short Closed. We cannot post it.';
             begin
 
                 //B2BSSD09AUG2023>>
@@ -174,6 +182,8 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                     repeat
                         if purchaseLinevar."Qty. to Receive" > purchaseLinevar."Quantity Accepted B2B" then
                             Error(Error002);
+                        if (purchaseLinevar.ShortClosed = true) and (purchaseLinevar."Outstanding Quantity" = 0) then
+                            Error(Text0001);
                     until PurchLine.Next() = 0;
                 end;
                 //B2BSSD09AUG2023<
@@ -326,8 +336,8 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                     PurchaseHeader: Record "Purchase Header";
                     RegErr: Label 'This is not a regularization order';
                 begin
-                    if not Rec.Regularization then
-                        Error(RegErr);
+                    //if not Rec.Regularization then
+                    //Error(RegErr);
                     PurchaseHeader.Reset();
                     PurchaseHeader.SetRange("Document Type", Rec."Document Type");
                     PurchaseHeader.SetRange("No.", Rec."No.");
@@ -348,6 +358,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 Image = PrintReport;
                 Promoted = true;
                 PromotedCategory = Category10;
+                Visible = false;
                 ToolTip = 'Prepare to print the Purchase Order. The report request window for the document opens where you can specify what to include on the print-out.';
                 trigger OnAction()
                 var
@@ -383,7 +394,6 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             }
         }
         //B2BSSDSSD12APR2023<<
-
         modify(DocAttach)
         {
             Visible = false;
@@ -401,11 +411,4 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         POAutomation: Codeunit "PO Automation";
         ErrorTxt: TextConst ENN = 'RGP Inward Must Be Post';
         ErrorTxt1: TextConst ENN = 'Quantity cannot Received More Then Accepted Inward Quantity';
-    /*   actions
-       {
-           // Add changes to page actions here
-       }
-
-       var
-           myInt: Integer;*/
 }

@@ -581,8 +581,19 @@ codeunit 50016 "MyBaseSubscr"
      end;*/
 
 
-
-
+    //B2BVCOn15Mar2024 >>
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Quote to Order", 'OnBeforeInsertPurchOrderLine', '', false, false)]
+    local procedure OnBeforeInsertPurchOrderLine(var PurchOrderLine: Record "Purchase Line"; PurchOrderHeader: Record "Purchase Header"; PurchQuoteLine: Record "Purchase Line"; PurchQuoteHeader: Record "Purchase Header")
+    var
+        IndentReqLine: Record "Indent Requisitions";
+    begin
+        if IndentReqLine.Get(PurchOrderLine."Indent Req No", PurchOrderLine."Indent Req Line No") then begin
+            IndentReqLine."Requisition Type" := IndentReqLine."Requisition Type"::"Purch Order";
+            IndentReqLine."Purch Order No." := PurchOrderLine."Document No.";
+            IndentReqLine.Modify;
+        end;
+    end;
+    //B2BVCOn15Mar2024 <<
 }
 
 

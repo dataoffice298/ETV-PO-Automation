@@ -527,7 +527,7 @@ codeunit 50016 "MyBaseSubscr"
                     DocumentAttachment.Validate("No.", RecNo);
                 end;
         end;
-        PurchOrderHeader."Vendor Quotation No." := PurchQuoteHeader."Vendor Quotation No.";
+
     end;
 
     [EventSubscriber(ObjectType::Page, PAGE::"Document Attachment Details", 'OnAfterOpenForRecRef', '', false, false)]

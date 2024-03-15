@@ -1,6 +1,6 @@
 report 50182 "Regularization Order"
 {
-    Caption = 'Regularization Order_50182';
+    Caption = 'Purchase Order Report_50182';
     UsageCategory = ReportsAndAnalysis;
     ApplicationArea = All;
     DefaultLayout = RDLC;
@@ -53,6 +53,10 @@ report 50182 "Regularization Order"
             column(Buy_from_Contact_No_; "Buy-from Contact No.")
             { }
             column(Buy_from_Email; VendorGRec."E-Mail")
+            { }
+            column(GSTRegNo; VendorGRec."GST Registration No.")
+            { }
+            column(Buy_from_Post_Code; "Buy-from Post Code")
             { }
             column(Posting_Date; "Posting Date")
             { }
@@ -437,15 +441,15 @@ report 50182 "Regularization Order"
                 if OrderAddress.FindSet() then begin
                     repeat
                         if OrderAddress.Name <> '' then
-                            ContactName := ContactName + OrderAddress.Name + ',';
+                            ContactName := ContactName + OrderAddress.Name + '/';
                         if OrderAddress."E-Mail" <> '' then
-                            ContactEmail := ContactEmail + OrderAddress."E-Mail" + ',';
+                            ContactEmail := ContactEmail + OrderAddress."E-Mail" + '/';
                         if OrderAddress."Phone No." <> '' then
-                            ContactPhNo := ContactPhNo + OrderAddress."Phone No." + ',';
+                            ContactPhNo := ContactPhNo + OrderAddress."Phone No." + '/';
                     until OrderAddress.Next = 0;
-                    ContactName := DelChr(ContactName, '<>', ',');
-                    ContactEmail := DelChr(ContactEmail, '<>', ',');
-                    ContactPhNo := DelChr(ContactPhNo, '<>', ',');
+                    ContactName := DelChr(ContactName, '<>', '/');
+                    ContactEmail := DelChr(ContactEmail, '<>', '/');
+                    ContactPhNo := DelChr(ContactPhNo, '<>', '/');
                 end;
             end;
         }
@@ -543,6 +547,7 @@ report 50182 "Regularization Order"
         ContactPhNo: Text;
         ContactEmail: Text;
         OrderAddress: Record "Order Address";
+
 
     //GST Starts>>
     local procedure GetGSTAmounts(PurchaseLine: Record "Purchase Line")

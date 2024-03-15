@@ -324,7 +324,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             action(PrintRegularization)
             {
                 ApplicationArea = Suite;
-                Caption = 'Print Regularization Order';
+                Caption = 'Print Purchase Order Report';
                 Ellipsis = true;
                 Image = PrintReport;
                 Promoted = true;

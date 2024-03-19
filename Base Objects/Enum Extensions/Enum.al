@@ -4,6 +4,10 @@ enumextension 50000 PurchaseDoc extends "Purchase Document Type"
     {
         Caption = 'Enquiry';
     }
+    value(7; Vendor)
+    {
+        Caption = 'Vendor';
+    }
 
 }
 

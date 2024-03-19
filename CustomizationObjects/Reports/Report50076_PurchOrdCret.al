@@ -91,6 +91,7 @@ report 50076 "Purchase Order Creation New"
                         //B2BSSD16FEB2023
                         PurchaseHeader.Purpose := "Quotation Comparison1".Purpose;//B2BSSD23MAR2023
                         PurchaseHeaderOrder."Vendor Quotation No." := "Quotation Comparison1"."Vendor Quotation No."; //B2BVCOn11Mar2024
+                        PurchaseHeaderOrder."Vendor Quotation Date" := "Quotation Comparison1"."Vendor Quotation Date"; //B2BVCOn18Mar2024
                         //B2BMSOn18Oct2022>>
                         if QuotCompHdr.Get("Quotation Comparison1"."Quot Comp No.") then
                             PurchaseHeaderOrder.Regularization := QuotCompHdr.Regularization;
@@ -172,6 +173,8 @@ report 50076 "Purchase Order Creation New"
                             if IndentReqLine.FindFirst() then begin
                                 IndentReqLine."Requisition Type" := IndentReqLine."Requisition Type"::"Purch Order";
                                 IndentReqLine."Purch Order No." := PurchaseLineOrder."Document No.";
+                                IndentReqLine."Qty. Ordered" := PurchaseLineOrder.Quantity;
+                                IndentReqLine.Validate("Remaining Quantity", (IndentReqLine.Quantity - IndentReqLine."Qty. Ordered"));
                                 IndentReqLine.Modify();
                             end;
                         //B2BVCOn12Mar2024 <<

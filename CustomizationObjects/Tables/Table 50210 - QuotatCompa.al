@@ -499,6 +499,11 @@ table 50210 "Quotation Comparison Test"
             Caption = 'Vendor Quotation No.';
             DataClassification = CustomerContent;
         }
+        field(60038; "Vendor Quotation Date"; Date) //B2BVCOn18Mar2024
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Vendor Quotation Date';
+        }
     }
 
     keys

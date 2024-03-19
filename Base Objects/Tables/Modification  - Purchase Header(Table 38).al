@@ -143,6 +143,10 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
         {
             DataClassification = CustomerContent;
         }
+        field(50122; "Vendor Quotation Date"; Date) //B2BVCOn18Mar2024
+        {
+            DataClassification = CustomerContent;
+        }
     }
 
 

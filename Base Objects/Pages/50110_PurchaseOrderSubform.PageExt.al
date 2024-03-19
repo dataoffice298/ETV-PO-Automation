@@ -254,6 +254,27 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 ApplicationArea = All;
                 Caption = 'Posted Gate Entry Line No.';
             }
+            field("Short Close Quantity"; Rec."Short Close Quantity")
+            {
+                Caption = 'Short Closed Quantity';
+                ApplicationArea = all;
+                Editable = false;
+            }
+            field("Short Closed by"; Rec."Short Closed by")
+            {
+                ApplicationArea = all;
+                Editable = false;
+            }
+            field("Short Closed Date & Time"; Rec."Short Closed Date & Time")
+            {
+                ApplicationArea = all;
+                Editable = false;
+            }
+            field(ShortClosed; Rec.ShortClosed)
+            {
+                ApplicationArea = all;
+                Editable = false;
+            }
         }
         //B2BSCM11SEP2023>>
         modify("GST Group Code")
@@ -672,6 +693,40 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         {
             Enabled = FieldEditable; //B2BVCOn14Nov2023
         }
+        addafter("&Line")
+        {
+            action("Short Close")
+            {
+                ApplicationArea = All;
+                Ellipsis = true;
+                Image = PostOrder;
+                ToolTip = 'Short Close the order based on Qty Received and Invoiced';
+                trigger OnAction()
+                begin
+                    ShortClose(); //B2BVCOn19Mar2024
+                    if Rec.ShortClosed then begin
+                        if IndentReqLine.Get(Rec."Indent Req No", Rec."Indent Req Line No") then begin
+                            IndentReqLine.CalcFields("Received Quantity");
+                            IndentReqLine."Qty. Ordered" := IndentReqLine."Received Quantity";
+                            IndentReqLine.Validate("Remaining Quantity", (IndentReqLine.Quantity - IndentReqLine."Qty. Ordered"));
+                            IndentReqLine.Modify;
+                        end;
+                    end;
+
+                end;
+            }
+            action("Cancel Order")
+            {
+                ApplicationArea = All;
+                Ellipsis = true;
+                Image = Cancel;
+                trigger OnAction()
+                begin
+                    CancelOrder();
+                end;
+            }
+
+        }
 
 
     }
@@ -883,6 +938,67 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             Error(SelErr);
     end;
     //B2BVCOn14Nov2023 >>
+
+    local procedure ShortClose()
+    var
+
+        ConfirmText: Label 'Do you want to Short Close the Purchase Order %1 and Line No. %2 ?';
+        NotApplicableErr: Label 'Qty Received and Qty Invoiced should be equal for Line %1';
+        SuccessMsg: Label 'Purchase Order %1 is Short Closed';
+        ShortClosed: Boolean;
+        PurchaseHeaderLRec: Record "Purchase Header";
+    begin
+        Rec.TestField("Quantity Received");
+        if Rec."Quantity Invoiced" <> Rec."Quantity Received" then
+            Error(NotApplicableErr, Rec."Line No.");
+        if not Confirm(StrSubstNo(ConfirmText, Rec."Document No.", Rec."Line No."), false) then
+            exit;
+        If PurchaseHeaderLRec.get(Rec."Document Type", Rec."Document No.") and (PurchaseHeaderLRec.Status = PurchaseHeaderLRec.Status::Released) then begin
+            PurchaseHeaderLRec.Status := PurchaseHeaderLRec.Status::Open;
+            PurchaseHeaderLRec.Modify();
+        end;
+
+        Rec.ShortClosed := true;
+        Rec.validate(Quantity, Rec."Quantity Invoiced");
+        Rec."Short Close Quantity" := Rec."Quantity Invoiced";
+        if Rec."Short Close Quantity" <> 0 then begin
+            Rec."Outstanding Quantity" := 0;
+            Rec."Outstanding Qty. (Base)" := 0;
+            Rec.Validate("Qty. to Receive", 0);
+            Rec.Validate("Qty. to Invoice", 0);
+        end;
+        Rec."Short Closed by" := UserId;
+        Rec."Short Closed Date & Time" := CurrentDateTime;
+        Rec.Modify();
+        If PurchaseHeaderLRec.get(Rec."Document Type", Rec."Document No.") and (PurchaseHeaderLRec.Status = PurchaseHeaderLRec.Status::Open) then begin
+            PurchaseHeaderLRec.Status := PurchaseHeaderLRec.Status::Released;
+            PurchaseHeaderLRec.Modify();
+        end;
+
+        Message(SuccessMsg, Rec."No.");
+    end;
+
+    local procedure CancelOrder()
+    var
+        ConfirmText: Label 'Do you want to Cancelled the Purchase Order %1 and Line No. %2?';
+        AlredyCancelledOrder: Label 'Purchase Order  %1 is already Order Cancelled';
+        SuccessMsg: Label 'Purchase Order %1 and Line No. %2 is Cancelled';
+        ErrorMsg: Label 'Quantity Received Must be Zero, Document No. %1, Line No. %2';
+    begin
+        if Rec.CancelOrder then
+            Error(AlredyCancelledOrder, Rec."Document No.");
+        if not Confirm(StrSubstNo(ConfirmText, Rec."Document No.", Rec."Line No."), false) then
+            exit;
+        if Rec."Quantity Received" <> 0 then
+            Error(ErrorMsg, Rec."Document No.", Rec."Line No.");
+        if Rec."Quantity Received" = 0 then begin
+            Rec.CancelOrder := true;
+            Rec.Modify;
+        end;
+        if Rec.CancelOrder then
+            Message(SuccessMsg, Rec."Document No.", Rec."Line No.");
+    end;
+
     trigger OnOpenPage()
     begin
         if UserSetupGRec.Get(UserId) then begin
@@ -936,6 +1052,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         GateEntryLineNo: Integer;//B2BVCOn09Nov2023
         UserSetupGRec: Record "User Setup";
         FieldEditable: Boolean;
+        IndentReqLine: Record "Indent Requisitions";
 
     //B2BSSD07Feb2023 Import Start >>
     local procedure FixedAssetsReadExcelSheet()

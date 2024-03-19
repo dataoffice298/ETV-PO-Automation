@@ -16,14 +16,24 @@ report 50250 "Indent Requisition Report"
                 trigger OnAfterGetRecord()
                 begin
                     if IndentHeader.Get(IndentReqLine."Indent No.") then;
+
+                    Clear(VendorNo);
+                    Clear(VendorName);
+                    PurchHead.Reset();
+                    PurchHead.SetRange("No.", IndentReqLine."Purch Order No.");
+                    if PurchHead.FindFirst() then begin
+                        VendorNo := PurchHead."Buy-from Vendor No.";
+                        VendorName := PurchHead."Buy-from Vendor Name";
+                    end;
+
                     ExcelBuffer.NewRow;
                     ExcelBuffer.AddColumn(IndentReqHeader."No.", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
-                    ExcelBuffer.AddColumn(Format(IndentReqHeader."Document Date", 0, '<Day,2>-<Month,2>-<Year4>'), FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Date);
+                    ExcelBuffer.AddColumn(IndentReqHeader."Document Date", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Date);
                     ExcelBuffer.AddColumn(IndentReqHeader."Resposibility Center", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
                     ExcelBuffer.AddColumn(IndentReqLine."Requisition Type", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
-                    ExcelBuffer.AddColumn(IndentReqLine.Department, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
+                    ExcelBuffer.AddColumn(IndentReqLine."Shortcut Dimension 2 Code", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
                     ExcelBuffer.AddColumn(IndentReqLine."Indent No.", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
-                    ExcelBuffer.AddColumn(Format(IndentHeader."Document Date", 0, '<Day,2>-<Month,2>-<Year4>'), FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Date);
+                    ExcelBuffer.AddColumn(IndentHeader."Document Date", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Date);
                     ExcelBuffer.AddColumn(IndentReqLine."Line No.", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Number);
                     ExcelBuffer.AddColumn(IndentReqLine."Item No.", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
                     ExcelBuffer.AddColumn(IndentReqLine.Description, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
@@ -36,8 +46,8 @@ report 50250 "Indent Requisition Report"
                     ExcelBuffer.AddColumn(IndentReqLine."Received Quantity", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Number);
                     ExcelBuffer.AddColumn(IndentReqLine."Remaining Quantity", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Number);
                     ExcelBuffer.AddColumn(IndentReqLine."Purch Order No.", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
-                    ExcelBuffer.AddColumn(IndentReqLine."Vendor No.", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
-                    ExcelBuffer.AddColumn(IndentReqLine."Vendor Name", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
+                    ExcelBuffer.AddColumn(VendorNo, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
+                    ExcelBuffer.AddColumn(VendorName, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
                     ExcelBuffer.AddColumn(IndentReqLine."Unit Cost", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Number);
                 end;
             }
@@ -125,5 +135,8 @@ report 50250 "Indent Requisition Report"
         StartDate: Date;
         EndDate: Date;
         IndentHeader: Record "Indent Header";
+        PurchHead: Record "Purchase Header";
+        VendorNo: Code[20];
+        VendorName: Text;
 
 }

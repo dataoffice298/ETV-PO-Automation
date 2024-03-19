@@ -40,6 +40,8 @@ table 50222 "Gate Entry Line_B2B"
             ELSE
             IF ("Source Type" = CONST("Fixed Asset")) "Fixed Asset"
             else
+            IF ("Source Type" = CONST("Purchase Return Shipment")) "Return Shipment Header"
+            else
             if ("Source Type" = const("Purchase Order")) "Purchase Header";//B2BSSD03MAY2023
             ValidateTableRelation = false;
 
@@ -48,6 +50,7 @@ table 50222 "Gate Entry Line_B2B"
                 FALRec: Record "Fixed Asset";
                 Item: Record Item;
                 ItemLedgEntry: Record "Item Ledger Entry";
+                ReturnShipmentHdr: Record "Return Shipment Header";
             begin
                 //B2BSSD06APR2023<<
                 case "Source Type" of
@@ -71,6 +74,13 @@ table 50222 "Gate Entry Line_B2B"
                                 "Source Name" := Item.Description;
                                 Description := Item.Description;
                                 "Unit of Measure" := Item."Base Unit of Measure";
+                            end;
+                        end;
+                    Rec."Source Type"::"Purchase Return Shipment":
+                        begin
+                            if ReturnShipmentHdr.Get("Source No.") then begin
+                                "Source No." := ReturnShipmentHdr."No.";
+
                             end;
                         end;
                 end;

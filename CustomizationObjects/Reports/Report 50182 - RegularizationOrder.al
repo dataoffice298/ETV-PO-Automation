@@ -384,7 +384,7 @@ report 50182 "Regularization Order"
                 if PurchLine.FindFirst() then
                     if IndentHdr.Get(PurchLine."Indent No.") then;
                 //Subject := StrSubstNo(Subject1, "Quote No.", "Purchase Header"."Document Date");
-                Subject := StrSubstNo(Subject1, "Vendor Quotation No.", "Purchase Header"."Document Date");
+                Subject := StrSubstNo(Subject1, "Vendor Quotation No.", "Vendor Quotation Date");
                 Subject := Subject + StrSubstNo(Subject2, IndentHdr."No.", IndentHdr."Document Date");
                 PurchLine.Reset();
                 PurchLine.SetCurrentKey("GST Group Code");
@@ -510,7 +510,7 @@ report 50182 "Regularization Order"
         AmountVendor: Decimal;
         Subject: Text;
         Subject1: Label 'With reference to your Quotation No. %1/dt. %2 and subsequent discussion we had with you, ';
-        Subject2: Label 'We would like to place order on you for the following lines against the Indent No. %1/dt. %2';
+        Subject2: Label 'We would like to place order on you for the following Indent No. %1/dt. %2';
         IGSTLbl: Label 'IGST';
         SGSTLbl: Label 'SGST';
         AmountVendor1: Decimal;
@@ -547,6 +547,7 @@ report 50182 "Regularization Order"
         ContactPhNo: Text;
         ContactEmail: Text;
         OrderAddress: Record "Order Address";
+
 
 
     //GST Starts>>

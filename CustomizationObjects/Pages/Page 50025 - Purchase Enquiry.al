@@ -29,6 +29,7 @@ page 50025 "Purchase Enquiry"
                 field("Buy-from Vendor No."; Rec."Buy-from Vendor No.")
                 {
                     ApplicationArea = All;
+
                 }
                 field("Buy-from Contact No."; Rec."Buy-from Contact No.")
                 {
@@ -93,6 +94,7 @@ page 50025 "Purchase Enquiry"
                 ApplicationArea = All;
                 Editable = PageEditable; //B2BVCOn28Sep22
             }
+
 
             group(Invoicing)
             {
@@ -178,7 +180,7 @@ page 50025 "Purchase Enquiry"
                 {
                     ApplicationArea = All;
                 }
-               
+
                 field("Shipment Method Code"; Rec."Shipment Method Code")
                 {
                     ApplicationArea = All;
@@ -187,6 +189,12 @@ page 50025 "Purchase Enquiry"
                 {
                     ApplicationArea = All;
                 }
+            }
+            part(TrermsAndCondition; "Terms and Condition")
+            {
+                ApplicationArea = all;
+                SubPageLink = DocumentNo = field("Buy-from Vendor No.");
+                UpdatePropagation = Both;
             }
         }
         //B2BSSD17FEB2023<<

@@ -63,11 +63,17 @@ pageextension 50073 pageextension70000001 extends "Purchase Quote"
         //B2BSSD25Jan2023<<
         addafter(PurchLines)
         {
-            part(TrermsAndCondition; "Terms and Condition")
+            /* part(TrermsAndCondition; "Terms and Condition")
             {
                 ApplicationArea = all;
                 SubPageLink = DocumentNo = field("No.");
                 SubPageView = where(DocumentType = const(Quote));
+                UpdatePropagation = Both;
+            } */
+            part(TrermsAndCondition; "Terms and Condition")
+            {
+                ApplicationArea = all;
+                SubPageLink = DocumentNo = field("Buy-from Vendor No.");
                 UpdatePropagation = Both;
             }
         }
@@ -94,6 +100,13 @@ pageextension 50073 pageextension70000001 extends "Purchase Quote"
             {
                 ApplicationArea = All;
                 Caption = 'Vendor Quotation No.';
+                ShowMandatory = true;
+            }
+            field("Vendor Quotation Date"; Rec."Vendor Quotation Date") //B2BVCOn18Mar2024
+            {
+                ApplicationArea = All;
+                Caption = 'Vendor Quotation Date';
+                ShowMandatory = true;
             }
 
             field("Ammendent Comments"; Rec."Ammendent Comments") //B2BVCOn12Mar2024
@@ -127,6 +140,7 @@ pageextension 50073 pageextension70000001 extends "Purchase Quote"
                 Rec.TestField("RFQ No.");
                 Rec.TestField("Payment Terms Code");
                 Rec.TestField("Vendor Quotation No."); //B2BVCOn12Mar2024
+                Rec.TestField("Vendor Quotation Date"); //B2BVCOn18Mar2024
             end;
         }
         modify(Reopen)

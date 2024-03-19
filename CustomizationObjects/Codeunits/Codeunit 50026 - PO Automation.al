@@ -954,6 +954,7 @@ codeunit 50026 "PO Automation"
                     QuoteCompare."Location Code" := PurchaseHeader."Location Code";
                     QuoteCompare."Parent Quote No." := PurchaseHeader."No.";
                     QuoteCompare."Vendor Quotation No." := PurchaseHeader."Vendor Quotation No."; //B2BVCOn11Mar2024
+                    QuoteCompare."Vendor Quotation Date" := PurchaseHeader."Vendor Quotation Date"; //B2BVCOn18Mar2024
                     QuoteCompare.Status := QuoteCompare.Status::Open;
                     QuoteCompare.INSERT();
                     Amount := 0;
@@ -1392,6 +1393,7 @@ codeunit 50026 "PO Automation"
         IndentLine: Record "Indent Line";
         DimentionSetEntry: Record "Dimension Set Entry";//B2BSSD20Feb2023
         IndentLineRec: Record "Indent Line";
+        IndentReqLine: Record "Indent Requisitions";
     begin
         PurchaseHeader.INIT;
         PurchaseHeader."Document Type" := PurchaseHeader."Document Type"::Quote;
@@ -1482,6 +1484,12 @@ codeunit 50026 "PO Automation"
                         IndentLineRec.Modify();
                     until IndentLineRec.Next() = 0;
                 end;
+                //B2BVCOn15Mar2024 >>
+                if IndentReqLine.Get(PurchaseLineQuote."Indent Req No", PurchaseLineQuote."Indent Req Line No") then begin
+                    IndentReqLine."Requisition Type" := IndentReqLine."Requisition Type"::Quote;
+                    IndentReqLine.Modify();
+                end;
+            //B2BVCOn15Mar2024 <<
 
             UNTIL PurchaseLine.NEXT = 0;
         IndentLineRec.Reset();

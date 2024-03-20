@@ -1868,6 +1868,8 @@ codeunit 50026 "PO Automation"
         Err0001: TextConst ENN = 'Either Qty. Accepted or Qty. Rejected must have a value as QC was enabled.';//B2BSSD13JUN2023
         PurchHdr: Record "Purchase Header";
         FixedAssets: Record "Fixed Asset";
+        FADepBook: Record "FA Depreciation Book";
+        FASetup: Record "FA Setup";
     begin
         if (ItemLRec.Get(PurchLine."No.")) and (ItemLRec."QC Enabled B2B") then begin
             // if (PurchLine."Qty. to Receive" <> 0)
@@ -1887,8 +1889,15 @@ codeunit 50026 "PO Automation"
         FixedAssets.Reset();
         FixedAssets.SetRange("No.", PurchLine."No.");
         FixedAssets.SetFilter(Acquired, '%1', true);
-        if FixedAssets.FindSet() then
-            Error('Fixed Asset Already Acquired %1 Use Another One', FixedAssets."No.");
+        if FixedAssets.FindSet() then begin
+            FADepBook.Reset();
+            FADepBook.SetRange("FA No.", FixedAssets."No.");
+            FADepBook.SetRange("Depreciation Book Code", FASetup."Default Depr. Book");
+            FADepBook.SetFilter("FA Posting Group", '<>%1&<>%2&<>%3', 'CWIP', 'WIP', 'WIP INTANG');
+            if FADepBook.FindFirst() then
+                Error('Fixed Asset Already Acquired %1 Use Another One', FixedAssets."No.");
+        end;
+
         //B2BSSD28FEB2023>>
     end;
     //B2BMSOn03Nov2022<<    

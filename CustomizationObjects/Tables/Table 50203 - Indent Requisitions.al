@@ -349,6 +349,10 @@ table 50203 "Indent Requisitions"
             OptionCaption = 'Indent Requisition,Enquiry,Quote,Purch Order,Quotation Comparsion';
             OptionMembers = "Indent Requisition",Enquiry,Quote,"Purch Order","Quotation Comparsion";
         }
+        field(50024; "PO Vendor"; Code[20])
+        {
+            DataClassification = CustomerContent;
+        }
     }
     //B2BSSD17FEB2023>>
 

@@ -180,7 +180,7 @@ page 50120 "Indent Requisition Document"
                         CurrPage.Indentrequisations.Page.SetSelectionFilter(CreateIndents);//B2BSSD18APR2023
                         if CreateIndents.Find('-') then
                             repeat
-                                if CreateIndents."Purch Order No." <> '' then
+                                if CreateIndents."Remaining Quantity" = 0 then
                                     Error('Purchase Order Already Created,Indent Line No.%1', CreateIndents."Line No.");
                             until CreateIndents.Next = 0;
                         CLEAR(VendorList);
@@ -251,7 +251,7 @@ page 50120 "Indent Requisition Document"
                         CurrPage.Indentrequisations.Page.SetSelectionFilter(CreateIndents);
                         if CreateIndents.Find('-') then
                             repeat
-                                if CreateIndents."Purch Order No." <> '' then
+                                if CreateIndents."Remaining Quantity" = 0 then
                                     Error('Purchase Order Already Created,Indent Line No.%1', CreateIndents."Line No.");
                             until CreateIndents.Next = 0;
                         CLEAR(VendorList);

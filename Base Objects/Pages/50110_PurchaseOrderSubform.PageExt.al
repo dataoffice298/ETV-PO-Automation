@@ -709,6 +709,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                             IndentReqLine.CalcFields("Received Quantity");
                             IndentReqLine."Qty. Ordered" := IndentReqLine."Received Quantity";
                             IndentReqLine.Validate("Remaining Quantity", (IndentReqLine.Quantity - IndentReqLine."Qty. Ordered"));
+                            IndentReqLine."PO Vendor" := Rec."Buy-from Vendor No.";
                             IndentReqLine.Modify;
                         end;
                     end;
@@ -723,6 +724,16 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 trigger OnAction()
                 begin
                     CancelOrder();
+                    if Rec.CancelOrder then begin
+                        if IndentReqLine.Get(Rec."Indent Req No", Rec."Indent Req Line No") then begin
+                            IndentReqLine.CalcFields("Received Quantity");
+                            IndentReqLine."Received Quantity" := 0;
+                            IndentReqLine.Quantity := IndentReqLine.Quantity + Rec.Quantity;
+                            IndentReqLine.Validate("Remaining Quantity", IndentReqLine.Quantity);
+                            IndentReqLine."PO Vendor" := Rec."Buy-from Vendor No.";
+                            IndentReqLine.Modify;
+                        end;
+                    end;
                 end;
             }
 

@@ -445,6 +445,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                                     IndentReqLine.CalcFields("Received Quantity");
                                     IndentReqLine."Qty. Ordered" := IndentReqLine."Received Quantity";
                                     IndentReqLine.Validate("Remaining Quantity", (IndentReqLine.Quantity - IndentReqLine."Qty. Ordered"));
+                                    IndentReqLine."PO Vendor" := PurchLineGRec."Buy-from Vendor No.";
                                     IndentReqLine.Modify;
                                 end;
                             until PurchLineGRec.Next = 0;
@@ -459,6 +460,22 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 trigger OnAction()
                 begin
                     CancelOrderHdr();
+                    if Rec."Cancelled Order" then begin
+                        PurchLineGRec.Reset();
+                        PurchLineGRec.SetRange("Document Type", Rec."Document Type");
+                        PurchLineGRec.SetRange("Document No.", Rec."No.");
+                        if PurchLineGRec.FindSet() then
+                            repeat
+                                if IndentReqLine.Get(PurchLineGRec."Indent Req No", PurchLineGRec."Indent Req Line No") then begin
+                                    IndentReqLine.CalcFields("Received Quantity");
+                                    IndentReqLine."Qty. Ordered" := 0;
+                                    IndentReqLine.Quantity := IndentReqLine.Quantity + PurchLineGRec.Quantity;
+                                    IndentReqLine.Validate("Remaining Quantity", IndentReqLine.Quantity);
+                                    IndentReqLine."PO Vendor" := PurchLineGRec."Buy-from Vendor No.";
+                                    IndentReqLine.Modify;
+                                end;
+                            until PurchLineGRec.Next = 0;
+                    end;
                 end;
             }
         }

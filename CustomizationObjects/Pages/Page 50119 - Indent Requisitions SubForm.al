@@ -230,6 +230,12 @@ page 50119 "Indent Requisitions SubForm"
                     ApplicationArea = all;
                     Editable = false;
                 }
+                field("PO Vendor"; Rec."PO Vendor") //B2BVCOn20Mar2024
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    Caption = 'Pervious PO Vendor';
+                }
 
             }
         }
@@ -315,5 +321,6 @@ page 50119 "Indent Requisitions SubForm"
         Vendor: Record 99;
         FieldEditable: Boolean;
         FieldEditableGVar: Boolean;
+        PurchaseLine: Record "Purchase Line";
 }
 

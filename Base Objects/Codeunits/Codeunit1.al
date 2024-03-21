@@ -71,7 +71,7 @@ codeunit 50016 "MyBaseSubscr"
         end;
     end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPurchRcptHeaderInsert', '', false, false)]
+    /*[EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPurchRcptHeaderInsert', '', false, false)]
     local procedure OnAfterPurchRcptHeaderInsert(var PurchRcptHeader: Record "Purch. Rcpt. Header"; var PurchaseHeader: Record "Purchase Header"; CommitIsSupressed: Boolean)
     var
         FromRecRef: RecordRef;
@@ -91,7 +91,7 @@ codeunit 50016 "MyBaseSubscr"
 
         if ToRecRef.Number > 0 then
             CopyAttachmentsForPostedDocs(FromRecRef, ToRecRef, IsHandled);
-    end;
+    end;*/
     //Invoice>>
     [EventSubscriber(ObjectType::Table, Database::"Document Attachment", 'OnAfterInitFieldsFromRecRef', '', false, false)]
     local procedure OnAfterInitFieldsFromRecInv(var DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef)
@@ -109,7 +109,7 @@ codeunit 50016 "MyBaseSubscr"
         end;
     end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPurchInvHeaderInsert', '', false, false)]
+    /*[EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPurchInvHeaderInsert', '', false, false)]
     //local procedure OnAfterPurchRcptHeaderInsert(var PurchRcptHeader: Record "Purch. Rcpt. Header"; var PurchaseHeader: Record "Purchase Header"; CommitIsSupressed: Boolean)
     local procedure OnAfterPurchInvHeaderInsert(var PurchInvHeader: Record "Purch. Inv. Header"; var PurchHeader: Record "Purchase Header"; PreviewMode: Boolean)
     var
@@ -173,7 +173,7 @@ codeunit 50016 "MyBaseSubscr"
                 ToDocumentAttachment.Insert;
             until FromDocumentAttachment.Next() = 0;
         end;
-    end;
+    end;*/
 
     //B2BMSOn06Oct2022>>
     [EventSubscriber(ObjectType::Page, Page::"Document Attachment Factbox", 'OnBeforeDrillDown', '', false, false)]

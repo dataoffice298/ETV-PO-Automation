@@ -7,7 +7,7 @@ pageextension 50150 "Vendor CardExt" extends "Vendor Card"
             part(TrermsAndCondition; "Terms and Condition")
             {
                 ApplicationArea = all;
-                SubPageLink = DocumentType = field("Document Type"), DocumentNo = field("No.");
+                SubPageLink = DocumentNo = field("No.");
                 UpdatePropagation = Both;
             }
         }
@@ -17,11 +17,7 @@ pageextension 50150 "Vendor CardExt" extends "Vendor Card"
     {
 
     }
-    trigger OnOpenPage()
-    begin
-        Rec."Document Type" := Rec."Document Type"::Vendor;
-        Rec.Modify;
-    end;
+
 
     var
         POTerms: Record "PO Terms And Conditions";

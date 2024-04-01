@@ -383,6 +383,12 @@ codeunit 50018 "Approvals MGt 4"
     var
         IndentDoc: Record "Indent Header";
         IndentLine: Record "Indent Line";
+        UserSetup: Record "User Setup";
+        Email: Codeunit Email;
+        EmailMessage: Codeunit "Email Message";
+        Recipiants: List of [Text];
+        Body: Text;
+        Text001: Label 'Please find Indent Number: %1 dt. %2 is raised for the purpose %3 has been approved by your HOD.';
     begin
         case RecRef.Number() of
             Database::"Indent Header":
@@ -392,6 +398,21 @@ codeunit 50018 "Approvals MGt 4"
                     IndentDoc."Released Status" := IndentDoc."Released Status"::Released;
                     IndentDoc."Last Modified Date" := WORKDATE;
                     IndentDoc.Modify();
+                    if UserSetup.Get(IndentDoc."User Id") then begin
+                        UserSetup.TestField("E-Mail");
+                        Recipiants.Add(UserSetup."E-Mail");
+                        Body += StrSubstNo(Text001, IndentDoc."No.", IndentDoc."Document Date", IndentDoc.Purpose);
+                        EmailMessage.Create(Recipiants, '', '', true);
+                        EmailMessage.AppendToBody('Dear Indenter,');
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody(Body);
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody('This is auto generated mail by system for information.');
+                        Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
+                    end;
+
 
                     IndentLine.RESET;
                     IndentLine.SETRANGE("Document No.", IndentDoc."No.");
@@ -519,36 +540,36 @@ codeunit 50018 "Approvals MGt 4"
 
 
 
-//1
+    //1
     //Indent Header Approvals Start --- B2BMSOn09Sep2022>>
     [IntegrationEvent(false, false)]
     Procedure OnSendIndentRequisitionDoc1ForApproval(var IndentRequisitionDoc1: Record "Indent Req Header")
     begin
     end;
-//2
+    //2
     [IntegrationEvent(false, false)]
     Procedure OnCancelIndentRequisitionDoc1ForApproval(var IndentRequisitionDoc1: Record "Indent Req Header")
     begin
     end;
-//3
+    //3
     //Create events for workflow
     procedure RunworkflowOnSendIndentRequisitionDoc1forApprovalCode(): code[128]
     begin
         exit(CopyStr(UpperCase('RunworkflowOnSendIndentRequisitionDoc1forApproval'), 1, 128));
     end;
-//4
+    //4
 
     [EventSubscriber(ObjectType::Codeunit, codeunit::"Approvals MGt 4", 'OnSendIndentRequisitionDoc1ForApproval', '', true, true)]
     local procedure RunworkflowonsendIndentRequisitionDoc1ForApproval(var IndentRequisitionDoc1: Record "Indent Req Header")
     begin
         WorkflowManagement.HandleEvent(RunworkflowOnSendIndentRequisitionDoc1forApprovalCode(), IndentRequisitionDoc1);
     end;
-//5
+    //5
     procedure RunworkflowOnCancelIndentRequisitionDoc1forApprovalCode(): code[128]
     begin
         exit(CopyStr(UpperCase('OnCancelIndentRequisitionDoc1ForApproval'), 1, 128));
     end;
-//6
+    //6
     [EventSubscriber(ObjectType::Codeunit, codeunit::"Approvals MGt 4", 'OnCancelIndentRequisitionDoc1ForApproval', '', true, true)]
 
     local procedure RunworkflowonCancelIndentRequisitionDoc1ForApproval(var IndentRequisitionDoc1: Record "Indent Req Header")
@@ -557,7 +578,7 @@ codeunit 50018 "Approvals MGt 4"
     end;
 
     //Add events to library
-//7
+    //7
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Event Handling", 'OnAddWorkflowEventsToLibrary', '', false, false)]
     local procedure OnAddWorkflowEventsToLibraryIndentRequisitionDoc1();
     begin
@@ -566,7 +587,7 @@ codeunit 50018 "Approvals MGt 4"
         WorkflowevenHandling.AddEventToLibrary(RunworkflowOnCancelIndentRequisitionDoc1forApprovalCode(), DATABASE::"Indent Req Header",
           CopyStr(IndentRequisitionDoc1requestcanceleventdesctxt, 1, 250), 0, FALSE);
     end;
-//8
+    //8
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Event Handling", 'OnAddWorkflowEventPredecessorsToLibrary', '', true, true)]
     local procedure OnAddworkfloweventprodecessorstolibraryIndentRequisitionDoc1(EventFunctionName: code[128]);
     begin
@@ -581,21 +602,21 @@ codeunit 50018 "Approvals MGt 4"
                 WorkflowevenHandling.AddEventPredecessor(WorkflowevenHandling.RunWorkflowOnDelegateApprovalRequestCode(), RunworkflowOnSendIndentRequisitionDoc1forApprovalCode());
         end;
     end;
-//9
+    //9
     procedure ISIndentRequisitionDoc1workflowenabled(var IndentRequisitionDoc1: Record "Indent Req Header"): Boolean
     begin
         if (IndentRequisitionDoc1.Status <> IndentRequisitionDoc1.Status::Open) then
             exit(false);
         exit(WorkflowManagement.CanExecuteWorkflow(IndentRequisitionDoc1, RunworkflowOnSendIndentRequisitionDoc1forApprovalCode()));
     end;
-//10
+    //10
     Procedure CheckIndentRequisitionDoc1ApprovalsWorkflowEnabled(var IndentRequisitionDoc1: Record "Indent Req Header"): Boolean
     begin
         IF not ISIndentRequisitionDoc1workflowenabled(IndentRequisitionDoc1) then
             Error((NoworkfloweableErr));
         exit(true);
     end;
-//11
+    //11
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnpopulateApprovalEntryArgument', '', true, true)]
     local procedure OnpopulateApprovalEntriesArgumentIndentRequisitionDoc1(var RecRef: RecordRef; var ApprovalEntryArgument: Record "Approval Entry"; WorkflowStepInstance: Record "Workflow Step Instance")
     var
@@ -611,31 +632,31 @@ codeunit 50018 "Approvals MGt 4"
     end;
 
     //Handling workflow response
-//12
+    //12
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'Onopendocument', '', true, true)]
     local procedure OnopendocumentIndentRequisitionDoc1(RecRef: RecordRef; var Handled: boolean)
     var
         IndentRequisitionDoc1: Record "Indent Req Header";
         IndentRequisitionLine: Record "Indent Requisitions";
     begin
-       /* case RecRef.Number() of
-            Database::"Indent Req Header":
-                begin
-                    RecRef.SetTable(IndentRequisitionDoc1);
-                    IndentRequisitionDoc1.SetRange("No.", IndentRequisitionDoc1."No.");
-                    IndentRequisitionDoc1.Status := IndentRequisitionDoc1.Status::Open;
-                    //  IndentRequisitionDoc1."Last Modified Date" := WorkDate();
-                    IndentRequisitionDoc1.Modify();
+        /* case RecRef.Number() of
+             Database::"Indent Req Header":
+                 begin
+                     RecRef.SetTable(IndentRequisitionDoc1);
+                     IndentRequisitionDoc1.SetRange("No.", IndentRequisitionDoc1."No.");
+                     IndentRequisitionDoc1.Status := IndentRequisitionDoc1.Status::Open;
+                     //  IndentRequisitionDoc1."Last Modified Date" := WorkDate();
+                     IndentRequisitionDoc1.Modify();
 
-                    IndentRequisitionLine.RESET;
-                    IndentRequisitionLine.SETRANGE("Document No.", IndentRequisitionDoc1."No.");
-                    // IndentRequisitionLine.SETRANGE("Indent Status", IndentLine."Indent Status"::Indent);
-                    IF IndentRequisitionLine.FindSet() THEN
-                        IndentRequisitionLine.MODIFYALL("Release Status", IndentRequisitionLine."Release Status"::Open);
-                    Handled := true;
-                end;
-        end;*/
-         case RecRef.Number() of
+                     IndentRequisitionLine.RESET;
+                     IndentRequisitionLine.SETRANGE("Document No.", IndentRequisitionDoc1."No.");
+                     // IndentRequisitionLine.SETRANGE("Indent Status", IndentLine."Indent Status"::Indent);
+                     IF IndentRequisitionLine.FindSet() THEN
+                         IndentRequisitionLine.MODIFYALL("Release Status", IndentRequisitionLine."Release Status"::Open);
+                     Handled := true;
+                 end;
+         end;*/
+        case RecRef.Number() of
             Database::"Indent Req Header":
                 begin
                     RecRef.SetTable(IndentRequisitionDoc1);
@@ -645,31 +666,31 @@ codeunit 50018 "Approvals MGt 4"
                 end;
         end;
     end;
-//13
+    //13
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'OnreleaseDocument', '', true, true)]
     local procedure OnReleasedocumentIndentRequisitionDoc1(RecRef: RecordRef; var Handled: boolean)
     var
         IndentRequisitionDoc1: Record "Indent Req Header";
         IndentrequisitionLine: Record "Indent Requisitions";
     begin
-       /* case RecRef.Number() of
-            Database::"Indent Req Header":
-                begin
-                    RecRef.SetTable(IndentRequisitionDoc1);
-                    IndentRequisitionDoc1.SetRange("No.", IndentRequisitionDoc1."No.");
-                    IndentRequisitionDoc1.Status := IndentRequisitionDoc1.Status::Release;
-                    //    IndentRequisitionDoc1."Last Modified Date" := WORKDATE;
-                    IndentRequisitionDoc1.Modify();
+        /* case RecRef.Number() of
+             Database::"Indent Req Header":
+                 begin
+                     RecRef.SetTable(IndentRequisitionDoc1);
+                     IndentRequisitionDoc1.SetRange("No.", IndentRequisitionDoc1."No.");
+                     IndentRequisitionDoc1.Status := IndentRequisitionDoc1.Status::Release;
+                     //    IndentRequisitionDoc1."Last Modified Date" := WORKDATE;
+                     IndentRequisitionDoc1.Modify();
 
-                    IndentRequisitionLine.RESET;
-                    IndentRequisitionLine.SETRANGE("Document No.", IndentRequisitionDoc1."No.");
-                    IF IndentRequisitionLine.FINDSET THEN
-                        IndentRequisitionLine.MODIFYALL("Release Status", IndentRequisitionLine."Release Status"::Released);
+                     IndentRequisitionLine.RESET;
+                     IndentRequisitionLine.SETRANGE("Document No.", IndentRequisitionDoc1."No.");
+                     IF IndentRequisitionLine.FINDSET THEN
+                         IndentRequisitionLine.MODIFYALL("Release Status", IndentRequisitionLine."Release Status"::Released);
 
-                    Handled := true;
-                end;
-        end;*/
-         case RecRef.Number() of
+                     Handled := true;
+                 end;
+         end;*/
+        case RecRef.Number() of
             Database::"Indent Req Header":
                 begin
                     RecRef.SetTable(IndentRequisitionDoc1);
@@ -679,30 +700,30 @@ codeunit 50018 "Approvals MGt 4"
                 end;
         end;
     end;
-//14
+    //14
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'Onsetstatustopendingapproval', '', true, true)]
     local procedure OnSetstatusToPendingApprovalIndentRequisitionDoc1(RecRef: RecordRef; var IsHandled: boolean)
     var
         IndentRequisitionDoc1: Record "Indent Req Header";
         IndentRequisitionLine: Record "Indent Requisitions";
     begin
-       /* case RecRef.Number() of
-            Database::"Indent Req Header":
-                begin
-                    RecRef.SetTable(IndentRequisitionDoc1);
-                    IndentRequisitionDoc1.SetRange("No.", IndentRequisitionDoc1."No.");
-                    IndentRequisitionDoc1.Status := IndentRequisitionDoc1.Status::"Pending Approval";
-                    // IndentRequisitionDoc1."Last Modified Date" := WorkDate();
-                    IndentRequisitionDoc1.Modify();
+        /* case RecRef.Number() of
+             Database::"Indent Req Header":
+                 begin
+                     RecRef.SetTable(IndentRequisitionDoc1);
+                     IndentRequisitionDoc1.SetRange("No.", IndentRequisitionDoc1."No.");
+                     IndentRequisitionDoc1.Status := IndentRequisitionDoc1.Status::"Pending Approval";
+                     // IndentRequisitionDoc1."Last Modified Date" := WorkDate();
+                     IndentRequisitionDoc1.Modify();
 
-                    IndentRequisitionLine.RESET;
-                    IndentRequisitionLine.SETRANGE("Document No.", IndentRequisitionDoc1."No.");
-                    IndentRequisitionLine.SETRANGE("Indent Status", IndentRequisitionLine."Indent Status"::Indent);
-                    IF IndentRequisitionLine.FindSet() THEN
-                        IndentRequisitionLine.MODIFYALL("Release Status", IndentRequisitionLine."Release Status"::"Pending Approval");
-                    IsHandled := true;
-                end;
-        end;*/
+                     IndentRequisitionLine.RESET;
+                     IndentRequisitionLine.SETRANGE("Document No.", IndentRequisitionDoc1."No.");
+                     IndentRequisitionLine.SETRANGE("Indent Status", IndentRequisitionLine."Indent Status"::Indent);
+                     IF IndentRequisitionLine.FindSet() THEN
+                         IndentRequisitionLine.MODIFYALL("Release Status", IndentRequisitionLine."Release Status"::"Pending Approval");
+                     IsHandled := true;
+                 end;
+         end;*/
         case RecRef.Number() of
             Database::"Indent Req Header":
                 begin
@@ -713,7 +734,7 @@ codeunit 50018 "Approvals MGt 4"
                 end;
         end;
     end;
-//15
+    //15
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'Onaddworkflowresponsepredecessorstolibrary', '', true, true)]
     local procedure OnaddworkflowresponseprodecessorstolibraryIndentRequisitionDoc1(ResponseFunctionName: Code[128])
     var
@@ -732,13 +753,13 @@ codeunit 50018 "Approvals MGt 4"
     end;
 
     //Setup workflow
-//16
+    //16
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Setup", 'OnAddworkflowcategoriestolibrary', '', true, true)]
     local procedure OnaddworkflowCategoryTolibraryIndentRequisitionDoc1()
     begin
         workflowsetup.InsertWorkflowCategory(CopyStr(IndentRequisitionDoc1CategoryTxt, 1, 20), CopyStr(IndentRequisitionDoc1CategoryDescTxt, 1, 100));
     end;
-//17
+    //17
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Setup", 'Onafterinsertapprovalstablerelations', '', true, true)]
     local procedure OnInsertApprovaltablerelationsIndentRequisitionDoc1()
     Var
@@ -746,13 +767,13 @@ codeunit 50018 "Approvals MGt 4"
     begin
         workflowsetup.InsertTableRelation(Database::"Indent Req Header", 0, Database::"Approval Entry", ApprovalEntry.FieldNo("Record ID to Approve"));
     end;
-//18
+    //18
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Setup", 'Oninsertworkflowtemplates', '', true, true)]
     local procedure OnInsertworkflowtemplateIndentRequisitionDoc1()
     begin
         InsertIndentRequisitionDoc1Approvalworkflowtemplate();
     end;
-//19
+    //19
 
 
     local procedure InsertIndentRequisitionDoc1Approvalworkflowtemplate();

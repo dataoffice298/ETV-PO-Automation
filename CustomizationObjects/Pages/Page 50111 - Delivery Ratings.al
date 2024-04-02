@@ -1,4 +1,4 @@
-page 50111 "Delivery Ratings"
+page 50199 "Delivery Ratings"
 {
     // version PH1.0,PO1.0
 

@@ -389,6 +389,7 @@ codeunit 50018 "Approvals MGt 4"
         Recipiants: List of [Text];
         Body: Text;
         Text001: Label 'Please find Indent Number: %1 dt. %2 is raised for the purpose %3 has been approved by your HOD.';
+        Sub: Label 'Request for Indent Approval';
     begin
         case RecRef.Number() of
             Database::"Indent Header":
@@ -402,7 +403,7 @@ codeunit 50018 "Approvals MGt 4"
                         UserSetup.TestField("E-Mail");
                         Recipiants.Add(UserSetup."E-Mail");
                         Body += StrSubstNo(Text001, IndentDoc."No.", IndentDoc."Document Date", IndentDoc.Purpose);
-                        EmailMessage.Create(Recipiants, '', '', true);
+                        EmailMessage.Create(Recipiants, Sub, '', true);
                         EmailMessage.AppendToBody('Dear Indenter,');
                         EmailMessage.AppendToBody('<BR></BR>');
                         EmailMessage.AppendToBody('<BR></BR>');

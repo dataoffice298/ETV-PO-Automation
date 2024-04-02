@@ -99,8 +99,6 @@ page 50116 "Indent Header"
                     Caption = 'Shortcut Dimension 2 Code';
                     Editable = PageEditable;
                 }
-
-
                 field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")
                 {
                     ApplicationArea = All;
@@ -269,6 +267,7 @@ page 50116 "Indent Header"
                     Recipiants: List of [Text];
                     Body: Text;
                     Text001: Label 'Please find Indent Number: %1 dt.%2 is raised for the purpose %3 is waiting for your approval.  Please approve the same.';
+                    Sub: Label 'Request for Indent Approval';
                     ApprovalEntryLRec: Record "Approval Entry";
                 begin
                     Rec.TESTFIELD("Released Status", Rec."Released Status"::Open);
@@ -316,8 +315,8 @@ page 50116 "Indent Header"
                         UserSetup.TestField("E-Mail");
                         Recipiants.Add(UserSetup."E-Mail");
                         Body += StrSubstNo(Text001, Rec."No.", Rec."Document Date", Rec.Purpose);
-                        EmailMessage.Create(Recipiants, '', '', true);
-                        EmailMessage.AppendToBody('Dear Sir');
+                        EmailMessage.Create(Recipiants, Sub, '', true);
+                        EmailMessage.AppendToBody('Dear Sir,');
                         EmailMessage.AppendToBody('<BR></BR>');
                         EmailMessage.AppendToBody('<BR></BR>');
                         EmailMessage.AppendToBody(Body);

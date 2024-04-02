@@ -604,19 +604,21 @@ codeunit 50016 "MyBaseSubscr"
         Recipiants: List of [Text];
         Body: Text;
         Text001: Label 'Please find Indent Number: %1 dt.%2 is raised for the purpose %3 is waiting for your approval.  Please approve the same.';
+        Sub: Label 'Request for Indent Approval';
         ApprovalEntryLRec: Record "Approval Entry";
     begin
-        IndentHead.Get(ApprovalEntry."Document No.");
         ApprovalEntryLRec.Reset();
         ApprovalEntryLRec.SetRange("Document No.", ApprovalEntry."Document No.");
+        ApprovalEntryLRec.SetRange("Record ID to Approve", ApprovalEntry."Record ID to Approve");
         ApprovalEntryLRec.SetRange(Status, ApprovalEntry.Status::Created);
         if ApprovalEntryLRec.FindFirst() then begin
+            IndentHead.Get(ApprovalEntry."Document No.");
             UserSetup.Get(ApprovalEntryLRec."Approver ID");
             UserSetup.TestField("E-Mail");
             Recipiants.Add(UserSetup."E-Mail");
             Body += StrSubstNo(Text001, IndentHead."No.", IndentHead."Document Date", IndentHead.Purpose);
-            EmailMessage.Create(Recipiants, '', '', true);
-            EmailMessage.AppendToBody('Dear Sir');
+            EmailMessage.Create(Recipiants, Sub, '', true);
+            EmailMessage.AppendToBody('Dear Sir,');
             EmailMessage.AppendToBody('<BR></BR>');
             EmailMessage.AppendToBody('<BR></BR>');
             EmailMessage.AppendToBody(Body);
@@ -638,28 +640,34 @@ codeunit 50016 "MyBaseSubscr"
         Recipiants: List of [Text];
         Body: Text;
         Text001: Label 'Please find Indent Number: %1 dt.%2 is raised for the purpose %3 has been rejected / returned by your HOD with the comments %4';
+        Sub: Label 'Indent Approval Status';
         ApprovalEntryLRec: Record "Approval Entry";
         ApprovalCommentLine: Record "Approval Comment Line";
     begin
-        IndentHead.Get(ApprovalEntry."Document No.");
         ApprovalCommentLine.Reset();
         ApprovalCommentLine.SetRange("Table ID", ApprovalEntry."Table ID");
         ApprovalCommentLine.SetRange("Record ID to Approve", ApprovalEntry."Record ID to Approve");
         if ApprovalCommentLine.FindFirst() then;
-        UserSetup.Get(IndentHead."User Id");
-        UserSetup.TestField("E-Mail");
-        Recipiants.Add(UserSetup."E-Mail");
-        Body += StrSubstNo(Text001, IndentHead."No.", IndentHead."Document Date", IndentHead.Purpose, ApprovalCommentLine.Comment);
-        EmailMessage.Create(Recipiants, '', '', true);
-        EmailMessage.AppendToBody('Dear Indenter,');
-        EmailMessage.AppendToBody('<BR></BR>');
-        EmailMessage.AppendToBody('<BR></BR>');
-        EmailMessage.AppendToBody(Body);
-        EmailMessage.AppendToBody('<BR></BR>');
-        EmailMessage.AppendToBody('<BR></BR>');
-        EmailMessage.AppendToBody('This is auto generated mail by system for information.');
-        Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
-        Message('Email Send Successfully');
+        ApprovalEntryLRec.Reset();
+        ApprovalEntryLRec.SetRange("Document No.", ApprovalEntry."Document No.");
+        ApprovalEntryLRec.SetRange("Record ID to Approve", ApprovalEntry."Record ID to Approve");
+        if ApprovalEntryLRec.FindFirst() then begin
+            IndentHead.Get(ApprovalEntry."Document No.");
+            UserSetup.Get(IndentHead."User Id");
+            UserSetup.TestField("E-Mail");
+            Recipiants.Add(UserSetup."E-Mail");
+            Body += StrSubstNo(Text001, IndentHead."No.", IndentHead."Document Date", IndentHead.Purpose, ApprovalCommentLine.Comment);
+            EmailMessage.Create(Recipiants, Sub, '', true);
+            EmailMessage.AppendToBody('Dear Indenter,');
+            EmailMessage.AppendToBody('<BR></BR>');
+            EmailMessage.AppendToBody('<BR></BR>');
+            EmailMessage.AppendToBody(Body);
+            EmailMessage.AppendToBody('<BR></BR>');
+            EmailMessage.AppendToBody('<BR></BR>');
+            EmailMessage.AppendToBody('This is auto generated mail by system for information.');
+            Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
+            Message('Email Send Successfully');
+        end;
     end;
 }
 

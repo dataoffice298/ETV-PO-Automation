@@ -22,7 +22,7 @@ table 50202 "Indent Line"
         field(3; "No."; Code[30])
         {
             Description = 'PO1.0';
-            TableRelation = IF (Type = CONST(Item)) Item
+            TableRelation = IF (Type = CONST(Item)) Item WHERE(Blocked = FILTER(FALSE))
             ELSE
             IF (Type = CONST("Fixed Assets")) "Fixed Asset"
             ELSE
@@ -691,7 +691,7 @@ table 50202 "Indent Line"
         NoSeriesMgt: Codeunit NoSeriesManagement;
         Item: Record Item;
     begin
-        
+
         ItemLedEntry.Reset();
         ItemLedEntry.SetCurrentKey("Entry No.");
         ItemLedEntry.SetRange("Item No.", Rec."No.");

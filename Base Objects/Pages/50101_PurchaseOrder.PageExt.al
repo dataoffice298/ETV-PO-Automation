@@ -468,8 +468,9 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                             repeat
                                 if IndentReqLine.Get(PurchLineGRec."Indent Req No", PurchLineGRec."Indent Req Line No") then begin
                                     IndentReqLine.CalcFields("Received Quantity");
-                                    IndentReqLine."Qty. Ordered" := 0;
-                                    IndentReqLine.Quantity := IndentReqLine.Quantity + PurchLineGRec.Quantity;
+                                    IndentReqLine."Received Quantity" := 0;
+                                    IndentReqLine."Qty. Ordered" := IndentReqLine."Received Quantity";
+                                    IndentReqLine.Quantity := IndentReqLine."Remaining Quantity" + PurchLineGRec.Quantity;
                                     IndentReqLine.Validate("Remaining Quantity", IndentReqLine.Quantity);
                                     IndentReqLine."PO Vendor" := PurchLineGRec."Buy-from Vendor No.";
                                     IndentReqLine.Modify;

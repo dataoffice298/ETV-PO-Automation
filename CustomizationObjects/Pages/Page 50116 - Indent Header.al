@@ -316,7 +316,7 @@ page 50116 "Indent Header"
                         Recipiants.Add(UserSetup."E-Mail");
                         Body += StrSubstNo(Text001, Rec."No.", Rec."Document Date", Rec.Purpose);
                         EmailMessage.Create(Recipiants, Sub, '', true);
-                        EmailMessage.AppendToBody('Dear Sir,');
+                        EmailMessage.AppendToBody('Dear Sir/Madam,');
                         EmailMessage.AppendToBody('<BR></BR>');
                         EmailMessage.AppendToBody('<BR></BR>');
                         EmailMessage.AppendToBody(Body);

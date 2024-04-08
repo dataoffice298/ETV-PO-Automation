@@ -423,6 +423,11 @@ table 50221 "Gate Entry Header_B2B"
             DataClassification = CustomerContent;
             TableRelation = Location;
         }
+        field(50007; "Purch Cr.Memo No."; Code[20])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Purch Cr. Memo No.';
+        }
     }
 
     keys

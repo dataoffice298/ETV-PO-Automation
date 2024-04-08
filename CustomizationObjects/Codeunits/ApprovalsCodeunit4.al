@@ -640,24 +640,24 @@ codeunit 50018 "Approvals MGt 4"
         IndentRequisitionDoc1: Record "Indent Req Header";
         IndentRequisitionLine: Record "Indent Requisitions";
     begin
-        /* case RecRef.Number() of
-             Database::"Indent Req Header":
-                 begin
-                     RecRef.SetTable(IndentRequisitionDoc1);
-                     IndentRequisitionDoc1.SetRange("No.", IndentRequisitionDoc1."No.");
-                     IndentRequisitionDoc1.Status := IndentRequisitionDoc1.Status::Open;
-                     //  IndentRequisitionDoc1."Last Modified Date" := WorkDate();
-                     IndentRequisitionDoc1.Modify();
-
-                     IndentRequisitionLine.RESET;
-                     IndentRequisitionLine.SETRANGE("Document No.", IndentRequisitionDoc1."No.");
-                     // IndentRequisitionLine.SETRANGE("Indent Status", IndentLine."Indent Status"::Indent);
-                     IF IndentRequisitionLine.FindSet() THEN
-                         IndentRequisitionLine.MODIFYALL("Release Status", IndentRequisitionLine."Release Status"::Open);
-                     Handled := true;
-                 end;
-         end;*/
         case RecRef.Number() of
+            Database::"Indent Req Header":
+                begin
+                    RecRef.SetTable(IndentRequisitionDoc1);
+                    IndentRequisitionDoc1.SetRange("No.", IndentRequisitionDoc1."No.");
+                    IndentRequisitionDoc1.Status := IndentRequisitionDoc1.Status::Open;
+                    //  IndentRequisitionDoc1."Last Modified Date" := WorkDate();
+                    IndentRequisitionDoc1.Modify();
+
+                    IndentRequisitionLine.RESET;
+                    IndentRequisitionLine.SETRANGE("Document No.", IndentRequisitionDoc1."No.");
+                    // IndentRequisitionLine.SETRANGE("Indent Status", IndentLine."Indent Status"::Indent);
+                    IF IndentRequisitionLine.FindSet() THEN
+                        IndentRequisitionLine.MODIFYALL("Release Status", IndentRequisitionLine."Release Status"::Open);
+                    Handled := true;
+                end;
+        end;
+        /* case RecRef.Number() of
             Database::"Indent Req Header":
                 begin
                     RecRef.SetTable(IndentRequisitionDoc1);
@@ -665,7 +665,7 @@ codeunit 50018 "Approvals MGt 4"
                     IndentRequisitionDoc1.Modify();
                     Handled := true;
                 end;
-        end;
+        end; */
     end;
     //13
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'OnreleaseDocument', '', true, true)]
@@ -673,25 +673,48 @@ codeunit 50018 "Approvals MGt 4"
     var
         IndentRequisitionDoc1: Record "Indent Req Header";
         IndentrequisitionLine: Record "Indent Requisitions";
+        UserSetup: Record "User Setup";
+        Email: Codeunit Email;
+        EmailMessage: Codeunit "Email Message";
+        Recipiants: List of [Text];
+        Body: Text;
+        Text001: Label 'Please find Indent Requisition Number: %1 dt. %2 is raised for the purpose %3 has been approved by your HOD.';
+        Sub: Label 'Request for Indent Requisition Approval';
+        IndentHead: Record "Indent Header";
     begin
-        /* case RecRef.Number() of
-             Database::"Indent Req Header":
-                 begin
-                     RecRef.SetTable(IndentRequisitionDoc1);
-                     IndentRequisitionDoc1.SetRange("No.", IndentRequisitionDoc1."No.");
-                     IndentRequisitionDoc1.Status := IndentRequisitionDoc1.Status::Release;
-                     //    IndentRequisitionDoc1."Last Modified Date" := WORKDATE;
-                     IndentRequisitionDoc1.Modify();
-
-                     IndentRequisitionLine.RESET;
-                     IndentRequisitionLine.SETRANGE("Document No.", IndentRequisitionDoc1."No.");
-                     IF IndentRequisitionLine.FINDSET THEN
-                         IndentRequisitionLine.MODIFYALL("Release Status", IndentRequisitionLine."Release Status"::Released);
-
-                     Handled := true;
-                 end;
-         end;*/
         case RecRef.Number() of
+            Database::"Indent Req Header":
+                begin
+                    RecRef.SetTable(IndentRequisitionDoc1);
+                    IndentRequisitionDoc1.SetRange("No.", IndentRequisitionDoc1."No.");
+                    IndentRequisitionDoc1.Status := IndentRequisitionDoc1.Status::Release;
+                    //    IndentRequisitionDoc1."Last Modified Date" := WORKDATE;
+                    IndentRequisitionDoc1.Modify();
+                    if IndentHead.Get(IndentRequisitionDoc1."Indent No.") then begin
+                        UserSetup.Get(IndentHead."User Id");
+                        UserSetup.TestField("E-Mail");
+                        Recipiants.Add(UserSetup."E-Mail");
+                        Body += StrSubstNo(Text001, IndentRequisitionDoc1."No.", IndentRequisitionDoc1."Document Date", IndentRequisitionDoc1.Purpose);
+                        EmailMessage.Create(Recipiants, Sub, '', true);
+                        EmailMessage.AppendToBody('Dear Indenter,');
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody(Body);
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody('This is auto generated mail by system for information.');
+                        Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
+                    end;
+
+                    IndentRequisitionLine.RESET;
+                    IndentRequisitionLine.SETRANGE("Document No.", IndentRequisitionDoc1."No.");
+                    IF IndentRequisitionLine.FINDSET THEN
+                        IndentRequisitionLine.MODIFYALL("Release Status", IndentRequisitionLine."Release Status"::Released);
+
+                    Handled := true;
+                end;
+        end;
+        /* case RecRef.Number() of
             Database::"Indent Req Header":
                 begin
                     RecRef.SetTable(IndentRequisitionDoc1);
@@ -699,7 +722,7 @@ codeunit 50018 "Approvals MGt 4"
                     IndentRequisitionDoc1.Modify();
                     Handled := true;
                 end;
-        end;
+        end; */
     end;
     //14
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'Onsetstatustopendingapproval', '', true, true)]
@@ -708,24 +731,24 @@ codeunit 50018 "Approvals MGt 4"
         IndentRequisitionDoc1: Record "Indent Req Header";
         IndentRequisitionLine: Record "Indent Requisitions";
     begin
-        /* case RecRef.Number() of
-             Database::"Indent Req Header":
-                 begin
-                     RecRef.SetTable(IndentRequisitionDoc1);
-                     IndentRequisitionDoc1.SetRange("No.", IndentRequisitionDoc1."No.");
-                     IndentRequisitionDoc1.Status := IndentRequisitionDoc1.Status::"Pending Approval";
-                     // IndentRequisitionDoc1."Last Modified Date" := WorkDate();
-                     IndentRequisitionDoc1.Modify();
-
-                     IndentRequisitionLine.RESET;
-                     IndentRequisitionLine.SETRANGE("Document No.", IndentRequisitionDoc1."No.");
-                     IndentRequisitionLine.SETRANGE("Indent Status", IndentRequisitionLine."Indent Status"::Indent);
-                     IF IndentRequisitionLine.FindSet() THEN
-                         IndentRequisitionLine.MODIFYALL("Release Status", IndentRequisitionLine."Release Status"::"Pending Approval");
-                     IsHandled := true;
-                 end;
-         end;*/
         case RecRef.Number() of
+            Database::"Indent Req Header":
+                begin
+                    RecRef.SetTable(IndentRequisitionDoc1);
+                    IndentRequisitionDoc1.SetRange("No.", IndentRequisitionDoc1."No.");
+                    IndentRequisitionDoc1.Status := IndentRequisitionDoc1.Status::"Pending Approval";
+                    // IndentRequisitionDoc1."Last Modified Date" := WorkDate();
+                    IndentRequisitionDoc1.Modify();
+
+                    IndentRequisitionLine.RESET;
+                    IndentRequisitionLine.SETRANGE("Document No.", IndentRequisitionDoc1."No.");
+                    IndentRequisitionLine.SETRANGE("Indent Status", IndentRequisitionLine."Indent Status"::Indent);
+                    IF IndentRequisitionLine.FindSet() THEN
+                        IndentRequisitionLine.MODIFYALL("Release Status", IndentRequisitionLine."Release Status"::"Pending Approval");
+                    IsHandled := true;
+                end;
+        end;
+        /* case RecRef.Number() of
             Database::"Indent Req Header":
                 begin
                     RecRef.SetTable(IndentRequisitionDoc1);
@@ -733,7 +756,7 @@ codeunit 50018 "Approvals MGt 4"
                     IndentRequisitionDoc1.Modify();
                     IsHandled := true;
                 end;
-        end;
+        end; */
     end;
     //15
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'Onaddworkflowresponsepredecessorstolibrary', '', true, true)]

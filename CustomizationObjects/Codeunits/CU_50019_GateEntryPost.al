@@ -161,12 +161,15 @@ codeunit 50019 "Gate Entry- Post"
                 PurchLineGRec.SetRange("Document No.", PostedGateEntryLine."Purchase Order No.");
                 PurchLineGRec.SetRange("Line No.", PostedGateEntryLine."Purchase Order Line No.");
                 if PurchLineGRec.FindFirst() then begin
-                    PurchLineGRec."Posted Gate Entry No." := PostedGateEntryLine."Gate Entry No.";
-                    PurchLineGRec."Posted Gate Entry Line No." := PostedGateEntryLine."Line No.";
-                    PurchLineGRec.validate("Qty. to Receive", (PostedGateEntryLine.Quantity + PurchLineGRec."Inward Qty") - PurchLineGRec."Quantity Received"); //B2BVCOn01Feb2024
-
-                    PurchLineGRec.Validate("Qty. to Invoice", (PostedGateEntryLine.Quantity + PurchLineGRec."Inward Qty") - PurchLineGRec."Quantity Invoiced"); //B2BVCOn01Feb2024
-                    PurchLineGRec."Inward Qty" += PurchLineGRec."Qty. to Receive"; //B2BVCOn01Feb2024
+                    if PostedGateEntryLine."Entry Type" = PostedGateEntryLine."Entry Type"::Inward then begin
+                        PurchLineGRec."Posted Gate Entry No." := PostedGateEntryLine."Gate Entry No.";
+                        PurchLineGRec."Posted Gate Entry Line No." := PostedGateEntryLine."Line No.";
+                        PurchLineGRec.validate("Qty. to Receive", (PostedGateEntryLine.Quantity + PurchLineGRec."Inward Qty") - PurchLineGRec."Quantity Received"); //B2BVCOn01Feb2024
+                        PurchLineGRec.Validate("Qty. to Invoice", (PostedGateEntryLine.Quantity + PurchLineGRec."Inward Qty") - PurchLineGRec."Quantity Invoiced"); //B2BVCOn01Feb2024
+                        PurchLineGRec."Inward Qty" += PurchLineGRec."Qty. to Receive"; //B2BVCOn01Feb2024
+                    end;
+                    if PostedGateEntryLine."Entry Type" = PostedGateEntryLine."Entry Type"::Outward then
+                        PurchLineGRec."RGP OutWard No." := PostedGateEntryLine."Gate Entry No.";
                     PurchLineGRec.Modify();
                 end;
             //B2BVCOn09Nov2023 <<

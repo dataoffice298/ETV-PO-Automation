@@ -50,6 +50,11 @@ pageextension 50070 MyExtension1 extends "Purchases & Payables Setup"
                 {
                     ApplicationArea = All;
                 }
+                field("Indent Workflow User Group"; Rec."Indent Workflow User Group")
+                {
+                    ApplicationArea = All;
+                    Caption = 'PO Workflow User Group';
+                }
 
 
             }

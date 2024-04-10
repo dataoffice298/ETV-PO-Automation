@@ -247,12 +247,18 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             field("Posted Gate Entry No."; Rec."Posted Gate Entry No.")
             {
                 ApplicationArea = All;
-                Caption = 'Posted Gate Entry No.';
+                Caption = 'RGP Inward No.';
             }
             field("Posted Gate Entry Line No."; Rec."Posted Gate Entry Line No.")
             {
                 ApplicationArea = All;
-                Caption = 'Posted Gate Entry Line No.';
+                Caption = 'RGP Inward Line No.';
+            }
+            field("RGP OutWard No."; Rec."RGP OutWard No.")
+            {
+                ApplicationArea = All;
+                Caption = 'RGP Outward No.';
+                Editable = false;
             }
             field("Short Close Quantity"; Rec."Short Close Quantity")
             {
@@ -273,6 +279,11 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             field(ShortClosed; Rec.ShortClosed)
             {
                 ApplicationArea = all;
+                Editable = false;
+            }
+            field(CancelOrder; Rec.CancelOrder)
+            {
+                ApplicationArea = All;
                 Editable = false;
             }
         }

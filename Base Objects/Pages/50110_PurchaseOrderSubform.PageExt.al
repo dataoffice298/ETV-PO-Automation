@@ -163,6 +163,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             {
                 ApplicationArea = All;
                 Caption = 'Project Code';
+                Visible = false;
             }
         }
         addafter("Gen. Prod. Posting Group")//B2BSSD24Feb2023

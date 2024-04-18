@@ -32,6 +32,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             {
                 ApplicationArea = All;
                 Caption = 'Project Code';
+                Visible = false;
             }
             //B2BVCOn12Mar2024 <<
 

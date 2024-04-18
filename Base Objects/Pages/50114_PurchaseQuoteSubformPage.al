@@ -30,6 +30,11 @@ pageextension 50114 PurchQuoteSubformExtB2B extends "Purchase Quote Subform"
                 ApplicationArea = All;
                 Caption = 'warranty';
             }
+            field("Shortcut Dimension 3 Code"; Rec."Shortcut Dimension 3 Code")
+            {
+                ApplicationArea = All;
+                Caption = 'Project Code';
+            }
         }
         addafter(Type)
         {

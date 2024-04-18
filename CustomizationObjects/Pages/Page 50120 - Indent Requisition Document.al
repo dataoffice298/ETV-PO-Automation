@@ -68,6 +68,12 @@ page 50120 "Indent Requisition Document"
                     Caption = 'Shortcut Dimension 9 Code';
                     Editable = FieldEditable;
                 }
+                field("Shortcut Dimension 3 Code"; Rec."Shortcut Dimension 3 Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Project Code';
+                    Editable = false;
+                }
                 //B2BSSD17FEB2023>>
                 field("programme Name"; Rec."programme Name")//B2BSSD20MAR2023
                 {
@@ -453,9 +459,19 @@ page 50120 "Indent Requisition Document"
 
                     IF Rec.Status <> Rec.Status::Release then BEGIN
                         Rec.Status := Rec.Status::Release;
-                        Rec.Modify();
+                        //Rec.Modify();
                         Message('Document has been Released.');
                     end;
+                end;
+            }
+            action(Approve)
+            {
+                ApplicationArea = All;
+                Image = Action;
+                //  Visible = OpenApprEntrEsists;
+                trigger OnAction()
+                begin
+                    approvalmngmt.ApproveRecordApprovalRequest(Rec.RecordId());
                 end;
             }
 
@@ -469,6 +485,14 @@ page 50120 "Indent Requisition Document"
                 trigger OnAction()
                 var
                     ApprovalsCodeunit: Codeunit "Approvals MGt 4";
+                    UserSetup: Record "User Setup";
+                    Email: Codeunit Email;
+                    EmailMessage: Codeunit "Email Message";
+                    Recipiants: List of [Text];
+                    Body: Text;
+                    Text001: Label 'Please find Indent Requisition Number: %1 dt.%2 is raised for the purpose %3 is waiting for your approval.  Please approve the same.';
+                    Sub: Label 'Request for Indent Requisition Approval';
+                    ApprovalEntryLRec: Record "Approval Entry";
 
                 begin
                     Rec.TestField("No.Series");
@@ -488,6 +512,25 @@ page 50120 "Indent Requisition Document"
                     Rec.TESTFIELD("Document Date");
                     IF ApprovalsCodeunit.CheckIndentRequisitionDoc1ApprovalsWorkflowEnabled(rec) then
                         ApprovalsCodeunit.OnSendIndentRequisitionDoc1ForApproval(Rec);
+                    ApprovalEntryLRec.Reset();
+                    ApprovalEntryLRec.SetRange("Document No.", Rec."No.");
+                    ApprovalEntryLRec.SetRange(Status, ApprovalEntryLRec.Status::Open);
+                    if ApprovalEntryLRec.FindFirst() then begin
+                        UserSetup.Get(ApprovalEntryLRec."Approver ID");
+                        UserSetup.TestField("E-Mail");
+                        Recipiants.Add(UserSetup."E-Mail");
+                        Body += StrSubstNo(Text001, Rec."No.", Rec."Document Date", Rec.Purpose);
+                        EmailMessage.Create(Recipiants, Sub, '', true);
+                        EmailMessage.AppendToBody('Dear Sir/Madam,');
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody(Body);
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody('This is auto generated mail by system for approval information.');
+                        Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
+                        Message('Email Send Successfully');
+                    end;
                 end;
             }
 
@@ -501,11 +544,30 @@ page 50120 "Indent Requisition Document"
                     ApprovalsCodeunit: Codeunit "Approvals MGt 4";
                 begin
                     ApprovalsCodeunit.OnCancelIndentRequisitionDoc1ForApproval(Rec);
-                    if rec."Status" = rec."Status"::"Pending Approval" then
-                        rec."Status" := rec."Status"::Open;
-                    Rec.Modify();
+                    //if rec."Status" = rec."Status"::"Pending Approval" then
+                    //rec."Status" := rec."Status"::Open;
                 end;
             }
+            /* action("Workflow User Group")
+            {
+                ApplicationArea = All;
+                Image = Users;
+                //Visible = NOT OpenApprovalEntriesExist;
+                //Visible = false;
+                trigger OnAction()
+                var
+                    WorkflowUserGroup: Record "Workflow User Group";
+                    PurchPaySetup: Record "Purchases & Payables Setup";
+                begin
+                    PurchPaySetup.GET;
+                    PurchPaySetup.TESTFIELD("Indent Workflow User Group");
+                    WorkflowUserGroup.RESET;
+                    WorkflowUserGroup.SETRANGE(Code, PurchPaySetup."Indent Workflow User Group");
+                    WorkflowUserGroup.FINDSET;
+                    PAGE.RUN(1531, WorkflowUserGroup);
+                end;
+
+            } */
 
             action("Approval Entries")
             {
@@ -543,7 +605,7 @@ page 50120 "Indent Requisition Document"
                     Rec.TestField(Status, Rec.Status::Release);
                     IF Rec."Status" <> Rec."Status"::Open then BEGIN
                         Rec."Status" := Rec."Status"::Open;
-                        Rec.Modify();
+                        //Rec.Modify();
                         Message(ReText01);
                     end;
                 end;

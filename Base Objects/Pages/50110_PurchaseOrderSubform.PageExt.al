@@ -159,6 +159,11 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 ApplicationArea = All;
                 Caption = 'warranty';
             }
+            field("Shortcut Dimension 3 Code"; Rec."Shortcut Dimension 3 Code")
+            {
+                ApplicationArea = All;
+                Caption = 'Project Code';
+            }
         }
         addafter("Gen. Prod. Posting Group")//B2BSSD24Feb2023
         {

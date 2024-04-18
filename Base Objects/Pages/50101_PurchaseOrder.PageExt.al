@@ -28,6 +28,11 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 ApplicationArea = All;
                 Caption = 'Order Cancelled';
             }
+            field("Shortcut Dimension 3 Code"; Rec."Shortcut Dimension 3 Code")
+            {
+                ApplicationArea = All;
+                Caption = 'Project Code';
+            }
             //B2BVCOn12Mar2024 <<
 
         }

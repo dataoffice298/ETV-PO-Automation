@@ -130,6 +130,12 @@ page 50126 "Quotation Comparision Doc"
                     ApplicationArea = All;
                     Caption = 'Purpose';
                 }
+                field("Shortcut Dimension 3 Code"; "Shortcut Dimension 3 Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Project Code';
+                    Editable = false;
+                }
                 field(ProgrammeName; Rec."Programme Name")//B2BSSD23MAR2023
                 {
                     ApplicationArea = All;
@@ -537,6 +543,5 @@ page 50126 "Quotation Comparision Doc"
             UNTIL QuotationComparisionDelete.NEXT = 0;
 
     end;
-
 
 }

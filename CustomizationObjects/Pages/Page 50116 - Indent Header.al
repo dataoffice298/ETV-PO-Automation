@@ -105,6 +105,11 @@ page 50116 "Indent Header"
                     Caption = 'Shortcut Dimension 9 Code';
                     Editable = PageEditable;
                 }
+                field("Shortcut Dimension 3 Code"; Rec."Shortcut Dimension 3 Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Project Code';
+                }
                 field("programme Name"; Rec."programme Name")//B2BSS20MAR2023
                 {
                     ApplicationArea = All;

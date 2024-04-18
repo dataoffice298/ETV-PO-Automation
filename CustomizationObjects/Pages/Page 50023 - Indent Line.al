@@ -166,6 +166,12 @@ page 50023 "Indent Line"
                     Caption = 'Shortcut Dimension 9 Code';
                     Editable = FieldEditable; //B2BSCM21AUG2023
                 }
+                field("Shortcut Dimension 3 Code"; Rec."Shortcut Dimension 3 Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Project Code';
+                    Editable = false;
+                }
                 field("Qty To Issue"; Rec."Qty To Issue")
                 {
                     ApplicationArea = all;

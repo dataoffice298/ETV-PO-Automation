@@ -353,6 +353,13 @@ table 50203 "Indent Requisitions"
         {
             DataClassification = CustomerContent;
         }
+        field(50025; "Shortcut Dimension 3 Code"; Code[20])
+        {
+            Caption = 'Shortcut Dimension 3 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(3),
+            Blocked = CONST(false));
+            DataClassification = CustomerContent;
+        }
     }
     //B2BSSD17FEB2023>>
 

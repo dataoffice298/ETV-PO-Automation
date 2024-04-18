@@ -86,6 +86,11 @@ page 50026 "Purchase Enquiry Subform"
                     ApplicationArea = all;
                     Editable = false;
                 }
+                field("Shortcut Dimension 3 Code"; "Shortcut Dimension 3 Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Project Code';
+                }
             }
         }
     }

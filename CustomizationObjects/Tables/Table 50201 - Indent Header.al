@@ -247,6 +247,21 @@ table 50201 "Indent Header"
         {
             DataClassification = ToBeClassified;
         }
+        field(50018; "Shortcut Dimension 3 Code"; Code[20])
+        {
+            Caption = 'Shortcut Dimension 3 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(3),
+            Blocked = CONST(false));
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                IndentLine.Reset();
+                IndentLine.SetRange("Document No.", "No.");
+                IF IndentLine.FINDSET THEN
+                    IndentLine.Modifyall("Shortcut Dimension 3 Code", "Shortcut Dimension 3 Code");
+            end;
+
+        }
     }
 
     keys
@@ -882,6 +897,7 @@ table 50201 "Indent Header"
             "Shortcut Dimension 1 Code" := IndentHeader."Shortcut Dimension 1 Code";
             "Shortcut Dimension 2 Code" := IndentHeader."Shortcut Dimension 2 Code";
             "Shortcut Dimension 9 Code" := IndentHeader."Shortcut Dimension 9 Code";
+            "Shortcut Dimension 3 Code" := IndentHeader."Shortcut Dimension 3 Code";
             "programme Name" := IndentHeader."programme Name";//B2BSSD23MAR2023
             Purpose := IndentHeader.Purpose;//B2BSSD23MAR2023
             Modify();
@@ -940,6 +956,7 @@ table 50201 "Indent Header"
             "Shortcut Dimension 1 Code" := IndentHeader."Shortcut Dimension 1 Code";
             "Shortcut Dimension 2 Code" := IndentHeader."Shortcut Dimension 2 Code";
             "Shortcut Dimension 9 Code" := IndentHeader."Shortcut Dimension 9 Code";
+            "Shortcut Dimension 3 Code" := IndentHeader."Shortcut Dimension 3 Code";
             "programme Name" := IndentHeader."programme Name";
             Purpose := IndentHeader.Purpose;
             Modify();

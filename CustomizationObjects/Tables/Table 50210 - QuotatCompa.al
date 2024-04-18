@@ -504,6 +504,13 @@ table 50210 "Quotation Comparison Test"
             DataClassification = CustomerContent;
             Caption = 'Vendor Quotation Date';
         }
+        field(60039; "Shortcut Dimension 3 Code"; Code[20])
+        {
+            Caption = 'Shortcut Dimension 3 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(3),
+            Blocked = CONST(false));
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

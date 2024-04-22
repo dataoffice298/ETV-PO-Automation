@@ -484,6 +484,19 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         {
             DataClassification = CustomerContent;
         }
+        field(60061; CWIP; Boolean)
+        {
+            Caption = 'CWIP';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+        modify(Quantity)
+        {
+            trigger OnBeforeValidate()
+            begin
+                CheckCWIPDetailsExists();
+            end;
+        }
 
     }
 
@@ -527,6 +540,30 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
                     Error(TrackErr1);
             end;
         end;
+    end;
+
+    local procedure CheckCWIPDetailsExists()
+    var
+        CWIPDetails: Record "CWIP Details";
+        ErrLbl: Label 'CWIP Details are defined for this line. Please check those first.';
+    begin
+        CWIPDetails.Reset();
+        CWIPDetails.SetRange("Document No.", Rec."Document No.");
+        CWIPDetails.SetRange("Document Line No.", Rec."Line No.");
+        if not CWIPDetails.IsEmpty then
+            Error(ErrLbl);
+    end;
+
+    procedure OpenCWIPDetails()
+    var
+        CWIPDetails: Record "CWIP Details";
+    begin
+        Rec.TestField(CWIP);
+        Rec.TestField(Quantity);
+        CWIPDetails.Reset();
+        CWIPDetails.SetRange("Document No.", Rec."Document No.");
+        CWIPDetails.SetRange("Document Line No.", Rec."Line No.");
+        Page.Run(0, CWIPDetails);
     end;
 
     var

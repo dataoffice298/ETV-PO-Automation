@@ -71,6 +71,12 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 end;
 
             }
+            field(CWIP; Rec.CWIP)
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the value of the CWIP field.';
+                Caption = 'CWIP';
+            }
 
         }
         addafter("Location Code")
@@ -756,8 +762,21 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             }
 
         }
-
-
+        addlast("&Line")
+        {
+            action("CWIP Details")
+            {
+                ApplicationArea = all;
+                Image = OpenJournal;
+                Enabled = Rec.CWIP;
+                ToolTip = 'Executes the CWIP Details action.';
+                Caption = 'CWIP Details';
+                trigger OnAction()
+                begin
+                    Rec.OpenCWIPDetails();
+                end;
+            }
+        }
     }
 
     procedure CreateGateEntries(EntryType: Option Inward,Outward; DocType: Option RGP,NRGP)

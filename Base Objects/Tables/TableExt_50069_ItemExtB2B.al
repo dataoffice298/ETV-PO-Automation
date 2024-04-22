@@ -9,6 +9,11 @@ tableextension 50069 ItemExtB2B extends Item //27
             DataClassification = CustomerContent;
         }
         //B2BMSOn03Nov2022<<
+        field(60001; "CWIP"; Boolean)
+        {
+            Caption = 'CWIP ';
+            DataClassification = CustomerContent;
+        }
     }
 
     //B2BMSOn30Sep2022>> Added for report sorting

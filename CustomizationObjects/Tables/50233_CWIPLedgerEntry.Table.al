@@ -1,4 +1,4 @@
-table 50230 "CWIP Ledger Entry"
+table 50233 "CWIP Ledger Entry"
 {
     Caption = 'CWIP Ledger Entry';
     DataClassification = CustomerContent;

@@ -299,7 +299,8 @@ table 50201 "Indent Header"
         "Document Date" := WORKDATE;
         Indentor := USERID;
         CompSetup.GET;
-        "Delivery Location" := CompSetup."Location Code";
+        //"Delivery Location" := CompSetup."Location Code";
+        "Delivery Location" := PurchaseSetup."Indent Store Location";
     end;
 
 

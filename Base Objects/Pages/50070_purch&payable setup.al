@@ -109,6 +109,13 @@ pageextension 50070 MyExtension1 extends "Purchases & Payables Setup"
                     ApplicationArea = All;
                 }
             }
+            group("Indent Location")
+            {
+                field("Indent Store Location"; Rec."Indent Store Location")
+                {
+                    ApplicationArea = All;
+                }
+            }
         }
         //B2BMSOn13Sep2022<<
 

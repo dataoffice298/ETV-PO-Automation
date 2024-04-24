@@ -165,6 +165,11 @@ page 50157 "Outward Gate Entry - RGP"
                     ApplicationArea = All;
                 }
                 //B2BSSD20Jan2023>>
+                field("Purch Cr.Memo No."; Rec."Purch Cr.Memo No.")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                }
             }
             part(Control1500028; "Outward Gate Entry SubFrm-RGP")
             {

@@ -99,8 +99,6 @@ page 50116 "Indent Header"
                     Caption = 'Shortcut Dimension 2 Code';
                     Editable = PageEditable;
                 }
-
-
                 field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")
                 {
                     ApplicationArea = All;
@@ -263,6 +261,14 @@ page 50116 "Indent Header"
                 trigger OnAction()
                 var
                     ItemVariantLRec: Record "Item Variant";
+                    UserSetup: Record "User Setup";
+                    Email: Codeunit Email;
+                    EmailMessage: Codeunit "Email Message";
+                    Recipiants: List of [Text];
+                    Body: Text;
+                    Text001: Label 'Please find Indent Number: %1 dt.%2 is raised for the purpose %3 is waiting for your approval.  Please approve the same.';
+                    Sub: Label 'Request for Indent Approval';
+                    ApprovalEntryLRec: Record "Approval Entry";
                 begin
                     Rec.TESTFIELD("Released Status", Rec."Released Status"::Open);
                     Rec.TESTFIELD(Indentor);
@@ -301,6 +307,25 @@ page 50116 "Indent Header"
                         UNTIL IndentLine.NEXT = 0;
                     IF allinoneCU.CheckIndentDocApprovalsWorkflowEnabled(Rec) then
                         allinoneCU.OnSendIndentDocForApproval(Rec);
+                    ApprovalEntryLRec.Reset();
+                    ApprovalEntryLRec.SetRange("Document No.", Rec."No.");
+                    ApprovalEntryLRec.SetRange(Status, ApprovalEntryLRec.Status::Open);
+                    if ApprovalEntryLRec.FindFirst() then begin
+                        UserSetup.Get(ApprovalEntryLRec."Approver ID");
+                        UserSetup.TestField("E-Mail");
+                        Recipiants.Add(UserSetup."E-Mail");
+                        Body += StrSubstNo(Text001, Rec."No.", Rec."Document Date", Rec.Purpose);
+                        EmailMessage.Create(Recipiants, Sub, '', true);
+                        EmailMessage.AppendToBody('Dear Sir/Madam,');
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody(Body);
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody('This is auto generated mail by system for approval information.');
+                        Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
+                        Message('Email Send Successfully');
+                    end;
 
                 end;
             }

@@ -146,6 +146,11 @@ tableextension 50057 tableextension70000012 extends "Purchases & Payables Setup"
             TableRelation = "No. Series";
         }
         //B2BMSOn13Sep2022<<
+        field(50110; "Indent Workflow User Group"; Code[20])
+        {
+            DataClassification = CustomerContent;
+            TableRelation = "Workflow User Group";
+        }
 
     }
 

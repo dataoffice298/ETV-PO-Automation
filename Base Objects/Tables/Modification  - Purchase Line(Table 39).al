@@ -451,6 +451,10 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             Caption = 'Inward Qty';
             DataClassification = CustomerContent;
         }
+        field(60055; "RGP OutWard No."; Code[20])
+        {
+            DataClassification = CustomerContent;
+        }
         modify("Variant Code")  //B2BSCM12JAN2024
         {
             trigger OnAfterValidate()
@@ -468,6 +472,17 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
                 end else
                     "Variant Description" := '';
             end;
+        }
+        field(60054; "Shortcut Dimension 3 Code"; Code[20])
+        {
+            Caption = 'Shortcut Dimension 3 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(3),
+            Blocked = CONST(false));
+            DataClassification = CustomerContent;
+        }
+        field(60060; "RFQ No."; Code[20])
+        {
+            DataClassification = CustomerContent;
         }
 
     }

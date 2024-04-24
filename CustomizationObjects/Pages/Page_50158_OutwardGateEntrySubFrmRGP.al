@@ -156,6 +156,20 @@ page 50158 "Outward Gate Entry SubFrm-RGP"
                     ApplicationArea = All;
                 }
                 //B2bSSD22Dec2022>>
+                //B2BVCOn03April2024 >>
+                field("Purchase Order No."; Rec."Purchase Order No.")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Purchase Order No.';
+                    Editable = false;
+                }
+                field("InWard Gate Entry No."; Rec."InWard Gate Entry No.")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Inward Gate Entry No.';
+                    Editable = false;
+                }
+                //B2BVCOn03April2024 <<
             }
         }
     }

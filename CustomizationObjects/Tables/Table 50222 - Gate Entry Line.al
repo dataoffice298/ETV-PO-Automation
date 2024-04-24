@@ -209,6 +209,20 @@ table 50222 "Gate Entry Line_B2B"
         {
             DataClassification = ToBeClassified;
         }
+        //B2BVCOn03April2024 >>
+        field(38; "Purch Cr. Memo No."; Code[20])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(39; "Purch Cr. Memo Line No."; Integer)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(40; "InWard Gate Entry No."; Code[20])
+        {
+            DataClassification = CustomerContent;
+        }
+        //B2BVCOn03April2024 <<
     }
 
     keys

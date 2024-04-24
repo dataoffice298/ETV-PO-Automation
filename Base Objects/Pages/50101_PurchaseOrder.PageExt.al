@@ -369,8 +369,32 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                     Report.RunModal(Report::"Regularization Order", true, false, PurchaseHeader);
                 end;
             }
+
         }
         //B2BSSD14Feb2023<<
+        addafter("Request Approval")
+        {
+            action("Workflow User Group")
+            {
+                ApplicationArea = Basic, Suite;
+                Image = Users;
+                //Visible = NOT OpenApprovalEntriesExist;
+                //Visible = false;
+                trigger OnAction()
+                var
+                    WorkflowUserGroup: Record "Workflow User Group";
+                    PurchPaySetup: Record "Purchases & Payables Setup";
+                begin
+                    PurchPaySetup.GET;
+                    PurchPaySetup.TESTFIELD("Indent Workflow User Group");
+                    WorkflowUserGroup.RESET;
+                    WorkflowUserGroup.SETRANGE(Code, PurchPaySetup."Indent Workflow User Group");
+                    WorkflowUserGroup.FINDSET;
+                    PAGE.RUN(1531, WorkflowUserGroup);
+                end;
+
+            }
+        }
 
         //B2BSSD12APR2023>>
         addafter(PrintRegularization)
@@ -468,8 +492,9 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                             repeat
                                 if IndentReqLine.Get(PurchLineGRec."Indent Req No", PurchLineGRec."Indent Req Line No") then begin
                                     IndentReqLine.CalcFields("Received Quantity");
-                                    IndentReqLine."Qty. Ordered" := 0;
-                                    IndentReqLine.Quantity := IndentReqLine.Quantity + PurchLineGRec.Quantity;
+                                    IndentReqLine."Received Quantity" := 0;
+                                    IndentReqLine."Qty. Ordered" := IndentReqLine."Received Quantity";
+                                    IndentReqLine.Quantity := IndentReqLine."Remaining Quantity" + PurchLineGRec.Quantity;
                                     IndentReqLine.Validate("Remaining Quantity", IndentReqLine.Quantity);
                                     IndentReqLine."PO Vendor" := PurchLineGRec."Buy-from Vendor No.";
                                     IndentReqLine.Modify;

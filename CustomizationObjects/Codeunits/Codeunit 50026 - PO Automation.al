@@ -111,6 +111,7 @@ codeunit 50026 "PO Automation"
                     CreateIndents."Release Status" := IndentLine."Release Status";
                     CreateIndents."Due Date" := IndentLine."Due Date";
                     CreateIndents."Location Code" := IndentLine."Delivery Location";
+                    CreateIndents."Shortcut Dimension 3 Code":=IndentLine."Shortcut Dimension 3 Code";//B2BKM25APR2024
                     Message('%1..%2', CreateIndents."Location Code", IndentLine."Delivery Location");
                     //CreateIndents."Location Code" := IndentLine.l
                     CreateIndents.Department := IndentLine.Department;
@@ -222,6 +223,7 @@ codeunit 50026 "PO Automation"
                 IndentVendorItems."Indent Req Line No" := CreateIndents."Line No.";
                 IndentVendorItems."Shortcut Dimension 1 Code" := CreateIndents."Shortcut Dimension 1 Code";//B2BPAV
                 IndentVendorItems."Shortcut Dimension 2 Code" := CreateIndents."Shortcut Dimension 2 Code";//B2BPAV
+                IndentVendorItems."Shortcut Dimension 3 Code" := CreateIndents."Shortcut Dimension 3 Code";//B2BKM25APR2024
                 IndentVendorItems.INSERT;
             UNTIL CreateIndents.NEXT = 0;
     end;
@@ -332,6 +334,7 @@ codeunit 50026 "PO Automation"
                             PurchaseLine."Sub Location Code" := IndentVendorEnquiry."Sub Location Code";
                             PurchaseLine."Spec Id" := IndentVendorEnquiry."Spec Id";
                             PurchaseLine."Unit of Measure Code" := IndentVendorEnquiry."Unit Of Measure";//B2BSSD20APR2023
+                            PurchaseLine."Shortcut Dimension 3 Code" := IndentVendorEnquiry."Shortcut Dimension 3 Code";//B2BKM25APR2024
 
 
                             IndentLineRec.Reset();
@@ -582,6 +585,7 @@ codeunit 50026 "PO Automation"
                     PurchaseHeader.Validate("Shortcut Dimension 1 Code", IndentVendorEnquiry."Shortcut Dimension 1 Code");
                     PurchaseHeader.Validate("Shortcut Dimension 2 Code", IndentVendorEnquiry."Shortcut Dimension 2 Code");
                     PurchaseHeader.Validate("Shortcut Dimension 9 Code", IndentVendorEnquiry."Shortcut Dimension 9 Code");//B2BSSD14MAR2023
+                    PurchaseHeader.Validate("Shortcut Dimension 3 Code", IndentVendorItems."Shortcut Dimension 3 Code"); //N2NKM25APR2024
                     PurchaseHeader.INSERT;
                     REPEAT
                         PurchaseLine.INIT;
@@ -630,6 +634,7 @@ codeunit 50026 "PO Automation"
                         PurchaseHeader.Validate("Shortcut Dimension 1 Code", IndentVendorEnquiry."Shortcut Dimension 1 Code");
                         PurchaseHeader.Validate("Shortcut Dimension 2 Code", IndentVendorEnquiry."Shortcut Dimension 2 Code");
                         PurchaseHeader.Validate("Shortcut Dimension 9 Code", IndentVendorEnquiry."Shortcut Dimension 9 Code");//B2BSSD14MAR2023
+                        PurchaseLine.Validate("Shortcut Dimension 3 Code", IndentVendorEnquiry."Shortcut Dimension 3 Code");//B2BKM25APR2024
                         PurchaseLine."Location Code" := IndentVendorEnquiry."Location Code";
                         PurchaseLine.VALIDATE("Location Code");
 

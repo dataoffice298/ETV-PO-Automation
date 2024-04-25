@@ -169,7 +169,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             {
                 ApplicationArea = All;
                 Caption = 'Project Code';
-                Visible = false;
+                //Visible = false; //B2BKM25APR2024
             }
         }
         addafter("Gen. Prod. Posting Group")//B2BSSD24Feb2023
@@ -320,6 +320,10 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 end;
 
             end;
+        }
+        modify(ShortcutDimCode3) //B2BKM24APR2024
+        {
+            Visible = false;
         }
         /*  modify(Type)
          {

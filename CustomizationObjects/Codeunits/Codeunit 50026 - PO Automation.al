@@ -111,7 +111,7 @@ codeunit 50026 "PO Automation"
                     CreateIndents."Release Status" := IndentLine."Release Status";
                     CreateIndents."Due Date" := IndentLine."Due Date";
                     CreateIndents."Location Code" := IndentLine."Delivery Location";
-                    CreateIndents."Shortcut Dimension 3 Code":=IndentLine."Shortcut Dimension 3 Code";//B2BKM25APR2024
+                    CreateIndents."Shortcut Dimension 3 Code" := IndentLine."Shortcut Dimension 3 Code";//B2BKM25APR2024
                     Message('%1..%2', CreateIndents."Location Code", IndentLine."Delivery Location");
                     //CreateIndents."Location Code" := IndentLine.l
                     CreateIndents.Department := IndentLine.Department;
@@ -1621,6 +1621,8 @@ codeunit 50026 "PO Automation"
         VendorNo: Code[20];
         indentRequisitions: Record "Indent Requisitions";
         IndentReqLine: Record "Indent Requisitions";
+        DimValue: Record "Dimension Value";
+        GLSetup: Record "General Ledger Setup";
     begin
         CreateIndents4.COPYFILTERS(CreateIndentsQuotes);
         //InsertIndentItemvendor2(CreateIndents4, Vendor);
@@ -1658,7 +1660,6 @@ codeunit 50026 "PO Automation"
                             PurchaseHeader.validate("Shortcut Dimension 1 Code", IndentVendorEnquiry."Shortcut Dimension 1 Code");//B2BPAV
                             PurchaseHeader.validate("Shortcut Dimension 2 Code", IndentVendorEnquiry."Shortcut Dimension 2 Code");//B2BPAV
                             PurchaseHeader.Validate("Shortcut Dimension 9 Code", IndentVendorEnquiry."Shortcut Dimension 9 Code");//B2BSSD21FEB2023
-                            PurchaseHeader.Validate("Shortcut Dimension 3 Code", IndentVendorEnquiry."Shortcut Dimension 3 Code");
                             PurchaseHeader."Programme Name" := IndentVendorEnquiry."Programme Name";//B2BSSD20MAR2023
                             PurchaseHeader.Purpose := IndentVendorEnquiry.Purpose; //B2BSSD21MAR2023
                             PurchaseHeader.Modify(true);
@@ -1705,7 +1706,7 @@ codeunit 50026 "PO Automation"
                         //B2BSSD21APR2023<<
 
                         PurchaseLine."Variant Code" := IndentVendorEnquiry."Variant Code";
-                        PurchaseLine."Variant Code" := IndentVendorEnquiry."Variant Description"; //B2BSCM11JAN2024
+                        PurchaseLine."Variant Description" := IndentVendorEnquiry."Variant Description"; //B2BSCM11JAN2024
                         PurchaseLine.Quantity := IndentVendorEnquiry.Quantity;
                         PurchaseLine."Outstanding Quantity" := PurchaseLine.Quantity;
                         PurchaseLine."Outstanding Qty. (Base)" := PurchaseLine.Quantity;
@@ -1760,6 +1761,21 @@ codeunit 50026 "PO Automation"
                         PurchaseLine.Modify(true);
                         IndentVendorEnquiry.Check := TRUE;
                         IndentVendorEnquiry.MODIFY;
+                        //B2BKM26APR2024 <<
+                        GLSetup.Get();
+                        DimValue.Reset();
+                        DimValue.SetRange("Dimension Code", GLSetup."Shortcut Dimension 3 Code");
+                        if DimValue.FindSet() then
+                            repeat
+                                CreateIndents2.Reset();
+                                CreateIndents2.SetRange("Shortcut Dimension 3 Code", DimValue.Code);
+                                CreateIndents2.SetRange("Document No.", IndentVendorEnquiry."Indent Req No");
+                                CreateIndents2.SetRange("Line No.", IndentVendorEnquiry."Indent Req Line No");
+                                CreateIndents2.SetRange("Item No.", IndentVendorEnquiry."Item No.");
+                                if CreateIndents2.FindFirst() then
+                                    PurchaseLine."Shortcut Dimension 3 Code" := CreateIndents2."Shortcut Dimension 3 Code";
+                            until DimValue.Next() = 0;
+                        //B2BKM26APR2024 >>
                     UNTIL IndentVendorEnquiry.NEXT = 0;
             UNTIL IndentVendorItems.NEXT = 0;
     end;

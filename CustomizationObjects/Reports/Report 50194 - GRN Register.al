@@ -40,12 +40,12 @@ report 50194 "GRN Register"//B2BSSD14JUN2023
 
                         if PostedRGPInwardGRec.findset() then begin
                             repeat
-                                RgpInwardRecieptDate := PostedRGPInwardGRec."Receipt Date";
+                                RgpInwardRecieptDate := PostedRGPInwardGRec."Receipt Date";//B2BKM25APR2024
                                 RgpInwardNo := PostedRGPInwardGRec."No.";
                                 RgpInwardDate := PostedRGPInwardGRec."Document Date";
                             until PostedRGPInwardGRec.Next() = 0;
-
                         end;
+
 
                     end;
 
@@ -61,7 +61,7 @@ report 50194 "GRN Register"//B2BSSD14JUN2023
                     TempExcelBuffer.AddColumn(GRNDate, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
                     TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."Pay-to Name", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."Vendor Invoice No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."Posting Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
+                    TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."Vendor Invoice Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date); //B2BKM26APR2024
                     if Type = Type::Item then   //B2BDNROn28Dec2023
                         if Item.Get("No.") then begin
                             TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD03APR2023

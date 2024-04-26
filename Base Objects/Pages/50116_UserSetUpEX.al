@@ -34,7 +34,19 @@ pageextension 50116 UserSetUpExt_B2B extends "User Setup"
             {
                 ApplicationArea = All;
             }
+            //B2BKM26APR2024 <<
+            field("User Signature"; Rec."User Signature")
+            {
+                ApplicationArea = All;
+            }
+            field(Designation; Rec.Designation)
+            {
+                ApplicationArea = All;
+            }
+            //B2BKM26APR2024 >>
 
         }
     }
+
+
 }

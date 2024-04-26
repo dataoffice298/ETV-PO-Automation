@@ -29,7 +29,7 @@ report 50071 "GRN RECEIPT"
             { }
             column(PONo; "Order No.")
             { }
-            column(ReceiptDate; "Document Date")
+            column(ReceiptDate; GateEntryhdrGRecB2B."Receipt Date") //B2BKM26APR2024
             { }
             column(Buy_from_Vendor_Name; "Buy-from Vendor Name")
             { }

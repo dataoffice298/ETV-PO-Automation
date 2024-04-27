@@ -1,4 +1,4 @@
-table 50230 "CWIP Ledger Entry"
+/* table 50230 "CWIP Ledger Entry"
 {
     Caption = 'CWIP Ledger Entry';
     DataClassification = CustomerContent;
@@ -143,3 +143,4 @@ table 50230 "CWIP Ledger Entry"
         DimMgt.ShowDimensionSet("Dimension Set ID", StrSubstNo('%1 %2', TableCaption, "Entry No."));
     end;
 }
+ */

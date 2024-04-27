@@ -767,7 +767,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 Caption = 'CWIP Details';
                 trigger OnAction()
                 begin
-                    Rec.OpenCWIPDetails();
+                  //  Rec.OpenCWIPDetails(); april27
                 end;
             }
         }

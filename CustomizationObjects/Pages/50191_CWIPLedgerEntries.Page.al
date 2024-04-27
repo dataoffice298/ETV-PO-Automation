@@ -1,4 +1,4 @@
-page 50191 "CWIP Ledger Entries"
+/* page 50191 "CWIP Ledger Entries"
 {
     ApplicationArea = All;
     Caption = 'CWIP Ledger Entries';
@@ -185,3 +185,4 @@ page 50191 "CWIP Ledger Entries"
         }
     }
 }
+ */

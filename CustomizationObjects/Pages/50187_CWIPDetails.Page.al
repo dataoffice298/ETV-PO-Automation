@@ -1,4 +1,4 @@
-page 50187 "CWIP Details"
+/* page 50187 "CWIP Details"
 {
     Caption = 'CWIP Details';
     PageType = List;
@@ -56,3 +56,4 @@ page 50187 "CWIP Details"
         }
     }
 }
+ */

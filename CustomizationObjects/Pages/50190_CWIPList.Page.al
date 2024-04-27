@@ -1,4 +1,4 @@
-page 50190 "CWIP List"
+/* page 50190 "CWIP List"
 {
     PageType = list;
     ApplicationArea = All;
@@ -64,4 +64,4 @@ page 50190 "CWIP List"
             }
         }
     }
-}
+} */

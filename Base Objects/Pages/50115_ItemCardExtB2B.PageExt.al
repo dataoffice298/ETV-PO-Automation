@@ -13,6 +13,13 @@ pageextension 50115 ItemCardExtB2B extends "Item Card"
                     ApplicationArea = all;
                 }
             }
+
+            field("CWIP "; Rec."CWIP")
+            {
+                ApplicationArea = all;
+                ToolTip = 'Specifies the value of the CWIP  field.';
+                Caption = 'CWIP ';
+            }
         }
         modify("Item Category Code")
         {

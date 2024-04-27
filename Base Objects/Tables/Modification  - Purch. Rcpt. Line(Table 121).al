@@ -187,6 +187,12 @@ tableextension 50052 tableextension70000003 extends "Purch. Rcpt. Line"
         {
             DataClassification = CustomerContent;
         }
+        field(60061; CWIP; Boolean)
+        {
+            Caption = 'CWIP';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
     }
     keys
     {

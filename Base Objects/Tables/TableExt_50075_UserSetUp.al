@@ -41,7 +41,6 @@ tableextension 50075 UserSetUp extends "User Setup"//B2BSSD20MAR2023
             Caption = 'User Signature';
             DataClassification = ToBeClassified;
             SubType = Bitmap;
-          
         }
         field(50108; Designation; Text[100])
         {
@@ -50,5 +49,5 @@ tableextension 50075 UserSetUp extends "User Setup"//B2BSSD20MAR2023
         }
         //B2BKM24APR2024 >>
     }
- 
+
 }

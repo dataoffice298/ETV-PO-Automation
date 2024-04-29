@@ -412,6 +412,7 @@ codeunit 50018 "Approvals MGt 4"
                         EmailMessage.AppendToBody('<BR></BR>');
                         EmailMessage.AppendToBody('This is auto generated mail by system for information.');
                         Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
+                        Message('Email Send Successfully');
                     end;
 
 
@@ -704,6 +705,7 @@ codeunit 50018 "Approvals MGt 4"
                         EmailMessage.AppendToBody('<BR></BR>');
                         EmailMessage.AppendToBody('This is auto generated mail by system for information.');
                         Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
+                        Message('Email Send Successfully');
                     end;
 
                     IndentRequisitionLine.RESET;

@@ -59,21 +59,20 @@ pageextension 50073 pageextension70000001 extends "Purchase Quote"
                 ApplicationArea = All;
                 Editable = false;
             }
+            field("Shortcut Dimension 3 Code"; Rec."Shortcut Dimension 3 Code")
+            {
+                ApplicationArea = All;
+                Caption = 'Project Code';
+            }
         }
         //B2BSSD25Jan2023<<
         addafter(PurchLines)
         {
-            /* part(TrermsAndCondition; "Terms and Condition")
+            part(TrermsAndCondition; "Terms and Condition")
             {
                 ApplicationArea = all;
                 SubPageLink = DocumentNo = field("No.");
                 SubPageView = where(DocumentType = const(Quote));
-                UpdatePropagation = Both;
-            } */
-            part(TrermsAndCondition; "Terms and Condition")
-            {
-                ApplicationArea = all;
-                SubPageLink = DocumentNo = field("Buy-from Vendor No.");
                 UpdatePropagation = Both;
             }
         }

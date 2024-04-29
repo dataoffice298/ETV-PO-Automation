@@ -147,6 +147,14 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
         {
             DataClassification = CustomerContent;
         }
+        field(50123; "Shortcut Dimension 3 Code"; Code[20])
+        {
+            Caption = 'Shortcut Dimension 3 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(3),
+            Blocked = CONST(false));
+            DataClassification = CustomerContent;
+
+        }
     }
 
 

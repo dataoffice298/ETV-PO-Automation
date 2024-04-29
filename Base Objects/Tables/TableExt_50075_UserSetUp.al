@@ -23,20 +23,39 @@ tableextension 50075 UserSetUp extends "User Setup"//B2BSSD20MAR2023
             DataClassification = CustomerContent;
             Caption = 'Accept/Reject';
         }
-       /* field(50104; "FA Class"; Boolean)
-        {
-            DataClassification = ToBeClassified;
-        }
-        field(50105; "FA Sub Class"; Boolean)
-        {
-            DataClassification = ToBeClassified;
-        }*/
+        /* field(50104; "FA Class"; Boolean)
+         {
+             DataClassification = ToBeClassified;
+         }
+         field(50105; "FA Sub Class"; Boolean)
+         {
+             DataClassification = ToBeClassified;
+         }*/
         field(50106; "QR Code"; Boolean)
         {
             DataClassification = ToBeClassified;
         }
-        
+        //B2BKM24APR2024 <<
+        field(50107; "User Signature"; Media)
+        {
+            Caption = 'User Signature';
+            DataClassification = CustomerContent;
 
+        }
 
+        field(50108; Designation; Text[100])
+        {
+            Caption = 'Designation';
+            DataClassification = ToBeClassified;
+        }
+        //B2BKM24APR2024 >>
+        field(50109; "Import Signature"; Boolean)
+        {
+            Caption = 'Import Signature';
+            DataClassification = ToBeClassified;
+            Editable = false;
+
+        }
     }
+
 }

@@ -606,9 +606,12 @@ codeunit 50016 "MyBaseSubscr"
         Text001: Label 'Please find Indent Number: %1 dt.%2 is raised for the purpose %3 is waiting for your approval.  Please approve the same.';
         Text002: Label 'Please find Indent Requisition Number: %1 dt.%2 is raised for the purpose %3 is waiting for your approval.  Please approve the same.';
         Sub: Label 'Request for Indent Approval';
+        Sub1: Label 'Request for Indent Requisition Approval';
         ApprovalEntryLRec: Record "Approval Entry";
         IndentReqHead: Record "Indent Req Header";
-
+        PurchaseHeader: Record "Purchase Header";
+        Text003: Label 'Please find Purchase Order Number: %1 dt.%2 is waiting for your approval.  Please approve the same.';
+        Sub2: Label 'Request for Purchase Order Approval';
 
     begin
         ApprovalEntryLRec.Reset();
@@ -631,13 +634,13 @@ codeunit 50016 "MyBaseSubscr"
                 EmailMessage.AppendToBody('This is auto generated mail by system for approval information.');
                 Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
                 Message('Email Send Successfully');
-            end else begin
+            end else
                 if IndentReqHead.Get(ApprovalEntry."Document No.") then begin
                     UserSetup.Get(ApprovalEntryLRec."Approver ID");
                     UserSetup.TestField("E-Mail");
                     Recipiants.Add(UserSetup."E-Mail");
                     Body += StrSubstNo(Text002, IndentReqHead."No.", IndentReqHead."Document Date", IndentReqHead.Purpose);
-                    EmailMessage.Create(Recipiants, Sub, '', true);
+                    EmailMessage.Create(Recipiants, Sub1, '', true);
                     EmailMessage.AppendToBody('Dear Sir/Madam,');
                     EmailMessage.AppendToBody('<BR></BR>');
                     EmailMessage.AppendToBody('<BR></BR>');
@@ -647,8 +650,23 @@ codeunit 50016 "MyBaseSubscr"
                     EmailMessage.AppendToBody('This is auto generated mail by system for approval information.');
                     Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
                     Message('Email Send Successfully');
-                end;
-            end;
+                end else
+                    if PurchaseHeader.Get(PurchaseHeader."Document Type"::Order, ApprovalEntry."Document No.") then begin
+                        UserSetup.Get(ApprovalEntryLRec."Approver ID");
+                        UserSetup.TestField("E-Mail");
+                        Recipiants.Add(UserSetup."E-Mail");
+                        Body += StrSubstNo(Text003, PurchaseHeader."No.", PurchaseHeader."Document Date");
+                        EmailMessage.Create(Recipiants, Sub2, '', true);
+                        EmailMessage.AppendToBody('Dear Sir/Madam,');
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody(Body);
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody('This is auto generated mail by system for approval information.');
+                        Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
+                        Message('Email Send Successfully');
+                    end;
         end;
     end;
 
@@ -725,9 +743,13 @@ codeunit 50016 "MyBaseSubscr"
         Text001: Label 'Please find Indent Number: %1 dt.%2 is raised for the purpose %3 has been Delegated for Approval. Please Approve the same.';
         Text002: Label 'Please find Indent Requisition Number: %1 dt.%2 is raised for the purpose %3 has been Delegated for Approval. Please Approve the same.';
         Sub: Label 'Indent Approval Status';
+        Sub1: Label 'Indent Requisition Approval Status';
         ApprovalEntryLRec: Record "Approval Entry";
         IndentReqHead: Record "Indent Req Header";
         ApprovalUserSetup: Record "User Setup";
+        Text003: Label 'Please find Purchase Order Number: %1 dt.%2 has been Delegated for Approval. Please Approve the same.';
+        Sub2: Label 'Purchase Order Approval Status';
+        PurchaseHeader: Record "Purchase Header";
     begin
         ApprovalEntryLRec.Reset();
         ApprovalEntryLRec.SetRange("Document No.", ApprovalEntry."Document No.");
@@ -749,7 +771,7 @@ codeunit 50016 "MyBaseSubscr"
                 EmailMessage.AppendToBody('This is auto generated mail by system for information.');
                 Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
                 Message('Email Send Successfully');
-            end else begin
+            end else
                 if IndentReqHead.Get(ApprovalEntry."Document No.") then begin
                     IndentHead.Get(IndentReqHead."Indent No.");
                     if ApprovalUserSetup.Get(ApprovalEntryLRec."Approver ID") then
@@ -757,7 +779,7 @@ codeunit 50016 "MyBaseSubscr"
                     UserSetup.TestField("E-Mail");
                     Recipiants.Add(UserSetup."E-Mail");
                     Body += StrSubstNo(Text001, IndentReqHead."No.", IndentReqHead."Document Date", IndentReqHead.Purpose);
-                    EmailMessage.Create(Recipiants, Sub, '', true);
+                    EmailMessage.Create(Recipiants, Sub1, '', true);
                     EmailMessage.AppendToBody('Dear Sir/Madam,');
                     EmailMessage.AppendToBody('<BR></BR>');
                     EmailMessage.AppendToBody('<BR></BR>');
@@ -767,9 +789,52 @@ codeunit 50016 "MyBaseSubscr"
                     EmailMessage.AppendToBody('This is auto generated mail by system for information.');
                     Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
                     Message('Email Send Successfully');
-                end;
-            end;
+                end else
+                    if PurchaseHeader.Get(PurchaseHeader."Document Type"::Order, ApprovalEntry."Document No.") then begin
+                        if ApprovalUserSetup.Get(ApprovalEntryLRec."Approver ID") then
+                            UserSetup.Get(ApprovalUserSetup."Approver ID");
+                        UserSetup.TestField("E-Mail");
+                        Recipiants.Add(UserSetup."E-Mail");
+                        Body += StrSubstNo(Text003, PurchaseHeader."No.", PurchaseHeader."Document Date");
+                        EmailMessage.Create(Recipiants, Sub2, '', true);
+                        EmailMessage.AppendToBody('Dear Sir/Madam,');
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody(Body);
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody('This is auto generated mail by system for information.');
+                        Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
+                        Message('Email Send Successfully');
+                    end;
         end;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Purchase Document", 'OnAfterReleasePurchaseDoc', '', false, false)]
+    local procedure OnAfterReleasePurchaseDoc(var PurchaseHeader: Record "Purchase Header"; PreviewMode: Boolean; var LinesWereModified: Boolean)
+    var
+        UserSetup: Record "User Setup";
+        Email: Codeunit Email;
+        EmailMessage: Codeunit "Email Message";
+        Recipiants: List of [Text];
+        Body: Text;
+        Text001: Label 'Please find Purchase Order Number: %1 dt. %2 has been approved by your HOD.';
+        Sub: Label 'Request for Purchase Order Approval';
+    begin
+        UserSetup.Get(PurchaseHeader."User Id");
+        UserSetup.TestField("E-Mail");
+        Recipiants.Add(UserSetup."E-Mail");
+        Body += StrSubstNo(Text001, PurchaseHeader."No.", PurchaseHeader."Document Date");
+        EmailMessage.Create(Recipiants, Sub, '', true);
+        EmailMessage.AppendToBody('Dear Indenter,');
+        EmailMessage.AppendToBody('<BR></BR>');
+        EmailMessage.AppendToBody('<BR></BR>');
+        EmailMessage.AppendToBody(Body);
+        EmailMessage.AppendToBody('<BR></BR>');
+        EmailMessage.AppendToBody('<BR></BR>');
+        EmailMessage.AppendToBody('This is auto generated mail by system for information.');
+        Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
+        Message('Email Send Successfully');
     end;
 }
 

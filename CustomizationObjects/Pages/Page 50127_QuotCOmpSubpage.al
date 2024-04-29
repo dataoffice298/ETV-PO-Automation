@@ -54,7 +54,7 @@ page 50127 QuotationComparSubForm
                     Editable = false;
                     ApplicationArea = all;
                 }
-                
+
                 field("Variant Code"; Rec."Variant Code")
                 {
                     Editable = false;
@@ -480,6 +480,11 @@ page 50127 QuotationComparSubForm
                 {
                     ApplicationArea = All;
                     Caption = 'warranty';
+                }
+                field("Shortcut Dimension 3 Code"; "Shortcut Dimension 3 Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Project Code';
                 }
             }
         }

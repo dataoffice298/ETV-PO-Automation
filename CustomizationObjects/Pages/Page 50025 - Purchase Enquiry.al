@@ -86,6 +86,11 @@ page 50025 "Purchase Enquiry"
                     ApplicationArea = All;
                     Caption = 'Purpose';
                 }
+                field("Shortcut Dimension 3 Code"; Rec."Shortcut Dimension 3 Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Project Code';
+                }
 
             }
             part(PurchLines; "Purchase Enquiry Subform")

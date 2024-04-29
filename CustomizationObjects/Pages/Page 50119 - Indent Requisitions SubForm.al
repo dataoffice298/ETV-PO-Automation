@@ -236,6 +236,12 @@ page 50119 "Indent Requisitions SubForm"
                     Editable = false;
                     Caption = 'Pervious PO Vendor';
                 }
+                field("Shortcut Dimension 3 Code"; Rec."Shortcut Dimension 3 Code")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Project Code';
+                    Editable = false;
+                }
 
             }
         }

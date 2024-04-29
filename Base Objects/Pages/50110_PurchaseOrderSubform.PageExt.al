@@ -165,6 +165,12 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 ApplicationArea = All;
                 Caption = 'warranty';
             }
+            field("Shortcut Dimension 3 Code"; Rec."Shortcut Dimension 3 Code")
+            {
+                ApplicationArea = All;
+                Caption = 'Project Code';
+                //Visible = false; //B2BKM25APR2024
+            }
         }
         addafter("Gen. Prod. Posting Group")//B2BSSD24Feb2023
         {
@@ -314,6 +320,10 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 end;
 
             end;
+        }
+        modify(ShortcutDimCode3) //B2BKM24APR2024
+        {
+            Visible = false;
         }
         /*  modify(Type)
          {
@@ -767,7 +777,10 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 Caption = 'CWIP Details';
                 trigger OnAction()
                 begin
+
+                    Rec.OpenCWIPDetails();
                   //  Rec.OpenCWIPDetails(); april27
+
                 end;
             }
         }

@@ -190,7 +190,11 @@ page 50159 "Inward Gate Entry-RGP"
                 {
                     ApplicationArea = All;
                     Importance = Additional;//B2BSSD31MAR2023
+
+                    ShowMandatory = true;
+
                     ShowMandatory = true;//B2BKM24APR2024
+
                 }
                 //B2BSSD22Dec2022>>
                 field("Challan No."; Rec."Challan No.")
@@ -298,6 +302,7 @@ page 50159 "Inward Gate Entry-RGP"
                     Image = ReleaseDoc;
                     trigger OnAction()
                     begin
+                        Rec.TestField("Receipt Date"); //B2BKM29APR2024
                         Rec.CHECKMAND();
                         // IF WorkflowManagement.CanExecuteWorkflow(Rec, allinoneCU.RunworkflowOnSendGATEforApprovalCode()) then
                         //   error('Workflow is enabled. You can not release manually.');

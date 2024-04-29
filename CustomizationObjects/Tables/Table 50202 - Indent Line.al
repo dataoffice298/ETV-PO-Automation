@@ -22,7 +22,7 @@ table 50202 "Indent Line"
         field(3; "No."; Code[30])
         {
             Description = 'PO1.0';
-            TableRelation = IF (Type = CONST(Item)) Item WHERE(Blocked = FILTER(FALSE))
+            TableRelation = IF (Type = CONST(Item)) Item where(Blocked = const(false))
             ELSE
             IF (Type = CONST("Fixed Assets")) "Fixed Asset"
             ELSE
@@ -519,7 +519,13 @@ table 50202 "Indent Line"
         {
             DataClassification = ToBeClassified;
         }
-
+        field(50027; "Shortcut Dimension 3 Code"; Code[20])
+        {
+            Caption = 'Shortcut Dimension 3 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(3),
+            Blocked = CONST(false));
+            DataClassification = CustomerContent;
+        }
 
     }
 
@@ -554,6 +560,7 @@ table 50202 "Indent Line"
             Validate("Shortcut Dimension 1 Code", IndHdr."Shortcut Dimension 1 Code");
             Validate("Shortcut Dimension 2 Code", IndHdr."Shortcut Dimension 2 Code");
             Validate("Shortcut Dimension 9 Code", IndHdr."Shortcut Dimension 9 Code");//B2BSSD20FEB2023
+            Validate("Shortcut Dimension 3 Code", IndHdr."Shortcut Dimension 3 Code");
 
             //B2BSSD06JUN2023>>
             "Avail.Qty" := 0;

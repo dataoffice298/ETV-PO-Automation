@@ -1,4 +1,6 @@
-/* page 50193 "Posted CWIP"
+
+page 50193 "Posted CWIP"
+
 {
     PageType = Document;
     UsageCategory = None;
@@ -94,4 +96,6 @@
             }
         }
     }
-} */
+
+}
+

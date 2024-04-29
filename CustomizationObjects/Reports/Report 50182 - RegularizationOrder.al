@@ -30,6 +30,12 @@ report 50182 "Regularization Order"
             }
             column(No_; "No.")
             { }
+            column(Signiture; UserSetup."User Signature")
+            { }
+            column(Designation; UserSetup.Designation)
+            { }
+            column(FullName; User."Full Name")
+            { }
             column(Picture_CompanyInfo; CompanyInfo.Picture)
             { }
             column(Name_CompanyInfo; CompanyInfo.Name)
@@ -124,7 +130,6 @@ report 50182 "Regularization Order"
             { }
             column(ContactPhNo; ContactPhNo)
             { }
-
             dataitem("Purchase Line"; "Purchase Line")
             {
                 DataItemLink = "Document No." = field("No.");
@@ -295,7 +300,6 @@ report 50182 "Regularization Order"
                 column(GSTAmountLine; GSTAmountLine[I])
                 { }
 
-
                 trigger OnPreDataItem()
                 begin
                     Clear(GSTGroupCode);
@@ -358,7 +362,15 @@ report 50182 "Regularization Order"
                 NextLoop := false;
                 CompanyInfo.get;
                 CompanyInfo.CalcFields(Picture);
-
+                ApprovalEntries.Reset();
+                ApprovalEntries.SetRange("Table ID", 38);
+                ApprovalEntries.SetRange("Document Type", "Purchase Header"."Document Type"::Order);
+                ApprovalEntries.SetRange("Document No.", "Purchase Header"."No.");
+                ApprovalEntries.SetRange(Status, ApprovalEntries.Status::Approved);
+                if ApprovalEntries.findlast() then begin
+                    UserSetup.Get(UserId);
+                    User.Get(UserSecurityId);
+                end;
                 if StateGRec.Get(CompanyInfo."State Code") then;
 
                 if VendorGRec.Get("Buy-from Vendor No.") then;
@@ -471,6 +483,9 @@ report 50182 "Regularization Order"
     }
 
     var
+        ApprovalEntries: Record "Approval Entry";
+        UserSetup: Record "User Setup";
+        User: Record User;
         SpecID: Text[250];
         SpecID1: Text[250];
         CurrencyCode: Code[10];

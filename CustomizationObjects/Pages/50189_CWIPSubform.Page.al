@@ -1,4 +1,6 @@
-/* page 50189 "CWIP Subform"
+
+page 50189 "CWIP Subform"
+
 {
     PageType = ListPart;
     SourceTable = "CWIP Line";
@@ -134,4 +136,5 @@
             }
         }
     }
-} */
+
+}

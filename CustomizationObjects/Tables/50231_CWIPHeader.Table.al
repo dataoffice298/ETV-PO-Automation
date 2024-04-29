@@ -1,4 +1,6 @@
-/* table 50231 "CWIP Header"
+
+table 50231 "CWIP Header"
+
 {
     Caption = 'CWIP Header';
     DataClassification = CustomerContent;
@@ -479,6 +481,11 @@
 
                 UpdateCWIPLedgerEntryAfterFAPosted(CWIPLine);
 
+            /* if PrevItemNo <> CWIPLine."Item No." then begin
+                PrevItemNo := CWIPLine."Item No.";
+                PostNegativeAdjustmentForItem(CWIPLine);
+            end; */
+
             until CWIPLine.Next() = 0;
             Posted := true;
             Modify();
@@ -612,4 +619,4 @@
         ItemJnlPostLine.RunWithCheck(ItemJnlLine);
     end;
 }
- */
+

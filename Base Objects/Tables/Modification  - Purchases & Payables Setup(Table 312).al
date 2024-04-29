@@ -151,6 +151,11 @@ tableextension 50057 tableextension70000012 extends "Purchases & Payables Setup"
             DataClassification = CustomerContent;
             TableRelation = "Workflow User Group";
         }
+        field(50113; "Indent Store Location"; Code[10])
+        {
+            DataClassification = CustomerContent;
+            TableRelation = Location.Code;
+        }
 
     }
 

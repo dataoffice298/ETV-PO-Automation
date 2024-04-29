@@ -91,6 +91,7 @@ report 50001 "Indent Requestion Lines"
                         IndentRequisitions.Validate("Shortcut Dimension 1 Code", "Shortcut Dimension 1 Code");//B2BPAV
                         IndentRequisitions.Validate("Shortcut Dimension 2 Code", "Shortcut Dimension 2 Code");//B2BPAV
                         IndentRequisitions."Shortcut Dimension 9 Code" := "Indent Line"."Shortcut Dimension 9 Code";//B2BSSD20FEB2023
+                        IndentRequisitions.Validate("Shortcut Dimension 3 Code", "Shortcut Dimension 3 Code"); //B2BVCOn02April2024
                         IndentRequisitions."Sub Location Code" := "Issue Sub Location";
                         IndentRequisitions."Unit of Measure" := "Unit of Measure";//B2BSSD14MAR2023
                         IndentRequisitions."Spec Id" := "Spec Id";
@@ -106,6 +107,7 @@ report 50001 "Indent Requestion Lines"
                             IndentReqHeaderGRec.Validate("Shortcut Dimension 1 Code", "Shortcut Dimension 1 Code");//B2BPAV
                             IndentReqHeaderGRec.Validate("Shortcut Dimension 2 Code", "Shortcut Dimension 2 Code");//B2BPAV
                             IndentReqHeaderGRec.Validate("Shortcut Dimension 9 Code", "Shortcut Dimension 9 Code");//B2BSSD21Feb2023
+                            IndentReqHeaderGRec.Validate("Shortcut Dimension 3 Code", "Shortcut Dimension 3 Code"); //B2BVCOn02April2024
                             IndentReqHeaderGRec."programme Name" := "Indent Header"."programme Name";//B2BSSD20MAR2023
                             IndentReqHeaderGRec.Purpose := "Indent Header".Purpose;//B2BSSD21MAR2023
                             IndentReqHeaderGRec."Indent No." := IndentRequisitions."Indent No.";

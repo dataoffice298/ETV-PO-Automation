@@ -193,6 +193,31 @@ tableextension 50052 tableextension70000003 extends "Purch. Rcpt. Line"
             DataClassification = CustomerContent;
             Editable = false;
         }
+        modify("Variant Code")  //B2BKM29APR2024
+        {
+            trigger OnAfterValidate()
+            var
+                ItemVariant: Record "Item Variant";
+                Item: Record Item;
+            begin
+                if "Variant Code" <> '' then begin
+                    if ItemVariant.Get("No.", "Variant Code") then
+                        "Variant Description" := ItemVariant.Description;
+                    if "No." <> '' then begin
+                        if Item.get("No.") then
+                            Description := Item.Description;
+                    end;
+                end else
+                    "Variant Description" := '';
+            end;
+        }
+        field(60052; "Variant Description"; Text[100]) //B2BKM29APR2024
+        {
+            Caption = 'Variant Description';
+            DataClassification = CustomerContent;
+            Editable = false;
+
+        }
     }
     keys
     {

@@ -40,9 +40,9 @@ report 50194 "GRN Register"//B2BSSD14JUN2023
 
                         if PostedRGPInwardGRec.findset() then begin
                             repeat
-                                RgpInwardRecieptDate := PostedRGPInwardGRec."Receipt Date";//B2BKM25APR2024
                                 RgpInwardNo := PostedRGPInwardGRec."No.";
                                 RgpInwardDate := PostedRGPInwardGRec."Document Date";
+                                RgpInwardRecieptDate := PostedRGPInwardGRec."Receipt Date";//B2BKM25APR2024
                             until PostedRGPInwardGRec.Next() = 0;
                         end;
 

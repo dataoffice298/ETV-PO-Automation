@@ -509,8 +509,43 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                     end;
                 end;
             }
+
         }
         //B2BVCOn12Mar2024 <<
+        modify(SendApprovalRequest)
+        {
+            trigger OnAfterAction()
+            var
+                UserSetup: Record "User Setup";
+                Email: Codeunit Email;
+                EmailMessage: Codeunit "Email Message";
+                Recipiants: List of [Text];
+                Body: Text;
+                Sub: Label 'Request for Purchase Order Approval';
+                ApprovalEntryLRec: Record "Approval Entry";
+                Text001: Label 'Please find Purchase Order Number: %1 dt.%2 is waiting for your approval.  Please approve the same.';
+            begin
+                ApprovalEntryLRec.Reset();
+                ApprovalEntryLRec.SetRange("Document No.", Rec."No.");
+                ApprovalEntryLRec.SetRange(Status, ApprovalEntryLRec.Status::Open);
+                if ApprovalEntryLRec.FindFirst() then begin
+                    UserSetup.Get(ApprovalEntryLRec."Approver ID");
+                    UserSetup.TestField("E-Mail");
+                    Recipiants.Add(UserSetup."E-Mail");
+                    Body += StrSubstNo(Text001, Rec."No.", Rec."Document Date", Rec.Purpose);
+                    EmailMessage.Create(Recipiants, Sub, '', true);
+                    EmailMessage.AppendToBody('Dear Sir/Madam,');
+                    EmailMessage.AppendToBody('<BR></BR>');
+                    EmailMessage.AppendToBody('<BR></BR>');
+                    EmailMessage.AppendToBody(Body);
+                    EmailMessage.AppendToBody('<BR></BR>');
+                    EmailMessage.AppendToBody('<BR></BR>');
+                    EmailMessage.AppendToBody('This is auto generated mail by system for approval information.');
+                    Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
+                    Message('Email Send Successfully');
+                end;
+            end;
+        }
 
     }
     //B2BVCOn12Mar2024 >>

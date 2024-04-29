@@ -1,4 +1,6 @@
+
 table 50232 "CWIP Line"
+
 {
     Caption = 'CWIP Line';
     DataClassification = CustomerContent;
@@ -207,3 +209,4 @@ table 50232 "CWIP Line"
         DimMgt.ValidateShortcutDimValues(FieldNumber, ShortcutDimCode, "Dimension Set ID");
     end;
 }
+

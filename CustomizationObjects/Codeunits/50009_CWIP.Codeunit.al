@@ -1,4 +1,6 @@
+
 codeunit 50009 CWIP
+
 {
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPostPurchaseDoc', '', false, false)]
     local procedure OnAfterPostPurchaseDoc(var PurchaseHeader: Record "Purchase Header"; PurchRcpHdrNo: Code[20])
@@ -341,4 +343,7 @@ codeunit 50009 CWIP
         IncDocOCRWorkflowCodeTxt: Label 'INCDOC-CWIP';
         CWIPTypeCondnTxt: Label '<?xml version="1.0" encoding="utf-8" standalone="yes"?><ReportParameters><DataItems><DataItem name="CWIP">%1</DataItem></DataItems></ReportParameters>', Comment = '%1 = Data Item Name';
     //CWIP Approval Ends<<
+
 }
+
+

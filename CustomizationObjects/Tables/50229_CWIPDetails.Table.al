@@ -1,4 +1,6 @@
+
 table 50229 "CWIP Details"
+
 {
     Caption = 'CWIP Details';
     DataClassification = CustomerContent;
@@ -99,3 +101,5 @@ table 50229 "CWIP Details"
         end;
     end;
 }
+
+

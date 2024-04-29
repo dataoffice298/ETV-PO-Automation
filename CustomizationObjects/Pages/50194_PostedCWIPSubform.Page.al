@@ -1,4 +1,6 @@
+
 page 50194 "Posted CWIP Subform"
+
 {
     PageType = ListPart;
     SourceTable = "CWIP Line";
@@ -110,6 +112,7 @@ page 50194 "Posted CWIP Subform"
                 }
                 field("No. of Depreciation Years"; Rec."No. of Depreciation Years")
                 {
+
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the No. of Depreciation Years field.';
                     Caption = 'No. of Depreciation Years';
@@ -118,7 +121,14 @@ page 50194 "Posted CWIP Subform"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the FA Asset No. field.';
-                    Caption = 'Fixed Asset No.';
+                }
+                
+                field("Fixed Asset No."; Rec."Fixed Asset No.")
+                {
+                    ApplicationArea = All;
+                    ToolTi    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the No. of Depreciation Years field.';
+                    Caption = 'No. of Depreciation Years';
                 }
                 field("Fixed Asset Name"; Rec."Fixed Asset Name")
                 {
@@ -129,4 +139,6 @@ page 50194 "Posted CWIP Subform"
             }
         }
     }
+
 }
+

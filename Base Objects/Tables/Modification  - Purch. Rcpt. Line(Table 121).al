@@ -193,6 +193,7 @@ tableextension 50052 tableextension70000003 extends "Purch. Rcpt. Line"
             DataClassification = CustomerContent;
             Editable = false;
         }
+
         modify("Variant Code")  //B2BKM29APR2024
         {
             trigger OnAfterValidate()
@@ -218,6 +219,7 @@ tableextension 50052 tableextension70000003 extends "Purch. Rcpt. Line"
             Editable = false;
 
         }
+
     }
     keys
     {

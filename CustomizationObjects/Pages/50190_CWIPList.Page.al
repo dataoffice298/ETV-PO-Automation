@@ -1,17 +1,13 @@
-
-page 50192 "Posted CWIP List"
-
+/* page 50190 "CWIP List"
 {
     PageType = list;
     ApplicationArea = All;
-    UsageCategory = History;
+    UsageCategory = Lists;
     SourceTable = "CWIP Header";
-    CardPageId = "Posted CWIP";
-    InsertAllowed = false;
-    DeleteAllowed = false;
-    ModifyAllowed = false;
-    SourceTableView = where(Posted = const(true));
-    Caption = 'Posted CWIP List';
+    CardPageId = CWIP;
+    Editable = false;
+    SourceTableView = where(Posted = const(false));
+    Caption = 'CWIP List';
     layout
     {
         area(Content)
@@ -68,6 +64,4 @@ page 50192 "Posted CWIP List"
             }
         }
     }
-
-}
-
+} */

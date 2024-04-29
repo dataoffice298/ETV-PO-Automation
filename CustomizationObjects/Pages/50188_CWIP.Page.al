@@ -1,4 +1,6 @@
+
 page 50188 CWIP
+
 {
     PageType = Document;
     UsageCategory = None;
@@ -243,4 +245,6 @@ page 50188 CWIP
         CanCancelapprovalforrecord: Boolean;
         CanCancelapprovalforflow: Boolean;
         CanrequestApprovForFlow: Boolean;
+
 }
+

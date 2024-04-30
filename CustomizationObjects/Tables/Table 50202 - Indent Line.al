@@ -554,8 +554,10 @@ table 50202 "Indent Line"
     var
         IndHdr: Record "Indent Header";
     begin
-        Compsetup.GET;
-        "Delivery Location" := Compsetup."Location Code";
+        //Compsetup.GET;
+        //"Delivery Location" := Compsetup."Location Code";
+        PurchSetUp.Get();
+        "Delivery Location" := PurchSetUp."Indent Store Location";
         If IndHdr.GET("Document No.") then begin
             Validate("Shortcut Dimension 1 Code", IndHdr."Shortcut Dimension 1 Code");
             Validate("Shortcut Dimension 2 Code", IndHdr."Shortcut Dimension 2 Code");
@@ -584,6 +586,7 @@ table 50202 "Indent Line"
     end;
 
     var
+        PurchSetUp: Record "Purchases & Payables Setup";
         IndentHeader: Record "Indent Header";
         Item: Record 27;
         ItemVariant: Record 5401;

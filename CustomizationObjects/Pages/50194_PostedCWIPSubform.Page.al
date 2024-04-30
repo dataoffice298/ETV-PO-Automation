@@ -123,13 +123,6 @@ page 50194 "Posted CWIP Subform"
                     ToolTip = 'Specifies the value of the FA Asset No. field.';
                 }
                 
-                field("Fixed Asset No."; Rec."Fixed Asset No.")
-                {
-                    ApplicationArea = All;
-                    ToolTi    ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the No. of Depreciation Years field.';
-                    Caption = 'No. of Depreciation Years';
-                }
                 field("Fixed Asset Name"; Rec."Fixed Asset Name")
                 {
                     ApplicationArea = All;

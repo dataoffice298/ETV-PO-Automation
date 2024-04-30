@@ -1660,6 +1660,7 @@ codeunit 50026 "PO Automation"
                             PurchaseHeader.validate("Shortcut Dimension 1 Code", IndentVendorEnquiry."Shortcut Dimension 1 Code");//B2BPAV
                             PurchaseHeader.validate("Shortcut Dimension 2 Code", IndentVendorEnquiry."Shortcut Dimension 2 Code");//B2BPAV
                             PurchaseHeader.Validate("Shortcut Dimension 9 Code", IndentVendorEnquiry."Shortcut Dimension 9 Code");//B2BSSD21FEB2023
+                            PurchaseHeader.Validate("Shortcut Dimension 3 Code", IndentVendorEnquiry."Shortcut Dimension 3 Code"); //B2BVCOn30April2024
                             PurchaseHeader."Programme Name" := IndentVendorEnquiry."Programme Name";//B2BSSD20MAR2023
                             PurchaseHeader.Purpose := IndentVendorEnquiry.Purpose; //B2BSSD21MAR2023
                             PurchaseHeader.Modify(true);
@@ -1775,7 +1776,7 @@ codeunit 50026 "PO Automation"
                                 if CreateIndents2.FindFirst() then
                                     PurchaseLine."Shortcut Dimension 3 Code" := CreateIndents2."Shortcut Dimension 3 Code";
                             until DimValue.Next() = 0;
-                        //B2BKM26APR2024 >>
+                    //B2BKM26APR2024 >>
                     UNTIL IndentVendorEnquiry.NEXT = 0;
             UNTIL IndentVendorItems.NEXT = 0;
     end;

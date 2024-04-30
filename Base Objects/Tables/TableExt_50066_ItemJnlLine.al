@@ -26,6 +26,13 @@ tableextension 50066 ItemJnlLine extends "Item Journal Line"
         {
             DataClassification = CustomerContent;
         }
+        field(50160; "Shortcut Dimension 3 Code"; Code[20]) //B2BVCOn30April2024
+        {
+            Caption = 'Shortcut Dimension 3 Code';
+            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(3),
+            Blocked = CONST(false));
+            DataClassification = CustomerContent;
+        }
 
     }
 

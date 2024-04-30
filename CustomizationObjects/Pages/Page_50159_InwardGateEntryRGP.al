@@ -190,6 +190,7 @@ page 50159 "Inward Gate Entry-RGP"
                 {
                     ApplicationArea = All;
                     Importance = Additional;//B2BSSD31MAR2023
+
                     ShowMandatory = true;//B2BKM24APR2024
                 }
                 //B2BSSD22Dec2022>>

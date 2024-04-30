@@ -368,8 +368,12 @@ report 50182 "Regularization Order"
                 ApprovalEntries.SetRange("Document No.", "Purchase Header"."No.");
                 ApprovalEntries.SetRange(Status, ApprovalEntries.Status::Approved);
                 if ApprovalEntries.findlast() then begin
-                    UserSetup.Get(UserId);
-                    User.Get(UserSecurityId);
+                    if "Purchase Header".Status = "Purchase Header".Status::Released then begin
+                        UserSetup.Get(ApprovalEntries."Approver ID");
+                        User.Reset();
+                        User.SetRange("User Name", UserSetup."User ID");
+                        if User.FindFirst() then;
+                    end;
                 end;
                 if StateGRec.Get(CompanyInfo."State Code") then;
 

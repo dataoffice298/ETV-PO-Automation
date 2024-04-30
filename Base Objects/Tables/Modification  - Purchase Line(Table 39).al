@@ -479,6 +479,10 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(3),
             Blocked = CONST(false));
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                ValidateShortcutDimCode(3, "Shortcut Dimension 3 Code");
+            end;
         }
         field(60060; "RFQ No."; Code[20])
         {

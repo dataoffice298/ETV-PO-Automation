@@ -153,6 +153,10 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(3),
             Blocked = CONST(false));
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                ValidateShortcutDimCode(3, "Shortcut Dimension 3 Code");
+            end;
 
         }
         field(50124; "Purchase order"; Boolean) //B2BKM30APR2024

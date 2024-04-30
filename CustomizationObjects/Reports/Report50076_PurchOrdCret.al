@@ -45,6 +45,7 @@ report 50076 "Purchase Order Creation New"
                 QuotCompHdr: Record QuotCompHdr; //B2BMSOn18Oct2022
                 PurchaseHead: Record "Purchase Header"; //B2BVCOn03Mar2024
                 IndentReqLine: Record "Indent Requisitions";
+                PurchHeaderQuote: Record "Purchase Header";
             begin
 
                 PurchaseHeader.RESET;
@@ -97,6 +98,9 @@ report 50076 "Purchase Order Creation New"
                             PurchaseHeaderOrder.Regularization := QuotCompHdr.Regularization;
                         PurchaseHeaderOrder."Indent Requisition No" := "Quotation Comparison1"."Indent Req. No.";
                         //B2BMSOn18Oct2022<<
+                        if PurchHeaderQuote.Get(PurchHeaderQuote."Document Type"::Quote, "Quotation Comparison1"."Parent Quote No.") then
+                            PurchaseHeaderOrder."Responsibility Center" := PurchHeaderQuote."Responsibility Center"; //B2BVCOn30April2024
+
                         PurchaseHeaderOrder.Modify();
                     end; //B2BMSOn18Oct2022
                     PurchaseLine.Reset();

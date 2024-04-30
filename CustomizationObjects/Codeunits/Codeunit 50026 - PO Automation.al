@@ -247,6 +247,7 @@ codeunit 50026 "PO Automation"
         PrevVendor: Code[20];
         IndentLineRec: Record "Indent Line";
         IndentReqLine: Record "Indent Requisitions";
+        IndentReqHeader: Record "Indent Req Header";
     begin
         PPSetup.GET;
         CreateIndents4.COPYFILTERS(CreateIndentsEnquiry);
@@ -283,6 +284,15 @@ codeunit 50026 "PO Automation"
                         PurchaseHeader.Validate("Shortcut Dimension 2 Code", IndentVendorEnquiry."Shortcut Dimension 2 Code");//B2BPAV
                         PurchaseHeader.Validate("Shortcut Dimension 9 Code", IndentVendorEnquiry."Shortcut Dimension 9 Code");//B2BSSD21FEB2023
                         PurchaseHeader.Validate("Shortcut Dimension 3 Code", IndentVendorEnquiry."Shortcut Dimension 3 Code");
+                        //B2BVCOn30April2024 >>
+                        CreateIndents2.Reset();
+                        CreateIndents2.SetRange("Document No.", IndentVendorEnquiry."Indent Req No");
+                        CreateIndents2.SetRange("Line No.", IndentVendorEnquiry."Indent Req Line No");
+                        if CreateIndents2.FindFirst() then begin
+                            if IndentReqHeader.Get(CreateIndents2."Document No.") then
+                                PurchaseHeader."Responsibility Center" := IndentReqHeader."Resposibility Center";
+                        end;
+                        //B2BVCOn30April2024 <<
                         PurchaseHeader.Modify(true);
                         LineNo := 10000;
                         REPEAT
@@ -406,6 +416,7 @@ codeunit 50026 "PO Automation"
         BaseUOMQtyMeasure: Decimal;
         PurchUOMQtyMeasure: Decimal;
         IndentReqLine: Record "Indent Requisitions";
+        IndentReqHeader: Record "Indent Req Header";
     begin
         CreateIndents4.COPYFILTERS(CreateIndentsQuotes);
         //InsertIndentItemvendor(CreateIndents4, Vendor);
@@ -439,6 +450,15 @@ codeunit 50026 "PO Automation"
                     PurchaseHeader.VALIDATE("Due Date");
                     PurchaseHeader."Programme Name" := IndentVendorEnquiry."Programme Name";//B2BSSD20MAR2023
                     PurchaseHeader.Purpose := IndentVendorEnquiry.Purpose; //B2BSSD21MAR2023
+                    //B2BVCOn30April2024 >>
+                    CreateIndents2.Reset();
+                    CreateIndents2.SetRange("Document No.", IndentVendorEnquiry."Indent Req No");
+                    CreateIndents2.SetRange("Line No.", IndentVendorEnquiry."Indent Req Line No");
+                    if CreateIndents2.FindFirst() then begin
+                        if IndentReqHeader.Get(CreateIndents2."Document No.") then
+                            PurchaseHeader."Responsibility Center" := IndentReqHeader."Resposibility Center";
+                    end;
+                    //B2BVCOn30April2024 <<
                     PurchaseHeader.Modify(true);
                     REPEAT
                         PurchaseLine.INIT;
@@ -1431,6 +1451,7 @@ codeunit 50026 "PO Automation"
         PurchaseHeader.Validate("Shortcut Dimension 3 Code", Rec."Shortcut Dimension 3 Code");
         PurchaseHeader."Programme Name" := Rec."Programme Name";//B2BSSD20MAR2023
         PurchaseHeader.Purpose := Rec.Purpose;//B2BSSD21MAR2023
+        PurchaseHeader."Responsibility Center" := Rec."Responsibility Center"; //B2BVCOn30April2024
         PurchaseHeader.Modify(true);//B2BSSD21FEB2023
 
 
@@ -1623,6 +1644,7 @@ codeunit 50026 "PO Automation"
         IndentReqLine: Record "Indent Requisitions";
         DimValue: Record "Dimension Value";
         GLSetup: Record "General Ledger Setup";
+        IndentReqHeader: Record "Indent Req Header";
     begin
         CreateIndents4.COPYFILTERS(CreateIndentsQuotes);
         //InsertIndentItemvendor2(CreateIndents4, Vendor);
@@ -1663,6 +1685,15 @@ codeunit 50026 "PO Automation"
                             PurchaseHeader.Validate("Shortcut Dimension 3 Code", IndentVendorEnquiry."Shortcut Dimension 3 Code"); //B2BVCOn30April2024
                             PurchaseHeader."Programme Name" := IndentVendorEnquiry."Programme Name";//B2BSSD20MAR2023
                             PurchaseHeader.Purpose := IndentVendorEnquiry.Purpose; //B2BSSD21MAR2023
+                            //B2                                                   BVCOn30April2024 >>
+                            CreateIndents2.Reset();
+                            CreateIndents2.SetRange("Document No.", IndentVendorEnquiry."Indent Req No");
+                            CreateIndents2.SetRange("Line No.", IndentVendorEnquiry."Indent Req Line No");
+                            if CreateIndents2.FindFirst() then begin
+                                if IndentReqHeader.Get(CreateIndents2."Document No.") then
+                                    PurchaseHeader."Responsibility Center" := IndentReqHeader."Resposibility Center";
+                            end;
+                            //B2BVCOn30April2024 <<
                             PurchaseHeader.Modify(true);
                         end;
                         PurchaseLine.INIT;

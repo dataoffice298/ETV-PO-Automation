@@ -123,6 +123,7 @@ page 50194 "Posted CWIP Subform"
                     ToolTip = 'Specifies the value of the FA Asset No. field.';
                 }
 
+                
                 field("Fixed Asset Name"; Rec."Fixed Asset Name")
                 {
                     ApplicationArea = All;

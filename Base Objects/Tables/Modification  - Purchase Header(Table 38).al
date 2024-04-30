@@ -159,6 +159,11 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
             end;
 
         }
+        field(50124; "Purchase order"; Boolean) //B2BKM30APR2024
+        {
+            Caption = 'Purchase order';
+            DataClassification = CustomerContent;
+        }
     }
 
 

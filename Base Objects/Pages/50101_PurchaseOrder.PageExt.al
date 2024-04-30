@@ -521,6 +521,38 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         //B2BVCOn12Mar2024 <<
         modify(SendApprovalRequest)
         {
+            trigger OnBeforeAction()
+            begin
+                Rec.TestField("Payment Terms Code");
+                Rec.TestField("Transaction Specification");
+                Rec.TestField("Transaction Type");
+                Rec.TestField("Transport Method");
+
+                PurchLine.Reset();
+                PurchLine.SetRange("Document No.", Rec."No.");
+                if PurchLine.FindSet() then begin
+                    repeat
+                        if PurchLine.Type = PurchLine.Type::"Fixed Asset" then begin
+                            PurchLine.TestField("FA Class Code");
+                            PurchLine.TestField("FA SubClass Code");
+                            PurchLine.TestField("Serial No.");
+                            PurchLine.TestField(Make_B2B);
+                            PurchLine.TestField("Model No.");
+                        end;
+                        PurchLine.TestField("GST Group Code");//B2BSCM22SEP2023
+                        PurchLine.TestField("HSN/SAC Code");//B2BSCM22SEP2023
+                    until PurchLine.Next() = 0;
+                end;
+                if (Rec."LC No." = '') then begin
+                    LCDetails.Reset();
+                    LCDetails.SetRange("Issued To/Received From", Rec."Buy-from Vendor No.");
+                    LCDetails.SetRange("Transaction Type", LCDetails."Transaction Type"::Purchase);
+                    LCDetails.SetRange(Released, true);
+                    if LCDetails.FindFirst() then
+                        Error('There is a Released LC document against this Vendor. To proceed, please provide LC No. in Purchase Order');
+                end;
+            end;
+
             trigger OnAfterAction()
             var
                 UserSetup: Record "User Setup";
@@ -553,6 +585,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 end;
             end;
         }
+
 
     }
     //B2BVCOn12Mar2024 >>

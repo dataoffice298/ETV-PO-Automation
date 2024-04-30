@@ -109,6 +109,10 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         }
         addafter(Status)//B2BSSD18JUN2023
         {
+            field("Purchase order"; Rec."Purchase order")
+            {
+                ApplicationArea = All;
+            }
             field("Ammendent Comments"; Rec."Ammendent Comments")
             {
                 ApplicationArea = All;
@@ -190,6 +194,9 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             }
         }
         //B2BSSD14FEB2023>>
+
+
+
 
     }
 

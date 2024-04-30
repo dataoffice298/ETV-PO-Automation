@@ -836,6 +836,19 @@ codeunit 50016 "MyBaseSubscr"
         Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
         Message('Email Send Successfully');
     end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPostItemJnlLine', '', false, false)]
+    local procedure OnAfterPostItemJnlLine(var ItemJournalLine: Record "Item Journal Line"; var PurchaseLine: Record "Purchase Line"; var PurchaseHeader: Record "Purchase Header"; var ItemJnlPostLine: Codeunit "Item Jnl.-Post Line")
+    begin
+        //ItemJournalLine."Shortcut Dimension 3 Code" := PurchaseLine."Shortcut Dimension 3 Code";
+        ItemJournalLine.Validate("Shortcut Dimension 3 Code", PurchaseLine."Shortcut Dimension 3 Code");
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnAfterInitItemLedgEntry', '', false, false)]
+    local procedure OnAfterInitItemLedgEntry(var NewItemLedgEntry: Record "Item Ledger Entry"; var ItemJournalLine: Record "Item Journal Line"; var ItemLedgEntryNo: Integer)
+    begin
+        NewItemLedgEntry."Shortcut Dimension 3 Code" := ItemJournalLine."Shortcut Dimension 3 Code";
+    end;
 }
 
 

@@ -193,8 +193,6 @@ page 50159 "Inward Gate Entry-RGP"
 
                     ShowMandatory = true;
 
-                    ShowMandatory = true;//B2BKM24APR2024
-
                 }
                 //B2BSSD22Dec2022>>
                 field("Challan No."; Rec."Challan No.")

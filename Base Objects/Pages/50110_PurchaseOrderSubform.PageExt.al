@@ -389,13 +389,27 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         var
                             PurChaseHeader: Record "Purchase Header";//B2BSSDJan2023
                             PurchLineLRec: Record "Purchase Line";
+                            //B2BKM2MAY2024 <<
+                            UserSetup: Record "User Setup";
+                            Email: Codeunit Email;
+                            EmailMessage: Codeunit "Email Message";
+                            Recipiants: Text;
+                            CCRecipiants: List of [Text];
+                            BCCRecipients: List of [Text];
+                            Body: Text;
+                            Sub: Label 'Quality Alert to Indent and Indent approver';
+                            ApprovalEntryLRec: Record "Approval Entry";
+                            GateEntryHeader: Record "Gate Entry Header_B2B";
+                            Text001: Label 'Dear Sir/Madam, Please find Indent Number:  %1 dt.%2 is raised for the purpose %3.Material is received against PO Number.%4 Dt.%5 is waiting for Quality Inspection.Please approve the same for further process of Invoice.';
+                            IndentHeader: Record "Indent Header";
+                            UserSetupRec: Record "User Setup";
+                        //B2BKM2MAY2024 >>
                         begin
                             PurchLineLRec.Reset();
                             PurchLineLRec.SetRange("Document No.", "Document No.");
                             PurchLineLRec.SetRange(Select, true);
                             if PurchLineLRec.FindSet() then begin
                                 repeat
-
                                     //B2BSSD15MAY2023>>
                                     if PurchLineLRec.Quantity = PurchLineLRec."Quantity Accepted B2B" then
                                         Error('Rgp Inward Already Created');
@@ -411,8 +425,53 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                                 PurChaseHeader.TestField("EPCG Scheme");//B2BSSD20MAR2023
                             end;
                             //B2BSSDJan2023>>
-                            CreateGateEntries(GateEntryType::Inward, GateEntryDocType::RGP)
+                            CreateGateEntries(GateEntryType::Inward, GateEntryDocType::RGP);
+                            //B2BKM2MAY2024 <<
+                            GateEntryHeader.Reset();
+                            GateEntryHeader.SetRange("Indent Document No", Rec."Indent No.");
+                            GateEntryHeader.SetRange("Purchase Order No.", Rec."Document No.");
+                            if GateEntryHeader.FindSet() then begin
+                                if IndentHeader.Get(Rec."Indent No.") then begin
+                                    if UserSetupRec.Get(IndentHeader."User Id") then begin
+                                        UserSetupRec.TestField("E-Mail");
+                                        if Recipiants <> '' then
+                                            Recipiants += ';' + UserSetupRec."E-Mail"
+                                        else
+                                            Recipiants := UserSetupRec."E-Mail";
+                                    end;
+                                    ApprovalEntryLRec.Reset();
+                                    ApprovalEntryLRec.SetRange("Document No.", IndentHeader."No.");
+                                    if ApprovalEntryLRec.FindSet() then
+                                        repeat
+                                            if UserSetup.Get(ApprovalEntryLRec."Approver ID") then begin
+                                                UserSetup.TestField("E-Mail");
+                                                if Recipiants <> '' then
+                                                    Recipiants += ';' + UserSetup."E-Mail"
+                                                else
+                                                    Recipiants := UserSetup."E-Mail";
+                                            end;
+                                        until ApprovalEntryLRec.Next = 0;
+                                end;
+
+                                // CCRecipiants.Add(UserSetup."E-Mail");
+                                Body += StrSubstNo(Text001, Rec."Indent No.", IndentHeader."Document Date", IndentHeader.Purpose, Rec."Document No.", PurChaseHeader."Document Date");
+                                EmailMessage.Create(Recipiants, Sub, '', true);
+                                //EmailMessage.Create(Recipiants, Sub, '', true, CCRecipiants, BCCRecipients);
+                                EmailMessage.AppendToBody('Dear Sir/Madam,');
+                                EmailMessage.AppendToBody('<BR></BR>');
+                                EmailMessage.AppendToBody('<BR></BR>');
+                                EmailMessage.AppendToBody(Body);
+                                EmailMessage.AppendToBody('<BR></BR>');
+                                EmailMessage.AppendToBody('<BR></BR>');
+                                EmailMessage.AppendToBody('This is auto generated mail by system for approval information.');
+                                Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
+                                Message('Email Send Successfully');
+                            end;
                         end;
+                        //B2BKM2MAY2024 >>
+
+                        //end;
+
                     }
 
                     action(CreateNRGPInward)
@@ -779,7 +838,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 begin
 
                     Rec.OpenCWIPDetails();
-                  //  Rec.OpenCWIPDetails(); april27
+                    //  Rec.OpenCWIPDetails(); april27
 
                 end;
             }

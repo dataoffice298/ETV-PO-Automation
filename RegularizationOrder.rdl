@@ -3729,7 +3729,7 @@
             <Sizing>Fit</Sizing>
             <Top>14.14423cm</Top>
             <Left>0.12383cm</Left>
-            <Height>1.42944cm</Height>
+            <Height>0.8209cm</Height>
             <Width>4.84156cm</Width>
             <ZIndex>21</ZIndex>
             <Style>
@@ -3746,7 +3746,9 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=First(Fields!FullName.Value, "DataSet_Result")</Value>
-                    <Style />
+                    <Style>
+                      <FontSize>9pt</FontSize>
+                    </Style>
                   </TextRun>
                   <TextRun>
                     <Value xml:space="preserve">  </Value>
@@ -3759,14 +3761,16 @@
                 <TextRuns>
                   <TextRun>
                     <Value>=First(Fields!Designation.Value, "DataSet_Result")</Value>
-                    <Style />
+                    <Style>
+                      <FontSize>9pt</FontSize>
+                    </Style>
                   </TextRun>
                 </TextRuns>
                 <Style />
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox34</rd:DefaultName>
-            <Top>15.67598cm</Top>
+            <Top>15.10624cm</Top>
             <Left>0.12383cm</Left>
             <Height>0.6cm</Height>
             <Width>6.0032cm</Width>
@@ -3782,7 +3786,7 @@
             </Style>
           </Textbox>
         </ReportItems>
-        <Height>16.35332cm</Height>
+        <Height>16.37978cm</Height>
         <Style />
       </Body>
       <Width>19.00683cm</Width>

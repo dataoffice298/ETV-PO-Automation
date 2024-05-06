@@ -427,45 +427,47 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                             //B2BSSDJan2023>>
                             CreateGateEntries(GateEntryType::Inward, GateEntryDocType::RGP);
                             //B2BKM2MAY2024 <<
-                            GateEntryHeader.Reset();
-                            GateEntryHeader.SetRange("Indent Document No", Rec."Indent No.");
-                            GateEntryHeader.SetRange("Purchase Order No.", Rec."Document No.");
-                            if GateEntryHeader.FindSet() then begin
-                                if IndentHeader.Get(Rec."Indent No.") then begin
-                                    if UserSetupRec.Get(IndentHeader."User Id") then begin
-                                        UserSetupRec.TestField("E-Mail");
-                                        if Recipiants <> '' then
-                                            Recipiants += ';' + UserSetupRec."E-Mail"
-                                        else
-                                            Recipiants := UserSetupRec."E-Mail";
+                            if Rec."Indent No." <> '' then begin //B2BKM6MAY2024
+                                GateEntryHeader.Reset();
+                                GateEntryHeader.SetRange("Indent Document No", Rec."Indent No.");
+                                GateEntryHeader.SetRange("Purchase Order No.", Rec."Document No.");
+                                if GateEntryHeader.FindSet() then begin
+                                    if IndentHeader.Get(Rec."Indent No.") then begin
+                                        if UserSetupRec.Get(IndentHeader."User Id") then begin
+                                            UserSetupRec.TestField("E-Mail");
+                                            if Recipiants <> '' then
+                                                Recipiants += ';' + UserSetupRec."E-Mail"
+                                            else
+                                                Recipiants := UserSetupRec."E-Mail";
+                                        end;
+                                        ApprovalEntryLRec.Reset();
+                                        ApprovalEntryLRec.SetRange("Document No.", IndentHeader."No.");
+                                        if ApprovalEntryLRec.FindSet() then
+                                            repeat
+                                                if UserSetup.Get(ApprovalEntryLRec."Approver ID") then begin
+                                                    UserSetup.TestField("E-Mail");
+                                                    if Recipiants <> '' then
+                                                        Recipiants += ';' + UserSetup."E-Mail"
+                                                    else
+                                                        Recipiants := UserSetup."E-Mail";
+                                                end;
+                                            until ApprovalEntryLRec.Next = 0;
                                     end;
-                                    ApprovalEntryLRec.Reset();
-                                    ApprovalEntryLRec.SetRange("Document No.", IndentHeader."No.");
-                                    if ApprovalEntryLRec.FindSet() then
-                                        repeat
-                                            if UserSetup.Get(ApprovalEntryLRec."Approver ID") then begin
-                                                UserSetup.TestField("E-Mail");
-                                                if Recipiants <> '' then
-                                                    Recipiants += ';' + UserSetup."E-Mail"
-                                                else
-                                                    Recipiants := UserSetup."E-Mail";
-                                            end;
-                                        until ApprovalEntryLRec.Next = 0;
-                                end;
 
-                                // CCRecipiants.Add(UserSetup."E-Mail");
-                                Body += StrSubstNo(Text001, Rec."Indent No.", IndentHeader."Document Date", IndentHeader.Purpose, Rec."Document No.", PurChaseHeader."Document Date");
-                                EmailMessage.Create(Recipiants, Sub, '', true);
-                                //EmailMessage.Create(Recipiants, Sub, '', true, CCRecipiants, BCCRecipients);
-                                EmailMessage.AppendToBody('Dear Sir/Madam,');
-                                EmailMessage.AppendToBody('<BR></BR>');
-                                EmailMessage.AppendToBody('<BR></BR>');
-                                EmailMessage.AppendToBody(Body);
-                                EmailMessage.AppendToBody('<BR></BR>');
-                                EmailMessage.AppendToBody('<BR></BR>');
-                                EmailMessage.AppendToBody('This is auto generated mail by system for approval information.');
-                                Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
-                                Message('Email Send Successfully');
+                                    // CCRecipiants.Add(UserSetup."E-Mail");
+                                    Body += StrSubstNo(Text001, Rec."Indent No.", IndentHeader."Document Date", IndentHeader.Purpose, Rec."Document No.", PurChaseHeader."Document Date");
+                                    EmailMessage.Create(Recipiants, Sub, '', true);
+                                    //EmailMessage.Create(Recipiants, Sub, '', true, CCRecipiants, BCCRecipients);
+                                    EmailMessage.AppendToBody('Dear Sir/Madam,');
+                                    EmailMessage.AppendToBody('<BR></BR>');
+                                    EmailMessage.AppendToBody('<BR></BR>');
+                                    EmailMessage.AppendToBody(Body);
+                                    EmailMessage.AppendToBody('<BR></BR>');
+                                    EmailMessage.AppendToBody('<BR></BR>');
+                                    EmailMessage.AppendToBody('This is auto generated mail by system for approval information.');
+                                    Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
+                                    Message('Email Send Successfully');
+                                end;
                             end;
                         end;
                         //B2BKM2MAY2024 >>

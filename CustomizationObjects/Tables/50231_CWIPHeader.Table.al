@@ -320,6 +320,7 @@ table 50231 "CWIP Header"
         CWIPLine.Description := CWIPLedgerEntry.Description;
         CWIPLine.Quantity := CWIPLedgerEntry.Quantity;
         CWIPLine.Amount := CWIPLedgerEntry.Amount;
+        CWIPLine."Location Code" := CWIPLedgerEntry."Location Code"; //B2BKM6MAY2024
         CWIPLine.Insert(true);
         CWIPLine.Validate("Shortcut Dimension 1 Code", CWIPLedgerEntry."Global Dimension 1 Code");
         CWIPLine.Validate("Shortcut Dimension 2 Code", CWIPLedgerEntry."Global Dimension 2 Code");

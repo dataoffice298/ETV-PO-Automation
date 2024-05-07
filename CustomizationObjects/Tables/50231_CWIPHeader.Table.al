@@ -301,35 +301,32 @@ table 50231 "CWIP Header"
     local procedure InsertCWIPLineFromLedgers(CWIPLedgerEntry: Record "CWIP Ledger Entry"; LineNo: Integer)
     var
         CWIPLine: Record "CWIP Line";
-        ErrMsg: Label 'Fixed Asset is Already Created.%1';
     begin
-        if CWIPLedgerEntry."FA No." = '' then begin
-            CWIPLine.Init();
-            CWIPLine."Document No." := "No.";
-            CWIPLine."Line No." := LineNo;
-            CWIPLine."Posting Date" := CWIPLedgerEntry."Posting Date";
-            CWIPLine."CWIP Entry No." := CWIPLedgerEntry."Entry No.";
-            CWIPLine."Order No." := CWIPLedgerEntry."Order No.";
-            CWIPLine."Order Line No." := CWIPLedgerEntry."Order Line No.";
-            CWIPLine."Receipt No." := CWIPLedgerEntry."Receipt No.";
-            CWIPLine."Receipt Line No." := CWIPLedgerEntry."Receipt Line No.";
-            CWIPLine.Make := CWIPLedgerEntry.Make;
-            CWIPLine.Model := CWIPLedgerEntry.Model;
-            CWIPLine."Serial No." := CWIPLedgerEntry."Serial No.";
-            CWIPLine."Vendor No." := CWIPLedgerEntry."Vendor No.";
-            CWIPLine."Vendor Name" := CWIPLedgerEntry."Vendor Name";
-            CWIPLine."Item No." := CWIPLedgerEntry."Item No.";
-            CWIPLine.Description := CWIPLedgerEntry.Description;
-            CWIPLine.Quantity := CWIPLedgerEntry.Quantity;
-            CWIPLine.Amount := CWIPLedgerEntry.Amount;
-            CWIPLine.Insert(true);
-            CWIPLine.Validate("Shortcut Dimension 1 Code", CWIPLedgerEntry."Global Dimension 1 Code");
-            CWIPLine.Validate("Shortcut Dimension 2 Code", CWIPLedgerEntry."Global Dimension 2 Code");
-            CWIPLine.Modify();
+        CWIPLine.Init();
+        CWIPLine."Document No." := "No.";
+        CWIPLine."Line No." := LineNo;
+        CWIPLine."Posting Date" := CWIPLedgerEntry."Posting Date";
+        CWIPLine."CWIP Entry No." := CWIPLedgerEntry."Entry No.";
+        CWIPLine."Order No." := CWIPLedgerEntry."Order No.";
+        CWIPLine."Order Line No." := CWIPLedgerEntry."Order Line No.";
+        CWIPLine."Receipt No." := CWIPLedgerEntry."Receipt No.";
+        CWIPLine."Receipt Line No." := CWIPLedgerEntry."Receipt Line No.";
+        CWIPLine.Make := CWIPLedgerEntry.Make;
+        CWIPLine.Model := CWIPLedgerEntry.Model;
+        CWIPLine."Serial No." := CWIPLedgerEntry."Serial No.";
+        CWIPLine."Vendor No." := CWIPLedgerEntry."Vendor No.";
+        CWIPLine."Vendor Name" := CWIPLedgerEntry."Vendor Name";
+        CWIPLine."Item No." := CWIPLedgerEntry."Item No.";
+        CWIPLine.Description := CWIPLedgerEntry.Description;
+        CWIPLine.Quantity := CWIPLedgerEntry.Quantity;
+        CWIPLine.Amount := CWIPLedgerEntry.Amount;
+        CWIPLine."Location Code" := CWIPLedgerEntry."Location Code";
+        CWIPLine.Insert(true);
+        CWIPLine.Validate("Shortcut Dimension 1 Code", CWIPLedgerEntry."Global Dimension 1 Code");
+        CWIPLine.Validate("Shortcut Dimension 2 Code", CWIPLedgerEntry."Global Dimension 2 Code");
+        CWIPLine.Modify();
 
-            UpdateCWIPLedgerEntry(CWIPLedgerEntry, CWIPLine);
-        end else
-            Error(ErrMsg, CWIPLedgerEntry."FA No.");
+        UpdateCWIPLedgerEntry(CWIPLedgerEntry, CWIPLine);
     end;
 
     local procedure UpdateCWIPLedgerEntry(CWIPLedgerEntry: Record "CWIP Ledger Entry"; CWIPLine: Record "CWIP Line")
@@ -382,7 +379,6 @@ table 50231 "CWIP Header"
         SuccessTxt: Label 'Fixed Assets created successfully.';
         ExecuteTxt: Label 'Do you want to create fixed assets?';
         NoSeriesMgt: Codeunit NoSeriesManagement;
-        CWIPLedgerEntry: Record "CWIP Ledger Entry"; //B2BVCOn06May2024
     begin
         if not CONFIRM(ExecuteTxt, false) then
             exit;

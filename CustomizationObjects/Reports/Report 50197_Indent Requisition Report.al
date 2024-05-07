@@ -11,6 +11,7 @@ report 50197 "Indent Requisition Report"
         {
             dataitem(IndentReqLine; "Indent Requisitions")
             {
+                CalcFields = "Received Quantity";
                 DataItemLink = "Document No." = field("No.");
                 DataItemLinkReference = IndentReqHeader;
                 trigger OnAfterGetRecord()

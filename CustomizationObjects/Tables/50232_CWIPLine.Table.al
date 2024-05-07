@@ -181,6 +181,15 @@ table 50232 "CWIP Line"
             TableRelation = "FA Subclass" where("FA Class Code" = field("FA Class Code"));
             Caption = 'FA Sub Class Code';
         }
+        field(36; "FA No. Series"; Code[20])
+        {
+            TableRelation = "No. Series";
+            Caption = 'FA No. Series';
+        }
+        field(37; Select; Boolean)
+        {
+            Caption = 'Select';
+        }
     }
     keys
     {

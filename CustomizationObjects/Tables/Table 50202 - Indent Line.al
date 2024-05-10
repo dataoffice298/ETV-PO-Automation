@@ -103,7 +103,7 @@ table 50202 "Indent Line"
 
             end;
         }
-        field(4; Description; Text[50])
+        field(4; Description; Text[100])
         {
 
             trigger OnValidate();

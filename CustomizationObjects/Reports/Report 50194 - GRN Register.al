@@ -25,7 +25,9 @@ report 50194 "GRN Register"//B2BSSD14JUN2023
                     TotalAmount: Decimal;
 
                 begin
+                    Clear(RgpInwardNo);
                     PostedPurchRcptGRec.Reset();
+                    PostedPurchRcptGRec.SetRange("No.", "Document No."); //B2BKM09MAY2024
                     PostedPurchRcptGRec.SetRange("Order No.", "Order No.");
                     if PostedPurchRcptGRec.FindSet() then begin
                         repeat
@@ -36,64 +38,64 @@ report 50194 "GRN Register"//B2BSSD14JUN2023
                             TotalAmount := TotalGSTAmount + ("Purch. Rcpt. Line".Quantity * "Purch. Rcpt. Line"."Direct Unit Cost") - (("Purch. Rcpt. Line".Quantity * "Purch. Rcpt. Line"."Direct Unit Cost" * "Purch. Rcpt. Line"."Line Discount %") / 100);//B2BAJ12012024
                         until PostedPurchRcptGRec.Next() = 0;
                         PostedRGPInwardGRec.Reset();
-                        PostedRGPInwardGRec.SetRange("Purchase Order No.", PostedPurchRcptGRec."Order No.");
-
+                        PostedRGPInwardGRec.SetRange("Purchase Order No.", "Order No.");
+                        PostedRGPInwardGRec.SetRange("No.", "Posted Gate Entry No."); //B2BKM09MAY2024
                         if PostedRGPInwardGRec.findset() then begin
                             repeat
                                 RgpInwardNo := PostedRGPInwardGRec."No.";
                                 RgpInwardDate := PostedRGPInwardGRec."Document Date";
                                 RgpInwardRecieptDate := PostedRGPInwardGRec."Receipt Date";//B2BKM25APR2024
+
                             until PostedRGPInwardGRec.Next() = 0;
                         end;
-
-
                     end;
 
+                    if Quantity <> 0 then begin //B2BKM09MAY2024
+                        SNo += 1;
+                        TempExcelBuffer.NewRow();
+                        TempExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        TempExcelBuffer.AddColumn(RgpInwardNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn(RgpInwardDate, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
 
-                    SNo += 1;
-                    TempExcelBuffer.NewRow();
-                    TempExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn(RgpInwardNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn(RgpInwardDate, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
+                        TempExcelBuffer.AddColumn(RgpInwardRecieptDate, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
+                        TempExcelBuffer.AddColumn(GRNno, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
+                        TempExcelBuffer.AddColumn(GRNDate, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
+                        TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."Pay-to Name", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."Vendor Invoice No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."Vendor Invoice Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date); //B2BKM26APR2024
+                        if Type = Type::Item then   //B2BDNROn28Dec2023
+                            if Item.Get("No.") then begin
+                                TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD03APR2023
+                                TempExcelBuffer.AddColumn(Item."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                                TempExcelBuffer.AddColumn(Item.Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            end;//B2BDNROn28Dec2023
 
-                    TempExcelBuffer.AddColumn(RgpInwardRecieptDate, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
-                    TempExcelBuffer.AddColumn(GRNno, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
-                    TempExcelBuffer.AddColumn(GRNDate, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date);
-                    TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."Pay-to Name", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."Vendor Invoice No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."Vendor Invoice Date", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Date); //B2BKM26APR2024
-                    if Type = Type::Item then   //B2BDNROn28Dec2023
-                        if Item.Get("No.") then begin
-                            TempExcelBuffer.AddColumn(Item."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSSD03APR2023
-                            TempExcelBuffer.AddColumn(Item."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                            TempExcelBuffer.AddColumn(Item.Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                        end;//B2BDNROn28Dec2023
+                        //B2BDNROn28Dec2023<<
+                        if type = Type::"Fixed Asset" then
+                            if FiedAssetRec.get("No.") then begin
+                                TempExcelBuffer.AddColumn(FiedAssetRec."FA Class Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BDNROn28Dec2023
+                                TempExcelBuffer.AddColumn(FiedAssetRec."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                                TempExcelBuffer.AddColumn(FiedAssetRec.Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            end;
+                        //B2BDNROn28Dec2023>>
 
-                    //B2BDNROn28Dec2023<<
-                    if type = Type::"Fixed Asset" then
-                        if FiedAssetRec.get("No.") then begin
-                            TempExcelBuffer.AddColumn(FiedAssetRec."FA Class Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BDNROn28Dec2023
-                            TempExcelBuffer.AddColumn(FiedAssetRec."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                            TempExcelBuffer.AddColumn(FiedAssetRec.Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                        end;
-                    //B2BDNROn28Dec2023>>
+                        // TempExcelBuffer.AddColumn("Purch. Rcpt. Line".Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSCM19SEP2023
+                        // TempExcelBuffer.AddColumn("Purch. Rcpt. Line"."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSCM19SEP2023
 
-                    // TempExcelBuffer.AddColumn("Purch. Rcpt. Line".Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSCM19SEP2023
-                    // TempExcelBuffer.AddColumn("Purch. Rcpt. Line"."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSCM19SEP2023
-
-                    TempExcelBuffer.AddColumn("Purch. Rcpt. Line"."Unit of Measure Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn("Purch. Rcpt. Line".Quantity, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn("Purch. Rcpt. Line"."Direct Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn("Purch. Rcpt. Line"."Line Discount %", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn(CGSTAmt, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn(SGSTAmt, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn(IGSSTAmt, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn(("Purch. Rcpt. Line".Quantity * "Purch. Rcpt. Line"."Direct Unit Cost"), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn(TotalAmount, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                    TempExcelBuffer.AddColumn("Purch. Rcpt. Line".Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."Import Type", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."EPCG Scheme", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                    TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."Order No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn("Purch. Rcpt. Line"."Unit of Measure Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn("Purch. Rcpt. Line".Quantity, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        TempExcelBuffer.AddColumn("Purch. Rcpt. Line"."Direct Unit Cost", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        TempExcelBuffer.AddColumn("Purch. Rcpt. Line"."Line Discount %", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        TempExcelBuffer.AddColumn(CGSTAmt, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        TempExcelBuffer.AddColumn(SGSTAmt, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        TempExcelBuffer.AddColumn(IGSSTAmt, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        TempExcelBuffer.AddColumn(("Purch. Rcpt. Line".Quantity * "Purch. Rcpt. Line"."Direct Unit Cost"), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        TempExcelBuffer.AddColumn(TotalAmount, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                        TempExcelBuffer.AddColumn("Purch. Rcpt. Line".Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."Import Type", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."EPCG Scheme", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                        TempExcelBuffer.AddColumn("Purch. Rcpt. Header"."Order No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    end;
                 end;
             }
             trigger OnPreDataItem()

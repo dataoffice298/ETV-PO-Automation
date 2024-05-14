@@ -39,6 +39,13 @@ page 50120 "Indent Requisition Document"
                 field(Type; Rec.Type)
                 {
                     ApplicationArea = All;
+                    //B2BKM14MAY2024
+                    trigger OnValidate()
+                    begin
+                        if Rec.Type = Rec.Type then
+                            Rec."No.Series" := '';
+                    end;
+                    //B2BKM14MAY2024
                 }
                 field("No.Series"; Rec."No.Series")
                 {

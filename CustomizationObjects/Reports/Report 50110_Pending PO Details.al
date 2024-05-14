@@ -46,6 +46,9 @@ report 50110 "Pending PO Details"
                     //TempExcelBuffer.AddColumn("Quantity Accepted B2B", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn("Buy-from Vendor No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("Purchase Header"."Buy-from Vendor Name", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn(Status, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn(ShortClosed, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    TempExcelBuffer.AddColumn(CancelOrder, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                 end;
 
                 trigger OnPreDataItem()
@@ -152,6 +155,9 @@ report 50110 "Pending PO Details"
         //TempExcelBuffer.AddColumn('Qty Accepted', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('Vendor No.', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('Vendor Name', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        TempExcelBuffer.AddColumn('PO Status', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        TempExcelBuffer.AddColumn('Short Close', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        TempExcelBuffer.AddColumn('Cancelled', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
     end;
 
     var

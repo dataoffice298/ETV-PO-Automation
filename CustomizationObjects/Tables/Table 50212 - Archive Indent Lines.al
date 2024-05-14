@@ -15,7 +15,7 @@ table 50212 "Archive Indent Line"
         {
 
         }
-        field(4; Description; Text[50])
+        field(4; Description; Text[100])
         {
 
         }

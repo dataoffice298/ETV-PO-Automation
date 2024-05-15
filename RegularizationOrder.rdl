@@ -1485,6 +1485,7 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -2113,7 +2114,7 @@
                 <TablixMember>
                   <Group Name="Number_GSTLoop">
                     <GroupExpressions>
-                      <GroupExpression>=Fields!Number_GSTLoop.Value</GroupExpression>
+                      <GroupExpression>=Fields!GSTPerText.Value</GroupExpression>
                     </GroupExpressions>
                   </Group>
                   <SortExpressions>

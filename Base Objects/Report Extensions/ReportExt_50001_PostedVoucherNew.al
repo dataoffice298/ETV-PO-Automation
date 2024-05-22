@@ -2,9 +2,14 @@ reportextension 50001 PostedVoucherNew extends "Posted Voucher New1"
 {
     dataset
     {
+
         add("G/L Entry")
         {
             column(PONarration; PONarration)
+            {
+
+            }
+            column(InvoiceNum; InvoiceNum)
             {
 
             }
@@ -19,6 +24,16 @@ reportextension 50001 PostedVoucherNew extends "Posted Voucher New1"
                 VLEntry.SetRange("Document No.", "G/L Entry"."Document No.");
                 if VLEntry.FindFirst() then
                     PONarration := VLEntry."PO Narration";
+
+                CLEAR(InvoiceNum);
+                purInvheader.RESET;
+                purInvheader.SETRANGE("No.", "Document No.");
+                IF purInvheader.FINDFIRST THEN BEGIN
+                    PurRcptheader.Reset();
+                    PurRcptheader.SetRange("Order No.", purInvheader."Order No.");
+                    if PurRcptheader.FindFirst() then
+                        InvoiceNum := purInvheader."Vendor Invoice No." + '  Date : ' + FORMAT(PurRcptheader."Vendor Invoice Date");
+                end;
             end;
         }
     }
@@ -29,11 +44,13 @@ reportextension 50001 PostedVoucherNew extends "Posted Voucher New1"
         {
             Type = RDLC;
             Caption = 'Posted Voucher New';
-            LayoutFile = './Posted Voucher.rdl';
+            LayoutFile = './Posted Voucher1.rdl';
         }
     }
 
     var
-        PONarration: Code[50];
+        PONarration, InvoiceNum : Code[50];
+        purInvheader: Record "Purch. Inv. Header";
+        PurRcptheader: Record "Purch. Rcpt. Header";
 
 }

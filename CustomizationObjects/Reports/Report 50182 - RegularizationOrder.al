@@ -289,7 +289,7 @@ report 50182 "Regularization Order"
             dataitem(GSTLoop; Integer)
             {
                 DataItemTableView = sorting(Number);
-                DataItemLinkReference = "Purchase Header";
+                DataItemLinkReference = "Purchase Line";
 
                 column(Number_GSTLoop; Number)
                 { }
@@ -309,7 +309,7 @@ report 50182 "Regularization Order"
                     PurchLineGST.SetRange("Document No.", "Purchase Header"."No.");
                     PurchLineGST.SetFilter("GST Group Code", '<>%1', '');
                     PurchLineGST.SetFilter("No.", '<>%1', '');
-                    if PurchLineGST.FindSet() then;
+                    if PurchLineGST.Findset() then;
                     PurchLineGST.SetAscending("GST Group Code", true);
                     SetRange(Number, 1, PurchLineGST.Count);
                 end;
@@ -318,12 +318,13 @@ report 50182 "Regularization Order"
                 begin
                     Clear(GSTPerText);
                     Clear(GSTPercent);
-                    if GSTGroupCode <> PurchLineGST."GST Group Code" then begin
-                        GSTGroupCode := PurchLineGST."GST Group Code";
+                    if GSTGroupCode <> "Purchase Line"."GST Group Code" then begin
+                        GSTGroupCode := "Purchase Line"."GST Group Code";
                         PurchLine.Reset();
                         PurchLine.SetCurrentKey("GST Group Code");
-                        PurchLine.SetRange("Document No.", PurchLineGST."Document No.");
-                        PurchLine.SetFilter("GST Group Code", PurchLineGST."GST Group Code");
+                        PurchLine.SetRange("Document No.", "Purchase Line"."Document No.");
+                        // PurchLine.SetRange("Line No.", "Purchase Line"."Line No.");
+                        //PurchLine.SetFilter("GST Group Code", PurchLineGST."GST Group Code");
                         if PurchLine.FindSet() then begin
                             GetGSTPercents(PurchLine);
                             if GSTPercent <> 0 then begin

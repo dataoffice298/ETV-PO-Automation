@@ -87,7 +87,7 @@ codeunit 50009 CWIP
             if not CWIPDetails.FindSet() then
                 Error(ErrLbl, PurchLine."No.", PurchLine."Line No.")
             else
-                if CWIPDetails.Count < (PurchLine."Qty. to Receive" + PurchLine."Quantity Received") then
+                if (CWIPDetails.Count < (PurchLine."Qty. to Receive" + PurchLine."Quantity Received")) and (PurchLine."Unit of Measure Code" = 'NOS') then
                     Error(Err2Lbl, PurchLine."No.", PurchLine."Line No.")
         end;
     end;

@@ -299,7 +299,6 @@ report 51099 "Category Wise Stock Summary"
                     WindPa.Update(1, Item."No.");
                     MakeExcelBody();
                 end;
-
             end;
 
             trigger OnPreDataItem()

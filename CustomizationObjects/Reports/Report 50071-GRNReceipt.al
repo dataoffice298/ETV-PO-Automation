@@ -228,8 +228,8 @@ report 50071 "GRN RECEIPT"
                     Clear(BasicAmount);
                     Clear(DiscountVar);
                     Clear(TotalAmountNew);
-                    CheckGRec.InitTextVariable;
-                    CheckGRec.FormatNoText(NumberText, Round(NetTotal, 1, '='), "Currency Code");
+                    //CheckGRec.InitTextVariable;
+                    //CheckGRec.FormatNoText(NumberText, Round(NetTotal, 1, '='), "Currency Code");
                     //B2BSCM27SEP2023>>
 
                     IndentHdr.Reset();
@@ -249,6 +249,9 @@ report 50071 "GRN RECEIPT"
                     BasicAmount := "Purch. Rcpt. Line"."Direct Unit Cost" * "Purch. Rcpt. Line".Quantity;
                     DiscountVar := (BasicAmount / 100) * ("Purch. Rcpt. Line"."Line Discount %");
                     TotalAmountNew := BasicAmount - DiscountVar;
+
+                    CheckGRec.InitTextVariable;
+                    CheckGRec.FormatNoText(NumberText, Round(TotalAmountNew, 1, '='), "Currency Code");
 
                     if "Purch. Rcpt. Line".Quantity = 0 then
                         CurrReport.Skip();

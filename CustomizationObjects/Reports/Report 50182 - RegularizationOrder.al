@@ -60,7 +60,7 @@ report 50182 "Regularization Order"
             { }
             column(Buy_from_Email; VendorGRec."E-Mail")
             { }
-            column(GSTRegNo; VendorGRec."GST Registration No.")
+            column(GSTRegNo; GSTRegNo)
             { }
             column(Buy_from_Post_Code; "Buy-from Post Code")
             { }
@@ -360,6 +360,8 @@ report 50182 "Regularization Order"
                 Clear(SNo);
                 Clear(TotalGSTAmount);
                 Clear(TotalLineAmount);
+                Clear(GSTRegNo);
+
                 NextLoop := false;
                 CompanyInfo.get;
                 CompanyInfo.CalcFields(Picture);
@@ -452,21 +454,32 @@ report 50182 "Regularization Order"
                     EmailId := PurchaseCode."E-Mail";
                     PhoneNo := PurchaseCode."Phone No.";
                 end;
+                if "Purchase Header"."Order Address Code" = '' then begin
+                    OrderAddress.Reset();
+                    OrderAddress.SetRange("Vendor No.", "Purchase Header"."Buy-from Vendor No.");
+                    if OrderAddress.FindSet() then begin
+                        repeat
+                            if OrderAddress.Name <> '' then
+                                ContactName := ContactName + OrderAddress.Name + '/';
+                            if OrderAddress."E-Mail" <> '' then
+                                ContactEmail := ContactEmail + OrderAddress."E-Mail" + '/';
+                            if OrderAddress."Phone No." <> '' then
+                                ContactPhNo := ContactPhNo + OrderAddress."Phone No." + '/';
+                        until OrderAddress.Next = 0;
+                        ContactName := DelChr(ContactName, '<>', '/');
+                        ContactEmail := DelChr(ContactEmail, '<>', '/');
+                        ContactPhNo := DelChr(ContactPhNo, '<>', '/');
+                    end;
+                    if VendorRec.Get("Purchase Header"."Buy-from Vendor No.") then
+                        GSTRegNo := VendorRec."GST Registration No.";
+                end else begin
+                    if OrderAddress.Get("Purchase Header"."Buy-from Vendor No.", "Purchase Header"."Order Address Code") then begin
+                        GSTRegNo := OrderAddress."GST Registration No.";
+                        ContactName := OrderAddress."Contact Name";
+                        ContactPhNo := OrderAddress."Phone No.";
+                        ContactEmail := OrderAddress."E-Mail";
+                    end;
 
-                OrderAddress.Reset();
-                OrderAddress.SetRange("Vendor No.", "Purchase Header"."Buy-from Vendor No.");
-                if OrderAddress.FindSet() then begin
-                    repeat
-                        if OrderAddress.Name <> '' then
-                            ContactName := ContactName + OrderAddress.Name + '/';
-                        if OrderAddress."E-Mail" <> '' then
-                            ContactEmail := ContactEmail + OrderAddress."E-Mail" + '/';
-                        if OrderAddress."Phone No." <> '' then
-                            ContactPhNo := ContactPhNo + OrderAddress."Phone No." + '/';
-                    until OrderAddress.Next = 0;
-                    ContactName := DelChr(ContactName, '<>', '/');
-                    ContactEmail := DelChr(ContactEmail, '<>', '/');
-                    ContactPhNo := DelChr(ContactPhNo, '<>', '/');
                 end;
             end;
         }
@@ -521,6 +534,7 @@ report 50182 "Regularization Order"
         CompanyInfo: Record "Company Information";
         StateGRec: Record State;
         VendorGRec: Record Vendor;
+        VendorRec: Record Vendor;
         GstTotal: Decimal;
         PurchaseHdr: Record "Purchase Header";
         PurchLine: Record "Purchase Line";
@@ -567,6 +581,7 @@ report 50182 "Regularization Order"
         ContactPhNo: Text;
         ContactEmail: Text;
         OrderAddress: Record "Order Address";
+        GSTRegNo: Code[20];
 
 
 

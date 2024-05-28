@@ -162,6 +162,9 @@
                               <Height>0.25in</Height>
                               <Width>4.125in</Width>
                               <ZIndex>3</ZIndex>
+                              <Visibility>
+                                <Hidden>true</Hidden>
+                              </Visibility>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -1273,205 +1276,6 @@
                                 <PaddingRight>5pt</PaddingRight>
                               </Style>
                             </Textbox>
-                            <Textbox Name="Discount2CapLbl">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>=Fields!Discount2CapLbl.Value</Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Right</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Discount2CapLbl</rd:DefaultName>
-                              <Top>11.65641cm</Top>
-                              <Left>18.84529cm</Left>
-                              <Height>0.60854cm</Height>
-                              <Width>3.8657cm</Width>
-                              <ZIndex>6</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <VerticalAlign>Middle</VerticalAlign>
-                                <PaddingLeft>5pt</PaddingLeft>
-                                <PaddingRight>5pt</PaddingRight>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="TaxCapLbl">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>=Fields!TaxCapLbl.Value</Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Right</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>TaxCapLbl</rd:DefaultName>
-                              <Top>12.24703cm</Top>
-                              <Left>19.29508cm</Left>
-                              <Height>0.6cm</Height>
-                              <Width>3.41591cm</Width>
-                              <ZIndex>7</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <VerticalAlign>Middle</VerticalAlign>
-                                <PaddingLeft>5pt</PaddingLeft>
-                                <PaddingRight>5pt</PaddingRight>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="FrgtChargesCapLbl">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>=Fields!FrgtChargesCapLbl.Value</Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Right</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>FrgtChargesCapLbl</rd:DefaultName>
-                              <Top>12.94432cm</Top>
-                              <Left>19.21571cm</Left>
-                              <Height>0.60854cm</Height>
-                              <Width>3.49528cm</Width>
-                              <ZIndex>8</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <VerticalAlign>Middle</VerticalAlign>
-                                <PaddingLeft>5pt</PaddingLeft>
-                                <PaddingRight>5pt</PaddingRight>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="OtherchargesCapLbl">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>=Fields!OtherchargesCapLbl.Value</Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Right</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>OtherchargesCapLbl</rd:DefaultName>
-                              <Top>13.62342cm</Top>
-                              <Left>20.08883cm</Left>
-                              <Height>0.58208cm</Height>
-                              <Width>2.62216cm</Width>
-                              <ZIndex>9</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <VerticalAlign>Middle</VerticalAlign>
-                                <PaddingLeft>5pt</PaddingLeft>
-                                <PaddingRight>5pt</PaddingRight>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="InsuranceCapLbl">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>=Fields!InsuranceCapLbl.Value</Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Right</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>InsuranceCapLbl</rd:DefaultName>
-                              <Top>14.2443cm</Top>
-                              <Left>20.21099cm</Left>
-                              <Height>0.63528cm</Height>
-                              <Width>2.5cm</Width>
-                              <ZIndex>10</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <VerticalAlign>Middle</VerticalAlign>
-                                <PaddingLeft>5pt</PaddingLeft>
-                                <PaddingRight>5pt</PaddingRight>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="NetAmtCapLbl">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>=Fields!NetAmtCapLbl.Value</Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                        <FontWeight>Bold</FontWeight>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Right</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>NetAmtCapLbl</rd:DefaultName>
-                              <Top>14.87958cm</Top>
-                              <Left>19.90363cm</Left>
-                              <Height>0.7141cm</Height>
-                              <Width>2.80736cm</Width>
-                              <ZIndex>11</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <VerticalAlign>Middle</VerticalAlign>
-                                <PaddingLeft>5pt</PaddingLeft>
-                                <PaddingRight>5pt</PaddingRight>
-                              </Style>
-                            </Textbox>
                             <Textbox Name="Textbox89">
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
@@ -1496,200 +1300,11 @@
                               <Left>24.44432cm</Left>
                               <Height>0.6cm</Height>
                               <Width>2.5cm</Width>
-                              <ZIndex>12</ZIndex>
+                              <ZIndex>6</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
                                 </Border>
-                                <VerticalAlign>Middle</VerticalAlign>
-                                <PaddingLeft>5pt</PaddingLeft>
-                                <PaddingRight>5pt</PaddingRight>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="Textbox90">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value />
-                                      <Style />
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style />
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Textbox90</rd:DefaultName>
-                              <Top>11.63849cm</Top>
-                              <Left>24.44432cm</Left>
-                              <Height>0.6cm</Height>
-                              <Width>2.5cm</Width>
-                              <ZIndex>13</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="Textbox91">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value />
-                                      <Style />
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style />
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Textbox91</rd:DefaultName>
-                              <Top>12.24703cm</Top>
-                              <Left>24.44432cm</Left>
-                              <Height>0.6cm</Height>
-                              <Width>2.5cm</Width>
-                              <ZIndex>14</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="Textbox92">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value />
-                                      <Style />
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style />
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Textbox92</rd:DefaultName>
-                              <Top>12.84703cm</Top>
-                              <Left>24.41671cm</Left>
-                              <Height>0.6cm</Height>
-                              <Width>2.5cm</Width>
-                              <ZIndex>15</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="Textbox93">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value />
-                                      <Style />
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style />
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Textbox93</rd:DefaultName>
-                              <Top>13.45558cm</Top>
-                              <Left>24.41671cm</Left>
-                              <Height>0.6cm</Height>
-                              <Width>2.5cm</Width>
-                              <ZIndex>16</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="Textbox94">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value />
-                                      <Style />
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style />
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Textbox94</rd:DefaultName>
-                              <Top>14.03766cm</Top>
-                              <Left>24.41671cm</Left>
-                              <Height>0.6cm</Height>
-                              <Width>2.5cm</Width>
-                              <ZIndex>17</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="Textbox95">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>=sum(Fields!NetTotal.Value)</Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                        <Format>0.00;(0.00)</Format>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Left</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Textbox95</rd:DefaultName>
-                              <Top>14.63766cm</Top>
-                              <Left>24.44432cm</Left>
-                              <Height>0.6cm</Height>
-                              <Width>2.5cm</Width>
-                              <ZIndex>18</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <TopBorder>
-                                  <Color>Black</Color>
-                                  <Style>Solid</Style>
-                                  <Width>1pt</Width>
-                                </TopBorder>
                                 <VerticalAlign>Middle</VerticalAlign>
                                 <PaddingLeft>5pt</PaddingLeft>
                                 <PaddingRight>5pt</PaddingRight>
@@ -1719,7 +1334,7 @@
                               <Left>6.01073cm</Left>
                               <Height>0.6cm</Height>
                               <Width>13.75234cm</Width>
-                              <ZIndex>19</ZIndex>
+                              <ZIndex>7</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -1734,7 +1349,7 @@
                               <Left>1.50495cm</Left>
                               <Height>0cm</Height>
                               <Width>26.25958cm</Width>
-                              <ZIndex>20</ZIndex>
+                              <ZIndex>8</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>Solid</Style>
@@ -1762,7 +1377,7 @@
                               <Left>2.65324cm</Left>
                               <Height>0.94396cm</Height>
                               <Width>3.73849cm</Width>
-                              <ZIndex>21</ZIndex>
+                              <ZIndex>9</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -1794,7 +1409,7 @@
                               <Left>7.17233cm</Left>
                               <Height>0.94396cm</Height>
                               <Width>3.90229cm</Width>
-                              <ZIndex>22</ZIndex>
+                              <ZIndex>10</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -1825,7 +1440,7 @@
                               <Left>11.94752cm</Left>
                               <Height>0.94396cm</Height>
                               <Width>4.01318cm</Width>
-                              <ZIndex>23</ZIndex>
+                              <ZIndex>11</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -1856,7 +1471,7 @@
                               <Left>16.83491cm</Left>
                               <Height>0.94396cm</Height>
                               <Width>3.74354cm</Width>
-                              <ZIndex>24</ZIndex>
+                              <ZIndex>12</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -1887,7 +1502,7 @@
                               <Left>21.50988cm</Left>
                               <Height>0.94396cm</Height>
                               <Width>3.73582cm</Width>
-                              <ZIndex>25</ZIndex>
+                              <ZIndex>13</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -1904,10 +1519,10 @@
                                     <Width>1.01616cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>1.73053cm</Width>
+                                    <Width>2.74129cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>1.86283cm</Width>
+                                    <Width>2.6412cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
                                     <Width>1.88929cm</Width>
@@ -1919,13 +1534,13 @@
                                     <Width>1.38658cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>1.25429cm</Width>
+                                    <Width>1.7123cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>1.14845cm</Width>
+                                    <Width>1.56376cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>1.36012cm</Width>
+                                    <Width>1.3744cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
                                     <Width>1.25429cm</Width>
@@ -1937,13 +1552,13 @@
                                     <Width>1.65116cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>1.43949cm</Width>
+                                    <Width>1.21836cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>1.38658cm</Width>
+                                    <Width>0.07938cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>1.22783cm</Width>
+                                    <Width>0.07938cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
                                     <Width>1.6247cm</Width>
@@ -3023,8 +2638,16 @@
                                   <TablixMember />
                                   <TablixMember />
                                   <TablixMember />
-                                  <TablixMember />
-                                  <TablixMember />
+                                  <TablixMember>
+                                    <Visibility>
+                                      <Hidden>true</Hidden>
+                                    </Visibility>
+                                  </TablixMember>
+                                  <TablixMember>
+                                    <Visibility>
+                                      <Hidden>true</Hidden>
+                                    </Visibility>
+                                  </TablixMember>
                                   <TablixMember />
                                 </TablixMembers>
                               </TablixColumnHierarchy>
@@ -3045,8 +2668,8 @@
                               <Top>8.17245cm</Top>
                               <Left>2.11217cm</Left>
                               <Height>1.2cm</Height>
-                              <Width>23.53462cm</Width>
-                              <ZIndex>26</ZIndex>
+                              <Width>23.53457cm</Width>
+                              <ZIndex>14</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -3076,7 +2699,7 @@
                               <Left>2.11217cm</Left>
                               <Height>0.94396cm</Height>
                               <Width>4.11396cm</Width>
-                              <ZIndex>27</ZIndex>
+                              <ZIndex>15</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>

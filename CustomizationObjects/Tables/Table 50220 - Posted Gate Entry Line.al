@@ -39,7 +39,7 @@ table 50220 "Posted Gate Entry Line_B2B"
         {
             DataClassification = CustomerContent;
         }
-        field(8; Description; Text[80])
+        field(8; Description; Text[100])
         {
             DataClassification = CustomerContent;
         }

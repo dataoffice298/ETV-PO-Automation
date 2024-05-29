@@ -130,6 +130,8 @@ report 50182 "Regularization Order"
             { }
             column(ContactPhNo; ContactPhNo)
             { }
+            column(Order_Date; "Order Date")
+            { }
             dataitem("Purchase Line"; "Purchase Line")
             {
                 DataItemLink = "Document No." = field("No.");

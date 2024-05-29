@@ -167,7 +167,7 @@
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value>=Fields!Posting_Date.Value</Value>
+                    <Value>=Fields!Order_Date.Value</Value>
                     <Style>
                       <FontFamily>Times New Roman</FontFamily>
                       <FontWeight>Normal</FontWeight>
@@ -1524,7 +1524,6 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -4574,6 +4573,9 @@ tm3feuutVVVVplTrkZfykiVLqqurR9WP49VTV1d3ww03HD58ePXq1ZweFZLnecPDw2vWrFm5clUQkJQY
         </Field>
         <Field Name="ContactPhNo">
           <DataField>ContactPhNo</DataField>
+        </Field>
+        <Field Name="Order_Date">
+          <DataField>Order_Date</DataField>
         </Field>
         <Field Name="SpecID">
           <DataField>SpecID</DataField>

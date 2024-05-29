@@ -24,7 +24,7 @@
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>7.54747in</Height>
+                  <Height>6.57872in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -1232,7 +1232,7 @@
                                 </TablixMembers>
                               </TablixRowHierarchy>
                               <DataSetName>DataSet_Result</DataSetName>
-                              <Top>3.99203cm</Top>
+                              <Top>3.2512cm</Top>
                               <Left>2.11217cm</Left>
                               <Height>3.6cm</Height>
                               <Width>23.53456cm</Width>
@@ -1262,8 +1262,8 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>TotalAmountCapLbl</rd:DefaultName>
-                              <Top>11.05641cm</Top>
-                              <Left>19.68182cm</Left>
+                              <Top>9.33662cm</Top>
+                              <Left>18.38423cm</Left>
                               <Height>0.6cm</Height>
                               <Width>3.02917cm</Width>
                               <ZIndex>5</ZIndex>
@@ -1296,8 +1296,8 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox89</rd:DefaultName>
-                              <Top>11.00321cm</Top>
-                              <Left>24.44432cm</Left>
+                              <Top>9.28342cm</Top>
+                              <Left>23.14673cm</Left>
                               <Height>0.6cm</Height>
                               <Width>2.5cm</Width>
                               <ZIndex>6</ZIndex>
@@ -1330,8 +1330,8 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>RupeesCapLbl</rd:DefaultName>
-                              <Top>15.9512cm</Top>
-                              <Left>6.01073cm</Left>
+                              <Top>12.35287cm</Top>
+                              <Left>5.9049cm</Left>
                               <Height>0.6cm</Height>
                               <Width>13.75234cm</Width>
                               <ZIndex>7</ZIndex>
@@ -1345,7 +1345,7 @@
                               </Style>
                             </Textbox>
                             <Line Name="Line1">
-                              <Top>17.36408cm</Top>
+                              <Top>14.12558cm</Top>
                               <Left>1.50495cm</Left>
                               <Height>0cm</Height>
                               <Width>26.25958cm</Width>
@@ -1373,8 +1373,8 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>EnteredbyCapLbl</rd:DefaultName>
-                              <Top>17.75037cm</Top>
-                              <Left>2.65324cm</Left>
+                              <Top>14.39016cm</Top>
+                              <Left>2.30928cm</Left>
                               <Height>0.94396cm</Height>
                               <Width>3.73849cm</Width>
                               <ZIndex>9</ZIndex>
@@ -1405,8 +1405,8 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>SectioninChargeCapLbl</rd:DefaultName>
-                              <Top>17.75037cm</Top>
-                              <Left>7.17233cm</Left>
+                              <Top>14.39016cm</Top>
+                              <Left>6.82837cm</Left>
                               <Height>0.94396cm</Height>
                               <Width>3.90229cm</Width>
                               <ZIndex>10</ZIndex>
@@ -1436,8 +1436,8 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>StoresinChargeCapLbl</rd:DefaultName>
-                              <Top>17.75037cm</Top>
-                              <Left>11.94752cm</Left>
+                              <Top>14.39016cm</Top>
+                              <Left>11.60356cm</Left>
                               <Height>0.94396cm</Height>
                               <Width>4.01318cm</Width>
                               <ZIndex>11</ZIndex>
@@ -1467,8 +1467,8 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>PurchDeptCapLbl</rd:DefaultName>
-                              <Top>17.75037cm</Top>
-                              <Left>16.83491cm</Left>
+                              <Top>14.39016cm</Top>
+                              <Left>16.49095cm</Left>
                               <Height>0.94396cm</Height>
                               <Width>3.74354cm</Width>
                               <ZIndex>12</ZIndex>
@@ -1498,8 +1498,8 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>AccountsDeptCapLbl</rd:DefaultName>
-                              <Top>17.75037cm</Top>
-                              <Left>21.50988cm</Left>
+                              <Top>14.39016cm</Top>
+                              <Left>21.16592cm</Left>
                               <Height>0.94396cm</Height>
                               <Width>3.73582cm</Width>
                               <ZIndex>13</ZIndex>
@@ -2665,7 +2665,7 @@
                                 </TablixMembers>
                               </TablixRowHierarchy>
                               <DataSetName>DataSet_Result</DataSetName>
-                              <Top>7.91845cm</Top>
+                              <Top>7.17762cm</Top>
                               <Left>2.11217cm</Left>
                               <Height>1.2cm</Height>
                               <Width>23.53456cm</Width>
@@ -2676,39 +2676,6 @@
                                 </Border>
                               </Style>
                             </Tablix>
-                            <Textbox Name="SectioninChargeCapLbl3">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>=Fields!EnteredbyCapLbl.Value</Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style>
-                                    <TextAlign>Center</TextAlign>
-                                  </Style>
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>SectioninChargeCapLbl</rd:DefaultName>
-                              <Top>18.22662cm</Top>
-                              <Left>2.11217cm</Left>
-                              <Height>0.94396cm</Height>
-                              <Width>4.11396cm</Width>
-                              <ZIndex>15</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <VerticalAlign>Middle</VerticalAlign>
-                                <PaddingLeft>5pt</PaddingLeft>
-                                <PaddingRight>5pt</PaddingRight>
-                              </Style>
-                            </Textbox>
                           </ReportItems>
                           <KeepTogether>true</KeepTogether>
                           <Style>
@@ -2717,7 +2684,6 @@
                             </Border>
                           </Style>
                         </Rectangle>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -2735,7 +2701,7 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet_Result</DataSetName>
-            <Height>7.54747in</Height>
+            <Height>6.57872in</Height>
             <Width>11.44419in</Width>
             <Style>
               <Border>
@@ -2744,7 +2710,7 @@
             </Style>
           </Tablix>
         </ReportItems>
-        <Height>19.21192cm</Height>
+        <Height>16.70995cm</Height>
         <Style />
       </Body>
       <Width>29.06824cm</Width>

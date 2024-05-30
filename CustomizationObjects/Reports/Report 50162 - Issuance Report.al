@@ -27,6 +27,7 @@ report 50162 "Issuance Report"
                     TempItemLedgerEntry: Record "Item Ledger Entry" temporary;
 
                 begin
+                    Clear(TotalAmount);
                     Clear(InwardRefNumber);
                     Clear(ItemLedgerQty);
                     ItemLedgerEntries.Reset();
@@ -63,6 +64,7 @@ report 50162 "Issuance Report"
                             ValueEntryLVar.SetRange("Item Ledger Entry No.", ItemLedgerEntries."Entry No.");
                             if ValueEntryLVar.FindFirst() then;
 
+                            TotalAmount := ItemLedgerEntries.Quantity * ValueEntryLVar."Cost per Unit"; //B2BSCM30MAY2024
                             WindPa.Update(1, "Document No.");
 
                             TempExcelBuffer.NewRow();
@@ -85,9 +87,10 @@ report 50162 "Issuance Report"
                             //TempExcelBuffer.AddColumn(ItemLedgerQty, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                             TempExcelBuffer.AddColumn(ItemLedgerEntries.Quantity, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                             TempExcelBuffer.AddColumn(ValueEntryLVar."Cost per Unit", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
-                            TempExcelBuffer.AddColumn(ABS(ItemLedgerEntries.Quantity * "Indent Line"."Unit Cost"), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
+                            TempExcelBuffer.AddColumn(ABS(TotalAmount), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                             TempExcelBuffer.AddColumn(No2, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                             TempExcelBuffer.AddColumn(ItemLedgerEntries."Entry No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn("Indent Header".Purpose, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text); //B2BSCM30MAY2024
                         until ItemLedgerEntries.Next() = 0;
                 end;
             }
@@ -202,6 +205,7 @@ report 50162 "Issuance Report"
         TempExcelBuffer.AddColumn('Total Amount', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('Inward Ref.', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('Entry No.', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        TempExcelBuffer.AddColumn('Purpose', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSCM30MAY2024
     end;
 
     procedure FindAppliedEntries(ItemLedgEntry: Record "Item Ledger Entry"; var TempItemLedgerEntry: Record "Item Ledger Entry" temporary)
@@ -277,4 +281,5 @@ report 50162 "Issuance Report"
         purchaseHeader: Record "Purchase Header";
         GateEntryHeader_B2B: Record "Posted Gate Entry Header_B2B";
         No2: Code[20];
+        TotalAmount: Decimal;
 }

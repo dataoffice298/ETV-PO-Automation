@@ -146,5 +146,27 @@ page 50189 "CWIP Subform"
             }
         }
     }
+    actions
+    {
+        area(Processing)
+        {
+            group(Functions)
+            {
+                action(SelectEntry)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Select';
+                    Image = SelectEntries;
+
+                    trigger OnAction()
+                    begin
+                        if not Rec.Select then
+                            Rec.TestField("Fixed Asset No.");
+                        Rec.Select := true;
+                    end;
+                }
+            }
+        }
+    }
 
 }

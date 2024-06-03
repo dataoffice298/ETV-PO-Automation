@@ -226,6 +226,23 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 end;
                 //B2BSSD09AUG2023<
 
+                PurchLine.Reset();
+                PurchLine.SetRange("Document No.", Rec."No.");
+                PurchLine.SetRange("Document Type", Rec."Document Type");
+                PurchLine.SetFilter("Qty. to Receive", '>0');
+                PurchLine.SetRange(CWIP, true);
+                if PurchLine.FindSet() then
+                    repeat
+                        CWIPDetails.Reset();
+                        CWIPDetails.SetRange("Document No.", PurchLine."Document No.");
+                        CWIPDetails.SetRange("Document Line No.", PurchLine."Line No.");
+                        if not CWIPDetails.FindSet() then
+                            Error(ErrLbl, PurchLine."No.", PurchLine."Line No.")
+                        else
+                            if (CWIPDetails.Count < (PurchLine."Qty. to Receive" + PurchLine."Quantity Received")) and (PurchLine."Unit of Measure Code" = 'NOS') then
+                                Error(Err2Lbl, PurchLine."No.", PurchLine."Line No.")
+                    until PurchLine.Next() = 0;
+
 
                 Rec.TestField("Import Type", ErrorInfo.Create(ImportTypeError, true, PurchaseHeader));//B2BSCM25SEP2023
                 if rec."EPCG Scheme" = rec."EPCG Scheme"::"Under EPCG" then
@@ -331,6 +348,23 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 Rec.TestField("Transport Method");
                 // Rec.TestField("EPCG Scheme");
                 //B2BSSD29JUN2023<<
+
+                // PurchLine.Reset();
+                // PurchLine.SetRange("Document No.", Rec."No.");
+                // PurchLine.SetRange("Document Type", Rec."Document Type");
+                // PurchLine.SetFilter("Qty. to Receive", '>0');
+                // PurchLine.SetRange(CWIP, true);
+                // if PurchLine.FindSet() then
+                //     repeat
+                //         CWIPDetails.Reset();
+                //         CWIPDetails.SetRange("Document No.", PurchLine."Document No.");
+                //         CWIPDetails.SetRange("Document Line No.", PurchLine."Line No.");
+                //         if not CWIPDetails.FindSet() then
+                //             Error(ErrLbl, PurchLine."No.", PurchLine."Line No.")
+                //         else
+                //             if (CWIPDetails.Count < (PurchLine."Qty. to Receive" + PurchLine."Quantity Received")) and (PurchLine."Unit of Measure Code" = 'NOS') then
+                //                 Error(Err2Lbl, PurchLine."No.", PurchLine."Line No.")
+                //     until PurchLine.Next() = 0;
             end;
         }
         //B2BVCOn04Oct2022<<<
@@ -551,6 +585,23 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                     if LCDetails.FindFirst() then
                         Error('There is a Released LC document against this Vendor. To proceed, please provide LC No. in Purchase Order');
                 end;
+
+                PurchLine.Reset();
+                PurchLine.SetRange("Document No.", Rec."No.");
+                PurchLine.SetRange("Document Type", Rec."Document Type");
+                PurchLine.SetFilter("Qty. to Receive", '>0');
+                PurchLine.SetRange(CWIP, true);
+                if PurchLine.FindSet() then
+                    repeat
+                        CWIPDetails.Reset();
+                        CWIPDetails.SetRange("Document No.", PurchLine."Document No.");
+                        CWIPDetails.SetRange("Document Line No.", PurchLine."Line No.");
+                        if not CWIPDetails.FindSet() then
+                            Error(ErrLbl, PurchLine."No.", PurchLine."Line No.")
+                        else
+                            if (CWIPDetails.Count < (PurchLine."Qty. to Receive" + PurchLine."Quantity Received")) and (PurchLine."Unit of Measure Code" = 'NOS') then
+                                Error(Err2Lbl, PurchLine."No.", PurchLine."Line No.")
+                    until PurchLine.Next() = 0;
             end;
 
             trigger OnAfterAction()
@@ -711,4 +762,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         ErrorTxt1: TextConst ENN = 'Quantity cannot Received More Then Accepted Inward Quantity';
         PurchLineGRec: Record "Purchase Line";
         IndentReqLine: Record "Indent Requisitions";
+        CWIPDetails: Record "CWIP Details";
+        ErrLbl: Label 'You must define CWIP details for the Item No. %1 and Line No. %2.';
+        Err2Lbl: Label 'CWIP details must be defined for the total receiving quantity of Item No. %1 and Line No. %2.';
 }

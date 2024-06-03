@@ -189,6 +189,11 @@ table 50232 "CWIP Line"
         field(37; Select; Boolean)
         {
             Caption = 'Select';
+            trigger OnValidate()
+            begin
+                if Select then
+                    TestField("Fixed Asset No.", '');
+            end;
         }
     }
     keys

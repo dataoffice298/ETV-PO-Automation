@@ -359,11 +359,18 @@ table 50231 "CWIP Header"
         ReleaseTxt: Label 'Do you want to release the Document?';
         NoWorkflowEnabledErr: Label 'This document can only be released when the approval process is complete.';
         SucessTxt: Label 'Document has been released successfully.';
+        ErrTxt: Label 'Atleast one CWIP must be selected.';
+        CWIPLine: Record "CWIP Line";
     begin
         if ApprovalMgmt.IsCheckCWIPworkflowenabled(Rec) then
             Error(NoWorkflowEnabledErr);
         if not CONFIRM(ReleaseTxt, false) then
             exit;
+        CWIPLine.Reset();
+        CWIPLine.SetRange("Document No.", "No.");
+        CWIPLine.SetRange(Select, true);
+        if not CWIPLine.FindFirst() then
+            Error(ErrTxt);
         TestField(Status, Status::Open);
         Status := Status::Released;
         Modify(true);
@@ -414,6 +421,7 @@ table 50231 "CWIP Header"
 
                 CWIPLine."Fixed Asset No." := FixedAsset."No.";
                 CWIPLine."Fixed Asset Name" := FixedAsset.Description;
+                CWIPLine.Select := false;
                 CWIPLine.Modify();
             until CWIPLine.Next() = 0;
             Window.Close();

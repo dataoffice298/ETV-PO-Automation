@@ -11,6 +11,13 @@ pageextension 50124 PurchaseInvoice extends "Purchase Invoice"
                 Editable = false;
             }
         }
+        addafter("Vendor Invoice No.")
+        {
+            field("Vendor Invoice Date"; "Vendor Invoice Date")
+            {
+                ApplicationArea = All;
+            }
+        }
     }
 
 }

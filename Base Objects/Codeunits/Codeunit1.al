@@ -849,6 +849,7 @@ codeunit 50016 "MyBaseSubscr"
     begin
         NewItemLedgEntry."Shortcut Dimension 3 Code" := ItemJournalLine."Shortcut Dimension 3 Code";
     end;
+
 }
 
 

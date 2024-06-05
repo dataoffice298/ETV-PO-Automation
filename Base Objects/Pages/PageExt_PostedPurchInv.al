@@ -34,6 +34,11 @@ pageextension 50079 postedPurchInvExt extends "Posted Purchase Invoice"
         //B2BSSD23MAR2023<<
         addafter("Vendor Order No.")
         {
+            field("Vendor Invoice Date"; "Vendor Invoice Date")
+            {
+                ApplicationArea = all;
+                Editable = false;
+            }
             field(ProgrammeName; Rec."Programme Name")
             {
                 ApplicationArea = All;

@@ -875,6 +875,12 @@ codeunit 50016 "MyBaseSubscr"
     begin
         NewItemLedgEntry."Shortcut Dimension 3 Code" := ItemJournalLine."Shortcut Dimension 3 Code";
     end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforePostLines', '', false, false)]
+    local procedure OnBeforePostLines(var PurchLine: Record "Purchase Line"; PurchHeader: Record "Purchase Header"; PreviewMode: Boolean; CommitIsSupressed: Boolean; var TempPurchLineGlobal: Record "Purchase Line" temporary)
+    begin
+        PurchLine.SetFilter("Quantity Accepted B2B", '<>%1', 0);
+    end;
 }
 
 

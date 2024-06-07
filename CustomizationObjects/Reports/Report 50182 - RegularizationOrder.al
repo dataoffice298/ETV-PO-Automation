@@ -120,6 +120,8 @@ report 50182 "Regularization Order"
             { }
             column(PurchName; PurchName)
             { }
+            /* column(Amendment; Amendment)
+            { } */
             column(Amendment; Amendment)
             { }
             column(Purpose; Purpose)
@@ -428,12 +430,12 @@ report 50182 "Regularization Order"
                     CurrencyCode := "Purchase Header"."Currency Code";
 
                 if "Purchase Header".Regularization then begin
-                    if Amendment then
+                    if "Purchase Header".Amendment then
                         AmendmentText := 'Amendment Cum Regularization  Order'
                     else
                         AmendmentText := 'Regularization Order';
                 end else begin
-                    if Amendment then
+                    if "Purchase Header".Amendment then
                         AmendmentText := 'Amendment Order'
                     else
                         AmendmentText := 'Purchase Order';
@@ -493,10 +495,10 @@ report 50182 "Regularization Order"
         {
             area(Content)
             {
-                field(Amendment; Amendment)
+                /* field(Amendment; Amendment)
                 {
                     ApplicationArea = All;
-                }
+                } */
 
             }
         }
@@ -511,7 +513,7 @@ report 50182 "Regularization Order"
         CurrencyCode: Code[10];
         Description1: Text[100];
         PaymentDescription: Text[100];
-        Amendment: Boolean;
+        //Amendment: Boolean;
         AmendmentText: Text;
         AmendmentDate: Date;
         PurchName: Text;

@@ -2980,9 +2980,6 @@ End Function
         <Field Name="POReqNo">
           <DataField>POReqNo</DataField>
         </Field>
-        <Field Name="InwardNo">
-          <DataField>InwardNo</DataField>
-        </Field>
         <Field Name="InwardDate">
           <DataField>InwardDate</DataField>
         </Field>
@@ -3060,6 +3057,9 @@ End Function
         </Field>
         <Field Name="ItemSubCategory">
           <DataField>ItemSubCategory</DataField>
+        </Field>
+        <Field Name="InwardNo">
+          <DataField>InwardNo</DataField>
         </Field>
       </Fields>
       <Query>

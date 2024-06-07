@@ -11,6 +11,10 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 ApplicationArea = all;
             }
             //B2BVCOn12Mar2024 >>
+            field(Amendment; Rec.Amendment)
+            {
+                ApplicationArea = All;
+            }
             field("Short Closed by"; Rec."Short Closed by")
             {
                 ApplicationArea = all;
@@ -207,7 +211,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         {
             trigger OnBeforeAction()
             var
-                Err001: Label 'Qty. to Accept and Qty. to Reject must not be greater than Quantity.';
+                Err001: Label 'Qty. to Accept and Qty. to Reject must not be greater than Quantity. Line No. %1';
                 Error002: TextConst ENN = 'Quantity Receive can not be Grater then QC Accepted Quantity';
                 ImportTypeError: TextConst ENN = 'Import type Must have value in Invoice details Tab';//B2BSCM25SEP2023
                 Text0001: Label 'This Purchase Order has been Short Closed. We cannot post it.';
@@ -215,6 +219,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
 
                 //B2BSSD09AUG2023>>
                 purchaseLinevar.Reset();
+                purchaseLinevar.SetRange("Document Type", Rec."Document Type");
                 purchaseLinevar.SetRange("Document No.", Rec."No.");
                 if purchaseLinevar.FindSet() then begin
                     repeat
@@ -222,9 +227,19 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                             Error(Error002);
                         if (purchaseLinevar.ShortClosed = true) and (purchaseLinevar."Outstanding Quantity" = 0) then
                             Error(Text0001);
-                    until PurchLine.Next() = 0;
+                    until purchaseLinevar.Next() = 0;
                 end;
                 //B2BSSD09AUG2023<
+
+                purchaseLinevar.Reset();
+                purchaseLinevar.SetRange("Document Type", Rec."Document Type");
+                purchaseLinevar.SetRange("Document No.", Rec."No.");
+                purchaseLinevar.SetRange(Select, true);
+                if purchaseLinevar.FindSet() then
+                    repeat
+                        if purchaseLinevar."Qty. to Receive" > purchaseLinevar."Quantity Accepted B2B" then
+                            Error(Error002, purchaseLinevar."Line No.");
+                    until purchaseLinevar.Next = 0;
 
                 PurchLine.Reset();
                 PurchLine.SetRange("Document No.", Rec."No.");

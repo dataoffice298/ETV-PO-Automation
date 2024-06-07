@@ -14,6 +14,11 @@ report 50151 "Issue Return Report Details"
                 CalcFields = "Qty Issued", "Qty Returned";
                 DataItemLink = "Document No." = field("No.");
                 DataItemLinkReference = IndentHeader;
+                trigger OnPreDataItem()
+                begin
+                    IndentLine.SetRange(Type, IndentLine.Type::Item);
+                end;
+
                 trigger OnAfterGetRecord()
                 begin
                     SNo += 1;

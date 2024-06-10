@@ -8,6 +8,10 @@ pageextension 50183 OrderAddressExtB2B extends "Order Address"
             {
                 ApplicationArea = All;
             }
+            field("Mail Alert"; Rec."Mail Alert")
+            {
+                ApplicationArea = All;
+            }
         }
     }
 

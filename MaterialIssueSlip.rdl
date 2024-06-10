@@ -1298,7 +1298,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum(Fields!Req_Quantity.Value)</Value>
+                                  <Value>=Last(Fields!ReqQtyVar.Value)</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -1601,6 +1601,12 @@ End Function
         </Field>
         <Field Name="ReqQtyFormat">
           <DataField>ReqQtyFormat</DataField>
+        </Field>
+        <Field Name="ReqQtyVar">
+          <DataField>ReqQtyVar</DataField>
+        </Field>
+        <Field Name="ReqQtyVarFormat">
+          <DataField>ReqQtyVarFormat</DataField>
         </Field>
         <Field Name="QtyIssue">
           <DataField>QtyIssue</DataField>

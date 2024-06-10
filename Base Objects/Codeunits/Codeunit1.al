@@ -881,6 +881,40 @@ codeunit 50016 "MyBaseSubscr"
     begin
         PurchLine.SetFilter("Quantity Accepted B2B", '<>%1', 0);
     end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Report Selections", 'OnBeforeGetVendorEmailAddress', '', false, false)]
+    local procedure OnBeforeGetVendorEmailAddress(BuyFromVendorNo: Code[20]; var ToAddress: Text; ReportUsage: Option; var IsHandled: Boolean; RecVar: Variant)
+    var
+        OrderAddress: Record "Order Address";
+        RecRef: RecordRef;
+        PurchaseHeader: Record "Purchase Header";
+        Vendor: Record Vendor;
+        Contact: Record Contact;
+    begin
+        IsHandled := true;
+        if ToAddress = '' then begin
+            if Contact.Get(BuyFromVendorNo) then
+                ToAddress := Contact."E-Mail";
+        end;
+
+        if ToAddress = '' then
+            if Vendor.Get(BuyFromVendorNo) then
+                ToAddress := Vendor."E-Mail";
+
+        OrderAddress.Reset();
+        OrderAddress.SetRange("Vendor No.", BuyFromVendorNo);
+        OrderAddress.SetRange("Mail Alert", true);
+        if OrderAddress.FindSet() then
+            repeat
+                if ToAddress <> '' then
+                    ToAddress += ';' + OrderAddress."E-Mail"
+                else
+                    ToAddress := OrderAddress."E-Mail";
+            until OrderAddress.Next = 0;
+    end;
+
+
+
 }
 
 

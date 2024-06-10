@@ -6,5 +6,9 @@ tableextension 50252 OrderAddressExtB2B extends "Order Address"
         {
             DataClassification = ToBeClassified;
         }
+        field(50105; "Mail Alert"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
     }
 }

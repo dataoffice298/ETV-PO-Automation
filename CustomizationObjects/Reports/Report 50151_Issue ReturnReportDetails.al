@@ -16,26 +16,29 @@ report 50151 "Issue Return Report Details"
                 DataItemLinkReference = IndentHeader;
                 trigger OnPreDataItem()
                 begin
-                    IndentLine.SetRange(Type, IndentLine.Type::Item);
+                    //IndentLine.SetRange(Type, IndentLine.Type::Item);
                 end;
 
                 trigger OnAfterGetRecord()
                 begin
-                    SNo += 1;
-                    ItemGRec.Get(IndentLine."No.");
+
+                    //ItemGRec.Get(IndentLine."No.");
                     ItemLedgerEntry.Reset();
                     ItemLedgerEntry.SetRange("Indent No.", IndentLine."Document No.");
                     ItemLedgerEntry.SetRange("Indent Line No.", IndentLine."Line No.");
+                    ItemLedgerEntry.SetFilter("Posting Date", '%1..%2', StartDate, EndDate);
                     ItemLedgerEntry.SetFilter(Quantity, '>%1', 0);
                     if ItemLedgerEntry.FindSet() then begin
                         repeat
+                            SNo += 1;
                             ExcelBuffer.NewRow;
                             ExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Number);
                             ExcelBuffer.AddColumn(IndentLine."Shortcut Dimension 2 Code", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
                             ExcelBuffer.AddColumn(IndentLine."Delivery Location", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
                             ExcelBuffer.AddColumn(IndentLine."Shortcut Dimension 1 Code", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
                             ExcelBuffer.AddColumn(IndentHeader."programme Name", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
-                            ExcelBuffer.AddColumn(ItemGRec."Item Category Code", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
+                            if ItemGRec.Get(ItemLedgerEntry."Item No.") then
+                                ExcelBuffer.AddColumn(ItemGRec."Item Category Code", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
                             ExcelBuffer.AddColumn(IndentHeader.Indentor, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
                             ExcelBuffer.AddColumn(IndentHeader."No.", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
                             ExcelBuffer.AddColumn(IndentHeader."Document Date", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Date);
@@ -61,7 +64,7 @@ report 50151 "Issue Return Report Details"
             }
             trigger OnPreDataItem()
             begin
-                SetFilter("Document Date", '%1..%2', StartDate, EndDate);
+                //SetFilter("Document Date", '%1..%2', StartDate, EndDate);
                 MakeIndentExcelDataHeader();
             end;
         }

@@ -201,104 +201,104 @@ report 51099 "Category Wise Stock Summary"
                         UnitRateNew := openingStockValue / Openingstock
                     else
                         UnitRateNew := 0;
+                    //end;
+
+
+                    Clear(ItemLedgerEntryCount);
+                    ItemLedgerEntry.RESET;
+                    ItemLedgerEntry.SETRANGE("Item No.", item."No.");
+                    //ItemLedgerEntry.SetRange("Variant Code", ItemLedgerEntry1."Variant Code");
+                    ItemLedgerEntry.SETFILTER("Posting Date", '%1..%2', StartDate, EndDate);
+                    ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);//B2BSSD16MAY2023
+                    ItemLedgerEntry.FilterGroup(-1);
+                    ItemLedgerEntry.SetFilter("Document Type", '%1', ItemLedgerEntry."Document Type"::"Purchase Receipt");
+                    ItemLedgerEntry.SetRange("Entry Type", ItemLedgerEntry."Entry Type"::"Positive Adjmt.");
+                    IF ItemLedgerEntry.FINDSET THEN begin
+                        repeat
+                            Make := ItemLedgerEntry."Variant Code";
+                            ItemLedgerEntry.CalcFields("Cost Amount (Actual)");
+                            InwardStock := InwardStock + Abs(ItemLedgerEntry.Quantity);
+                            InwardsStockValue := InwardsStockValue + abs(ItemLedgerEntry."Cost Amount (Actual)");
+                        until ItemLedgerEntry.Next() = 0;
+                    end;
+
+
+                    // ItemLedgerEntry.CalcSums(Quantity, "Cost Amount (Actual)");
+                    // InwardStock := ItemLedgerEntry.Quantity;
+                    // ItemLedgerEntryCount := ItemLedgerEntry.Count;
+                    // ItemLedgerEntry.CalcSums("Cost Amount (Actual)");
+                    // InwardsStockValue := ItemLedgerEntry."Cost Amount (Actual)";
+                    if InwardStock <> 0 then
+                        UnitRateInwardStockNew := InwardsStockValue / InwardStock
+                    else
+                        UnitRateInwardStockNew := 0;
+
+                    Clear(ItemLedgerEntryCount);
+                    ItemLedgerEntry.RESET;
+                    ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
+                    //ItemLedgerEntry.SetRange("Variant Code", ItemLedgerEntry1."Variant Code");
+                    ItemLedgerEntry.SETFILTER("Posting Date", '%1..%2', StartDate, EndDate);
+                    ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);//B2BSSD16MAY2023
+                                                                                            //ItemLedgerEntry.SetFilter("Entry Type", '%1', ItemLedgerEntry."Entry Type"::"Negative Adjmt.");
+                                                                                            //ItemLedgerEntry.SetRange("Document Type", ItemLedgerEntry."Document Type"::"Sales Invoice");//B2BSCM10JAN2024
+                    ItemLedgerEntry.SetFilter("Entry Type", '%1|%2', ItemLedgerEntry."Entry Type"::"Negative Adjmt.", ItemLedgerEntry."Entry Type"::Sale); //B2BSCM10JAN2024
+                    IF ItemLedgerEntry.FINDSET THEN begin
+                        repeat
+                            Make := ItemLedgerEntry."Variant Code";
+                            ItemLedgerEntry.CalcFields("Cost Amount (Actual)");
+                            OutwardStock := OutwardStock + Abs(ItemLedgerEntry.Quantity);
+                            OutwardStockalue := OutwardStockalue + Abs(ItemLedgerEntry."Cost Amount (Actual)");
+                        until ItemLedgerEntry.Next() = 0;
+                    end;
+
+
+                    // ItemLedgerEntry.CalcSums(Quantity, "Cost Amount (Actual)");
+                    // OutwardStock := ABS(ItemLedgerEntry.Quantity);
+                    // // ItemLedgerEntry.CalcSums("Cost Amount (Actual)");
+                    // OutwardStockalue := ItemLedgerEntry."Cost Amount (Actual)";
+                    // ItemLedgerEntryCount := ItemLedgerEntry.Count;
+                    if OutwardStock <> 0 then
+                        UnitRateOutWardStockNew := OutwardStockalue / OutwardStock
+                    else
+                        UnitRateOutWardStockNew := 0;
+
+                    // if ItemVariant.Get(ItemLedgerEntry1."Variant Code") then
+                    //     Make := ItemVariant.Description;
+
+                    // Clear(ItemLedgerEntryCount);
+                    // ItemLedgerEntry.RESET;
+                    // ItemLedgerEntry.SETRANGE("Item No.", Item."No."); //Item."No."
+                    // ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);
+                    // ItemLedgerEntry.SetRange("Variant Code", ItemVariant.Code);
+                    // ItemLedgerEntry.SETFILTER("Posting Date", '<=%1', EndDate);
+                    // IF ItemLedgerEntry.FINDSET THEN begin
+                    //     ItemLedgerEntryCount := ItemLedgerEntry.Count;
+                    //     repeat
+                    //         ValueEntryGrec.Reset();
+                    //         ValueEntryGrec.SetRange("Item Ledger Entry No.", ItemLedgerEntry."Entry No.");
+                    //         if ValueEntryGrec.FindFirst() then begin
+                    //             CloseUnitrate += ValueEntryGrec."Cost per Unit";
+                    //         end;
+                    //     until ItemLedgerEntry.Next() = 0;
+                    //     ClosingUnitRate := CloseUnitrate / ItemLedgerEntryCount;
+                    // end;
+
+                    ClosingStock := (Openingstock + InwardStock) - OutwardStock;
+                    ClosingStockValue := openingStockValue + InwardsStockValue - OutwardStockalue;
+                    if ClosingStock <> 0 then
+                        unitRateClosingStocNew := ClosingStockValue / ClosingStock
+                    else
+                        unitRateClosingStocNew := 0;
+                    //unitRateClosingStocNew := (Round(Openingstock * UnitRateNew, 0.01) + Round(InwardStock * UnitRateInwardStockNew, 0.01)) - Round(OutwardStock * UnitRateOutWardStockNew, 0.01);
+                    // if ClosingStock <> 0 then
+                    //     unitRateClosingStoc := ((Round(Openingstock * UnitRateNew, 0.01) + Round(InwardStock * UnitRateInwardStockNew, 0.01)) - Round(OutwardStock * UnitRateOutWardStockNew, 0.01)) / ClosingStock
+                    // else
+                    //     unitRateClosingStoc := 0;
+
+                    SNo += 1;
+                    WindPa.Update(1, Item."No.");
+                    MakeExcelBody();
                 end;
-
-
-                Clear(ItemLedgerEntryCount);
-                ItemLedgerEntry.RESET;
-                ItemLedgerEntry.SETRANGE("Item No.", item."No.");
-                //ItemLedgerEntry.SetRange("Variant Code", ItemLedgerEntry1."Variant Code");
-                ItemLedgerEntry.SETFILTER("Posting Date", '%1..%2', StartDate, EndDate);
-                ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);//B2BSSD16MAY2023
-                ItemLedgerEntry.FilterGroup(-1);
-                ItemLedgerEntry.SetFilter("Document Type", '%1', ItemLedgerEntry."Document Type"::"Purchase Receipt");
-                ItemLedgerEntry.SetRange("Entry Type", ItemLedgerEntry."Entry Type"::"Positive Adjmt.");
-                IF ItemLedgerEntry.FINDSET THEN begin
-                    repeat
-                        Make := ItemLedgerEntry."Variant Code";
-                        ItemLedgerEntry.CalcFields("Cost Amount (Actual)");
-                        InwardStock := InwardStock + Abs(ItemLedgerEntry.Quantity);
-                        InwardsStockValue := InwardsStockValue + abs(ItemLedgerEntry."Cost Amount (Actual)");
-                    until ItemLedgerEntry.Next() = 0;
-                end;
-
-
-                // ItemLedgerEntry.CalcSums(Quantity, "Cost Amount (Actual)");
-                // InwardStock := ItemLedgerEntry.Quantity;
-                // ItemLedgerEntryCount := ItemLedgerEntry.Count;
-                // ItemLedgerEntry.CalcSums("Cost Amount (Actual)");
-                // InwardsStockValue := ItemLedgerEntry."Cost Amount (Actual)";
-                if InwardStock <> 0 then
-                    UnitRateInwardStockNew := InwardsStockValue / InwardStock
-                else
-                    UnitRateInwardStockNew := 0;
-
-                Clear(ItemLedgerEntryCount);
-                ItemLedgerEntry.RESET;
-                ItemLedgerEntry.SETRANGE("Item No.", Item."No.");
-                //ItemLedgerEntry.SetRange("Variant Code", ItemLedgerEntry1."Variant Code");
-                ItemLedgerEntry.SETFILTER("Posting Date", '%1..%2', StartDate, EndDate);
-                ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);//B2BSSD16MAY2023
-                //ItemLedgerEntry.SetFilter("Entry Type", '%1', ItemLedgerEntry."Entry Type"::"Negative Adjmt.");
-                //ItemLedgerEntry.SetRange("Document Type", ItemLedgerEntry."Document Type"::"Sales Invoice");//B2BSCM10JAN2024
-                ItemLedgerEntry.SetFilter("Entry Type", '%1|%2', ItemLedgerEntry."Entry Type"::"Negative Adjmt.", ItemLedgerEntry."Entry Type"::Sale); //B2BSCM10JAN2024
-                IF ItemLedgerEntry.FINDSET THEN begin
-                    repeat
-                        Make := ItemLedgerEntry."Variant Code";
-                        ItemLedgerEntry.CalcFields("Cost Amount (Actual)");
-                        OutwardStock := OutwardStock + Abs(ItemLedgerEntry.Quantity);
-                        OutwardStockalue := OutwardStockalue + Abs(ItemLedgerEntry."Cost Amount (Actual)");
-                    until ItemLedgerEntry.Next() = 0;
-                end;
-
-
-                // ItemLedgerEntry.CalcSums(Quantity, "Cost Amount (Actual)");
-                // OutwardStock := ABS(ItemLedgerEntry.Quantity);
-                // // ItemLedgerEntry.CalcSums("Cost Amount (Actual)");
-                // OutwardStockalue := ItemLedgerEntry."Cost Amount (Actual)";
-                // ItemLedgerEntryCount := ItemLedgerEntry.Count;
-                if OutwardStock <> 0 then
-                    UnitRateOutWardStockNew := OutwardStockalue / OutwardStock
-                else
-                    UnitRateOutWardStockNew := 0;
-
-                // if ItemVariant.Get(ItemLedgerEntry1."Variant Code") then
-                //     Make := ItemVariant.Description;
-
-                // Clear(ItemLedgerEntryCount);
-                // ItemLedgerEntry.RESET;
-                // ItemLedgerEntry.SETRANGE("Item No.", Item."No."); //Item."No."
-                // ItemLedgerEntry.SetRange(ItemLedgerEntry."Location Code", LocationGvar);
-                // ItemLedgerEntry.SetRange("Variant Code", ItemVariant.Code);
-                // ItemLedgerEntry.SETFILTER("Posting Date", '<=%1', EndDate);
-                // IF ItemLedgerEntry.FINDSET THEN begin
-                //     ItemLedgerEntryCount := ItemLedgerEntry.Count;
-                //     repeat
-                //         ValueEntryGrec.Reset();
-                //         ValueEntryGrec.SetRange("Item Ledger Entry No.", ItemLedgerEntry."Entry No.");
-                //         if ValueEntryGrec.FindFirst() then begin
-                //             CloseUnitrate += ValueEntryGrec."Cost per Unit";
-                //         end;
-                //     until ItemLedgerEntry.Next() = 0;
-                //     ClosingUnitRate := CloseUnitrate / ItemLedgerEntryCount;
-                // end;
-
-                ClosingStock := (Openingstock + InwardStock) - OutwardStock;
-                ClosingStockValue := openingStockValue + InwardsStockValue - OutwardStockalue;
-                if ClosingStock <> 0 then
-                    unitRateClosingStocNew := ClosingStockValue / ClosingStock
-                else
-                    unitRateClosingStocNew := 0;
-                //unitRateClosingStocNew := (Round(Openingstock * UnitRateNew, 0.01) + Round(InwardStock * UnitRateInwardStockNew, 0.01)) - Round(OutwardStock * UnitRateOutWardStockNew, 0.01);
-                // if ClosingStock <> 0 then
-                //     unitRateClosingStoc := ((Round(Openingstock * UnitRateNew, 0.01) + Round(InwardStock * UnitRateInwardStockNew, 0.01)) - Round(OutwardStock * UnitRateOutWardStockNew, 0.01)) / ClosingStock
-                // else
-                //     unitRateClosingStoc := 0;
-
-                SNo += 1;
-                WindPa.Update(1, Item."No.");
-                MakeExcelBody();
-
             end;
 
             trigger OnPreDataItem()

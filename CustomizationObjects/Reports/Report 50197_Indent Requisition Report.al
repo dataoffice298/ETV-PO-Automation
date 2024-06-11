@@ -1,8 +1,8 @@
-report 50250 "Indent Requisition Report"
+report 50197 "Indent Requisition Report"
 {
     UsageCategory = ReportsAndAnalysis;
     ApplicationArea = All;
-    Caption = 'Indent Requisition Detailed Status_50250';
+    Caption = 'Indent Requisition Detailed Status_50197';
     ProcessingOnly = true;
 
     dataset
@@ -11,6 +11,7 @@ report 50250 "Indent Requisition Report"
         {
             dataitem(IndentReqLine; "Indent Requisitions")
             {
+                CalcFields = "Received Quantity";
                 DataItemLink = "Document No." = field("No.");
                 DataItemLinkReference = IndentReqHeader;
                 trigger OnAfterGetRecord()
@@ -25,6 +26,8 @@ report 50250 "Indent Requisition Report"
                         VendorNo := PurchHead."Buy-from Vendor No.";
                         VendorName := PurchHead."Buy-from Vendor Name";
                     end;
+
+
 
                     ExcelBuffer.NewRow;
                     ExcelBuffer.AddColumn(IndentReqHeader."No.", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
@@ -49,8 +52,23 @@ report 50250 "Indent Requisition Report"
                     ExcelBuffer.AddColumn(VendorNo, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
                     ExcelBuffer.AddColumn(VendorName, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
                     ExcelBuffer.AddColumn(IndentReqLine."Unit Cost", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Number);
+                    ExcelBuffer.AddColumn(LastApprovalDateTime, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
+                    ExcelBuffer.AddColumn(IndentReqHeader.Purpose, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
                 end;
             }
+            trigger OnAfterGetRecord()
+            begin
+                Clear(LastApprovalDateTime);
+                ApprovalEntry.Reset();
+                ApprovalEntry.SetRange("Table ID", 50209);
+                ApprovalEntry.SetRange("Document No.", IndentReqHeader."No.");
+                ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
+                if ApprovalEntry.FindLast() then begin
+                    if IndentReqHeader.Status = IndentReqHeader.Status::Release then
+                        LastApprovalDateTime := ApprovalEntry."Last Date-Time Modified";
+                end;
+            end;
+
             trigger OnPreDataItem()
             begin
                 SetFilter("Document Date", '%1..%2', StartDate, EndDate);
@@ -127,6 +145,8 @@ report 50250 "Indent Requisition Report"
         ExcelBuffer.AddColumn('Vendor No.', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
         ExcelBuffer.AddColumn('Vendor Name', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
         ExcelBuffer.AddColumn('Unit Cost', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
+        ExcelBuffer.AddColumn('Last Approval Date&Time', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
+        ExcelBuffer.AddColumn('Purpose', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
 
     END;
 
@@ -138,5 +158,7 @@ report 50250 "Indent Requisition Report"
         PurchHead: Record "Purchase Header";
         VendorNo: Code[20];
         VendorName: Text;
+        ApprovalEntry: Record "Approval Entry";
+        LastApprovalDateTime: DateTime;
 
 }

@@ -164,6 +164,11 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
             Caption = 'Purchase order';
             DataClassification = CustomerContent;
         }
+        field(50125; Amendment; Boolean)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Amendment';
+        }
     }
 
 

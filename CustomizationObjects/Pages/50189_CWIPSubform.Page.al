@@ -32,6 +32,11 @@ page 50189 "CWIP Subform"
                     ToolTip = 'Specifies the value of the Description field.';
                     Caption = 'Description';
                 }
+                field(Select; Rec.Select)
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Select field.';
+                }
                 field("Location Code"; Rec."Location Code")
                 {
                     ApplicationArea = All;
@@ -113,6 +118,11 @@ page 50189 "CWIP Subform"
                     Caption = 'FA Sub Class Code';
                     ApplicationArea = All;
                 }
+                field("FA No. Series"; Rec."FA No. Series")
+                {
+                    ToolTip = 'Specifies the value of the FA No. Series field.';
+                    ApplicationArea = all;
+                }
                 field("No. of Depreciation Years"; Rec."No. of Depreciation Years")
                 {
                     ApplicationArea = All;
@@ -132,6 +142,28 @@ page 50189 "CWIP Subform"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the FA Asset Name field.';
                     Caption = 'Fixed Asset Name';
+                }
+            }
+        }
+    }
+    actions
+    {
+        area(Processing)
+        {
+            group(Functions)
+            {
+                action(SelectEntry)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Select';
+                    Image = SelectEntries;
+
+                    trigger OnAction()
+                    begin
+                        if not Rec.Select then
+                            Rec.TestField("Fixed Asset No.");
+                        Rec.Select := true;
+                    end;
                 }
             }
         }

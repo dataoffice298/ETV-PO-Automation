@@ -1112,6 +1112,10 @@ table 50201 "Indent Header"
         ArchiveVersion: Integer;
         text0001: Label 'Cannot Reopen the indent if the status is Cancel/Closed.';
     Begin
+        //CHP>>
+        if IndentLine."Qty To Issue" = 0 then
+            Exit;
+        //CHP<<
         IF NOT (IndentHeader."Indent Status" = IndentHeader."Indent Status"::Close) OR (IndentHeader."Indent Status" = IndentHeader."Indent Status"::Cancel) THEN BEGIN
             ArchiveIndLine.Reset();
             ArchiveIndLine.SetRange("Document No.", IndentLine."Document No.");

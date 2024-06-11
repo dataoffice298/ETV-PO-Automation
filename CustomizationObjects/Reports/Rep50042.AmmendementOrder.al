@@ -73,7 +73,7 @@ report 50042 "Ammendement Order"
             { }
             column(Quote_No_; "Purchase Quote No.")
             { }
-            column(Subject; Subject)
+            column(Subject; SubjectGVar)
             { }
             column(AmountText; AmountText[1] + ' ' + AmountText[2])
             { }
@@ -365,8 +365,8 @@ report 50042 "Ammendement Order"
                 PurchLineArch.SetFilter("No.", '<>%1', '');
                 if PurchLineArch.FindFirst() then
                     if IndentHdr.Get(PurchLineArch."Indent No.") then;
-                Subject := StrSubstNo(Subject1, "Purchase Quote No.", "Purchase Header Archive"."Document Date");
-                Subject := Subject + StrSubstNo(Subject2, IndentHdr."No.", IndentHdr."Document Date");
+                SubjectGVar := StrSubstNo(Subject1, "Purchase Quote No.", "Purchase Header Archive"."Document Date");
+                SubjectGVar := SubjectGVar + StrSubstNo(Subject2, IndentHdr."No.", IndentHdr."Document Date");
                 PurchLineArch.Reset();
                 PurchLineArch.SetCurrentKey("GST Group Code");
                 PurchLineArch.SetRange("Document No.", "No.");
@@ -425,7 +425,7 @@ report 50042 "Ammendement Order"
         IndentHdr: Record "Indent Header";
         Dear_CaptionLbl: Label 'Dear Sir,';
         AmountVendor: Decimal;
-        Subject: Text;
+        SubjectGVar: Text;
         Subject1: Label 'With reference to your Quotation No. %1/dt. %2 and subsequent discussion we had with you, ';
         Subject2: Label 'We would like to place order on you for the following lines against the Indent No. %1/dt. %2';
         IGSTLbl: Label 'IGST';

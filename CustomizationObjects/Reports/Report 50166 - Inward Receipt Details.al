@@ -27,7 +27,7 @@ report 50166 "Inward Receipt Details"
                     DocumentTotals: Codeunit "Document Totals";
                     INVOICENO: Code[30];
                     INVOICEDate: Date;
-                    SUPPLIERNAME: Text[50];
+                    SUPPLIERNAME: Text[100];
                     BasicAmount: Decimal;
                     BasePercent: Decimal;
                     ImporType: Text;

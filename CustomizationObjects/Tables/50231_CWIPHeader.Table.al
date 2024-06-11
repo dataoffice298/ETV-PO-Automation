@@ -320,7 +320,7 @@ table 50231 "CWIP Header"
         CWIPLine.Description := CWIPLedgerEntry.Description;
         CWIPLine.Quantity := CWIPLedgerEntry.Quantity;
         CWIPLine.Amount := CWIPLedgerEntry.Amount;
-        CWIPLine."Location Code" := CWIPLedgerEntry."Location Code"; //B2BKM6MAY2024
+        CWIPLine."Location Code" := CWIPLedgerEntry."Location Code";
         CWIPLine.Insert(true);
         CWIPLine.Validate("Shortcut Dimension 1 Code", CWIPLedgerEntry."Global Dimension 1 Code");
         CWIPLine.Validate("Shortcut Dimension 2 Code", CWIPLedgerEntry."Global Dimension 2 Code");
@@ -359,11 +359,18 @@ table 50231 "CWIP Header"
         ReleaseTxt: Label 'Do you want to release the Document?';
         NoWorkflowEnabledErr: Label 'This document can only be released when the approval process is complete.';
         SucessTxt: Label 'Document has been released successfully.';
+        ErrTxt: Label 'Atleast one CWIP must be selected.';
+        CWIPLine: Record "CWIP Line";
     begin
         if ApprovalMgmt.IsCheckCWIPworkflowenabled(Rec) then
             Error(NoWorkflowEnabledErr);
         if not CONFIRM(ReleaseTxt, false) then
             exit;
+        CWIPLine.Reset();
+        CWIPLine.SetRange("Document No.", "No.");
+        CWIPLine.SetRange(Select, true);
+        if not CWIPLine.FindFirst() then
+            Error(ErrTxt);
         TestField(Status, Status::Open);
         Status := Status::Released;
         Modify(true);
@@ -378,17 +385,19 @@ table 50231 "CWIP Header"
         Window: Dialog;
         SuccessTxt: Label 'Fixed Assets created successfully.';
         ExecuteTxt: Label 'Do you want to create fixed assets?';
+        NoSeriesMgt: Codeunit NoSeriesManagement;
     begin
         if not CONFIRM(ExecuteTxt, false) then
             exit;
         CheckFACreationValidations();
         CWIPLine.Reset();
         CWIPLine.SetRange("Document No.", "No.");
+        CWIPLine.SetRange(Select, true);
         if CWIPLine.FindSet() then begin
             Window.Open('Processing Lines...');
             repeat
                 FixedAsset.Init();
-                FixedAsset."No." := '';
+                FixedAsset."No." := NoSeriesMgt.GetNextNo(CWIPLine."FA No. Series", WorkDate(), true);
                 FixedAsset.Insert(true);
                 FixedAsset.Description := CopyStr(CWIPLine.Description, 1, MaxStrLen(FixedAsset.Description));
                 FixedAsset.Validate("FA Class Code", CWIPLine."FA Class Code");
@@ -412,6 +421,7 @@ table 50231 "CWIP Header"
 
                 CWIPLine."Fixed Asset No." := FixedAsset."No.";
                 CWIPLine."Fixed Asset Name" := FixedAsset.Description;
+                CWIPLine.Select := false;
                 CWIPLine.Modify();
             until CWIPLine.Next() = 0;
             Window.Close();
@@ -422,18 +432,23 @@ table 50231 "CWIP Header"
     local procedure CheckFACreationValidations()
     var
         CWIPLine: Record "CWIP Line";
+        NoSelectErr: Label 'No lines selected.';
     begin
         TestField(Status, Status::Released);
         TestField(Posted, false);
         CWIPLine.Reset();
         CWIPLine.SetRange("Document No.", "No.");
-        if CWIPLine.FindSet() then
+        CWIPLine.SetRange(Select, true);
+        if CWIPLine.FindSet() then begin
             repeat
                 CWIPLine.TestField("FA Posting Group");
                 CWIPLine.TestField("FA Depreciation Book");
                 CWIPLine.TestField("FA Start Date");
                 CWIPLine.TestField("No. of Depreciation Years");
+                CWIPLine.TestField("FA No. Series");
             until CWIPLine.Next() = 0;
+        end else
+            Error(NoSelectErr);
     end;
 
     local procedure UpdateCWIPLedgerEntryAfterFACreated(CWIPLine: Record "CWIP Line"; FixedAsset: Record "Fixed Asset")

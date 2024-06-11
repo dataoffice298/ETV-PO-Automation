@@ -117,6 +117,8 @@ report 50063 "Material Issue Slip"
                 { }
                 column(ReqQty; ReqQty)
                 { }
+                column(ReqQtyVar; ReqQtyVar)
+                { }
                 column(QtyIssue; QtyIssue)
                 { }
                 dataitem("Item Ledger Entry"; "Item Ledger Entry")
@@ -144,6 +146,7 @@ report 50063 "Material Issue Slip"
                     myInt: Integer;
                 begin
                     SNo += 1;
+                    ReqQtyVar += "Indent Line"."Req.Quantity";
 
                 end;
             }
@@ -194,4 +197,6 @@ report 50063 "Material Issue Slip"
         SNo: Integer;
         ItemLedgerEntry: Record "Item Ledger Entry";
         ILEQuantity: Decimal;//B2BSCM11SEP2023
+        ReqQtyVar: Decimal;
+
 }

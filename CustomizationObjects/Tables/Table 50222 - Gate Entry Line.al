@@ -126,7 +126,7 @@ table 50222 "Gate Entry Line_B2B"
             DataClassification = CustomerContent;
             OptionMembers = Open,Close;
         }
-        field(8; Description; Text[80])
+        field(8; Description; Text[100])
         {
             DataClassification = CustomerContent;
         }

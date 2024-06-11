@@ -21,13 +21,12 @@ codeunit 50009 CWIP
             else
                 LastEntryNo := 1;
 
-            CWIPCount := 0;
-
             PurchRcptLine.Reset();
             PurchRcptLine.SetRange("Document No.", PurchRcptHeader."No.");
             PurchRcptLine.SetRange(CWIP, true);
             if PurchRcptLine.FindSet() then
                 repeat
+                    CWIPCount := 0;
                     CWIPDetails.Reset();
                     CWIPDetails.SetRange("Document No.", PurchRcptLine."Order No.");
                     CWIPDetails.SetRange("Document Line No.", PurchRcptLine."Order Line No.");
@@ -44,7 +43,10 @@ codeunit 50009 CWIP
                             CWIPLedgerEntry."Order Line No." := PurchRcptLine."Order Line No.";
                             CWIPLedgerEntry."Item No." := PurchRcptLine."No.";
                             CWIPLedgerEntry.Description := PurchRcptLine.Description;
-                            CWIPLedgerEntry.Quantity := 1;
+                            if PurchRcptLine."Unit of Measure Code" = 'NOS' then
+                                CWIPLedgerEntry.Quantity := 1
+                            else
+                                CWIPLedgerEntry.Quantity := PurchRcptLine.Quantity;
                             CWIPLedgerEntry."Vendor No." := PurchRcptHeader."Buy-from Vendor No.";
                             CWIPLedgerEntry."Vendor Name" := PurchRcptHeader."Buy-from Vendor Name";
                             CWIPLedgerEntry.Make := CWIPDetails.Make;
@@ -87,7 +89,7 @@ codeunit 50009 CWIP
             if not CWIPDetails.FindSet() then
                 Error(ErrLbl, PurchLine."No.", PurchLine."Line No.")
             else
-                if CWIPDetails.Count < (PurchLine."Qty. to Receive" + PurchLine."Quantity Received") then
+                if (CWIPDetails.Count < (PurchLine."Qty. to Receive" + PurchLine."Quantity Received")) and (PurchLine."Unit of Measure Code" = 'NOS') then
                     Error(Err2Lbl, PurchLine."No.", PurchLine."Line No.")
         end;
     end;

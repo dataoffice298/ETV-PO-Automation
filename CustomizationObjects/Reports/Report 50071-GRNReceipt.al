@@ -159,8 +159,8 @@ report 50071 "GRN RECEIPT"
                 // column(InwardNo; "Ref. Posted Gate Entry")
                 // { }
                 //B2BMMOn06Oct2022>>
-                column(InwardNo; InwardNo)
-                { }
+                /* column(InwardNo; InwardNo)
+                { } */
 
                 column(InwardDate; InwardDate)
                 { }
@@ -209,6 +209,8 @@ report 50071 "GRN RECEIPT"
                 {
 
                 }
+                column(InwardNo; "Posted Gate Entry No.")
+                { }
 
 
 
@@ -228,8 +230,8 @@ report 50071 "GRN RECEIPT"
                     Clear(BasicAmount);
                     Clear(DiscountVar);
                     Clear(TotalAmountNew);
-                    CheckGRec.InitTextVariable;
-                    CheckGRec.FormatNoText(NumberText, Round(NetTotal, 1, '='), "Currency Code");
+                    //CheckGRec.InitTextVariable;
+                    //CheckGRec.FormatNoText(NumberText, Round(NetTotal, 1, '='), "Currency Code");
                     //B2BSCM27SEP2023>>
 
                     IndentHdr.Reset();
@@ -238,6 +240,18 @@ report 50071 "GRN RECEIPT"
                         IndentDate := IndentHdr."Document Date";
                         Indentor := IndentHdr.Indentor;
                     end;
+
+                    GateEntryhdrGRecB2B.Reset();
+                    GateEntryhdrGRecB2B.SetRange("No.", "Purch. Rcpt. Line"."Posted Gate Entry No.");
+                    GateEntryhdrGRecB2B.SetRange("Entry Type", GateEntryhdrGRecB2B."Entry Type"::Inward);
+                    GateEntryhdrGRecB2B.SetRange(Type, GateEntryhdrGRecB2B.Type::RGP);
+                    if GateEntryhdrGRecB2B.FindFirst() then begin
+                        DCNO := GateEntryhdrGRecB2B."Challan No.";
+                        DCDate := GateEntryhdrGRecB2B."Challan Date";
+                        //InwardNo := GateEntryhdrGRecB2B."No.";
+                        InwardDate := GateEntryhdrGRecB2B."Document Date";
+                    end;
+
                     if ItemRec.get("No.") then begin
                         ItemCategory := "Purch. Rcpt. Line"."Item Category Code";
                         ItemSubCategory := "Purch. Rcpt. Line"."Item Category Code";
@@ -249,6 +263,9 @@ report 50071 "GRN RECEIPT"
                     BasicAmount := "Purch. Rcpt. Line"."Direct Unit Cost" * "Purch. Rcpt. Line".Quantity;
                     DiscountVar := (BasicAmount / 100) * ("Purch. Rcpt. Line"."Line Discount %");
                     TotalAmountNew := BasicAmount - DiscountVar;
+
+                    CheckGRec.InitTextVariable;
+                    CheckGRec.FormatNoText(NumberText, Round(TotalAmountNew, 1, '='), "Currency Code");
 
                     if "Purch. Rcpt. Line".Quantity = 0 then
                         CurrReport.Skip();
@@ -294,16 +311,6 @@ report 50071 "GRN RECEIPT"
                  // NetTotal := (BasicAmount + CGSTAmt + SGSTAmt); 
 
                  */
-                GateEntryhdrGRecB2B.Reset();
-                GateEntryhdrGRecB2B.SetRange("Purchase Order No.", "Order No.");
-                GateEntryhdrGRecB2B.SetRange("Entry Type", GateEntryhdrGRecB2B."Entry Type"::Inward);
-                GateEntryhdrGRecB2B.SetRange(Type, GateEntryhdrGRecB2B.Type::RGP);
-                if GateEntryhdrGRecB2B.FindFirst() then begin
-                    DCNO := GateEntryhdrGRecB2B."Challan No.";
-                    DCDate := GateEntryhdrGRecB2B."Challan Date";
-                    InwardNo := GateEntryhdrGRecB2B."No.";
-                    InwardDate := GateEntryhdrGRecB2B."Document Date";
-                end;
 
             end;
 

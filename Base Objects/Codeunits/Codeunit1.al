@@ -685,6 +685,9 @@ codeunit 50016 "MyBaseSubscr"
         ApprovalEntryLRec: Record "Approval Entry";
         ApprovalCommentLine: Record "Approval Comment Line";
         IndentReqHead: Record "Indent Req Header";
+        PurchaseHeader: Record "Purchase Header";
+        Text003: Label 'Please find Purchase Order Number: %1 dt.%2 has been rejected / returned by your HOD with the comments.%3';
+        Sub2: Label 'Request for Purchase Order Approval';
     begin
         ApprovalCommentLine.Reset();
         ApprovalCommentLine.SetRange("Table ID", ApprovalEntry."Table ID");
@@ -709,7 +712,7 @@ codeunit 50016 "MyBaseSubscr"
                 EmailMessage.AppendToBody('This is auto generated mail by system for information.');
                 Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
                 Message('Email Send Successfully');
-            end else begin
+            end else
                 if IndentReqHead.Get(ApprovalEntry."Document No.") then begin
                     IndentHead.Get(IndentReqHead."Indent No.");
                     UserSetup.Get(IndentHead."User Id");
@@ -726,8 +729,23 @@ codeunit 50016 "MyBaseSubscr"
                     EmailMessage.AppendToBody('This is auto generated mail by system for information.');
                     Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
                     Message('Email Send Successfully');
-                end;
-            end;
+                end else
+                    if PurchaseHeader.Get(PurchaseHeader."Document Type"::Order, ApprovalEntry."Document No.") then begin
+                        UserSetup.Get(ApprovalEntryLRec."Approver ID");
+                        UserSetup.TestField("E-Mail");
+                        Recipiants.Add(UserSetup."E-Mail");
+                        Body += StrSubstNo(Text003, PurchaseHeader."No.", PurchaseHeader."Document Date", ApprovalCommentLine.Comment);
+                        EmailMessage.Create(Recipiants, Sub2, '', true);
+                        EmailMessage.AppendToBody('Dear Indenter,');
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody(Body);
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody('<BR></BR>');
+                        EmailMessage.AppendToBody('This is auto generated mail by system for information.');
+                        Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
+                        Message('Email Send Successfully');
+                    end;
         end;
     end;
 
@@ -820,21 +838,29 @@ codeunit 50016 "MyBaseSubscr"
         Body: Text;
         Text001: Label 'Please find Purchase Order Number: %1 dt. %2 has been approved by your HOD.';
         Sub: Label 'Request for Purchase Order Approval';
+        ApprovalEntry: Record "Approval Entry";
     begin
-        UserSetup.Get(PurchaseHeader."User Id");
-        UserSetup.TestField("E-Mail");
-        Recipiants.Add(UserSetup."E-Mail");
-        Body += StrSubstNo(Text001, PurchaseHeader."No.", PurchaseHeader."Document Date");
-        EmailMessage.Create(Recipiants, Sub, '', true);
-        EmailMessage.AppendToBody('Dear Indenter,');
-        EmailMessage.AppendToBody('<BR></BR>');
-        EmailMessage.AppendToBody('<BR></BR>');
-        EmailMessage.AppendToBody(Body);
-        EmailMessage.AppendToBody('<BR></BR>');
-        EmailMessage.AppendToBody('<BR></BR>');
-        EmailMessage.AppendToBody('This is auto generated mail by system for information.');
-        Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
-        Message('Email Send Successfully');
+        ApprovalEntry.Reset();
+        ApprovalEntry.SetRange("Table ID", 38);
+        ApprovalEntry.SetRange("Document Type", PurchaseHeader."Document Type");
+        ApprovalEntry.SetRange("Document No.", PurchaseHeader."No.");
+        ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
+        if ApprovalEntry.FindLast() then begin
+            UserSetup.Get(PurchaseHeader."User Id");
+            UserSetup.TestField("E-Mail");
+            Recipiants.Add(UserSetup."E-Mail");
+            Body += StrSubstNo(Text001, PurchaseHeader."No.", PurchaseHeader."Document Date");
+            EmailMessage.Create(Recipiants, Sub, '', true);
+            EmailMessage.AppendToBody('Dear Indenter,');
+            EmailMessage.AppendToBody('<BR></BR>');
+            EmailMessage.AppendToBody('<BR></BR>');
+            EmailMessage.AppendToBody(Body);
+            EmailMessage.AppendToBody('<BR></BR>');
+            EmailMessage.AppendToBody('<BR></BR>');
+            EmailMessage.AppendToBody('This is auto generated mail by system for information.');
+            Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
+            Message('Email Send Successfully');
+        end;
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPostItemJnlLine', '', false, false)]
@@ -850,6 +876,42 @@ codeunit 50016 "MyBaseSubscr"
         NewItemLedgEntry."Shortcut Dimension 3 Code" := ItemJournalLine."Shortcut Dimension 3 Code";
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforePostLines', '', false, false)]
+    local procedure OnBeforePostLines(var PurchLine: Record "Purchase Line"; PurchHeader: Record "Purchase Header"; PreviewMode: Boolean; CommitIsSupressed: Boolean; var TempPurchLineGlobal: Record "Purchase Line" temporary)
+    begin
+        PurchLine.SetFilter("Quantity Accepted B2B", '<>%1', 0);
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Report Selections", 'OnBeforeGetVendorEmailAddress', '', false, false)]
+    local procedure OnBeforeGetVendorEmailAddress(BuyFromVendorNo: Code[20]; var ToAddress: Text; ReportUsage: Option; var IsHandled: Boolean; RecVar: Variant)
+    var
+        OrderAddress: Record "Order Address";
+        RecRef: RecordRef;
+        PurchaseHeader: Record "Purchase Header";
+        Vendor: Record Vendor;
+        Contact: Record Contact;
+    begin
+        IsHandled := true;
+        if ToAddress = '' then begin
+            if Contact.Get(BuyFromVendorNo) then
+                ToAddress := Contact."E-Mail";
+        end;
+
+        if ToAddress = '' then
+            if Vendor.Get(BuyFromVendorNo) then
+                ToAddress := Vendor."E-Mail";
+
+        OrderAddress.Reset();
+        OrderAddress.SetRange("Vendor No.", BuyFromVendorNo);
+        OrderAddress.SetRange("Mail Alert", true);
+        if OrderAddress.FindSet() then
+            repeat
+                if ToAddress <> '' then
+                    ToAddress += ';' + OrderAddress."E-Mail"
+                else
+                    ToAddress := OrderAddress."E-Mail";
+            until OrderAddress.Next = 0;
+    end;
 }
 
 

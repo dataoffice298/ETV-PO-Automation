@@ -32,7 +32,7 @@ reportextension 50001 PostedVoucherNew extends "Posted Voucher New1"
                     PurRcptheader.Reset();
                     PurRcptheader.SetRange("Order No.", purInvheader."Order No.");
                     if PurRcptheader.FindFirst() then
-                        InvoiceNum := purInvheader."Vendor Invoice No." + '  Date : ' + FORMAT(PurRcptheader."Vendor Invoice Date");
+                        InvoiceNum := purInvheader."Vendor Invoice No." + '  Date : ' + FORMAT(PurRcptheader."Vendor Invoice Date") + '  Purchase Invoice Date :' + Format((purInvheader."Vendor Invoice Date"));
                 end;
             end;
         }
@@ -49,7 +49,8 @@ reportextension 50001 PostedVoucherNew extends "Posted Voucher New1"
     }
 
     var
-        PONarration, InvoiceNum : Code[50];
+        PONarration: Code[50];
+        InvoiceNum: Text;
         purInvheader: Record "Purch. Inv. Header";
         PurRcptheader: Record "Purch. Rcpt. Header";
 

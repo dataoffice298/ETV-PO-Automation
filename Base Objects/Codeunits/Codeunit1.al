@@ -912,9 +912,6 @@ codeunit 50016 "MyBaseSubscr"
                     ToAddress := OrderAddress."E-Mail";
             until OrderAddress.Next = 0;
     end;
-
-
-
 }
 
 

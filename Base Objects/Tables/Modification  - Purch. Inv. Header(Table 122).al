@@ -42,6 +42,10 @@ tableextension 50049 tableextension70000004 extends "Purch. Inv. Header"
         {
             Caption = 'Regularization';
         }
+        field(50116; "Vendor Invoice Date"; Date)
+        {
+            Caption = 'Vendor Invoice Date';
+        }
         field(50117; "Programme Name"; Code[50])//B2BSSD20MAR2023
         {
             DataClassification = CustomerContent;

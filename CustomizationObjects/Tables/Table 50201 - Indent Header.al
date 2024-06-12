@@ -558,7 +558,7 @@ table 50201 "Indent Header"
                             IndentQty := ItemLedEntries."Remaining Quantity";
                         end else
                             IndentQty := IndentLineRec."Qty To Issue" - ILEQty2;
-                        IndentQty2 += IndentQty;
+                        //IndentQty2 += IndentQty;
                         Clear(UnitCost);
                         ValueEntry.Reset();
                         ValueEntry.SetRange("Item No.", ItemLedEntries."Item No.");
@@ -602,8 +602,10 @@ table 50201 "Indent Header"
                                 Item.Get(ItemLedEntries."Item No.");
                                 if item."Item Tracking Code" = '' then
                                     ItemJnlLine."Applies-to Entry" := ItemLedEntries."Entry No.";
-                                //ItemJnlLine.Validate("Unit Cost", UnitCost);
-                                ItemJnlLine.Validate("Unit Cost", ItemLedEntries."Cost Amount (Actual)");
+                                ItemJnlLine.Validate("Unit Cost", UnitCost);
+                                ItemJnlLine.Validate("Unit Amount", UnitCost);
+                                //ItemJnlLine.Validate("Unit Cost", ItemLedEntries."Cost Amount (Actual)");
+                                //ItemJnlLine.Validate("Unit Amount", ItemLedEntries."Cost Amount (Actual)");
                                 ItemJnlLine."Issue Location" := IndentLineRec."Issue Location";//BaluOn19Oct2022
                                 ItemJnlLine."Issue Sub Location" := IndentLineRec."Issue Sub Location";//BaluOn19Oct2022
                                 ItemJnlLine."Variant Code" := IndentLineRec."Variant Code";
@@ -680,9 +682,10 @@ table 50201 "Indent Header"
                                 //if IndentLineRec."Qty To Issue" >= IndentQty2 then begin
 
                                 if IndentQty <> 0 then begin
-                                    ItemJnlLine."Unit Cost" += ItemLedEntries."Cost Amount (Actual)";
-                                    if IndentLineRec."Qty To Issue" = ItemJnlLineLrec.Quantity then
-                                        ItemJnlLineLrec.Validate("Unit Cost", (ItemJnlLine."Unit Cost" / ItemJnlLineLrec.Quantity));
+                                    //ItemJnlLine."Unit Cost" += ItemLedEntries."Cost Amount (Actual)";
+                                    //ItemJnlLine."Unit Cost" += UnitCost;
+                                    //if IndentLineRec."Qty To Issue" = ItemJnlLineLrec.Quantity then
+                                    ItemJnlLineLrec.Validate("Unit Cost", GetUnitCostFromValueEntry(ItemJnlLineLrec));
                                     ItemJnlLineLrec.Validate("Unit Amount", ItemJnlLineLrec."Unit Cost");
                                 end;
                                 ItemJnlLineLrec.Modify();
@@ -752,7 +755,50 @@ table 50201 "Indent Header"
             Error('Nothing to Issue');
     end;
 
+    local procedure GetUnitCostFromValueEntry(ItemJLine: Record "Item Journal Line") TotalCostPerUnit: Decimal
+    var
+        ReservEntry: Record "Reservation Entry";
+        ILE: Record "Item Ledger Entry";
+        ValueEntry: Record "Value Entry";
+        CostPerUnit: Decimal;
+    begin
+        Clear(TotalCostPerUnit);
+        ReservEntry.Reset();
+        ReservEntry.SetRange("Item No.", ItemJLine."Item No.");
+        ReservEntry.SetRange("Source Type", Database::"Item Journal Line");
+        ReservEntry.SetRange("Source Subtype", 3);
+        ReservEntry.SetRange("Source Batch Name", ItemJLine."Journal Batch Name");
+        ReservEntry.SetRange("Source ID", ItemJLine."Journal Template Name");
+        ReservEntry.SetRange("Source Ref. No.", ItemJLine."Line No.");
+        if ReservEntry.FindSet() then
+            repeat
+                Clear(CostPerUnit);
+                if ILE.Get(ReservEntry."Appl.-to Item Entry") then begin
+                    ValueEntry.Reset();
+                    ValueEntry.SetRange("Item Ledger Entry No.", ILE."Entry No.");
+                    ValueEntry.SetFilter("Item Ledger Entry Type", '%1|%2',
+                                            ValueEntry."Item Ledger Entry Type"::"Positive Adjmt.",
+                                            ValueEntry."Item Ledger Entry Type"::Purchase);
+                    ValueEntry.SetFilter("Cost per Unit", '<>0');
+                    if ValueEntry.FindSet() then
+                        repeat
+                            case ValueEntry."Item Ledger Entry Type" of
+                                ValueEntry."Item Ledger Entry Type"::"Positive Adjmt.":
+                                    CostPerUnit += ValueEntry."Cost per Unit";
+                                ValueEntry."Item Ledger Entry Type"::Purchase:
+                                    if (ValueEntry."Document Type" = ValueEntry."Document Type"::"Purchase Receipt")
+                                        or (ValueEntry."Document Type" = ValueEntry."Document Type"::" ") then
+                                        CostPerUnit += ValueEntry."Cost per Unit";
+                            end;
+                        until ValueEntry.Next() = 0;
+                    TotalCostPerUnit += Round(CostPerUnit * ReservEntry.Quantity, 0.01);
+                end;
+            until ReservEntry.Next() = 0;
 
+        if TotalCostPerUnit <> 0 then begin
+            TotalCostPerUnit := ABS(Round(TotalCostPerUnit / ItemJLine.Quantity, 0.01));
+        end;
+    end;
 
     Procedure CheckIndentHeaderApprovalsWorkflowEnabled(var
                                                             IndentHeader: Record "Indent Header"): Boolean

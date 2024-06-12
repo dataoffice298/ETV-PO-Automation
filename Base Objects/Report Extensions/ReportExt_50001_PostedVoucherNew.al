@@ -20,10 +20,14 @@ reportextension 50001 PostedVoucherNew extends "Posted Voucher New1"
             var
                 VLEntry: Record "Vendor Ledger Entry";
             begin
+                Clear(DocumentDate);
                 VLEntry.Reset();
                 VLEntry.SetRange("Document No.", "G/L Entry"."Document No.");
-                if VLEntry.FindFirst() then
+                if VLEntry.FindFirst() then begin
                     PONarration := VLEntry."PO Narration";
+                    DocumentDate := VLEntry."Document Date";
+                end;
+
 
                 CLEAR(InvoiceNum);
                 purInvheader.RESET;
@@ -32,7 +36,7 @@ reportextension 50001 PostedVoucherNew extends "Posted Voucher New1"
                     PurRcptheader.Reset();
                     PurRcptheader.SetRange("Order No.", purInvheader."Order No.");
                     if PurRcptheader.FindFirst() then
-                        InvoiceNum := purInvheader."Vendor Invoice No." + '  Date : ' + FORMAT(PurRcptheader."Vendor Invoice Date") + '  Purchase Invoice Date :' + Format((purInvheader."Vendor Invoice Date"));
+                        InvoiceNum := purInvheader."Vendor Invoice No." + '  Date : ' + FORMAT(DocumentDate) + '  Purchase Invoice Date :' + Format((purInvheader."Vendor Invoice Date"));
                 end;
             end;
         }
@@ -53,5 +57,6 @@ reportextension 50001 PostedVoucherNew extends "Posted Voucher New1"
         InvoiceNum: Text;
         purInvheader: Record "Purch. Inv. Header";
         PurRcptheader: Record "Purch. Rcpt. Header";
+        DocumentDate: Date;
 
 }

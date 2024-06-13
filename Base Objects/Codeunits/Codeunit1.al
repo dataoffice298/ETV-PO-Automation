@@ -879,7 +879,8 @@ codeunit 50016 "MyBaseSubscr"
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforePostLines', '', false, false)]
     local procedure OnBeforePostLines(var PurchLine: Record "Purchase Line"; PurchHeader: Record "Purchase Header"; PreviewMode: Boolean; CommitIsSupressed: Boolean; var TempPurchLineGlobal: Record "Purchase Line" temporary)
     begin
-        PurchLine.SetFilter("Quantity Accepted B2B", '<>%1', 0);
+        if PurchLine."Document Type" = PurchLine."Document Type"::Order then
+            PurchLine.SetFilter("Quantity Accepted B2B", '<>%1', 0);
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Report Selections", 'OnBeforeGetVendorEmailAddress', '', false, false)]
@@ -912,6 +913,7 @@ codeunit 50016 "MyBaseSubscr"
                     ToAddress := OrderAddress."E-Mail";
             until OrderAddress.Next = 0;
     end;
+
 }
 
 

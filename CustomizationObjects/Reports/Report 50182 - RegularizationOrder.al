@@ -225,9 +225,13 @@ report 50182 "Regularization Order"
                     //   GateEntryPostYesNo.InitTextVariable;
                     //  GateEntryPostYesNo.FormatNoTextInvoice(AmountText, Round(AmountVendor1, 1, '='), "Currency Code");
                     // GateEntryPostYesNo.FormatNoText(AmountText, AmountVendor1, "Currency Code");
-                    CheckRec.InitTextVariable;
-
-                    CheckRec.FormatNoText(AmountText, AmountVendor1, "Currency Code");
+                    if "Purchase Header"."Currency Code" = '' then begin
+                        CheckRec.InitTextVariable();
+                        CheckRec.FormatNoTextWithoutCurrency(AmountText, AmountVendor1, '');
+                    end else begin
+                        CheckRec.InitTextVariable;
+                        CheckRec.FormatNoText(AmountText, AmountVendor1, "Purchase Header"."Currency Code");
+                    end;
 
                     if ("Purchase Line".Type = "Purchase Line".Type::Item)
                        or ("Purchase Line".Type = "Purchase Line".Type::"Fixed Asset")

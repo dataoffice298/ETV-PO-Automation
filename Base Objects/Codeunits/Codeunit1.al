@@ -913,6 +913,30 @@ codeunit 50016 "MyBaseSubscr"
                     ToAddress := OrderAddress."E-Mail";
             until OrderAddress.Next = 0;
     end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post (Yes/No)", 'OnBeforeRunPurchPost', '', false, false)]
+    local procedure OnBeforeRunPurchPost(var PurchaseHeader: Record "Purchase Header")
+    var
+        GateEntryHdr: Record "Gate Entry Header_B2B";
+        PurchLine: Record "Purchase Line";
+        TextLbl: Label 'Please Post the Gate Entry Inward against Document No. %1, Line No. %2';
+    begin
+        //B2BVCOn18Jun2024 >>
+        PurchLine.Reset();
+        PurchLine.SetRange("Document Type", PurchLine."Document Type"::Order);
+        PurchLine.SetRange("Document No.", PurchaseHeader."No.");
+        PurchLine.SetRange(Select, true);
+        if PurchLine.FindSet() then
+            repeat
+                GateEntryHdr.Reset();
+                GateEntryHdr.SetRange("Entry Type", GateEntryHdr."Entry Type"::Inward);
+                GateEntryHdr.SetRange("Purchase Order No.", PurchLine."Document No.");
+                GateEntryHdr.SetRange("Purchase Order Line No.", PurchLine."Line No.");
+                if GateEntryHdr.FindFirst() then
+                    Error(TextLbl, GateEntryHdr."Purchase Order No.", GateEntryHdr."Purchase Order Line No.");
+            until PurchLine.Next = 0;
+        //B2BVCOn18Jun2024 <<
+    end;
 }
 
 

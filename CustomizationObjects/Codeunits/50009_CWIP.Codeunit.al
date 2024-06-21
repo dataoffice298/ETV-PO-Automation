@@ -43,10 +43,21 @@ codeunit 50009 CWIP
                             CWIPLedgerEntry."Order Line No." := PurchRcptLine."Order Line No.";
                             CWIPLedgerEntry."Item No." := PurchRcptLine."No.";
                             CWIPLedgerEntry.Description := PurchRcptLine.Description;
-                            if PurchRcptLine."Unit of Measure Code" = 'NOS' then
-                                CWIPLedgerEntry.Quantity := 1
-                            else
+                            if PurchRcptLine."Unit of Measure Code" = 'NOS' then begin
+                                CWIPLedgerEntry.Quantity := 1;
+                                if PurchRcptLine."Line Discount %" = 0 then
+                                    CWIPLedgerEntry.Amount := PurchRcptLine."Direct Unit Cost"
+                                else begin
+                                    CWIPLedgerEntry.Amount := Round(PurchRcptLine.Quantity * PurchRcptLine."Direct Unit Cost", 0.01);
+                                    if CWIPLedgerEntry.Amount <> 0 then
+                                        CWIPLedgerEntry.Amount := Round((CWIPLedgerEntry.Amount - (CWIPLedgerEntry.Amount * PurchRcptLine."Line Discount %") / 100) / PurchRcptLine.Quantity, 0.01);
+                                end;
+                            end else begin
                                 CWIPLedgerEntry.Quantity := PurchRcptLine.Quantity;
+                                CWIPLedgerEntry.Amount := Round(PurchRcptLine.Quantity * PurchRcptLine."Direct Unit Cost", 0.01);
+                                if (CWIPLedgerEntry.Amount <> 0) and (PurchRcptLine."Line Discount %" <> 0) then
+                                    CWIPLedgerEntry.Amount := Round((CWIPLedgerEntry.Amount - (CWIPLedgerEntry.Amount * PurchRcptLine."Line Discount %") / 100), 0.01);
+                            end;
                             CWIPLedgerEntry."Vendor No." := PurchRcptHeader."Buy-from Vendor No.";
                             CWIPLedgerEntry."Vendor Name" := PurchRcptHeader."Buy-from Vendor Name";
                             CWIPLedgerEntry.Make := CWIPDetails.Make;
@@ -57,7 +68,6 @@ codeunit 50009 CWIP
                             CWIPLedgerEntry."Global Dimension 2 Code" := PurchRcptLine."Shortcut Dimension 2 Code";
                             CWIPLedgerEntry."Dimension Set ID" := PurchRcptLine."Dimension Set ID";
                             CWIPLedgerEntry."Location Code" := PurchRcptHeader."Location Code";
-                            CWIPLedgerEntry.Amount := PurchRcptLine."Direct Unit Cost";
                             CWIPLedgerEntry."CWIP Detail Line No." := CWIPDetails."Line No.";
                             CWIPLedgerEntry.Insert(true);
                             LastEntryNo += 1;

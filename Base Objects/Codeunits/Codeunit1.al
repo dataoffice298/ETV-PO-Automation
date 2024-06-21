@@ -876,13 +876,6 @@ codeunit 50016 "MyBaseSubscr"
         NewItemLedgEntry."Shortcut Dimension 3 Code" := ItemJournalLine."Shortcut Dimension 3 Code";
     end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforePostLines', '', false, false)]
-    local procedure OnBeforePostLines(var PurchLine: Record "Purchase Line"; PurchHeader: Record "Purchase Header"; PreviewMode: Boolean; CommitIsSupressed: Boolean; var TempPurchLineGlobal: Record "Purchase Line" temporary)
-    begin
-        if PurchLine."Document Type" = PurchLine."Document Type"::Order then
-            PurchLine.SetFilter("Quantity Accepted B2B", '<>%1', 0);
-    end;
-
     [EventSubscriber(ObjectType::Table, Database::"Report Selections", 'OnBeforeGetVendorEmailAddress', '', false, false)]
     local procedure OnBeforeGetVendorEmailAddress(BuyFromVendorNo: Code[20]; var ToAddress: Text; ReportUsage: Option; var IsHandled: Boolean; RecVar: Variant)
     var
@@ -936,6 +929,23 @@ codeunit 50016 "MyBaseSubscr"
                     Error(TextLbl, GateEntryHdr."Purchase Order No.", GateEntryHdr."Purchase Order Line No.");
             until PurchLine.Next = 0;
         //B2BVCOn18Jun2024 <<
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPostPurchaseDoc', '', false, false)]
+    procedure OnAfterPostPurchaseDoc(var PurchaseHeader: Record "Purchase Header"; var GenJnlPostLine: Codeunit "Gen. Jnl.-Post Line"; PurchRcpHdrNo: Code[20]; RetShptHdrNo: Code[20]; PurchInvHdrNo: Code[20]; PurchCrMemoHdrNo: Code[20]; CommitIsSupressed: Boolean)
+    var
+        PurchLine: Record "Purchase Line";
+    begin
+        PurchLine.Reset();
+        PurchLine.SetRange("Document Type", PurchLine."Document Type"::Order);
+        PurchLine.SetRange("Document No.", PurchaseHeader."No.");
+        if PurchLine.FindSet() then
+            repeat
+                if PurchLine."Quantity Accepted B2B" <> 0 then begin
+                    PurchLine."Quantity Accepted B2B" := 0;
+                    PurchLine.Modify;
+                end;
+            until PurchLine.Next = 0;
     end;
 }
 

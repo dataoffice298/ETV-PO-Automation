@@ -217,6 +217,15 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 Text0001: Label 'This Purchase Order has been Short Closed. We cannot post it.';
             begin
 
+                PurchaseLine.Reset();
+                PurchaseLine.SetRange("Document Type", Rec."Document Type");
+                PurchaseLine.SetRange("Document No.", Rec."No.");
+                if PurchaseLine.FindSet() then
+                    repeat
+                        PurchaseLine.Validate("Qty. to Receive", PurchaseLine."Quantity Accepted B2B");
+                        PurchaseLine.Modify;
+                    until PurchaseLine.Next = 0;
+
                 //B2BSSD09AUG2023>>
                 purchaseLinevar.Reset();
                 purchaseLinevar.SetRange("Document Type", Rec."Document Type");
@@ -778,6 +787,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         PurchLineGRec: Record "Purchase Line";
         IndentReqLine: Record "Indent Requisitions";
         CWIPDetails: Record "CWIP Details";
+        PurchaseLine: Record "Purchase Line";
         ErrLbl: Label 'You must define CWIP details for the Item No. %1 and Line No. %2.';
         Err2Lbl: Label 'CWIP details must be defined for the total receiving quantity of Item No. %1 and Line No. %2.';
 }

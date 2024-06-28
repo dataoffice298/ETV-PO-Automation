@@ -92,7 +92,7 @@ codeunit 50009 CWIP
         ErrLbl: Label 'You must define CWIP details for the Item No. %1 and Line No. %2.';
         Err2Lbl: Label 'CWIP details must be defined for the total receiving quantity of Item No. %1 and Line No. %2.';
     begin
-        if (PurchHeader.Receive) and (PurchLine.CWIP) then begin
+        if (PurchHeader.Receive) and (PurchLine.CWIP) and (PurchLine."Qty. to Receive" > 0) then begin
             CWIPDetails.Reset();
             CWIPDetails.SetRange("Document No.", PurchLine."Document No.");
             CWIPDetails.SetRange("Document Line No.", PurchLine."Line No.");

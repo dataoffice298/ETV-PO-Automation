@@ -216,39 +216,17 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 ImportTypeError: TextConst ENN = 'Import type Must have value in Invoice details Tab';//B2BSCM25SEP2023
                 Text0001: Label 'This Purchase Order has been Short Closed. We cannot post it.';
             begin
-
-                PurchaseLine.Reset();
-                PurchaseLine.SetRange("Document Type", Rec."Document Type");
-                PurchaseLine.SetRange("Document No.", Rec."No.");
-                if PurchaseLine.FindSet() then
-                    repeat
-                        PurchaseLine.Validate("Qty. to Receive", PurchaseLine."Quantity Accepted B2B");
-                        PurchaseLine.Modify;
-                    until PurchaseLine.Next = 0;
-
                 //B2BSSD09AUG2023>>
                 purchaseLinevar.Reset();
                 purchaseLinevar.SetRange("Document Type", Rec."Document Type");
                 purchaseLinevar.SetRange("Document No.", Rec."No.");
                 if purchaseLinevar.FindSet() then begin
                     repeat
-                        if purchaseLinevar."Qty. to Receive" > purchaseLinevar."Quantity Accepted B2B" then
-                            Error(Error002);
                         if (purchaseLinevar.ShortClosed = true) and (purchaseLinevar."Outstanding Quantity" = 0) then
                             Error(Text0001);
                     until purchaseLinevar.Next() = 0;
                 end;
                 //B2BSSD09AUG2023<
-
-                purchaseLinevar.Reset();
-                purchaseLinevar.SetRange("Document Type", Rec."Document Type");
-                purchaseLinevar.SetRange("Document No.", Rec."No.");
-                purchaseLinevar.SetRange(Select, true);
-                if purchaseLinevar.FindSet() then
-                    repeat
-                        if purchaseLinevar."Qty. to Receive" > purchaseLinevar."Quantity Accepted B2B" then
-                            Error(Error002, purchaseLinevar."Line No.");
-                    until purchaseLinevar.Next = 0;
 
                 PurchLine.Reset();
                 PurchLine.SetRange("Document No.", Rec."No.");
@@ -272,8 +250,6 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 if rec."EPCG Scheme" = rec."EPCG Scheme"::"Under EPCG" then
                     Rec.TestField("EPCG No.");
 
-                //   Rec.TestField("EPCG Scheme");//B2BSCM25SEP2023
-                //  Rec.TestField("EPCG No.");//B2BSCM25SEP2023 
                 GateEntry.Reset();
                 GateEntry.SetRange("Source No.", Rec."No.");
                 if GateEntry.FindFirst() then begin
@@ -285,6 +261,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                                 Error('Gate entry available for the purchase document. Hence, It must be filled in Line No. %1.', PurchLine."Line No.");
                         until PurchLine.Next = 0;
                 end;
+                
                 PurchLine.Reset();
                 PurchLine.SetRange("Document No.", Rec."No.");
                 if PurchLine.FindSet() then
@@ -307,7 +284,6 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                     //until purchaseLinevar.Next() = 0;
                 end;
                 //B2BSSD09AUG2023<<
-
             end;
 
 

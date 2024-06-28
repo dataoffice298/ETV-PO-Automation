@@ -914,21 +914,27 @@ codeunit 50016 "MyBaseSubscr"
         PurchLine: Record "Purchase Line";
         TextLbl: Label 'Please Post the Gate Entry Inward against Document No. %1, Line No. %2';
     begin
-        //B2BVCOn18Jun2024 >>
-        PurchLine.Reset();
-        PurchLine.SetRange("Document Type", PurchLine."Document Type"::Order);
-        PurchLine.SetRange("Document No.", PurchaseHeader."No.");
-        PurchLine.SetRange(Select, true);
-        if PurchLine.FindSet() then
-            repeat
-                GateEntryHdr.Reset();
-                GateEntryHdr.SetRange("Entry Type", GateEntryHdr."Entry Type"::Inward);
-                GateEntryHdr.SetRange("Purchase Order No.", PurchLine."Document No.");
-                GateEntryHdr.SetRange("Purchase Order Line No.", PurchLine."Line No.");
-                if GateEntryHdr.FindFirst() then
-                    Error(TextLbl, GateEntryHdr."Purchase Order No.", GateEntryHdr."Purchase Order Line No.");
-            until PurchLine.Next = 0;
-        //B2BVCOn18Jun2024 <<
+        //B2BVCOn28Jun2024 >>
+        if PurchaseHeader.Receive then begin
+            PurchLine.Reset();
+            PurchLine.SetRange("Document Type", PurchLine."Document Type"::Order);
+            PurchLine.SetRange("Document No.", PurchaseHeader."No.");
+            if PurchLine.FindSet() then
+                repeat
+                    if PurchLine.Select then begin
+                        PurchLine.TestField("Qty. to Accept B2B");
+                        GateEntryHdr.Reset();
+                        GateEntryHdr.SetRange("Entry Type", GateEntryHdr."Entry Type"::Inward);
+                        GateEntryHdr.SetRange("Purchase Order No.", PurchLine."Document No.");
+                        GateEntryHdr.SetRange("Purchase Order Line No.", PurchLine."Line No.");
+                        if GateEntryHdr.FindFirst() then
+                            Error(TextLbl, GateEntryHdr."Purchase Order No.", GateEntryHdr."Purchase Order Line No.");
+                    end;
+                    PurchLine.Validate("Qty. to Receive", PurchLine."Qty. to Accept B2B");
+                    PurchLine.Modify;
+                until PurchLine.Next = 0;
+            //B2BVCOn28Jun2024 <<
+        end;
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPostPurchaseDoc', '', false, false)]
@@ -936,17 +942,22 @@ codeunit 50016 "MyBaseSubscr"
     var
         PurchLine: Record "Purchase Line";
     begin
+        //B2BVCOn28Jun2024>>
         PurchLine.Reset();
         PurchLine.SetRange("Document Type", PurchLine."Document Type"::Order);
         PurchLine.SetRange("Document No.", PurchaseHeader."No.");
         if PurchLine.FindSet() then
             repeat
-                if PurchLine."Quantity Accepted B2B" <> 0 then begin
-                    PurchLine."Quantity Accepted B2B" := 0;
+                if PurchLine."Qty. to Accept B2B" <> 0 then begin
+                    PurchLine."Quantity Accepted B2B" += PurchLine."Qty. to Accept B2B";
+                    PurchLine."Qty. to Accept B2B" := 0;
+                    PurchLine.Inward := false;
                     PurchLine.Modify;
                 end;
             until PurchLine.Next = 0;
+        //B2BVCOn28Jun2024 <<
     end;
+
 }
 
 

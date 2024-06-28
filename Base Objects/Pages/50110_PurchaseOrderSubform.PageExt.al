@@ -122,11 +122,28 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                     myInt: Integer;
                     userSetup: Record "User Setup";
                     Text0001: Label 'You dont have permessions for entering Accept/Reject values';
+                    Text002: label 'Gate Entry Inward Must be Created.';
+                    PostedGateEntryLine: Record "Posted Gate Entry Line_B2B";
+                    Text003: Label 'Qty. To Accept Exceeded than Inward Quantity.';
                 begin
-
-
                     if userSetup.Get(UserId) and (userSetup."Accept/Reject" = false) then
                         Error(Text0001);
+
+                    //B2BVCOn28Jun2024 >>
+                    if not (Rec.Select) then
+                        Error(Text002);
+                    if (Rec.Select) And (Rec."Posted Gate Entry No." <> '') And (Rec.Inward = false) then
+                        Error(Text002);
+
+                    PostedGateEntryLine.Reset();
+                    PostedGateEntryLine.SetRange("Gate Entry No.", Rec."Posted Gate Entry No.");
+                    PostedGateEntryLine.SetRange("Line No.", Rec."Posted Gate Entry Line No.");
+                    if PostedGateEntryLine.FindFirst() then begin
+                        if Rec."Qty. to Accept B2B" > PostedGateEntryLine.Quantity then
+                            Error(Text003);
+                    end;
+
+                    //B2BVCOn28Jun2024 <<
 
                 end;
             }

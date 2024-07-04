@@ -120,6 +120,28 @@ table 50214 "Archive Indent Header"
         {
             DataClassification = CustomerContent;
         }
+        //B2BVCOn25Jun2024 >>
+        field(50030; "ILE Doc No."; Code[20])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50031; "ILE Posting Date"; Date)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50032; "Selected Indent"; Boolean)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50033; "Issue Doc No."; code[20])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50034; "Issue Date"; Date)
+        {
+            DataClassification = CustomerContent;
+        }
+        //B2BVCOn25Jun2024 <<
 
     }
 

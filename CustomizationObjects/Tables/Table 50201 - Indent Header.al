@@ -1158,19 +1158,29 @@ table 50201 "Indent Header"
         ArchiveVersion: Integer;
         text0001: Label 'Cannot Reopen the indent if the status is Cancel/Closed.';
     Begin
-        //CHP>>
-        if IndentLine."Qty To Issue" = 0 then
-            Exit;
+       //CHP>>
+        //if IndentLine."Qty To Issue" = 0 then
+        //Exit;
         //CHP<<
+
+        IndentLineRec.Reset();
+        IndentLineRec.SetRange("Document No.", IndentLine."Document No.");
+        if IndentLineRec.FindSet() then
+            repeat
+                if IndentLineRec."Archive Indent" then begin
+                    if IndentLineRec."Qty To Issue" = 0 then
+                        exit;
+                end;
+            until IndentLineRec.Next = 0;
+
+        if IndentLine."Qty To Issue" = 0 then
+            exit;
+
         IF NOT (IndentHeader."Indent Status" = IndentHeader."Indent Status"::Close) OR (IndentHeader."Indent Status" = IndentHeader."Indent Status"::Cancel) THEN BEGIN
             ArchiveIndLine.Reset();
             ArchiveIndLine.SetRange("Document No.", IndentLine."Document No.");
             ArchiveIndLine.SetRange("Line No.", IndentLine."Line No.");
             ArchiveIndLine.SetRange("Archived Qty Issued", IndentLine."Qty To Issue");
-            /* if ItemledgerEntry."Lot No." <> '' then
-                ArchiveIndLine.SetRange("Lot No.", ItemledgerEntry."Lot No.");
-            if ItemledgerEntry."Serial No." <> '' then
-                ArchiveIndLine.SetRange("Serial No.", ItemledgerEntry."Serial No."); */
             if not ArchiveIndLine.FindFirst() then begin
                 ArchiveIndHdr.Reset();
                 ArchiveIndHdr.SetCurrentKey("Archived Version");
@@ -1185,11 +1195,10 @@ table 50201 "Indent Header"
                 ArchiveIndHdr."Archived Version" := ArchiveVersion;
                 ArchiveIndHdr."Archived By" := UserId;
                 ArchiveIndHdr."Indent Issued" := true;
+                ArchiveIndHdr."ILE Doc No." := ItemledgerEntry."Document No."; //B2BVCOn25Jun2024
+                ArchiveIndHdr."ILE Posting Date" := ItemledgerEntry."Posting Date"; //B2BVCOn25Jun2024
                 ArchiveIndHdr.Insert();
-                if ArchiveIndHdr1.Get(IndentHeader."No.") then begin
-                    ArchiveIndHdr1."Indent Issued" := true;
-                    ArchiveIndHdr1.Modify(true);
-                end;
+
                 IndentLine.Reset();
                 IndentLine.SetRange("Document No.", IndentHeader."No.");
                 IndentLine.SetFilter("Archive Indent", '%1', True);
@@ -1197,15 +1206,55 @@ table 50201 "Indent Header"
                     repeat
                         ArchiveIndLine.Init();
                         ArchiveIndLine.TransferFields(IndentLine);
-                        /* ArchiveIndLine."Lot No." := ItemledgerEntry."Lot No.";
-                        ArchiveIndLine."Serial No." := ItemledgerEntry."Serial No."; */
                         ArchiveIndLine."Archived Version" := ArchiveVersion;
                         ArchiveIndLine."Archived By" := UserId;
                         ArchiveIndLine."Archived Qty Issued" := IndentLine."Qty To Issue";
                         ArchiveIndLine.Insert();
+                        IndentLine."Archive Indent" := false;
+                        IndentLine.Modify;
                     until IndentLine.Next() = 0;
                 Message('Document Archived %1', IndentHeader."No.");
-            END;
+            end else begin
+                ArchiveIndLine.Reset();
+                ArchiveIndLine.SetRange("Document No.", IndentLine."Document No.");
+                ArchiveIndLine.SetRange("Line No.", IndentLine."Line No.");
+                ArchiveIndLine.SetRange("Archived Qty Issued", IndentLine."Qty To Issue");
+                if ArchiveIndLine.FindFirst() then begin
+                    if IndentLine."Archive Indent" then begin
+                        ArchiveIndHdr.Reset();
+                        ArchiveIndHdr.SetCurrentKey("Archived Version");
+                        ArchiveIndHdr.SetRange("No.", IndentHeader."No.");
+                        if ArchiveIndHdr.FindLast() then
+                            ArchiveVersion := ArchiveIndHdr."Archived Version" + 1
+                        else
+                            ArchiveVersion := 1;
+
+                        ArchiveIndHdr.Init();
+                        ArchiveIndHdr.TransferFields(IndentHeader);
+                        ArchiveIndHdr."Archived Version" := ArchiveVersion;
+                        ArchiveIndHdr."Archived By" := UserId;
+                        ArchiveIndHdr."Indent Issued" := true;
+                        ArchiveIndHdr."ILE Doc No." := ItemledgerEntry."Document No."; //B2BVCOn25Jun2024
+                        ArchiveIndHdr."ILE Posting Date" := ItemledgerEntry."Posting Date"; //B2BVCOn25Jun2024
+                        ArchiveIndHdr.Insert();
+                        IndentLine.Reset();
+                        IndentLine.SetRange("Document No.", IndentHeader."No.");
+                        IndentLine.SetFilter("Archive Indent", '%1', True);
+                        if IndentLine.FindSet() then
+                            repeat
+                                ArchiveIndLine.Init();
+                                ArchiveIndLine.TransferFields(IndentLine);
+                                ArchiveIndLine."Archived Version" := ArchiveVersion;
+                                ArchiveIndLine."Archived By" := UserId;
+                                ArchiveIndLine."Archived Qty Issued" := IndentLine."Qty To Issue";
+                                ArchiveIndLine.Insert();
+                                IndentLine."Archive Indent" := false;
+                                IndentLine.Modify;
+                            until IndentLine.Next() = 0;
+                        Message('Document Archived %1', IndentHeader."No.");
+                    end;
+                end;
+            end;
         end;
     end;
 

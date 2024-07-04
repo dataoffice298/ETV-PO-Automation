@@ -1,6 +1,6 @@
 report 50110 "Pending PO Details"
 {
-    UsageCategory = ReportsAndAnalysis;
+   UsageCategory = ReportsAndAnalysis;
     ApplicationArea = All;
     Caption = 'Pending PO Details';
     ProcessingOnly = true;
@@ -18,12 +18,15 @@ report 50110 "Pending PO Details"
 
                 trigger OnAfterGetRecord()
                 begin
+
                     SNo += 1;
                     TempExcelBuffer.NewRow();
                     TempExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                     TempExcelBuffer.AddColumn("Document No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn("No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     TempExcelBuffer.AddColumn(Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                    if ItemGRec.Get("Purchase Line"."No.") then
+                        TempExcelBuffer.AddColumn(ItemGRec."Item Category Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                     //TempExcelBuffer.AddColumn("Indentor Description", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text); // B2BKM14MAY2024
                     // TempExcelBuffer.AddColumn("Spec Id", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text); // B2BKM14MAY2024
                     // TempExcelBuffer.AddColumn("Variant Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text); // B2BKM14MAY2024
@@ -133,6 +136,7 @@ report 50110 "Pending PO Details"
         TempExcelBuffer.AddColumn('Document No.', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('Item No.', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('Item Description', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        TempExcelBuffer.AddColumn('Item Category Code', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         // TempExcelBuffer.AddColumn('Indentor Description', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text); // B2BKM14MAY2024
         // TempExcelBuffer.AddColumn('Spec ID', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text); // B2BKM14MAY2024
         // TempExcelBuffer.AddColumn('Variant Code', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text); // B2BKM14MAY2024
@@ -166,4 +170,5 @@ report 50110 "Pending PO Details"
         EndDate: Date;
         TempExcelBuffer: Record "Excel Buffer" temporary;
         WindPa: Dialog;
+        ItemGRec: Record Item;
 }

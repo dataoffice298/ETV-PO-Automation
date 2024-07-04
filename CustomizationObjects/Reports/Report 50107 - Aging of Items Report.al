@@ -37,11 +37,11 @@ report 50107 "Aging of Items Report"
                 ItemLedgerEntry.SetRange("Item No.", "No.");
                 ItemLedgerEntry.SetFilter("Entry Type", '%1|%2|%3', ItemLedgerEntry."Entry Type"::Purchase, ItemLedgerEntry."Entry Type"::"Positive Adjmt.", ItemLedgerEntry."Entry Type"::Transfer);
                 ItemLedgerEntry.SetFilter("Document Type", '%1|%2|%3', ItemLedgerEntry."Document Type"::"Purchase Receipt", ItemLedgerEntry."Document Type"::" ", ItemLedgerEntry."Document Type"::"Transfer Receipt");
-                ItemLedgerEntry.SetFilter("Remaining Quantity", '<>%1', 0); //B2BVCOn25Oct2023
-                                                                            // ItemLedgerEntry.SetFilter("Entry Type", '%1', ItemLedgerEntry."Entry Type"::Transfer);
-                                                                            // ItemLedgerEntry.SetFilter("Document Type", '%1', ItemLedgerEntry."Document Type"::"Transfer Receipt");
-                                                                            // ItemLedgerEntry.SetFilter("Entry Type", '%1', ItemLedgerEntry."Entry Type"::Transfer);
-                                                                            // ItemLedgerEntry.SetFilter("Document Type", '%1', ItemLedgerEntry."Document Type"::" ");
+                ItemLedgerEntry.SetFilter("Remaining Quantity", '>%1', 0); //B2BVCOn25Oct2023
+                                                                           // ItemLedgerEntry.SetFilter("Entry Type", '%1', ItemLedgerEntry."Entry Type"::Transfer);
+                                                                           // ItemLedgerEntry.SetFilter("Document Type", '%1', ItemLedgerEntry."Document Type"::"Transfer Receipt");
+                                                                           // ItemLedgerEntry.SetFilter("Entry Type", '%1', ItemLedgerEntry."Entry Type"::Transfer);
+                                                                           // ItemLedgerEntry.SetFilter("Document Type", '%1', ItemLedgerEntry."Document Type"::" ");
                 if ItemLedgerEntry.FindSet() then begin
                     ItemLedgerEntry.CalcFields("Cost Amount (Actual)");
                     repeat //B2BSCM25SEP2023
@@ -57,13 +57,8 @@ report 50107 "Aging of Items Report"
                         ValueEntry.SetRange("Item Ledger Entry No.", ItemLedgerEntry."Entry No.");
                         ValueEntry.SetRange("Document No.", ItemLedgerEntry."Document No.");
                         ValueEntry.SetRange("Item No.", ItemLedgerEntry."Item No.");
-                        ValueEntry.SetRange("Document Type", ItemLedgerEntry."Document Type");
-                        ValueEntry.SetRange("Item Ledger Entry Type", ValueEntry."Item Ledger Entry Type");
-                        if ValueEntry.FindSet() then begin
-                            repeat
-                                ValueEntry.CalcSums("Cost per Unit");
-                                UnitCostRec := ValueEntry."Cost per Unit";
-                            until ValueEntry.Next() = 0;
+                        if ValueEntry.FindFirst() then begin
+                            UnitCostRec := ValueEntry."Cost per Unit";
                         end;
 
                         SNo += 1;

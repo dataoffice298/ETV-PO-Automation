@@ -169,6 +169,22 @@ table 50210 "Quotation Comparison Test"
         field(21; "Carry Out Action"; Boolean)
         {
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            var
+                QuoteCompLine1: Record "Quotation Comparison Test";
+                Text011Lbl: Label 'Quantity Exceeded than  Order Raised';
+            begin
+                //B2BVCOn13Jun2024 >>
+                QuoteCompLine1.Reset();
+                QuoteCompLine1.SetRange("Indent No.", Rec."Indent No.");
+                QuoteCompLine1.SetRange("Indent Line No.", Rec."Indent Line No.");
+                QuoteCompLine1.SetRange("Item No.", Rec."Item No.");
+                QuoteCompLine1.SetRange("Carry Out Action", true);
+                QuoteCompLine1.SetFilter("Line No.", '<>%1', Rec."Line No.");
+                if QuoteCompLine1.FindFirst() then
+                    Error(Text011Lbl);
+                //B2BVCOn13Jun2024 <<
+            end;
         }
         field(22; Level; Integer)
         {

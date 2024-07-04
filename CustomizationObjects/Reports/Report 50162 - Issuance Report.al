@@ -34,6 +34,7 @@ report 50162 "Issuance Report"
                     ItemLedgerEntries.SetRange("Indent No.", "Indent Line"."Document No.");
                     ItemLedgerEntries.SetRange("Indent Line No.", "Indent Line"."Line No.");
                     ItemLedgerEntries.SetRange("Entry Type", ItemLedgerEntries."Entry Type"::"Negative Adjmt.");//B2BSCM14SEP2023
+                    ItemLedgerEntries.SetFilter("Posting Date", '%1..%2', StartDate, EndDate);//B2BVCOn25Jun2024
                     if ItemLedgerEntries.FindSet() then
                         repeat
                             //B2BSSD24APR2023<<
@@ -97,7 +98,7 @@ report 50162 "Issuance Report"
 
             trigger OnPreDataItem()
             begin
-                SetFilter("Document Date", '%1..%2', StartDate, EndDate);
+                //SetFilter("Document Date", '%1..%2', StartDate, EndDate); //B2BVCOn25Jun2024
                 Clear(SNo);
                 MakeExcelHeaders();
             end;

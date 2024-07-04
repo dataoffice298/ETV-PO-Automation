@@ -958,6 +958,41 @@ codeunit 50016 "MyBaseSubscr"
         //B2BVCOn28Jun2024 <<
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Document-Mailing", 'OnBeforeSendEmail', '', false, false)]
+    local procedure OnBeforeSendEmail(var TempEmailItem: Record "Email Item" temporary; var IsFromPostedDoc: Boolean; var PostedDocNo: Code[20]; var HideDialog: Boolean; var ReportUsage: Integer; var EmailSentSuccesfully: Boolean; var IsHandled: Boolean; EmailDocName: Text[250]; SenderUserID: Code[50]; EmailScenario: Enum "Email Scenario")
+    var
+        DocumentAttachment: Record "Document Attachment";
+        TempBlob: Codeunit "Temp Blob";
+        AttcahmentInstream: InStream;
+        AttchmentOutStream: OutStream;
+        FilePathName: Text;
+        TempFile: File;
+        FileName: Text;
+        FileMngt: Codeunit "File Management";
+        PurchLine: Record "Purchase Line";
+    begin
+        DocumentAttachment.Reset();
+        DocumentAttachment.SetRange("No.", PostedDocNo);
+        DocumentAttachment.SetRange("Document Type", DocumentAttachment."Document Type"::Order);
+        DocumentAttachment.SetRange(Select, true);
+        if DocumentAttachment.FindSet() then begin
+            repeat
+                Clear(FilePathName);
+                Clear(FileName);
+                Clear(TempFile);
+                FilePathName := DocumentAttachment."File Path";
+                TempFile.Open(FilePathName);
+                TempFile.CreateInStream(AttcahmentInstream);
+                TempBlob.CreateOutStream(AttchmentOutStream, TextEncoding::UTF8);
+                CopyStream(AttchmentOutStream, AttcahmentInstream);
+                FileName := DocumentAttachment."File Name" + '.' + DocumentAttachment."File Extension";
+                //FileName := FileMngt.BLOBExport(TempBlob, FileName, true);
+                TempBlob.CreateInStream(AttcahmentInstream);
+                TempEmailItem.AddAttachment(AttcahmentInstream, FileName);
+            until DocumentAttachment.Next = 0;
+        end;
+    end;
+
 }
 
 

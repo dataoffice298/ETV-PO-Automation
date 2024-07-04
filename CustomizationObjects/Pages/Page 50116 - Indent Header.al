@@ -508,7 +508,7 @@ page 50116 "Indent Header"
 
 
                         Rec."Material Issued" := false;
-                        CurrPage.UPDATE
+                        //CurrPage.UPDATE
 
                         //B2BPGOn6Nov23>>>>
 

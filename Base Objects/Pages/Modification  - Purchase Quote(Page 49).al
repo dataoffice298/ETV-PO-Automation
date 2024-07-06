@@ -125,6 +125,17 @@ pageextension 50073 pageextension70000001 extends "Purchase Quote"
                 if rec."Payment Terms Code" = '' then
                     Error('Payment Trems Code Must Have a value');
             end;
+
+            trigger OnAfterAction()
+            var
+                POAutomation: Codeunit "PO Automation";
+                PurchaseOrder: Record "Purchase Header";
+            begin
+                PurchaseOrder.Reset();
+                PurchaseOrder.SetRange("Quotation No.", Rec."No.");
+                if PurchaseOrder.FindFirst() then
+                    POAutomation.CopyTermsandConditionsofVendorDoc(Rec, PurchaseOrder);
+            end;
         }
         modify(DocAttach)
         {

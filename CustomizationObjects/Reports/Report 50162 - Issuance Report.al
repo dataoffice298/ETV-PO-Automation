@@ -34,7 +34,6 @@ report 50162 "Issuance Report"
                     ItemLedgerEntries.SetRange("Indent No.", "Indent Line"."Document No.");
                     ItemLedgerEntries.SetRange("Indent Line No.", "Indent Line"."Line No.");
                     ItemLedgerEntries.SetRange("Entry Type", ItemLedgerEntries."Entry Type"::"Negative Adjmt.");//B2BSCM14SEP2023
-                    ItemLedgerEntries.SetFilter("Posting Date", '%1..%2', StartDate, EndDate);//B2BVCOn25Jun2024
                     if ItemLedgerEntries.FindSet() then
                         repeat
                             //B2BSSD24APR2023<<
@@ -54,6 +53,25 @@ report 50162 "Issuance Report"
                             // if ItemLedgerEntries.Get('5368') then
                             Clear(No2);
                             FindAppliedEntries(ItemLedgerEntries, TempItemLedgerEntry);
+
+                            /* Clear(InvAdjAcc);
+                            if Item.Get(ItemLedgerEntries."Item No.") then begin
+                                GeneralPostingSetup.Reset();
+                                GeneralPostingSetup.SetRange("Gen. Prod. Posting Group", Item."Gen. Prod. Posting Group");
+                                GeneralPostingSetup.SetFilter("Gen. Bus. Posting Group", '');
+                                if GeneralPostingSetup.FindFirst() then
+                                    InvAdjAcc := GeneralPostingSetup."Inventory Adjmt. Account";
+                            end; */
+
+                            //B2BVCOn05July2024 >>
+                            Clear(InvAdjAcc);
+                            GeneralLedgEntry.Reset();
+                            GeneralLedgEntry.SetCurrentKey("Entry No.");
+                            GeneralLedgEntry.SetRange("External Document No.", "Indent Line"."Document No.");
+                            GeneralLedgEntry.SetFilter("Debit Amount", '>%1', 0);
+                            if GeneralLedgEntry.FindFirst() then
+                                InvAdjAcc := GeneralLedgEntry."G/L Account No.";
+                            //B2BVCOn05July2024 <<
 
 
                             Users.Reset();
@@ -91,6 +109,7 @@ report 50162 "Issuance Report"
                             TempExcelBuffer.AddColumn(ABS(TotalAmount), FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Number);
                             TempExcelBuffer.AddColumn(No2, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                             TempExcelBuffer.AddColumn(ItemLedgerEntries."Entry No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn(InvAdjAcc, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                             TempExcelBuffer.AddColumn("Indent Header".Purpose, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text); //B2BSCM30MAY2024
                         until ItemLedgerEntries.Next() = 0;
                 end;
@@ -98,7 +117,7 @@ report 50162 "Issuance Report"
 
             trigger OnPreDataItem()
             begin
-                //SetFilter("Document Date", '%1..%2', StartDate, EndDate); //B2BVCOn25Jun2024
+                SetFilter("Document Date", '%1..%2', StartDate, EndDate);
                 Clear(SNo);
                 MakeExcelHeaders();
             end;
@@ -141,15 +160,19 @@ report 50162 "Issuance Report"
 
     var
         TempExcelBuffer: Record "Excel Buffer" temporary;
+        Item: Record Item;
+        GeneralPostingSetup: Record "General Posting Setup";
         StartDate: Date;
         EndDate: Date;
         WindPa: Dialog;
         SNo: Integer;
+        InvAdjAcc: Code[30];
         InwardRefNumber: Code[100];//B2BSSD28MAR2023
         username: Text[50];//B2BSSD28MAR2023
         ILE: Record "Item Ledger Entry";
         DocumentNoVar: Code[50];
         ItemLedgerQty: Decimal;//B2BSCM31AUG2023
+        GeneralLedgEntry: Record "G/L Entry";
 
     procedure MakeExcelHeaders()
     begin
@@ -206,6 +229,7 @@ report 50162 "Issuance Report"
         TempExcelBuffer.AddColumn('Total Amount', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('Inward Ref.', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('Entry No.', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        TempExcelBuffer.AddColumn('G/L Account No.', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('Purpose', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);//B2BSCM30MAY2024
     end;
 

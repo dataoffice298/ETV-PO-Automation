@@ -399,8 +399,8 @@ report 50182 "Regularization Order"
                     TransactionTypeDES := TransactionTypeRec.Description;
                 if Shipments.get("Shipment Method Code") then
                     shipmethod := Shipments.Description;
-                if Shipments.get("Payment Terms Code") then
-                    shipmethod := Shipments.Description;
+                /* if Shipments.get("Payment Terms Code") then
+                    shipmethod := Shipments.Description; */
                 if Transactionspecifcation.get("Transaction Specification") then
                     transactionspecificTxt := Transactionspecifcation.Text;
                 //B2bssd25apr2023<<

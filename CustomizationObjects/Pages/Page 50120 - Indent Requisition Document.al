@@ -92,6 +92,12 @@ page 50120 "Indent Requisition Document"
                     ApplicationArea = All;
                     Caption = 'Purpose';
                 }
+                field("Req Status"; Rec."Req Status")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    StyleExpr = StyleTxt;
+                }
             }
             part(Indentrequisations; 50119)
             {
@@ -749,6 +755,8 @@ page 50120 "Indent Requisition Document"
         Text0010: Label 'Enquiries Created Successfully';
         Text0011: Label 'Quotes Created Successfully';
         FieldEditable: Boolean;
+        IndentReq: Record "Indent Requisitions";
+        StyleTxt: Text;
     // ShowAct: Boolean;
 
     procedure CheckRemainingQuantity();
@@ -875,13 +883,33 @@ page 50120 "Indent Requisition Document"
      end;*/
     trigger OnAfterGetRecord()
     begin
+        StyleTxt := Rec.SetStyle();
         OpenAppEntrExistsForCurrUser := approvalmngmt.HasOpenApprovalEntriesForCurrentUser(Rec.RecordId());
         OpenApprEntrEsists := approvalmngmt.HasOpenApprovalEntries(Rec.RecordId());
         CanCancelapprovalforrecord := approvalmngmt.CanCancelApprovalForRecord(Rec.RecordId());
         workflowwebhookmangt.GetCanRequestAndCanCancel(Rec.RecordId(), CanrequestApprovForFlow, CanCancelapprovalforflow);
     end;
 
-
+    trigger OnOpenPage()
+    var
+        PurchHeader: Record "Purchase Header";
+    begin
+        IndentReq.Reset();
+        IndentReq.SetRange("Document No.", Rec."No.");
+        if IndentReq.FindSet() then
+            repeat
+                if (IndentReq."Remaining Quantity" = 0) And (IndentReq."Purch Order No." <> '') then begin
+                    if PurchHeader.Get(PurchHeader."Document Type"::Order, IndentReq."Purch Order No.") then begin
+                        if PurchHeader.Status = PurchHeader.Status::Released then
+                            Rec."Req Status" := Rec."Req Status"::Completed
+                        else
+                            Rec."Req Status" := Rec."Req Status"::Pending;
+                    end;
+                end else
+                    Rec."Req Status" := Rec."Req Status"::Pending;
+                Rec.Modify();
+            until IndentReq.Next = 0;
+    end;
 
 
 

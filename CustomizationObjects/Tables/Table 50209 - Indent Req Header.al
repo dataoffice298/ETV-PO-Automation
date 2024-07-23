@@ -140,12 +140,20 @@ table 50209 "Indent Req Header"
             Blocked = CONST(false));
             DataClassification = CustomerContent;
         }
+        field(50008; "Req Status"; Option)
+        {
+            OptionCaption = ' ,Pending,Completed';
+            OptionMembers = "",Pending,Completed;
+            Caption = 'Req Status';
+        }
     }
     keys
     {
         key(Key1; "No.")
         {
         }
+        key(Key2; "Document Date")
+        { }
     }
 
     fieldgroups
@@ -194,6 +202,14 @@ table 50209 "Indent Req Header"
     procedure TestStatusOpen();
     begin
         TESTFIELD(Status, Status::Open);
+    end;
+    procedure SetStyle(): Text
+    begin
+        if Rec."Req Status" = Rec."Req Status"::Completed then
+            exit('favorable')
+        else
+            exit('Unfavorable');
+        exit('');
     end;
 }
 

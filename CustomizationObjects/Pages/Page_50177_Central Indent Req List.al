@@ -41,6 +41,11 @@ page 50177 "Centrak Indent Req List"
                     ApplicationArea = all;
                     Editable = false;
                 }
+                field("Req Status"; Rec."Req Status")
+                {
+                    ApplicationArea = All;
+                    StyleExpr = StyleTxt;
+                }
             }
         }
     }
@@ -48,5 +53,12 @@ page 50177 "Centrak Indent Req List"
     actions
     {
     }
+    var
+        StyleTxt: Text;
+
+    trigger OnAfterGetRecord()
+    begin
+        StyleTxt := Rec.SetStyle();
+    end;
 }
 

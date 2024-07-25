@@ -92,12 +92,12 @@ page 50120 "Indent Requisition Document"
                     ApplicationArea = All;
                     Caption = 'Purpose';
                 }
-                field("Req Status"; Rec."Req Status")
+                 field("Req Status"; Rec."Req Status")
                 {
                     ApplicationArea = All;
                     Editable = false;
                     StyleExpr = StyleTxt;
-                }
+                } 
             }
             part(Indentrequisations; 50119)
             {
@@ -893,22 +893,63 @@ page 50120 "Indent Requisition Document"
     trigger OnOpenPage()
     var
         PurchHeader: Record "Purchase Header";
+        PurchLine: Record "Purchase Line";
+        PurchInvHeader: Record "Purch. Inv. Header";
+        Count: Integer;
+        ReleaseCount: Integer;
+        PurchOrderCount: Integer;
+        IndentReqLine: Record "Indent Requisitions";
+        Linecount: Integer;
     begin
         IndentReq.Reset();
         IndentReq.SetRange("Document No.", Rec."No.");
-        if IndentReq.FindSet() then
+        IndentReq.SetFilter("Remaining Quantity", '%1', 0);
+        IndentReq.SetFilter("Purch Order No.", '<>%1', '');
+        if IndentReq.FindSet() then begin
             repeat
-                if (IndentReq."Remaining Quantity" = 0) And (IndentReq."Purch Order No." <> '') then begin
-                    if PurchHeader.Get(PurchHeader."Document Type"::Order, IndentReq."Purch Order No.") then begin
-                        if PurchHeader.Status = PurchHeader.Status::Released then
-                            Rec."Req Status" := Rec."Req Status"::Completed
-                        else
-                            Rec."Req Status" := Rec."Req Status"::Pending;
-                    end;
-                end else
-                    Rec."Req Status" := Rec."Req Status"::Pending;
-                Rec.Modify();
+                Clear(PurchOrderCount);
+                Clear(ReleaseCount);
+                PurchLine.Reset();
+                PurchLine.SetRange("Indent Req No", IndentReq."Document No.");
+                PurchLine.SetRange("Indent Req Line No", IndentReq."Line No.");
+                if PurchLine.FindSet() then begin
+                    repeat
+                        PurchOrderCount += 1;
+                        if PurchHeader.Get(PurchHeader."Document Type"::Order, PurchLine."Document No.") then begin
+                            if PurchHeader.Status = PurchHeader.Status::Released then
+                                ReleaseCount += 1;
+                        end;
+                    until PurchLine.Next = 0;
+                    if PurchOrderCount = ReleaseCount then
+                        IndentReq."Order Status" := IndentReq."Order Status"::Completed
+                    else
+                        IndentReq."Order Status" := IndentReq."Order Status"::Pending;
+                end else begin
+                    PurchInvHeader.Reset();
+                    PurchInvHeader.SetRange("Order No.", IndentReq."Purch Order No.");
+                    if PurchInvHeader.FindFirst() then
+                        IndentReq."Order Status" := IndentReq."Order Status"::Completed;
+                end;
+                IndentReq.Modify();
             until IndentReq.Next = 0;
+        end;
+
+        Clear(Linecount);
+        Clear(Count);
+        IndentReqLine.Reset();
+        IndentReqLine.SetRange("Document No.", Rec."No.");
+        if IndentReqLine.FindSet() then begin
+            repeat
+                Linecount += 1;
+                if IndentReqLine."Order Status" = IndentReqLine."Order Status"::Completed then
+                    Count += 1;
+            until IndentReqLine.Next = 0;
+            if Linecount = Count then
+                Rec."Req Status" := Rec."Req Status"::Completed
+            else
+                Rec."Req Status" := Rec."Req Status"::Pending;
+            Rec.Modify();
+        end;
     end;
 
 

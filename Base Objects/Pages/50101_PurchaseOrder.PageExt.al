@@ -143,6 +143,14 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         {
             Caption = 'Payment Term';
         }
+        addafter("Cancelled Order")
+        {
+            field("Exchange Rate"; Rec."Exchange Rate")
+            {
+                ApplicationArea = All;
+
+            }
+        }
 
         //B2BSSD25Jan2023<<
         addafter(PurchLines)

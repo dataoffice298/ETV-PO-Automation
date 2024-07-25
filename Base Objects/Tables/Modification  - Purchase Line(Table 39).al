@@ -143,6 +143,7 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         field(65000; "Short Close Quantity"; Decimal)
         {
             DataClassification = CustomerContent;
+            DecimalPlaces = 0 : 5;
         }
         field(65001; "Short Closed by"; Code[50])
         {
@@ -208,6 +209,7 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         {
             Caption = 'Qty. to Accept';
             DataClassification = CustomerContent;
+            DecimalPlaces = 0 : 5;
             trigger OnValidate()
             var
                 Error1: TextConst ENN = 'The Qty. to Accept must not be greater than Qty Accepted Inward.';//B2BSSD29JUN2023
@@ -234,6 +236,7 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         {
             Caption = 'Qty. to Reject';
             DataClassification = CustomerContent;
+            DecimalPlaces = 0 : 5;
             trigger OnValidate()
             var
                 RejErr: TextConst ENN = 'You cannot reject the quantity as total quantity is received.';
@@ -258,12 +261,14 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             Editable = false;
             Caption = 'Quantity Accepted';
             DataClassification = CustomerContent;
+            DecimalPlaces = 0 : 5;
         }
         field(60015; "Quantity Rejected B2B"; Decimal)
         {
             Editable = false;
             Caption = 'Quantity Rejected';
             DataClassification = CustomerContent;
+            DecimalPlaces = 0 : 5;
         }
         field(60016; "QC Enabled B2B"; Boolean)
         {
@@ -338,6 +343,7 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         field(60026; "Qty to Inward_B2B"; Decimal) //B2BSCM11SEP2023 INTtoDEC change
         {
             DataClassification = CustomerContent;
+            DecimalPlaces = 0 : 5;
             trigger OnValidate()
             var
                 InwardError: TextConst ENN = 'FULL QTY HAS BEEN INWARD AS PER PO QTY';//B2BSSD22MAY2023
@@ -365,6 +371,7 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         field(60027; "Qty Accepted Inward_B2B"; Decimal)
         {
             DataClassification = CustomerContent;
+            DecimalPlaces = 0 : 5;
         }
         //B2BSSD15MAY2023<<
 
@@ -372,6 +379,7 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         field(60028; "Qty Rejected OutWard_B2B"; Decimal)
         {
             DataClassification = CustomerContent;
+            DecimalPlaces = 0 : 5;
             trigger OnValidate()
             var
                 //B2BSSD22MAY2023
@@ -438,6 +446,7 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         {
             Caption = 'Inward Qty';
             DataClassification = CustomerContent;
+            DecimalPlaces = 0 : 5;
         }
         field(60055; "RGP OutWard No."; Code[20])
         {

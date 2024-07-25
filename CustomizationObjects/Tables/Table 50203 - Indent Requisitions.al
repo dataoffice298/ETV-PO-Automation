@@ -360,6 +360,12 @@ table 50203 "Indent Requisitions"
             Blocked = CONST(false));
             DataClassification = CustomerContent;
         }
+        field(50026; "Order Status"; Option)
+        {
+            OptionCaption = ' ,Pending,Completed';
+            OptionMembers = "",Pending,Completed;
+            Caption = 'Req Status';
+        }
     }
     //B2BSSD17FEB2023>>
 

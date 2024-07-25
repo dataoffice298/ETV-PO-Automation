@@ -4,8 +4,38 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
     layout
     {
 
+        moveafter("No."; Description)
+        moveafter(Description; Quantity)
+        moveafter(Quantity; "Unit of Measure Code")
+        moveafter("Unit of Measure Code"; "Direct Unit Cost")
+        movebefore("Item Reference No."; "Line Amount")
+        moveafter("Line Amount"; "GST Group Code")
+        moveafter("GST Group Code"; "HSN/SAC Code")
+        moveafter("HSN/SAC Code"; "GST Credit")
+        moveafter("GST Credit"; "GST Assessable Value")
+        moveafter("GST Assessable Value"; "Variant Code")
+        movebefore("Item Reference No."; "Quantity Received")
+        movebefore("Item Reference No."; "Quantity Invoiced")
+
         addafter(Description)
         {
+            field("Spec Id"; rec."Spec Id")
+            {
+                ApplicationArea = all;
+                trigger OnValidate()
+                var
+                    myInt: Integer;
+                    userSetup: Record "User Setup";
+                    Text0001: Label 'You dont have permessions for entering Specifications';
+                begin
+
+
+                    if userSetup.Get(UserId) and (userSetup.Specifications = false) then
+                        Error(Text0001);
+
+                end;
+
+            }
             field(Select; Rec.Select)
             {
                 ApplicationArea = all;
@@ -16,19 +46,12 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 Visible = false;
             }
         }
-        addafter(Description)
+        addafter(Control1)
         {
             field("FA Posting Type"; Rec."FA Posting Type")
             {
                 ApplicationArea = All;
 
-            }
-        }
-        addafter("Variant Code")
-        {
-            field("Variant Description"; Rec."Variant Description") //B2BSCM11JAN2024
-            {
-                ApplicationArea = All;
             }
         }
         //B2BSSD16FEB2023<<
@@ -48,29 +71,13 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         //     }
         // }
         //B2BSSD16FEB2023>>
-        addafter("No.")//B2BSSD15FEB2023
+        addafter("Quantity Invoiced")//B2BSSD15FEB2023
         {
             field("Indentor Description"; Rec."Indentor Description")//B2BSSD02Feb2023
             {
                 ApplicationArea = All;
             }
-            field("Spec Id"; rec."Spec Id")
-            {
-                ApplicationArea = all;
-                trigger OnValidate()
-                var
-                    myInt: Integer;
-                    userSetup: Record "User Setup";
-                    Text0001: Label 'You dont have permessions for entering Specifications';
-                begin
 
-
-                    if userSetup.Get(UserId) and (userSetup.Specifications = false) then
-                        Error(Text0001);
-
-                end;
-
-            }
             field(CWIP; Rec.CWIP)
             {
                 ApplicationArea = all;
@@ -86,6 +93,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 ApplicationArea = All;
             }
         }
+
 
         addbefore("Shortcut Dimension 1 Code")
         {
@@ -114,39 +122,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             {
                 ApplicationArea = All;
             }
-            field("Qty. to Accept B2B"; Rec."Qty. to Accept B2B")
-            {
-                ApplicationArea = All;
-                trigger OnValidate()
-                var
-                    myInt: Integer;
-                    userSetup: Record "User Setup";
-                    Text0001: Label 'You dont have permessions for entering Accept/Reject values';
-                    Text002: label 'Gate Entry Inward Must be Created.';
-                    PostedGateEntryLine: Record "Posted Gate Entry Line_B2B";
-                    Text003: Label 'Qty. To Accept Exceeded than Inward Quantity.';
-                begin
-                    if userSetup.Get(UserId) and (userSetup."Accept/Reject" = false) then
-                        Error(Text0001);
 
-                    //B2BVCOn28Jun2024 >>
-                    if not (Rec.Select) then
-                        Error(Text002);
-                    if (Rec.Select) And (Rec."Posted Gate Entry No." <> '') And (Rec.Inward = false) then
-                        Error(Text002);
-
-                    PostedGateEntryLine.Reset();
-                    PostedGateEntryLine.SetRange("Gate Entry No.", Rec."Posted Gate Entry No.");
-                    PostedGateEntryLine.SetRange("Line No.", Rec."Posted Gate Entry Line No.");
-                    if PostedGateEntryLine.FindFirst() then begin
-                        if Rec."Qty. to Accept B2B" > PostedGateEntryLine.Quantity then
-                            Error(Text003);
-                    end;
-
-                    //B2BVCOn28Jun2024 <<
-
-                end;
-            }
             field("Qty. to Reject B2B"; Rec."Qty. to Reject B2B")
             {
                 ApplicationArea = All;
@@ -168,10 +144,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 Caption = 'Rejection Comments';
                 ApplicationArea = all;
             }
-            field("Quantity Accepted B2B"; Rec."Quantity Accepted B2B")
-            {
-                ApplicationArea = All;
-            }
+
             field("Quantity Rejected B2B"; Rec."Quantity Rejected B2B")
             {
                 ApplicationArea = All;
@@ -223,12 +196,16 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             }
         }
         //B2BSSD14MAR2023<<
-        addafter("Spec Id")
+        addafter("GST Assessable Value")
         {
             field("Variant Code1"; Rec."Variant Code")
             {
                 ApplicationArea = All;
                 Caption = 'Variant Code';
+            }
+            field("Variant Description"; Rec."Variant Description") //B2BSCM11JAN2024
+            {
+                ApplicationArea = All;
             }
         }
         addafter("Direct Unit Cost")
@@ -240,12 +217,49 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             }
         }
         //B2BSSD14MAR2023>>
-        addafter("Reserved Quantity")//B2BSSD15MAY2023
+        addafter("Quantity Received")//B2BSSD15MAY2023
         {
             field("Qty to Inward_B2B"; Rec."Qty to Inward_B2B")
             {
                 ApplicationArea = All;
                 caption = 'Qty to Inward';
+            }
+            field("Qty. to Accept B2B"; Rec."Qty. to Accept B2B")
+            {
+                ApplicationArea = All;
+                trigger OnValidate()
+                var
+                    myInt: Integer;
+                    userSetup: Record "User Setup";
+                    PostedGateEntryLine: Record "Posted Gate Entry Line_B2B";
+                    Text0001: Label 'You dont have permessions for entering Accept/Reject values';
+                    Text002: label 'Gate Entry Inward Must be Created.';
+                    Text003: Label 'Qty. To Accept Exceeded than Inward Quantity.';
+                begin
+                    if userSetup.Get(UserId) and (userSetup."Accept/Reject" = false) then
+                        Error(Text0001);
+
+                    //B2BVCOn28Jun2024 >>
+                    if not (Rec.Select) then
+                        Error(Text002);
+                    if (Rec.Select) And (Rec."Posted Gate Entry No." <> '') And (Rec.Inward = false) then
+                        Error(Text002);
+
+                    PostedGateEntryLine.Reset();
+                    PostedGateEntryLine.SetRange("Gate Entry No.", Rec."Posted Gate Entry No.");
+                    PostedGateEntryLine.SetRange("Line No.", Rec."Posted Gate Entry Line No.");
+                    if PostedGateEntryLine.FindFirst() then begin
+                        if Rec."Qty. to Accept B2B" > PostedGateEntryLine.Quantity then
+                            Error(Text003);
+                    end;
+
+                    //B2BVCOn28Jun2024 <<
+
+                end;
+            }
+            field("Quantity Accepted B2B"; Rec."Quantity Accepted B2B")
+            {
+                ApplicationArea = All;
             }
         }
 

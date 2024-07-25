@@ -147,6 +147,7 @@ table 50222 "Gate Entry Line_B2B"
         field(26; Quantity; Decimal)
         {
             DataClassification = CustomerContent;
+            DecimalPlaces = 0 : 5;
             //B2BSSD25APR2023<<
             // trigger OnValidate()
             // begin
@@ -196,6 +197,7 @@ table 50222 "Gate Entry Line_B2B"
         field(50000; "Avail Qty"; Decimal)//B2BSSD03APR2023
         {
             DataClassification = CustomerContent;
+            DecimalPlaces = 0 : 5;
         }
         field(35; "Avail/UnAvail"; Boolean)//B2BSSD07JUN2023
         {

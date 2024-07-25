@@ -993,6 +993,20 @@ codeunit 50016 "MyBaseSubscr"
         end;
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Purchase Document", 'OnBeforeCheckPurchaseHeaderPendingApproval', '', false, false)]
+    local procedure OnBeforeCheckPurchaseHeaderPendingApproval(var PurchaseHeader: Record "Purchase Header"; var IsHandled: Boolean)
+    begin
+        if PurchaseHeader."Exchange Rate" then
+            IsHandled := true;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnBeforePrePostApprovalCheckPurch', '', false, false)]
+    local procedure OnBeforePrePostApprovalCheckPurch(var PurchaseHeader: Record "Purchase Header"; var Result: Boolean; var IsHandled: Boolean)
+    begin
+        if PurchaseHeader."Exchange Rate" then
+            IsHandled := true;
+    end;
+
 }
 
 

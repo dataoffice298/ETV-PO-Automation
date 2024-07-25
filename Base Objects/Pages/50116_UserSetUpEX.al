@@ -47,6 +47,10 @@ pageextension 50116 UserSetUpExt_B2B extends "User Setup"
             {
                 ApplicationArea = All;
             }
+            field("Exchange Rate"; Rec."Exchange Rate")
+            {
+                ApplicationArea = All;
+            }
         }
     }
     //B2BKM29APR2024 <<

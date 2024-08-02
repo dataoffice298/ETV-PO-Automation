@@ -2,7 +2,14 @@ pageextension 50081 DocAttachmentsEXT extends "Document Attachment Details"
 {
     layout
     {
-        // Add changes to page layout here
+        addafter("Attached Date")
+        {
+            field(Select; Rec.Select)
+            {
+                ApplicationArea = All;
+                Caption = 'Select';
+            }
+        }
     }
 
     actions

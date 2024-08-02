@@ -526,6 +526,39 @@ table 50202 "Indent Line"
             Blocked = CONST(false));
             DataClassification = CustomerContent;
         }
+        //B2BVCOn17Jun2024 >>
+        field(50028; ShortClose; Boolean)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50029; CancelIndent; Boolean)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50030; Closed; Boolean)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50031; "ShortClose Qty"; Decimal)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50032; "ShortClosed By"; Code[50])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50033; "ShortClose Date & Time"; DateTime)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50034; "ShortClose Status"; Option)
+        {
+            Editable = false;
+            OptionCaption = ',ShortClose,Cancel,Closed';
+            OptionMembers = " ",ShortClose,Cancel,Closed;
+        }
+
+        //B2BVCOn17Jun2024 <<
 
     }
 

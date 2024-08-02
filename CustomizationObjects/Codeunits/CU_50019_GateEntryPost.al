@@ -167,6 +167,7 @@ codeunit 50019 "Gate Entry- Post"
                         PurchLineGRec.validate("Qty. to Receive", (PostedGateEntryLine.Quantity + PurchLineGRec."Inward Qty") - PurchLineGRec."Quantity Received"); //B2BVCOn01Feb2024
                         PurchLineGRec.Validate("Qty. to Invoice", (PostedGateEntryLine.Quantity + PurchLineGRec."Inward Qty") - PurchLineGRec."Quantity Invoiced"); //B2BVCOn01Feb2024
                         PurchLineGRec."Inward Qty" += PurchLineGRec."Qty. to Receive"; //B2BVCOn01Feb2024
+                        PurchLineGRec.Inward := true; //B2BVCOn28Jun2024
                     end;
                     if PostedGateEntryLine."Entry Type" = PostedGateEntryLine."Entry Type"::Outward then
                         PurchLineGRec."RGP OutWard No." := PostedGateEntryLine."Gate Entry No.";

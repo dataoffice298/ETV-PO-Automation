@@ -43,8 +43,7 @@ codeunit 50056 "Check Codeunit"
         ExponentText[4] := Text1280001;
     end;
 
-
-    procedure FormatNoText(var NoText: array[2] of Text[180]; No: Decimal; CurrencyCode: Code[10])
+    procedure FormatNoText(var NoText: array[2] of Text[60]; No: Decimal; CurrencyCode: Code[10])
     var
         PrintExponent: Boolean;
         Ones: Integer;
@@ -53,33 +52,31 @@ codeunit 50056 "Check Codeunit"
         Exponent: Integer;
         NoTextIndex: Integer;
         DecimalPosition: Decimal;
-        TensDec: Integer;
         OnesDec: Integer;
+        TensDec: Integer;
+        GenLedSetup: Record "General Ledger Setup";
+        CurrDescription: Text;
+        Currency: Record "Currency";
+        CurrencyDesc: Text[100];
     begin
         CLEAR(NoText);
         NoTextIndex := 1;
-        Clear(Currency);
-        if Currency.get(CurrencyCode) then;
-        //  if CurrencyCode = '' then
-        NoText[1] := 'RUPEES';
+        NoText[1] := '';
 
         IF No < 1 THEN
             AddToNoText(NoText, NoTextIndex, PrintExponent, Text026)
-        ELSE
+        ELSE BEGIN
             FOR Exponent := 4 DOWNTO 1 DO BEGIN
                 PrintExponent := FALSE;
-                IF No > 99999 THEN BEGIN
-                    Ones := No DIV (POWER(100, Exponent - 1) * 10);
-                    Hundreds := 0;
-                END ELSE BEGIN
-                    Ones := No DIV POWER(1000, Exponent - 1);
-                    Hundreds := Ones DIV 100;
-                END;
+                Ones := No DIV POWER(1000, Exponent - 1);
+                Hundreds := Ones DIV 100;
                 Tens := (Ones MOD 100) DIV 10;
                 Ones := Ones MOD 10;
                 IF Hundreds > 0 THEN BEGIN
                     AddToNoText(NoText, NoTextIndex, PrintExponent, OnesText[Hundreds]);
                     AddToNoText(NoText, NoTextIndex, PrintExponent, Text027);
+                    if (Tens >= 2) or ((Tens * 10 + Ones) > 0) then
+                        AddToNoText(NoText, NoTextIndex, PrintExponent, Text028);
                 END;
                 IF Tens >= 2 THEN BEGIN
                     AddToNoText(NoText, NoTextIndex, PrintExponent, TensText[Tens]);
@@ -90,36 +87,46 @@ codeunit 50056 "Check Codeunit"
                         AddToNoText(NoText, NoTextIndex, PrintExponent, OnesText[Tens * 10 + Ones]);
                 IF PrintExponent AND (Exponent > 1) THEN
                     AddToNoText(NoText, NoTextIndex, PrintExponent, ExponentText[Exponent]);
-                IF No > 99999 THEN
-                    No := No - (Hundreds * 100 + Tens * 10 + Ones) * POWER(100, Exponent - 1) * 10
-                ELSE
-                    No := No - (Hundreds * 100 + Tens * 10 + Ones) * POWER(1000, Exponent - 1);
+
+                No := No - (Hundreds * 100 + Tens * 10 + Ones) * POWER(1000, Exponent - 1);
+                if (Exponent = 2) and ((Tens * 10 + Ones) > 0) and (No > 0) then
+                    AddToNoText(NoText, NoTextIndex, PrintExponent, '');
             END;
+        END;
 
-        //IF CurrencyCode <> '' THEN BEGIN
-        //   Currency.GET(CurrencyCode);
-        //   AddToNoText(NoText, NoTextIndex, PrintExponent, Currency."Currency Numeric Description");
-        //END ELSE
-        //   AddToNoText(NoText, NoTextIndex, PrintExponent, 'RUPEES');
+        AddToNoText(NoText, NoTextIndex, PrintExponent, '');
 
-        AddToNoText(NoText, NoTextIndex, PrintExponent, Text028);
-        // AddToNoText(NoText,NoTextIndex,PrintExponent,FORMAT(No * 100) + '/100');
+        TensDec := (No * 100) DIV 10;
+        OnesDec := Round((No * 100) MOD 10, 1);
 
-        TensDec := ((No * 100) MOD 100) DIV 10;
-        OnesDec := ROUND(((No * 100) MOD 10), 1);
-        IF TensDec >= 2 THEN BEGIN
-            AddToNoText(NoText, NoTextIndex, PrintExponent, TensText[TensDec]);
-            IF OnesDec > 0 THEN
-                AddToNoText(NoText, NoTextIndex, PrintExponent, OnesText[OnesDec]);
-        END ELSE
-            IF (TensDec * 10 + OnesDec) > 0 THEN
-                AddToNoText(NoText, NoTextIndex, PrintExponent, OnesText[TensDec * 10 + OnesDec])
-            ELSE
-                AddToNoText(NoText, NoTextIndex, PrintExponent, Text026);
-        /* IF (CurrencyCode <> '') THEN
-             AddToNoText(NoText, NoTextIndex, PrintExponent, Currency."Currency Decimal Description" + ' ONLY')
-         ELSE*/
-        AddToNoText(NoText, NoTextIndex, PrintExponent, ' PAISA ONLY');
+        if Currency.Get(CurrencyCode) then
+            CurrencyDesc := Currency.Description;
+
+        IF No = 0 THEN
+            if CurrencyCode = '' then
+                AddToNoText(NoText, NoTextIndex, PrintExponent, 'RUPEES ONLY ')
+            else
+                AddToNoText(NoText, NoTextIndex, PrintExponent, CurrencyDesc + 'S ONLY')
+        ELSE BEGIN
+            if CurrencyCode = 'USD' then
+                AddToNoText(NoText, NoTextIndex, PrintExponent, 'DOLLERS ' + Text028)
+            else
+                if CurrencyCode = 'EURO' then
+                    AddToNoText(NoText, NoTextIndex, PrintExponent, 'EUROS ' + Text028)
+                else
+                    AddToNoText(NoText, NoTextIndex, PrintExponent, Text028);
+            IF TensDec >= 2 THEN BEGIN
+                AddToNoText(NoText, NoTextIndex, PrintExponent, TensText[TensDec]);
+                IF OnesDec > 0 THEN
+                    AddToNoText(NoText, NoTextIndex, PrintExponent, OnesText[OnesDec]);
+            END ELSE
+                IF (TensDec * 10 + OnesDec) > 0 THEN
+                    AddToNoText(NoText, NoTextIndex, PrintExponent, OnesText[TensDec * 10 + OnesDec]);
+            if (CurrencyCode = 'USD') OR (CurrencyCode = 'EURO') then
+                AddToNoText(NoText, NoTextIndex, PrintExponent, 'CENTS ONLY')
+            else
+                AddToNoText(NoText, NoTextIndex, PrintExponent, 'PAISE ONLY');
+        END;
     end;
 
 
@@ -149,6 +156,79 @@ codeunit 50056 "Check Codeunit"
         exit(1 / Currency."Amount Rounding Precision");
     end;
 
+    procedure FormatNoTextWithoutCurrency(var NoText: array[2] of Text[80]; No: Decimal; CurrencyCode: Code[10])
+    var
+        CurrRec: Record Currency;
+        PrintExponent: Boolean;
+        Ones: Integer;
+        Tens: Integer;
+        Hundreds: Integer;
+        Exponent: Integer;
+        NoTextIndex: Integer;
+        TensDec: Integer;
+        OnesDec: Integer;
+    begin
+        Clear(NoText);
+        NoTextIndex := 1;
+        NoText[1] := '';
+
+        if No < 1 then
+            AddToNoText(NoText, NoTextIndex, PrintExponent, ZeroLbl)
+        else
+            for Exponent := 4 DOWNTO 1 do begin
+                PrintExponent := false;
+                if No > 99999 then begin
+                    Ones := No DIV (Power(100, Exponent - 1) * 10);
+                    Hundreds := 0;
+                end else begin
+                    Ones := No DIV Power(1000, Exponent - 1);
+                    Hundreds := Ones DIV 100;
+                end;
+                Tens := (Ones MOD 100) DIV 10;
+                Ones := Round(Ones MOD 10, 1);
+                if Hundreds > 0 then begin
+                    AddToNoText(NoText, NoTextIndex, PrintExponent, OnesText[Hundreds]);
+                    AddToNoText(NoText, NoTextIndex, PrintExponent, HundreadLbl);
+                end;
+                if Tens >= 2 then begin
+                    AddToNoText(NoText, NoTextIndex, PrintExponent, TensText[Tens]);
+                    if Ones > 0 then
+                        AddToNoText(NoText, NoTextIndex, PrintExponent, OnesText[Ones]);
+                end else
+                    if (Tens * 10 + Ones) > 0 then
+                        AddToNoText(NoText, NoTextIndex, PrintExponent, OnesText[Tens * 10 + Ones]);
+                if PrintExponent and (Exponent > 1) then
+                    AddToNoText(NoText, NoTextIndex, PrintExponent, ExponentText[Exponent]);
+                if No > 99999 then
+                    No := No - (Hundreds * 100 + Tens * 10 + Ones) * Power(100, Exponent - 1) * 10
+                else
+                    No := No - (Hundreds * 100 + Tens * 10 + Ones) * Power(1000, Exponent - 1);
+            end;
+
+        if CurrencyCode <> '' then begin
+            CurrRec.Get(CurrencyCode);
+            AddToNoText(NoText, NoTextIndex, PrintExponent, ' ');
+        end else
+            AddToNoText(NoText, NoTextIndex, PrintExponent, 'RUPEES');
+
+        AddToNoText(NoText, NoTextIndex, PrintExponent, AndLbl);
+
+        TensDec := ((No * 100) MOD 100) DIV 10;
+        OnesDec := Round((No * 100) MOD 10, 1);
+        if TensDec >= 2 then begin
+            AddToNoText(NoText, NoTextIndex, PrintExponent, TensText[TensDec]);
+            if OnesDec > 0 then
+                AddToNoText(NoText, NoTextIndex, PrintExponent, OnesText[OnesDec]);
+        end else
+            if (TensDec * 10 + OnesDec) > 0 then
+                AddToNoText(NoText, NoTextIndex, PrintExponent, OnesText[TensDec * 10 + OnesDec])
+            else
+                AddToNoText(NoText, NoTextIndex, PrintExponent, ZeroLbl);
+        if (CurrencyCode <> '') then
+            AddToNoText(NoText, NoTextIndex, PrintExponent, ' ' + ' ONLY')
+        else
+            AddToNoText(NoText, NoTextIndex, PrintExponent, 'PAISE ONLY');
+    end;
 
 
 
@@ -292,6 +372,9 @@ codeunit 50056 "Check Codeunit"
         TransportCaptionLbl: Label 'Transport';
         BlockedEmplForCheckErr: Label 'You cannot print check because employee %1 is blocked due to privacy.', Comment = '%1 - Employee no.';
         AlreadyAppliedToEmployeeErr: Label ' is already applied to %1 %2 for employee %3.', Comment = '%1 = Document type, %2 = Document No., %3 = Employee No.';
+        ZeroLbl: Label 'ZERO';
+        HundreadLbl: Label 'HUNDRED';
+        AndLbl: Label 'AND';
     //B2BBaluOnAUG29<< Check Report
 
 }

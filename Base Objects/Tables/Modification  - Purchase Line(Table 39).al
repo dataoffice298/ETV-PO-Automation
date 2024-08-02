@@ -216,30 +216,19 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
                 if Rec.Type = Rec.Type::Item then begin
                     if Rec."Qty. to Accept B2B" > Rec."Qty Accepted Inward_B2B" then
                         Error(Error1);
-                    //B2BSSD13JUN2023>>
-                    Rec."Quantity Accepted B2B" := Rec."Qty. to Accept B2B";
-                    Validate("Qty. to Receive", "Quantity Accepted B2B");//B2BSSD29JUN2023
-                    Rec."Qty. to Accept B2B" := 0;
-                    //Rec.Modify();
                 end;
                 //B2BSCM13SEP2023>>
                 if Rec.Type = Rec.Type::Description then begin //B2BSCM13SEP2023
                     if Rec."Qty. to Accept B2B" > Rec."Qty Accepted Inward_B2B" then
                         Error(Error1);
-
-                    // Rec."Quantity Accepted B2B" := Rec."Qty. to Accept B2B";
-                    // Validate("Qty. to Receive", "Quantity Accepted B2B");
-                    // Validate("Qty. to Invoice", "Quantity Accepted B2B");
-                    // // Rec."Qty. to Accept B2B" := 0;
-                    // Rec.Modify();
                 end;
                 //B2BSCM13SEP2023<<
                 if "Qty. to Accept B2B" <> 0 then
                     CheckTracking(Rec);
-                // if ("Qty. to Accept B2B" + "Quantity Accepted B2B") > "Qty. to Receive (Base)" then//B2BSSD28JUN2023
-                //     Error(Error2);
+
                 if "Qty. to Accept B2B" <> 0 then
                     Validate("Qty. to Receive", "Qty. to Accept B2B");
+
             end;
         }
         field(60013; "Qty. to Reject B2B"; Decimal)
@@ -494,6 +483,12 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(60062; Inward; Boolean) //B2BVCOn28Jun2024
+        {
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+
         modify(Quantity)
         {
             trigger OnBeforeValidate()

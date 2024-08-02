@@ -13,6 +13,8 @@ reportextension 50001 PostedVoucherNew extends "Posted Voucher New1"
             {
 
             }
+            column(DocumentDate; DocumentDate)
+            { }
         }
         modify("G/L Entry")
         {
@@ -25,18 +27,15 @@ reportextension 50001 PostedVoucherNew extends "Posted Voucher New1"
                 VLEntry.SetRange("Document No.", "G/L Entry"."Document No.");
                 if VLEntry.FindFirst() then begin
                     PONarration := VLEntry."PO Narration";
-                    DocumentDate := VLEntry."Document Date";
-                end;
+                    DocumentDate := 'Date : ' + Format(VLEntry."Document Date");
 
-
-                CLEAR(InvoiceNum);
-                purInvheader.RESET;
-                purInvheader.SETRANGE("No.", "Document No.");
-                IF purInvheader.FINDFIRST THEN BEGIN
-                    PurRcptheader.Reset();
-                    PurRcptheader.SetRange("Order No.", purInvheader."Order No.");
-                    if PurRcptheader.FindFirst() then
-                        InvoiceNum := purInvheader."Vendor Invoice No." + '  Date : ' + FORMAT(DocumentDate) + '  Purchase Invoice Date :' + Format((purInvheader."Vendor Invoice Date"));
+                    CLEAR(InvoiceNum);
+                    purInvheader.RESET;
+                    purInvheader.SETRANGE("No.", VLEntry."Document No.");
+                    IF purInvheader.FINDFIRST THEN BEGIN
+                        //InvoiceNum := purInvheader."Vendor Invoice No." + '  Date : ' + FORMAT(DocumentDate) + '  Purchase Invoice Date :' + Format((purInvheader."Vendor Invoice Date"));
+                        InvoiceNum := 'Invoice No.:' + purInvheader."Vendor Invoice No." + '  Invoice Date :' + Format((purInvheader."Vendor Invoice Date"));
+                    end;
                 end;
             end;
         }
@@ -57,6 +56,6 @@ reportextension 50001 PostedVoucherNew extends "Posted Voucher New1"
         InvoiceNum: Text;
         purInvheader: Record "Purch. Inv. Header";
         PurRcptheader: Record "Purch. Rcpt. Header";
-        DocumentDate: Date;
+        DocumentDate: Text;
 
 }

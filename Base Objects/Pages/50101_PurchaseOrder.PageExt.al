@@ -223,23 +223,11 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 purchaseLinevar.SetRange("Document No.", Rec."No.");
                 if purchaseLinevar.FindSet() then begin
                     repeat
-                        if purchaseLinevar."Qty. to Receive" > purchaseLinevar."Quantity Accepted B2B" then
-                            Error(Error002);
                         if (purchaseLinevar.ShortClosed = true) and (purchaseLinevar."Outstanding Quantity" = 0) then
                             Error(Text0001);
                     until purchaseLinevar.Next() = 0;
                 end;
                 //B2BSSD09AUG2023<
-
-                purchaseLinevar.Reset();
-                purchaseLinevar.SetRange("Document Type", Rec."Document Type");
-                purchaseLinevar.SetRange("Document No.", Rec."No.");
-                purchaseLinevar.SetRange(Select, true);
-                if purchaseLinevar.FindSet() then
-                    repeat
-                        if purchaseLinevar."Qty. to Receive" > purchaseLinevar."Quantity Accepted B2B" then
-                            Error(Error002, purchaseLinevar."Line No.");
-                    until purchaseLinevar.Next = 0;
 
                 PurchLine.Reset();
                 PurchLine.SetRange("Document No.", Rec."No.");
@@ -263,8 +251,6 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 if rec."EPCG Scheme" = rec."EPCG Scheme"::"Under EPCG" then
                     Rec.TestField("EPCG No.");
 
-                //   Rec.TestField("EPCG Scheme");//B2BSCM25SEP2023
-                //  Rec.TestField("EPCG No.");//B2BSCM25SEP2023 
                 GateEntry.Reset();
                 GateEntry.SetRange("Source No.", Rec."No.");
                 if GateEntry.FindFirst() then begin
@@ -276,6 +262,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                                 Error('Gate entry available for the purchase document. Hence, It must be filled in Line No. %1.', PurchLine."Line No.");
                         until PurchLine.Next = 0;
                 end;
+                
                 PurchLine.Reset();
                 PurchLine.SetRange("Document No.", Rec."No.");
                 if PurchLine.FindSet() then
@@ -778,6 +765,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         PurchLineGRec: Record "Purchase Line";
         IndentReqLine: Record "Indent Requisitions";
         CWIPDetails: Record "CWIP Details";
+        PurchaseLine: Record "Purchase Line";
         ErrLbl: Label 'You must define CWIP details for the Item No. %1 and Line No. %2.';
         Err2Lbl: Label 'CWIP details must be defined for the total receiving quantity of Item No. %1 and Line No. %2.';
 }

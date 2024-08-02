@@ -179,8 +179,8 @@ page 50023 "Indent Line"
                     //Editable = FieldEditable; //B2BSCM21AUG2023
                     trigger OnValidate()
                     begin
-
-
+                        if (Rec."ShortClose Status" = Rec."ShortClose Status"::ShortClose) OR (Rec."ShortClose Status" = Rec."ShortClose Status"::Cancel) then
+                            Error(TextLbl, Rec."Line No.", Rec."ShortClose Status");
                     end;
                 }
                 field("Qty Issued"; Rec."Qty Issued")
@@ -193,6 +193,7 @@ page 50023 "Indent Line"
                 {
                     ApplicationArea = all;
                     Caption = 'Qty To Return';
+
                 }
                 field("Qty Returned"; Rec."Qty Returned")
                 {
@@ -211,6 +212,7 @@ page 50023 "Indent Line"
                     begin
                         if not UserwiseSecurity.CheckUserLocation(UserId, Rec."Issue Location", 5) then
                             Error('User %1 dont have permission to location %2', UserId, Rec."Issue Location");
+
                     end;
                     //B2BSS11APR2023<<
                 }
@@ -219,6 +221,16 @@ page 50023 "Indent Line"
                     ApplicationArea = all;
                     Caption = 'To Location';//B2BSSD05APR2023
                     //Editable = FieldEditable; //B2BSCM21AUG2023 //B2BVCOn01Feb2024 Comment
+                    trigger OnValidate()
+                    begin
+                        Rec.CalcFields("Qty Issued");
+                        if Rec."Req.Quantity" = Abs(Rec."Qty Issued") then begin
+                            if Rec."ShortClose Status" = Rec."ShortClose Status"::" " then begin
+                                Rec.Closed := true;
+                                Rec."ShortClose Status" := Rec."ShortClose Status"::Closed;
+                            end;
+                        end;
+                    end;
                 }
                 field("Archive Indent"; "Archive Indent")
                 {
@@ -226,6 +238,27 @@ page 50023 "Indent Line"
                     Caption = 'Archive Indent';
                     Editable = false;
                 }
+                //B2BVCOn17Jun2024 >>
+                field(ShortClose; Rec.ShortClose)
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                }
+                field(CancelIndent; Rec.CancelIndent)
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                }
+                field(Closed; Rec.Closed)
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                }
+                field("ShortClose Status"; Rec."ShortClose Status")
+                {
+                    ApplicationArea = All;
+                }
+                //B2BVCOn17Jun2024 <<
             }
         }
     }
@@ -325,8 +358,10 @@ page 50023 "Indent Line"
                     begin
                         if Rec.Select = false then
                             Error(SelectErr);
-                        TechnicalSpec.ReadExcelSheet();
-                        TechnicalSpec.ImportExcelData();
+                        //TechnicalSpec.ReadExcelSheet(); //B2BVCOn13Jun2024
+                        //TechnicalSpec.ImportExcelData(); //B2BVCOn13Jun2024
+                        ReadExcelSheet();   //B2BVCOn13Jun2024
+                        ImportExcelData();  //B2BVCOn13Jun2024
                     end;
                 }
                 action("Item TechnicalSpec")
@@ -344,7 +379,7 @@ page 50023 "Indent Line"
                         TechnicalspecRec.Reset();
                         TechnicalspecRec.SetRange("Item No.", Rec."No.");
                         TechnicalspecRec.SetRange("Document No.", Rec."Document No.");
-                        TechnicalspecRec.SetRange("Line No.", Rec."Line No.");
+                        //TechnicalspecRec.SetRange("Line No.", Rec."Line No."); //B2BVCOn13Jun2024
                         TechnicalSpec.SetTableView(TechnicalspecRec);
                         TechnicalSpec.Run();
                     end;
@@ -373,6 +408,31 @@ page 50023 "Indent Line"
                     end;
                 }
                 //B2BSSD31Jan2023>>
+
+                //B2BVCOn17Jun2024 >>
+                action("ShortClose IndentDoc")
+                {
+                    ApplicationArea = All;
+                    Caption = 'ShortClose';
+                    Image = PostOrder;
+                    ToolTip = 'Short Close the order based on Qty Issued';
+                    trigger OnAction()
+                    begin
+                        ShortCloseIndent();
+                    end;
+                }
+                action("Cancle IndentDoc")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Cancle Indent';
+                    Image = CancelLine;
+                    trigger OnAction()
+                    begin
+                        CancleIndentDoc();
+                    end;
+
+                }
+                //B2BVCOn17Jun2024 <<
             }
             //B2BSSD02MAR2023<<
             group("NRGP/RGP")
@@ -643,6 +703,80 @@ page 50023 "Indent Line"
         }
     }
     //B2BSSD02MAR2023<<
+
+    //B2BVCOn13Jun2024 >>
+    procedure ReadExcelSheet()
+    var
+        FileManagement: Codeunit "File Management";
+        Istream: InStream;
+        FromFile: Text[100];
+    begin
+        UploadIntoStream(uplodMsg, '', '', FromFile, Istream);
+        if FromFile <> '' then begin
+            FileName := FileManagement.GetFileName(FromFile);
+            SheetName := TempExcelBuffer.SelectSheetsNameStream(Istream)
+        end else
+            Error(NoFileMsg);
+        TempExcelBuffer.Reset();
+        TempExcelBuffer.DeleteAll();
+        TempExcelBuffer.OpenBookStream(Istream, SheetName);
+        TempExcelBuffer.ReadSheet();
+    end;
+
+    procedure GetCellValue(RowNo: Integer; ColNo: Integer): Text
+    begin
+        TempExcelBuffer.Reset();
+        if TempExcelBuffer.Get(RowNo, ColNo) then
+            exit(TempExcelBuffer."Cell Value As Text")
+        else
+            exit('');
+    end;
+
+    procedure ImportExcelData()
+    var
+        TechnicalSpec: Record "Technical Specifications";
+        RowNo: Integer;
+        ColNo: Integer;
+        LineNo: Integer;
+        MaxRow: Integer;
+        SNo: Integer;
+    begin
+        RowNo := 0;
+        ColNo := 0;
+        LineNo := 0;
+        MaxRow := 0;
+        TechnicalSpec.Reset();
+        TechnicalSpec.SetRange("Document Type", TechnicalSpec."Document Type");
+        TechnicalSpec.SetRange("Document No.", Rec."Document No.");
+        if TechnicalSpec.FindFirst() then begin
+            LineNo := TechnicalSpec."Line No.";
+            SNo := TechnicalSpec."S.No.";
+        end;
+        TempExcelBuffer.Reset();
+        if TempExcelBuffer.FindLast() then begin
+            MaxRow := TempExcelBuffer."Row No.";
+        end;
+        for RowNo := 2 to MaxRow Do begin
+            LineNo := LineNo + 10000;
+            SNo := SNo + 1;
+
+            TechnicalSpec.Init();
+            //Evaluate(ExcelImport."Transaction Name", TransName1);
+            TechnicalSpec."Document No." := Rec."Document No.";
+            TechnicalSpec."Document Type" := TechnicalSpec."Document Type"::Indent;
+            TechnicalSpec."Item No." := Rec."No.";
+            TechnicalSpec."Line No." := LineNo;
+            TechnicalSpec."S.No." := SNo;
+            Evaluate(TechnicalSpec."Product Name", GetCellValue(RowNo, 1));
+            Evaluate(TechnicalSpec.Description, GetCellValue(RowNo, 2));
+            Evaluate(TechnicalSpec.Quantity, GetCellValue(RowNo, 3));
+            Evaluate(TechnicalSpec.Units, GetCellValue(RowNo, 4));
+            TechnicalSpec."Imported Date" := Today;
+            TechnicalSpec.Insert();
+        end;
+        Message(ExcelImportSuccess);
+    end;
+    //B2BVCOn13Jun2024 <<
     local procedure CreateRGPfromIndent(EntryType: Option Inward,Outward; DocType: Option RGP,NRGP)
     var
         GateEntryHeader: Record "Gate Entry Header_B2B";
@@ -802,6 +936,9 @@ page 50023 "Indent Line"
     trigger OnAfterGetRecord()
     var
         IndentHdr: Record "Indent Header";
+        IndentLine: Record "Indent Line";
+        LineCount: Integer;
+        CountVar: Integer;
     begin
 
         if IndentHdr.Get(Rec."Document No.") then;
@@ -812,6 +949,13 @@ page 50023 "Indent Line"
             FieldEditable := true;
         end;
 
+        /* Rec.CalcFields("Qty Issued");
+        if Rec."Req.Quantity" = Abs(Rec."Qty Issued") then begin
+            if Rec."ShortClose Status" = Rec."ShortClose Status"::" " then begin
+                Rec.Closed := true;
+                Rec."ShortClose Status" := Rec."ShortClose Status"::Closed;
+            end;
+        end; */
     end;
 
     //B2BMSOn04Nov2022<<
@@ -851,8 +995,15 @@ page 50023 "Indent Line"
         GateEntryType: Option Inward,Outward;
         GateEntryDocType: Option RGP,NRGP;
         FixedAsset: Record "Fixed Asset";
+        uplodMsg: Label 'Please Choose The Excel file';
+        FileName: text[100];
+        SheetName: Text[100];
+        TempExcelBuffer: Record "Excel Buffer" temporary;
+        NoFileMsg: Label 'No excel File Found';
+        ExcelImportSuccess: Label 'Excel File Imported Successfully';
 
         GateEntryHeaderOutwardGvar: Record "Gate Entry Header_B2B";
+        TextLbl: Label 'Qty To Issue not allowed, Line No. %1 already %2.';
     //B2BSSD03AUG2023>>
     procedure QTyToIssueNonEditable()
     begin
@@ -868,7 +1019,57 @@ page 50023 "Indent Line"
             until IndentLine.Next() = 0;
         end;
     end;
-
-
     //SSD03AUG2023<<
+
+    local procedure ShortCloseIndent()
+    var
+        ConfirmText: Label 'Do you want to Short Close the Indent No. %1 and Line No. %2 ?';
+        NotApplicableErr: Label 'Indent Line No. %1 can not be Shortclosed, Req.Qty and Qty Issue is same';
+        SuccessMsg: Label 'Indent Doucument No. %1 and Line No. %2 is Short Closed';
+        ShortClosed: Boolean;
+        AlredyShortclose: Label 'Indent Document  %1 is already shortclosed';
+    begin
+        if Rec.ShortClose then
+            Error(AlredyShortclose, Rec."Document No.");
+        Rec.TestField("Qty Issued");
+        if Rec."Req.Quantity" = Abs(Rec."Qty Issued") then
+            Error(NotApplicableErr, Rec."Line No.");
+        if not Confirm(StrSubstNo(ConfirmText, Rec."Document No.", Rec."Line No."), false) then
+            exit;
+
+        Rec.ShortClose := true;
+        if Rec."ShortClose Status" = Rec."ShortClose Status"::" " then
+            Rec."ShortClose Status" := Rec."ShortClose Status"::ShortClose;
+        Rec."ShortClose Qty" := Rec."Req.Quantity" - Abs(Rec."Qty Issued");
+        Rec."Req.Quantity" := Abs(Rec."Qty Issued");
+        Rec."ShortClosed By" := UserId;
+        Rec."ShortClose Date & Time" := CurrentDateTime;
+        Rec.Modify();
+        if Rec.ShortClose then
+            Message(SuccessMsg, Rec."Document No.", Rec."Line No.");
+    end;
+
+    local procedure CancleIndentDoc()
+    var
+        ConfirmText: Label 'Do you want to Cancelled the Indent Doc No. %1 and Line No. %2?';
+        AlredyCancelledOrder: Label 'Indent Document  %1 is already Cancelled';
+        SuccessMsg: Label 'Indent Document No. %1 and Line No. %2 is Cancelled';
+        ErrorMsg: Label 'Qty Issued Must be Zero, Document No. %1, Line No. %2';
+    begin
+        if Rec.CancelIndent then
+            Error(AlredyCancelledOrder, Rec."Document No.");
+        if not Confirm(StrSubstNo(ConfirmText, Rec."Document No.", Rec."Line No."), false) then
+            exit;
+        if Abs(Rec."Qty Issued") <> 0 then
+            Error(ErrorMsg, Rec."Document No.", Rec."Line No.");
+
+        if Abs(Rec."Qty Issued") = 0 then begin
+            Rec.CancelIndent := true;
+            if Rec."ShortClose Status" = Rec."ShortClose Status"::" " then
+                Rec."ShortClose Status" := Rec."ShortClose Status"::Cancel;
+            Rec.Modify;
+        end;
+        if Rec.CancelIndent then
+            Message(SuccessMsg, Rec."Document No.", Rec."Line No.");
+    end;
 }

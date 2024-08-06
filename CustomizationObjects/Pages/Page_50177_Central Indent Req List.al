@@ -4,7 +4,7 @@ page 50177 "Centrak Indent Req List"
     CardPageID = "Indent Requisition Document";
     PageType = List;
     SourceTable = "Indent Req Header";
-    SourceTableView = where("Resposibility Center" = const('CENTRL REQ'), Status = const(Release));
+    SourceTableView = sorting("Last Modified Date") order(descending) where("Resposibility Center" = const('CENTRL REQ'), Status = const(Release), "Req Status" = filter(<> Completed));
     UsageCategory = Lists;
     ApplicationArea = all;
     Editable = false;
@@ -41,6 +41,12 @@ page 50177 "Centrak Indent Req List"
                     ApplicationArea = all;
                     Editable = false;
                 }
+                field("Req Status"; Rec."Req Status")
+                {
+                    ApplicationArea = All;
+                    StyleExpr = StyleTxt;
+                }
+
             }
         }
     }
@@ -48,5 +54,13 @@ page 50177 "Centrak Indent Req List"
     actions
     {
     }
+
+    var
+        StyleTxt: Text;
+
+    trigger OnAfterGetRecord()
+    begin
+        StyleTxt := Rec.SetStyle();
+    end;
 }
 

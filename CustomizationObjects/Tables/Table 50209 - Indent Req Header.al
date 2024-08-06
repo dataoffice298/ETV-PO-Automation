@@ -38,7 +38,7 @@ table 50209 "Indent Req Header"
         field(12; Status; Option)
         {
             Editable = false;
-            OptionMembers =Open,Release,"Pending Approval";
+            OptionMembers = Open,Release,"Pending Approval";
         }
         field(13; "No.Series"; Code[20])
         {
@@ -140,12 +140,25 @@ table 50209 "Indent Req Header"
             Blocked = CONST(false));
             DataClassification = CustomerContent;
         }
+        field(50008; "Req Status"; Option)
+        {
+            OptionCaption = ' ,Pending,Completed';
+            OptionMembers = "",Pending,Completed;
+            Caption = 'Req Status';
+        }
+        field(50009; "Last Modified Date"; DateTime)
+        {
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
     }
     keys
     {
         key(Key1; "No.")
         {
         }
+        key(Key2; "Document Date", "Last Modified Date")
+        { }
     }
 
     fieldgroups
@@ -194,6 +207,15 @@ table 50209 "Indent Req Header"
     procedure TestStatusOpen();
     begin
         TESTFIELD(Status, Status::Open);
+    end;
+
+    procedure SetStyle(): Text
+    begin
+        if Rec."Req Status" = Rec."Req Status"::Completed then
+            exit('favorable')
+        else
+            exit('Unfavorable');
+        exit('');
     end;
 }
 

@@ -156,6 +156,15 @@ tableextension 50057 tableextension70000012 extends "Purchases & Payables Setup"
             DataClassification = CustomerContent;
             TableRelation = Location.Code;
         }
+        field(50114; Note; Text[500])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50115; "Accessories No."; Code[20])
+        {
+            DataClassification = CustomerContent;
+            TableRelation = "No. Series";
+        }
 
     }
 

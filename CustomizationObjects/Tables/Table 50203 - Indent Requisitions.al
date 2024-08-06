@@ -360,6 +360,12 @@ table 50203 "Indent Requisitions"
             Blocked = CONST(false));
             DataClassification = CustomerContent;
         }
+        field(50026; "Order Status"; Option)
+        {
+            OptionCaption = ' ,Pending,Completed';
+            OptionMembers = "",Pending,Completed;
+            Caption = 'Req Status';
+        }
     }
     //B2BSSD17FEB2023>>
 
@@ -400,5 +406,7 @@ table 50203 "Indent Requisitions"
         IndentReqHeader.TESTFIELD(Status, IndentReqHeader.Status::Open);
         IndentReqHeader.MODIFY;
     end;
+
+
 }
 

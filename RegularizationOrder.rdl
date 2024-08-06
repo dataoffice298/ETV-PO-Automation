@@ -268,28 +268,28 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>1.10657cm</Width>
+                  <Width>1.05365cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>6.01085cm</Width>
+                  <Width>5.81783cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.87828cm</Width>
+                  <Width>2.14287cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.11196cm</Width>
+                  <Width>2.09332cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.58208cm</Width>
+                  <Width>1.76729cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.63638cm</Width>
+                  <Width>1.60992cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.01936cm</Width>
+                  <Width>2.06167cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.46882cm</Width>
+                  <Width>2.20424cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -779,7 +779,7 @@
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.46771cm</Height>
+                  <Height>0.86459cm</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -1496,7 +1496,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>ADD GST %                    </Value>
+                                  <Value>ADD GST                    </Value>
                                   <Style>
                                     <FontFamily>Times New Roman</FontFamily>
                                   </Style>
@@ -2132,8 +2132,8 @@
             <DataSetName>DataSet_Result</DataSetName>
             <Top>6.54745cm</Top>
             <Left>0.12383cm</Left>
-            <Height>2.17979cm</Height>
-            <Width>18.8143cm</Width>
+            <Height>2.57667cm</Height>
+            <Width>18.75078cm</Width>
             <ZIndex>6</ZIndex>
             <Style>
               <Border>
@@ -2195,7 +2195,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox30</rd:DefaultName>
-            <Top>8.78545cm</Top>
+            <Top>9.22995cm</Top>
             <Left>0.1238cm</Left>
             <Height>0.46279cm</Height>
             <Width>18.88303cm</Width>
@@ -2807,7 +2807,7 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet_Result</DataSetName>
-            <Top>9.34349cm</Top>
+            <Top>9.78799cm</Top>
             <Left>0.12383cm</Left>
             <Height>2.17653cm</Height>
             <Width>18.75078cm</Width>
@@ -2838,7 +2838,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox30</rd:DefaultName>
-            <Top>12.12684cm</Top>
+            <Top>12.57134cm</Top>
             <Left>0.1238cm</Left>
             <Height>0.48924cm</Height>
             <Width>18.75081cm</Width>
@@ -2958,6 +2958,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox35</rd:DefaultName>
+                          <Visibility>
+                            <Hidden>=IIF(Fields!PurchName.Value="",True,False)</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -3028,6 +3031,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox140</rd:DefaultName>
+                          <Visibility>
+                            <Hidden>=IIF(Fields!PurchName.Value="",True,False)</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -3074,6 +3080,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox91</rd:DefaultName>
+                          <Visibility>
+                            <Hidden>=IIF(Fields!PurchName.Value="",True,False)</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -3142,6 +3151,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox24</rd:DefaultName>
+                          <Visibility>
+                            <Hidden>=IIF(Fields!PurchName.Value="",True,False)</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -3182,6 +3194,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox27</rd:DefaultName>
+                          <Visibility>
+                            <Hidden>=IIF(Fields!PurchName.Value="",True,False)</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -3192,6 +3207,7 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -3213,7 +3229,7 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet_Result</DataSetName>
-            <Top>12.69722cm</Top>
+            <Top>13.14172cm</Top>
             <Left>0.1238cm</Left>
             <Height>1.32765cm</Height>
             <Width>18.75081cm</Width>
@@ -3396,7 +3412,7 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet_Result</DataSetName>
-            <Top>11.61476cm</Top>
+            <Top>12.05926cm</Top>
             <Left>0.12383cm</Left>
             <Height>0.44125cm</Height>
             <Width>18.75078cm</Width>
@@ -3721,7 +3737,7 @@
             <Value>=First(Fields!Signiture.Value, "DataSet_Result")</Value>
             <MIMEType>image/png</MIMEType>
             <Sizing>Fit</Sizing>
-            <Top>14.14423cm</Top>
+            <Top>14.58873cm</Top>
             <Left>0.12383cm</Left>
             <Height>0.8209cm</Height>
             <Width>4.84156cm</Width>
@@ -3764,7 +3780,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox34</rd:DefaultName>
-            <Top>15.10624cm</Top>
+            <Top>15.55074cm</Top>
             <Left>0.12383cm</Left>
             <Height>0.6cm</Height>
             <Width>6.0032cm</Width>
@@ -3780,10 +3796,10 @@
             </Style>
           </Textbox>
         </ReportItems>
-        <Height>16.37978cm</Height>
+        <Height>16.40623cm</Height>
         <Style />
       </Body>
-      <Width>19.00683cm</Width>
+      <Width>19.03587cm</Width>
       <Page>
         <PageHeader>
           <Height>4.03476cm</Height>

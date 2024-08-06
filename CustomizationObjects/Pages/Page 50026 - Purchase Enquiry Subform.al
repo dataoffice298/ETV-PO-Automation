@@ -38,6 +38,10 @@ page 50026 "Purchase Enquiry Subform"
                     ApplicationArea = All;
 
                 }
+                field(Make_B2B; Rec.Make_B2B)
+                {
+                    ApplicationArea = All;
+                }
                 field("Indentor Description"; Rec."Indentor Description")//B2BSSD03Feb2023
                 {
                     ApplicationArea = All;

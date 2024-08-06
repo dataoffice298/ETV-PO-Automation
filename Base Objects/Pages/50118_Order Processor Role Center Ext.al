@@ -225,6 +225,90 @@ pageextension 50118 OrderRoleCenterExt extends "Order Processor Role Center"//B2
                 }
             }
         }
+        addafter(Action63)
+        {
+            group("Central Purchase")
+            {
+                action(Vendor)
+                {
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Vendors';
+                    Image = Vendor;
+                    RunObject = page "Vendor List";
+                    ToolTip = 'View Vendor List Info';
+                }
+                action(CentralIndentRequisition)
+                {
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Central Indent Requisition List';
+                    Image = Indent;
+                    RunObject = page "Centrak Indent Req List";
+                }
+                action(Enquiry)
+                {
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Purchase Enquiry';
+                    RunObject = page "Purchase Enquiry List";
+                }
+                action(Quotes)
+                {
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Purchase Quote';
+                    Image = Quote;
+                    RunObject = page "Purchase Quotes";
+                }
+                action(QuotationComparision)
+                {
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Quotation Comparision';
+                    RunObject = page "Quotation Comparisions";
+                }
+                action(PurchaseOrder)
+                {
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Purchase Order';
+                    Image = Order;
+                    RunObject = page "Purchase Order List";
+                }
+                action(Item)
+                {
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Item';
+                    Image = Item;
+                    RunObject = page "Item List";
+                }
+                action(IndentReqStatus)
+                {
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Indent Requisition Status Report';
+                    Image = Report;
+                    RunObject = report "Indent Requisition Report";
+                }
+                action(POReort)
+                {
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Purchase Order Report';
+                    Image = Report;
+                    RunObject = report "Regularization Order";
+                }
+                action(OpenPOReport)
+                {
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Open PO Report';
+                    Image = Report;
+                    RunObject = report "OPen Po Report";
+                }
+                action(VendorPayment)
+                {
+                    ApplicationArea = Basic, Suite;
+                    Caption = 'Vendor Payment Receipt';
+                    Image = Report;
+                    RunObject = report "Vendor - Payment Receipt";
+                }
+
+            }
+
+        }
     }
     var
         myInt: Integer;

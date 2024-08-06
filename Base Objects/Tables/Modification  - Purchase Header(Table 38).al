@@ -169,6 +169,22 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
             DataClassification = CustomerContent;
             Caption = 'Amendment';
         }
+        field(50127; Note; Text[500])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50128; "Exchange Rate"; Boolean)
+        {
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            var
+                Text001: Label 'Do not have Permissions';
+            begin
+                UserSetup.Get(UserId);
+                if not UserSetup."Exchange Rate" then
+                    Error(Text001);
+            end;
+        }
     }
 
 
@@ -303,6 +319,7 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
         IndentLine: Record "Indent Line";
         PurchLine1: Record "Purchase Line";
         PurchLineNo: Integer;
+        UserSetup: Record "User Setup";
 
 }
 

@@ -876,13 +876,6 @@ codeunit 50016 "MyBaseSubscr"
         NewItemLedgEntry."Shortcut Dimension 3 Code" := ItemJournalLine."Shortcut Dimension 3 Code";
     end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforePostLines', '', false, false)]
-    local procedure OnBeforePostLines(var PurchLine: Record "Purchase Line"; PurchHeader: Record "Purchase Header"; PreviewMode: Boolean; CommitIsSupressed: Boolean; var TempPurchLineGlobal: Record "Purchase Line" temporary)
-    begin
-        if PurchLine."Document Type" = PurchLine."Document Type"::Order then
-            PurchLine.SetFilter("Quantity Accepted B2B", '<>%1', 0);
-    end;
-
     [EventSubscriber(ObjectType::Table, Database::"Report Selections", 'OnBeforeGetVendorEmailAddress', '', false, false)]
     local procedure OnBeforeGetVendorEmailAddress(BuyFromVendorNo: Code[20]; var ToAddress: Text; ReportUsage: Option; var IsHandled: Boolean; RecVar: Variant)
     var
@@ -914,6 +907,181 @@ codeunit 50016 "MyBaseSubscr"
             until OrderAddress.Next = 0;
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post (Yes/No)", 'OnBeforeRunPurchPost', '', false, false)]
+    local procedure OnBeforeRunPurchPost(var PurchaseHeader: Record "Purchase Header")
+    var
+        GateEntryHdr: Record "Gate Entry Header_B2B";
+        PurchLine: Record "Purchase Line";
+        TextLbl: Label 'Please Post the Gate Entry Inward against Document No. %1, Line No. %2';
+    begin
+        //B2BVCOn28Jun2024 >>
+        if PurchaseHeader.Receive then begin
+            PurchLine.Reset();
+            PurchLine.SetRange("Document Type", PurchLine."Document Type"::Order);
+            PurchLine.SetRange("Document No.", PurchaseHeader."No.");
+            if PurchLine.FindSet() then
+                repeat
+                    if PurchLine.Select then begin
+                        PurchLine.TestField("Qty. to Accept B2B");
+                        GateEntryHdr.Reset();
+                        GateEntryHdr.SetRange("Entry Type", GateEntryHdr."Entry Type"::Inward);
+                        GateEntryHdr.SetRange("Purchase Order No.", PurchLine."Document No.");
+                        GateEntryHdr.SetRange("Purchase Order Line No.", PurchLine."Line No.");
+                        if GateEntryHdr.FindFirst() then
+                            Error(TextLbl, GateEntryHdr."Purchase Order No.", GateEntryHdr."Purchase Order Line No.");
+                    end;
+                    PurchLine.Validate("Qty. to Receive", PurchLine."Qty. to Accept B2B");
+                    PurchLine.Modify;
+                until PurchLine.Next = 0;
+            //B2BVCOn28Jun2024 <<
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnAfterPostItemJnlLine', '', false, false)]
+    local procedure OnAfterPostItemJnlLines(var ItemJournalLine: Record "Item Journal Line"; ItemLedgerEntry: Record "Item Ledger Entry"; var ValueEntryNo: Integer; var InventoryPostingToGL: Codeunit "Inventory Posting To G/L"; CalledFromAdjustment: Boolean; CalledFromInvtPutawayPick: Boolean; var ItemRegister: Record "Item Register"; var ItemLedgEntryNo: Integer; var ItemApplnEntryNo: Integer)
+    var
+        IndentLine: Record "Indent Line";
+        QtyIssued: Decimal;
+        ILE: Record "Item Ledger Entry";
+        LineCount: Integer;
+        CountVar: Integer;
+        IndentHdr: Record "Indent Header";
+    begin
+        //B2BVCOn19Jun2024 >>
+        Clear(QtyIssued);
+        ILE.Reset();
+        ILE.SetRange("Indent No.", ItemLedgerEntry."Indent No.");
+        ILE.SetRange("Indent Line No.", ItemLedgerEntry."Indent Line No.");
+        ILE.SetFilter(Quantity, '<%1', 0);
+        if ILE.FindSet() then begin
+            repeat
+                QtyIssued += ILE.Quantity;
+            until ILE.Next = 0;
+
+            IndentLine.Reset();
+            IndentLine.SetRange("Document No.", ILE."Indent No.");
+            IndentLine.SetRange("Line No.", ILE."Indent Line No.");
+            if IndentLine.FindFirst() then begin
+                if IndentLine."Req.Quantity" = Abs(QtyIssued) then begin
+                    IndentLine.Closed := true;
+                    if IndentLine."ShortClose Status" = IndentLine."ShortClose Status"::" " then
+                        IndentLine."ShortClose Status" := IndentLine."ShortClose Status"::Closed;
+                    IndentLine.Modify;
+                end;
+            end;
+            LineCount := 0;
+            CountVar := 0;
+            IndentLine.Reset();
+            IndentLine.SetRange("Document No.", ILE."Indent No.");
+            IndentLine.SetFilter("No.", '<>%1', '');
+            if IndentLine.FindSet() then
+                repeat
+                    LineCount += 1;
+                    IndentLine.CalcFields("Qty Issued");
+                    if IndentLine."Req.Quantity" = Abs(IndentLine."Qty Issued") then
+                        CountVar += 1;
+                until IndentLine.Next = 0;
+            if LineCount = CountVar then begin
+                if IndentHdr.Get(ILE."Indent No.") then begin
+                    if IndentHdr."ShortClose Status" = IndentHdr."ShortClose Status"::" " then
+                        IndentHdr."ShortClose Status" := IndentHdr."ShortClose Status"::Closed;
+                    IndentHdr.Modify;
+                end;
+            end;
+
+        end;
+        //B2BVCOn19Jun2024 <<
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Document-Mailing", 'OnBeforeSendEmail', '', false, false)]
+    local procedure OnBeforeSendEmail(var TempEmailItem: Record "Email Item" temporary; var IsFromPostedDoc: Boolean; var PostedDocNo: Code[20]; var HideDialog: Boolean; var ReportUsage: Integer; var EmailSentSuccesfully: Boolean; var IsHandled: Boolean; EmailDocName: Text[250]; SenderUserID: Code[50]; EmailScenario: Enum "Email Scenario")
+    var
+        DocumentAttachment: Record "Document Attachment";
+        TempBlob: Codeunit "Temp Blob";
+        AttcahmentInstream: InStream;
+        AttchmentOutStream: OutStream;
+        FilePathName: Text;
+        TempFile: File;
+        FileName: Text;
+        FileMngt: Codeunit "File Management";
+        PurchLine: Record "Purchase Line";
+    begin
+        DocumentAttachment.Reset();
+        DocumentAttachment.SetRange("No.", PostedDocNo);
+        DocumentAttachment.SetRange("Document Type", DocumentAttachment."Document Type"::Order);
+        DocumentAttachment.SetRange(Select, true);
+        if DocumentAttachment.FindSet() then begin
+            repeat
+                Clear(FilePathName);
+                Clear(FileName);
+                Clear(TempFile);
+                FilePathName := DocumentAttachment."File Path";
+                TempFile.Open(FilePathName);
+                TempFile.CreateInStream(AttcahmentInstream);
+                TempBlob.CreateOutStream(AttchmentOutStream, TextEncoding::UTF8);
+                CopyStream(AttchmentOutStream, AttcahmentInstream);
+                FileName := DocumentAttachment."File Name" + '.' + DocumentAttachment."File Extension";
+                //FileName := FileMngt.BLOBExport(TempBlob, FileName, true);
+                TempBlob.CreateInStream(AttcahmentInstream);
+                TempEmailItem.AddAttachment(AttcahmentInstream, FileName);
+            until DocumentAttachment.Next = 0;
+        end;
+    end;
+
+
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPostPurchaseDoc', '', false, false)]
+    procedure OnAfterPostPurchaseDoc(var PurchaseHeader: Record "Purchase Header"; var GenJnlPostLine: Codeunit "Gen. Jnl.-Post Line"; PurchRcpHdrNo: Code[20]; RetShptHdrNo: Code[20]; PurchInvHdrNo: Code[20]; PurchCrMemoHdrNo: Code[20]; CommitIsSupressed: Boolean)
+    var
+        PurchLine: Record "Purchase Line";
+    begin
+        //B2BVCOn28Jun2024>>
+        PurchLine.Reset();
+        PurchLine.SetRange("Document Type", PurchLine."Document Type"::Order);
+        PurchLine.SetRange("Document No.", PurchaseHeader."No.");
+        if PurchLine.FindSet() then
+            repeat
+                if PurchLine."Qty. to Accept B2B" <> 0 then begin
+                    PurchLine."Quantity Accepted B2B" += PurchLine."Qty. to Accept B2B";
+                    PurchLine."Qty. to Accept B2B" := 0;
+                    PurchLine.Inward := false;
+                    PurchLine.Modify;
+                end;
+            until PurchLine.Next = 0;
+        //B2BVCOn28Jun2024 <<
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Enum Assignment Management", 'OnGetPurchApprovalDocumentType', '', false, false)]
+    local procedure OnGetPurchApprovalDocumentType(PurchDocumentType: Enum "Purchase Document Type"; var ApprovalDocumentType: Enum "Approval Document Type"; var IsHandled: Boolean)
+    begin
+        if PurchDocumentType = PurchDocumentType::Enquiry then
+            IsHandled := true;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Purchase Document", 'OnBeforeCheckPurchaseHeaderPendingApproval', '', false, false)]
+    local procedure OnBeforeCheckPurchaseHeaderPendingApproval(var PurchaseHeader: Record "Purchase Header"; var IsHandled: Boolean)
+    begin
+        if PurchaseHeader."Exchange Rate" then
+            IsHandled := true;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnBeforePrePostApprovalCheckPurch', '', false, false)]
+    local procedure OnBeforePrePostApprovalCheckPurch(var PurchaseHeader: Record "Purchase Header"; var Result: Boolean; var IsHandled: Boolean)
+    begin
+        if PurchaseHeader."Exchange Rate" then
+            IsHandled := true;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnApproveApprovalRequest', '', false, false)]
+    local procedure OnApproveApprovalRequest(var ApprovalEntry: Record "Approval Entry")
+    var
+        IndentReqHead: Record "Indent Req Header";
+    begin
+        if IndentReqHead.Get(ApprovalEntry."Document No.") then begin
+            IndentReqHead."Last Modified Date" := ApprovalEntry."Last Date-Time Modified";
+            IndentReqHead.Modify();
+        end;
+    end;
 }
 
 

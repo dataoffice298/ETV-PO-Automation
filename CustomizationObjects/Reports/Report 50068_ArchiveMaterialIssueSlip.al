@@ -100,6 +100,10 @@ report 50068 "Archive Material Issue Slip"
             }
             column(ISSDate1; ISSDate1)
             { }
+            /* column(ISSNo1; "ILE Doc No.")
+            { }
+            column(ISSDate1; "ILE Posting Date")
+            { } */
             column(Purpose; Purpose) //B2BVCOn01Jan2023
             { }
 
@@ -160,15 +164,26 @@ report 50068 "Archive Material Issue Slip"
             }
             trigger OnAfterGetRecord()
             begin
+                //B2BVCOn27Jun2024 >>
+                if "Archive Indent Header"."ILE Doc No." <> '' then
+                    ISSNo1 := "Archive Indent Header"."ILE Doc No."
+                else
+                    ISSNo1 := "Archive Indent Header"."Issue Doc No.";
+
+                if "Archive Indent Header"."ILE Posting Date" <> 0D then
+                    ISSDate1 := "Archive Indent Header"."ILE Posting Date"
+                else
+                    ISSDate1 := "Archive Indent Header"."Issue Date";
+                //B2BVCOn27Jun2024 <<
+
                 iF IndHdr.Get("No.") then
                     ProgrammeName := IndHdr."programme Name";
-                ItemLedgerEntryGvar.Reset();
+                /* ItemLedgerEntryGvar.Reset();
                 ItemLedgerEntryGvar.SetRange("Indent No.", "Archive Indent Header"."No.");
-                if ItemLedgerEntryGvar.FindFirst() then begin
+                if ItemLedgerEntryGvar.FindLast() then begin
                     ISSNo1 := ItemLedgerEntryGvar."Document No.";
                     ISSDate1 := ItemLedgerEntryGvar."Posting Date";
-                end;
-
+                end; */
             end;
 
             trigger OnPreDataItem();
@@ -226,4 +241,5 @@ report 50068 "Archive Material Issue Slip"
 
         Qty_Iss: Decimal;
         Req_Q: Decimal;
+        ArchiveIndentHdr: Record "Archive Indent Header";
 }

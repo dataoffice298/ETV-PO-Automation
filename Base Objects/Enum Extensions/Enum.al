@@ -128,5 +128,12 @@ enum 50006 GateEntryType
 
     }
 }
+enumextension 50020 ApprovalDocTypeExt extends "Approval Document Type"
+{
+    value(7; Enquiry)
+    {
+        Caption = 'Enquiry';
+    }
+}
 
 

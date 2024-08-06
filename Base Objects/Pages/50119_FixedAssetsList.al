@@ -68,7 +68,105 @@ pageextension 50119 FixedAssetListExt extends "Fixed Asset List"
 
                 end;
             }
+
+        }
+        addafter("C&opy Fixed Asset")
+        {
+            action("Update FA Location")
+            {
+                ApplicationArea = All;
+                Caption = 'Update FA Location';
+                Image = Import;
+                Promoted = true;
+                PromotedCategory = Process;
+                trigger OnAction()
+                begin
+                    ReadExcelSheet();
+                    ImportExcelData();
+                end;
+            }
         }
     }
+    procedure ReadExcelSheet()
+    var
+        FileManagement: Codeunit "File Management";
+        Istream: InStream;
+        FromFile: Text[100];
+    begin
+        UploadIntoStream(uplodMsg, '', '', FromFile, Istream);
+        if FromFile <> '' then begin
+            FileName := FileManagement.GetFileName(FromFile);
+            SheetName := TempExcelBuffer.SelectSheetsNameStream(Istream)
+        end else
+            Error(NoFileMsg);
+        TempExcelBuffer.Reset();
+        TempExcelBuffer.DeleteAll();
+        TempExcelBuffer.OpenBookStream(Istream, SheetName);
+        TempExcelBuffer.ReadSheet();
+    end;
+
+    procedure GetCellValue(RowNo: Integer; ColNo: Integer): Text
+    begin
+        TempExcelBuffer.Reset();
+        if TempExcelBuffer.Get(RowNo, ColNo) then
+            exit(TempExcelBuffer."Cell Value As Text")
+        else
+            exit('');
+    end;
+
+    procedure ImportExcelData()
+    var
+        RowNo: Integer;
+        ColNo: Integer;
+        LineNo: Integer;
+        MaxRow: Integer;
+        FANo: Code[20];
+        FALocation: Code[10];
+        FASubLoc: Code[10];
+    begin
+        RowNo := 0;
+        ColNo := 0;
+        LineNo := 0;
+        MaxRow := 0;
+        TempExcelBuffer.Reset();
+        if TempExcelBuffer.FindLast() then begin
+            MaxRow := TempExcelBuffer."Row No.";
+        end;
+        for RowNo := 2 to MaxRow do begin
+            Evaluate(FANo, GetCellValue(RowNo, 1));
+            Evaluate(FALocation, GetCellValue(RowNo, 2));
+            Evaluate(FASubLoc, GetCellValue(RowNo, 3));
+            FixedAsset.Reset();
+            FixedAsset.SetRange("No.", FANo);
+            if FixedAsset.FindFirst() then begin
+                if FixedAsset."FA Location Code" = '' then begin
+                    FALocationRec.Reset();
+                    FALocationRec.SetRange(Code, FALocation);
+                    if FALocationRec.FindFirst() then
+                        FixedAsset."FA Location Code" := FALocation;
+                end;
+                if FixedAsset."FA Sub Location" = '' then begin
+                    FASubLocation.Reset();
+                    FASubLocation.SetRange("Location Code", FixedAsset."FA Location Code");
+                    FASubLocation.SetRange("Sub Location Code", FASubLoc);
+                    if FASubLocation.FindFirst() then
+                        FixedAsset."FA Sub Location" := FASubLoc;
+                end;
+                FixedAsset.Modify();
+            end;
+        end;
+        Message(ExcelImportSuccess);
+    end;
+
+    var
+        uplodMsg: Label 'Please Choose The Excel file';
+        FileName: text[100];
+        SheetName: Text[100];
+        TempExcelBuffer: Record "Excel Buffer" temporary;
+        NoFileMsg: Label 'No excel File Found';
+        ExcelImportSuccess: Label 'Excel File Imported Successfully';
+        FixedAsset: Record "Fixed Asset";
+        FALocationRec: Record "FA Location";
+        FASubLocation: Record "FA Sub Location";
 
 }

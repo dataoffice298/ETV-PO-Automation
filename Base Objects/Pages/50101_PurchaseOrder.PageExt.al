@@ -135,6 +135,23 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 //Editable = false;
             }
         }
+        modify("Shipment Method Code")
+        {
+            Caption = 'Delivery';
+        }
+        modify("Payment Terms Code")
+        {
+            Caption = 'Payment Term';
+        }
+        addafter("Cancelled Order")
+        {
+            field("Exchange Rate"; Rec."Exchange Rate")
+            {
+                ApplicationArea = All;
+
+            }
+        }
+
 
         //B2BSSD25Jan2023<<
         addafter(PurchLines)
@@ -146,6 +163,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 UpdatePropagation = Both;
             }
         }
+
         //B2BSSD25Jan2023>>
 
         //B2BSSD14FEB2023<<
@@ -170,11 +188,13 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         {
             Editable = true;
             ShowMandatory = true;
+            Caption = 'Price Basis';
         }
         modify("Transaction Type")//B2BSCM08SEP2023
         {
             Editable = true;
             ShowMandatory = true;
+            Caption = 'Taxes';
         }
         modify("Transport Method")//B2BSCM08SEP2023
         {
@@ -262,7 +282,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                                 Error('Gate entry available for the purchase document. Hence, It must be filled in Line No. %1.', PurchLine."Line No.");
                         until PurchLine.Next = 0;
                 end;
-                
+
                 PurchLine.Reset();
                 PurchLine.SetRange("Document No.", Rec."No.");
                 if PurchLine.FindSet() then

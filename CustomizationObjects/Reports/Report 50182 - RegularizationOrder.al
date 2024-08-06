@@ -189,7 +189,8 @@ report 50182 "Regularization Order"
                 { }
                 column(GSTPercent1; GSTPercent1)
                 { }
-
+                /*  column(ItemPicture; ItemTenantMedia.Content)
+                 { } */
 
                 /* trigger OnPreDataItem()
                 begin
@@ -199,7 +200,6 @@ report 50182 "Regularization Order"
                 trigger OnAfterGetRecord()
                 var
 
-
                 begin
                     SNo += 1;
                     Clear(CGSTAmt);
@@ -207,10 +207,19 @@ report 50182 "Regularization Order"
                     Clear(IGSSTAmt);
                     Clear(SpecID1);
 
+                    /* if Type = Type::Item then begin
+                        if ItemRec.Get("No.") then
+                            if ItemRec.Picture.Count > 0 then begin
+                                ItemTenantMedia.Get(ItemRec.Picture.Item(1));
+                                ItemTenantMedia.CalcFields(Content);
+                            end;
+                    end; */
+
                     // TotalLineAmount += "Purchase Line"."Line Amount";
 
                     // GetGSTAmounts("Purchase Line");
                     // TotalGSTAmount += CGSTAmt + SGSTAmt + IGSSTAmt;
+
                     GetGSTAmounts("Purchase Line");//Balu
                     Clear(GstTotal);
                     GstTotal := CGSTAmt + SGSTAmt + IGSSTAmt;
@@ -225,9 +234,13 @@ report 50182 "Regularization Order"
                     //   GateEntryPostYesNo.InitTextVariable;
                     //  GateEntryPostYesNo.FormatNoTextInvoice(AmountText, Round(AmountVendor1, 1, '='), "Currency Code");
                     // GateEntryPostYesNo.FormatNoText(AmountText, AmountVendor1, "Currency Code");
-                    CheckRec.InitTextVariable;
-
-                    CheckRec.FormatNoText(AmountText, AmountVendor1, "Currency Code");
+                    if "Purchase Header"."Currency Code" = '' then begin
+                        CheckRec.InitTextVariable();
+                        CheckRec.FormatNoTextWithoutCurrency(AmountText, AmountVendor1, '');
+                    end else begin
+                        CheckRec.InitTextVariable;
+                        CheckRec.FormatNoText(AmountText, AmountVendor1, "Purchase Header"."Currency Code");
+                    end;
 
                     if ("Purchase Line".Type = "Purchase Line".Type::Item)
                        or ("Purchase Line".Type = "Purchase Line".Type::"Fixed Asset")
@@ -395,8 +408,8 @@ report 50182 "Regularization Order"
                     TransactionTypeDES := TransactionTypeRec.Description;
                 if Shipments.get("Shipment Method Code") then
                     shipmethod := Shipments.Description;
-                if Shipments.get("Payment Terms Code") then
-                    shipmethod := Shipments.Description;
+                /* if Shipments.get("Payment Terms Code") then
+                    shipmethod := Shipments.Description; */
                 if Transactionspecifcation.get("Transaction Specification") then
                     transactionspecificTxt := Transactionspecifcation.Text;
                 //B2bssd25apr2023<<
@@ -464,7 +477,7 @@ report 50182 "Regularization Order"
                     if OrderAddress.FindSet() then begin
                         repeat
                             if OrderAddress.Name <> '' then
-                                ContactName := ContactName + OrderAddress.Name + '/';
+                                ContactName := ContactName + OrderAddress."Contact Name" + '/';
                             if OrderAddress."E-Mail" <> '' then
                                 ContactEmail := ContactEmail + OrderAddress."E-Mail" + '/';
                             if OrderAddress."Phone No." <> '' then
@@ -586,6 +599,15 @@ report 50182 "Regularization Order"
         ContactEmail: Text;
         OrderAddress: Record "Order Address";
         GSTRegNo: Code[20];
+        DocumentAttachment: Record "Document Attachment";
+        TempBlob: Codeunit "Temp Blob";
+        AttcahmentInstream: InStream;
+        AttchmentOutStream: OutStream;
+        FilePathName: Text;
+        TempFile: File;
+        FileName: Text;
+        ItemRec: Record Item;
+        ItemTenantMedia: Record "Tenant Media";
 
 
 

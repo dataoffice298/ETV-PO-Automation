@@ -92,11 +92,18 @@ page 50120 "Indent Requisition Document"
                     ApplicationArea = All;
                     Caption = 'Purpose';
                 }
+                field("Req Status"; Rec."Req Status")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    StyleExpr = StyleTxt;
+                }
             }
             part(Indentrequisations; 50119)
             {
                 SubPageLink = "Document No." = FIELD("No.");
                 ApplicationArea = All;
+
             }
         }
         //B2BSSD31Jan2023<<
@@ -749,6 +756,8 @@ page 50120 "Indent Requisition Document"
         Text0010: Label 'Enquiries Created Successfully';
         Text0011: Label 'Quotes Created Successfully';
         FieldEditable: Boolean;
+        IndentReq: Record "Indent Requisitions";
+        StyleTxt: Text;
     // ShowAct: Boolean;
 
     procedure CheckRemainingQuantity();
@@ -875,10 +884,147 @@ page 50120 "Indent Requisition Document"
      end;*/
     trigger OnAfterGetRecord()
     begin
+        StyleTxt := Rec.SetStyle();
         OpenAppEntrExistsForCurrUser := approvalmngmt.HasOpenApprovalEntriesForCurrentUser(Rec.RecordId());
         OpenApprEntrEsists := approvalmngmt.HasOpenApprovalEntries(Rec.RecordId());
         CanCancelapprovalforrecord := approvalmngmt.CanCancelApprovalForRecord(Rec.RecordId());
         workflowwebhookmangt.GetCanRequestAndCanCancel(Rec.RecordId(), CanrequestApprovForFlow, CanCancelapprovalforflow);
+    end;
+
+    trigger OnAfterGetCurrRecord()
+    var
+
+        PurchHeader: Record "Purchase Header";
+        PurchLine: Record "Purchase Line";
+        PurchInvHeader: Record "Purch. Inv. Header";
+        Count: Integer;
+        ReleaseCount: Integer;
+        PurchOrderCount: Integer;
+        IndentReqLine: Record "Indent Requisitions";
+        Linecount: Integer;
+    begin
+        /*  IndentRequisition.Reset();
+         IndentRequisition.SetRange("Document No.", Rec."No.");
+         IndentRequisition.SetFilter("Item No.", '<>%1', '');
+         IndentRequisition.SetFilter("Indent No.", '<>%1', '');
+         if not IndentRequisition.FindSet() then
+             Rec."Indent No." := '';
+
+         IndentReq.Reset();
+         IndentReq.SetRange("Document No.", Rec."No.");
+         IndentReq.SetFilter("Remaining Quantity", '%1', 0);
+         IndentReq.SetFilter("Purch Order No.", '<>%1', '');
+         if IndentReq.FindSet() then begin
+             repeat
+                 Clear(PurchOrderCount);
+                 Clear(ReleaseCount);
+                 PurchLine.Reset();
+                 PurchLine.SetRange("Indent Req No", IndentReq."Document No.");
+                 PurchLine.SetRange("Indent Req Line No", IndentReq."Line No.");
+                 PurchLine.SetRange(CancelOrder, false);
+                 if PurchLine.FindSet() then begin
+                     repeat
+                         PurchOrderCount += 1;
+                         if PurchHeader.Get(PurchHeader."Document Type"::Order, PurchLine."Document No.") then begin
+                             if (PurchHeader.Status = PurchHeader.Status::Released) And Not (PurchHeader."Cancelled Order") then
+                                 ReleaseCount += 1;
+                         end;
+                     until PurchLine.Next = 0;
+                     if PurchOrderCount = ReleaseCount then
+                         IndentReq."Order Status" := IndentReq."Order Status"::Completed
+                     else
+                         IndentReq."Order Status" := IndentReq."Order Status"::Pending;
+                 end else begin
+                     PurchInvHeader.Reset();
+                     PurchInvHeader.SetRange("Order No.", IndentReq."Purch Order No.");
+                     if PurchInvHeader.FindFirst() then
+                         IndentReq."Order Status" := IndentReq."Order Status"::Completed;
+                 end;
+                 IndentReq.Modify();
+             until IndentReq.Next = 0;
+         end;
+
+         Clear(Linecount);
+         Clear(Count);
+         IndentReqLine.Reset();
+         IndentReqLine.SetRange("Document No.", Rec."No.");
+         if IndentReqLine.FindSet() then begin
+             repeat
+                 Linecount += 1;
+                 if IndentReqLine."Order Status" = IndentReqLine."Order Status"::Completed then
+                     Count += 1;
+             until IndentReqLine.Next = 0;
+             if Linecount = Count then
+                 Rec."Req Status" := Rec."Req Status"::Completed
+             else
+                 Rec."Req Status" := Rec."Req Status"::Pending;
+             Rec.Modify();
+         end;
+         CurrPage.Update(); */
+    end;
+
+    trigger OnOpenPage()
+    var
+        PurchHeader: Record "Purchase Header";
+        PurchLine: Record "Purchase Line";
+        PurchInvHeader: Record "Purch. Inv. Header";
+        Count: Integer;
+        ReleaseCount: Integer;
+        PurchOrderCount: Integer;
+        IndentReqLine: Record "Indent Requisitions";
+        Linecount: Integer;
+    begin
+        IndentReq.Reset();
+        IndentReq.SetRange("Document No.", Rec."No.");
+        IndentReq.SetFilter("Remaining Quantity", '%1', 0);
+        IndentReq.SetFilter("Purch Order No.", '<>%1', '');
+        if IndentReq.FindSet() then begin
+            repeat
+                Clear(PurchOrderCount);
+                Clear(ReleaseCount);
+                PurchLine.Reset();
+                PurchLine.SetRange("Indent Req No", IndentReq."Document No.");
+                PurchLine.SetRange("Indent Req Line No", IndentReq."Line No.");
+                PurchLine.SetRange(CancelOrder, false);
+                if PurchLine.FindSet() then begin
+                    repeat
+                        PurchOrderCount += 1;
+                        if PurchHeader.Get(PurchHeader."Document Type"::Order, PurchLine."Document No.") then begin
+                            if (PurchHeader.Status = PurchHeader.Status::Released) And Not (PurchHeader."Cancelled Order") then
+                                ReleaseCount += 1;
+                        end;
+                    until PurchLine.Next = 0;
+                    if PurchOrderCount = ReleaseCount then
+                        IndentReq."Order Status" := IndentReq."Order Status"::Completed
+                    else
+                        IndentReq."Order Status" := IndentReq."Order Status"::Pending;
+                end else begin
+                    PurchInvHeader.Reset();
+                    PurchInvHeader.SetRange("Order No.", IndentReq."Purch Order No.");
+                    if PurchInvHeader.FindFirst() then
+                        IndentReq."Order Status" := IndentReq."Order Status"::Completed;
+                end;
+                IndentReq.Modify();
+            until IndentReq.Next = 0;
+        end;
+
+        Clear(Linecount);
+        Clear(Count);
+        IndentReqLine.Reset();
+        IndentReqLine.SetRange("Document No.", Rec."No.");
+        if IndentReqLine.FindSet() then begin
+            repeat
+                Linecount += 1;
+                if IndentReqLine."Order Status" = IndentReqLine."Order Status"::Completed then
+                    Count += 1;
+            until IndentReqLine.Next = 0;
+            if Linecount = Count then
+                Rec."Req Status" := Rec."Req Status"::Completed
+            else
+                Rec."Req Status" := Rec."Req Status"::Pending;
+            Rec.Modify();
+        end;
+        CurrPage.Update();
     end;
 
 
@@ -902,5 +1048,7 @@ page 50120 "Indent Requisition Document"
         // approvalmngmt: Codeunit "Approvals MGt 3"
         approvalmngmt: Codeunit "Approvals Mgmt.";
         workflowwebhookmangt: Codeunit "Workflow Webhook Management";
+
+        IndentRequisition: Record "Indent Requisitions";
 
 }

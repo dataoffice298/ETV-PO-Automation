@@ -56,6 +56,10 @@ tableextension 50075 UserSetUp extends "User Setup"//B2BSSD20MAR2023
             Editable = false;
 
         }
+        field(50110; "Exchange Rate"; Boolean)
+        {
+            DataClassification = CustomerContent;
+        }
     }
 
 }

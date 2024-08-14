@@ -134,6 +134,12 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 Caption = 'Vendor Quotation Date';
                 //Editable = false;
             }
+            field("Draft Date"; Rec."Draft Date")
+            {
+                ApplicationArea = All;
+                Caption = 'Draft Date';
+            }
+
         }
         modify("Shipment Method Code")
         {
@@ -155,6 +161,13 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         //B2BSSD25Jan2023<<
         addafter(PurchLines)
         {
+            part(PoSpecifications; "Po Specifications")
+            {
+                ApplicationArea = all;
+                SubPageLink = DocumentNo = field("No.");
+                UpdatePropagation = Both;
+            }
+
             part(TrermsAndCondition; "Terms and Condition")
             {
                 ApplicationArea = all;
@@ -162,6 +175,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 UpdatePropagation = Both;
             }
         }
+
         //B2BSSD25Jan2023>>
 
         //B2BSSD14FEB2023<<
@@ -199,6 +213,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             Editable = true;
             ShowMandatory = true;
         }
+        
 
         addafter("Attached Documents")
         {

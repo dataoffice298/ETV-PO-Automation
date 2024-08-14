@@ -10,7 +10,9 @@ pageextension 50150 "Vendor CardExt" extends "Vendor Card"
                 SubPageLink = DocumentNo = field("No.");
                 UpdatePropagation = Both;
             }
+
         }
+        moveafter("Address 2"; "Address 3")
     }
 
     actions

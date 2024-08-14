@@ -181,6 +181,10 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
                     Error(Text001);
             end;
         }
+        field(50129; "Draft Date"; Date)
+        {
+            DataClassification = ToBeClassified;
+        }
     }
 
 

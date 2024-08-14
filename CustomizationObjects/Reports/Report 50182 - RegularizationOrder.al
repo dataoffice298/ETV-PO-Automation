@@ -54,6 +54,8 @@ report 50182 "Regularization Order"
             { }
             column(Buy_from_Address_2; "Buy-from Address 2")
             { }
+            column(Buy_from_Address_3; "Buy-from Address 3")
+            { }
             column(Buy_from_City; "Buy-from City")
             { }
             column(Buy_from_Contact_No_; "Buy-from Contact No.")
@@ -260,6 +262,22 @@ report 50182 "Regularization Order"
                     // GateEntryPostYesNo.InitTextVariable;
                     // GateEntryPostYesNo.FormatNoText(AmountText, Round(TotalOrderAmount, 1, '='), "Currency Code");
                 end;
+            }
+            dataitem("PO Specifications"; "PO Specifications")
+            {
+                DataItemLink = DocumentNo = field("No.");
+                column(PO_LineType; LineType)
+                { }
+                column(PO_Description11; Description)
+                {
+
+                }
+                column(PO_Line_Type; Line_Type)
+                {
+
+                }
+                column(PO_LineNo; LineNo)
+                { }
             }
             dataitem("PO Terms And Conditions"; "PO Terms And Conditions") //B2BAJ02012024
             {

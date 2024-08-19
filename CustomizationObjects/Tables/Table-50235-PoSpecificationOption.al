@@ -31,7 +31,7 @@ table 50235 POSpecificationOption
     }
     trigger OnInsert()
     var
-        TechSpecOp: Record TechnicalSpecOption;
+        TechSpecOp: Record POSpecificationOption;
     begin
         TechSpecOp.Reset();
         if TechSpecOp.FindLast() then

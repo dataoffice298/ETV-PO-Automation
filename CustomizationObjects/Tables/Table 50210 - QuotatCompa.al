@@ -40,7 +40,7 @@ table 50210 "Quotation Comparison Test"
                 Item.TESTFIELD(Blocked, FALSE);
             end;
         }
-        field(7; Description; Text[100])
+        field(7; Description; Text[500])
         {
             Editable = false;
             DataClassification = CustomerContent;

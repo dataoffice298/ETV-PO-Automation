@@ -158,7 +158,8 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             part(TrermsAndCondition; "Terms and Condition")
             {
                 ApplicationArea = all;
-                SubPageLink = DocumentNo = field("No.");
+                //SubPageLink = DocumentNo = field("No.");
+                SubPageLink = DocumentType = field("Document Type"), DocumentNo = field("No.");
                 UpdatePropagation = Both;
             }
         }

@@ -395,10 +395,56 @@ codeunit 50026 "PO Automation"
                             IndentVendorEnquiry.Check := TRUE;
                             IndentVendorEnquiry.MODIFY;
                         UNTIL IndentVendorEnquiry.NEXT = 0;
+                        CopyTermsandConditionsofVendor(PurchaseHeader);
                     END;
                 end;
             UNTIL IndentVendorItems.NEXT = 0;
     end;
+
+    //B2BDNRon17thJune>>
+    Procedure CopyTermsandConditionsofVendor(PurchaseHeader: Record "Purchase Header")
+    Var
+        TermsandConditions: Record "PO Terms And Conditions";
+        NewTermsandConditions: Record "PO Terms And Conditions";
+        VendorRec: Record Vendor;
+        LineNo: Integer;
+    begin
+        VendorRec.Reset();
+        VendorRec.SetRange("No.", PurchaseHeader."Buy-from Vendor No.");
+        if VendorRec.Findfirst() then begin
+            TermsandConditions.reset();
+            TermsandConditions.SetRange(DocumentNo, VendorRec."No.");
+            if TermsandConditions.FindSet() then
+                repeat
+                    NewTermsandConditions.Init();
+                    NewTermsandConditions.TransferFields(TermsandConditions);
+                    NewTermsandConditions.DocumentNo := PurchaseHeader."No.";
+                    NewTermsandConditions.DocumentType := PurchaseHeader."Document Type";
+                    NewTermsandConditions.Insert(true);
+                until TermsandConditions.Next() = 0;
+        end;
+    end;
+
+    Procedure CopyTermsandConditionsofVendorDoc(OldPurchaseHeader: Record "Purchase Header"; NewPurchaseHeader: Record "Purchase Header")
+    Var
+        TermsandConditions: Record "PO Terms And Conditions";
+        NewTermsandConditions: Record "PO Terms And Conditions";
+        VendorRec: Record Vendor;
+        LineNo: Integer;
+    begin
+        TermsandConditions.reset();
+        TermsandConditions.SetRange(DocumentNo, OldPurchaseHeader."No.");
+        TermsandConditions.SetRange(DocumentType, OldPurchaseHeader."Document Type");
+        if TermsandConditions.FindSet() then
+            repeat
+                NewTermsandConditions.Init();
+                NewTermsandConditions.TransferFields(TermsandConditions);
+                NewTermsandConditions.DocumentNo := NewPurchaseHeader."No.";
+                NewTermsandConditions.DocumentType := NewPurchaseHeader."Document Type";
+                NewTermsandConditions.Insert(true);
+            until TermsandConditions.Next() = 0;
+    end;
+    //B2BDNRon17thJune<<
 
     procedure CreateQuotes(var CreateIndentsQuotes: Record "Indent Requisitions"; var Vendor: Record 23; var Noseries: Code[20]);
     var
@@ -557,6 +603,7 @@ codeunit 50026 "PO Automation"
                         IndentVendorEnquiry.Check := TRUE;
                         IndentVendorEnquiry.MODIFY;
                     UNTIL IndentVendorEnquiry.NEXT = 0;
+                    CopyTermsandConditionsofVendor(PurchaseHeader);
                 END;
             UNTIL IndentVendorItems.NEXT = 0;
     end;
@@ -671,6 +718,7 @@ codeunit 50026 "PO Automation"
                         IndentVendorEnquiry.Check := TRUE;
                         IndentVendorEnquiry.MODIFY;
                     UNTIL IndentVendorEnquiry.NEXT = 0;
+                    CopyTermsandConditionsofVendor(PurchaseHeader);
                 END;
             UNTIL IndentVendorItems.NEXT = 0;
 
@@ -948,6 +996,7 @@ codeunit 50026 "PO Automation"
         PurchaseHeader: Record "Purchase Header";
         QuoCompHdr: Record QuotCompHdr;
         IndentLineRec: Record "Indent Line";
+        TermsandConditions: Record "PO Terms And Conditions";
     begin
         clear(TotalWeightage);
         PurchaseHeader.RESET();
@@ -988,6 +1037,42 @@ codeunit 50026 "PO Automation"
                     QuoteCompare."Shortcut Dimension 3 Code" := PurchaseHeader."Shortcut Dimension 3 Code";
                     QuoteCompare.Status := QuoteCompare.Status::Open;
                     QuoteCompare.INSERT();
+
+                    //Inserting PO Terms and Conditions>>
+                    TermsandConditions.Reset();
+                    TermsandConditions.SetRange(DocumentType, PurchaseHeader."Document Type");
+                    TermsandConditions.SetRange(DocumentNo, PurchaseHeader."No.");
+                    If TermsandConditions.FindSet() then
+                        repeat
+                            QuoteCompare.INIT();
+                            QuoteCompare.Type := QuoteCompare.Type::Description;
+                            QuoteCompare."Quot Comp No." := QuotComp."No.";
+                            QuoteCompare."RFQ No." := PurchaseHeader."RFQ No.";
+                            QuoteCompare."Quote No." := PurchaseHeader."No.";
+                            QuoteCompare."Vendor No." := PurchaseHeader."Buy-from Vendor No.";
+                            QuoteCompare."Vendor Name" := PurchaseHeader."Buy-from Vendor Name";
+                            QuoteCompare."Item No." := '';
+                            QuoteCompare.Description := TermsandConditions.Description;
+                            QuoteCompare.Quantity := 0;
+                            QuoteCompare.Rate := 0;
+                            QuoteCompare.Amount := 0;
+                            QuoteCompare."Payment Term Code" := '';
+                            QuoteCompare."Parent Quote No." := '';
+                            QuoteCompare."Line Amount" := 0;
+                            QuoteCompare."Delivery Date" := 0D;
+                            QuoteCompare.Level := 0;
+                            QuoteCompare."RFQ No." := RFQNumber;
+                            QuoteCompare."Line No." := QuoteCompare."Line No." + 10000;
+                            QuoteCompare."Location Code" := PurchaseHeader."Location Code";
+                            QuoteCompare."Parent Quote No." := PurchaseHeader."No.";
+                            QuoteCompare."Vendor Quotation No." := PurchaseHeader."Vendor Quotation No."; //B2BVCOn11Mar2024
+                            QuoteCompare."Vendor Quotation Date" := PurchaseHeader."Vendor Quotation Date"; //B2BVCOn18Mar2024
+                            QuoteCompare."Shortcut Dimension 3 Code" := PurchaseHeader."Shortcut Dimension 3 Code";
+                            QuoteCompare.Status := QuoteCompare.Status::Open;
+                            QuoteCompare.INSERT();
+                        until TermsandConditions.Next() = 0;
+                    //Inserting PO Terms and Conditions<<
+
                     Amount := 0;
                     PurchaseLine.SETRANGE(PurchaseLine."Document Type", PurchaseHeader."Document Type");
                     PurchaseLine.SETRANGE(PurchaseLine."Document No.", PurchaseHeader."No.");
@@ -1131,6 +1216,7 @@ codeunit 50026 "PO Automation"
                                 until IndentLineRec.Next() = 0;
                             end;
                         UNTIL PurchaseLine.NEXT() = 0;
+
 
                 END;
             UNTIL PurchaseHeader.NEXT() = 0;
@@ -1528,8 +1614,9 @@ codeunit 50026 "PO Automation"
             //B2BVCOn15Mar2024 <<
 
             UNTIL PurchaseLine.NEXT = 0;
-        IndentLineRec.Reset();
-        /*     IndentLineRec.SetRange("Document No.", PurchaseLine."Indent No.");
+        CopyTermsandConditionsofVendorDoc(Rec, PurchaseHeader);
+        /*IndentLineRec.Reset();
+             IndentLineRec.SetRange("Document No.", PurchaseLine."Indent No.");
              IndentLineRec.SetRange("Line No.", PurchaseLine."Indent Line No.");
              if IndentLineRec.FindSet() then begin
                  repeat
@@ -1695,6 +1782,7 @@ codeunit 50026 "PO Automation"
                             end;
                             //B2BVCOn30April2024 <<
                             PurchaseHeader.Modify(true);
+                            CopyTermsandConditionsofVendor(PurchaseHeader);
                         end;
                         PurchaseLine.INIT;
                         PurchaseLine."Document Type" := PurchaseLine."Document Type"::Order;
@@ -1809,6 +1897,7 @@ codeunit 50026 "PO Automation"
                             until DimValue.Next() = 0;
                     //B2BKM26APR2024 >>
                     UNTIL IndentVendorEnquiry.NEXT = 0;
+
             UNTIL IndentVendorItems.NEXT = 0;
     end;
 

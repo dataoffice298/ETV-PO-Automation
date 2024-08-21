@@ -198,7 +198,8 @@ page 50025 "Purchase Enquiry"
             part(TrermsAndCondition; "Terms and Condition")
             {
                 ApplicationArea = all;
-                SubPageLink = DocumentNo = field("Buy-from Vendor No.");
+                //SubPageLink = DocumentNo = field("Buy-from Vendor No.");
+                SubPageLink = DocumentType = field("Document Type"), DocumentNo = field("No.");
                 UpdatePropagation = Both;
             }
         }

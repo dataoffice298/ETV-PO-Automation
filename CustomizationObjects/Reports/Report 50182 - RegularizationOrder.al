@@ -374,7 +374,7 @@ report 50182 "Regularization Order"
                 CompanyInfo.get;
                 CompanyInfo.CalcFields(Picture);
                 ApprovalEntries.Reset();
-                ApprovalEntries.SetRange("Table ID", 38);
+                ApprovalEntries.SetRange("Table ID", Database::"Purchase Header");
                 ApprovalEntries.SetRange("Document Type", "Purchase Header"."Document Type"::Order);
                 ApprovalEntries.SetRange("Document No.", "Purchase Header"."No.");
                 ApprovalEntries.SetRange(Status, ApprovalEntries.Status::Approved);

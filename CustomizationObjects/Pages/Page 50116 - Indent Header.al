@@ -128,6 +128,23 @@ page 50116 "Indent Header"
                     Caption = 'Location Code';
                     Editable = PageEditable;
                 }
+                //B2BVCOn17Jun2024 >>
+                field("ShortClose Status"; Rec."ShortClose Status")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                }
+                field(ShortClose; Rec.ShortClose)
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                }
+                field(Cancel; Rec.Cancel)
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                }
+                //B2BVCOn17Jun2024 <<
             }
             //B2BPAV<<
             part(indentLine; "Indent Line")
@@ -763,9 +780,138 @@ page 50116 "Indent Header"
                     REPORT.RUNMODAL(REPORT::"Material Issue Slip", TRUE, false, IndentHeader);
                 end;
             }
+             //B2BVCOn17Jun2024 >>
+            action("Short Close")
+            {
+                Caption = 'ShortClose';
+                Ellipsis = true;
+                Image = PostOrder;
+                Promoted = true;
+                PromotedCategory = Process;
+                ApplicationArea = All;
+                trigger OnAction()
+                begin
+                    ShortcloseIndentHdr();
+                end;
+            }
+            action("Cancel Indent")
+            {
+                Caption = 'Cancel';
+                Ellipsis = true;
+                Image = Cancel;
+                Promoted = true;
+                PromotedCategory = Process;
+                ApplicationArea = All;
+                trigger OnAction()
+                begin
+                    CancelIndentDoc();
+                end;
+            }
+            //B2BVCOn17Jun2024 <<
 
         }
     }
+
+     local procedure ShortcloseIndentHdr()
+    var
+        ConfirmText: Label 'Do you want to Short Close the Indent Document No. %1 ?';
+        NotApplicableErr: Label 'Req. Qty and Qty Issued should not be same for Line %1';
+        SuccessMsg: Label 'Indent Document No. %1 is Short Closed';
+        AlredyShortClosed: Label 'Indent Document No.  %1 is already Short Closed';
+        ShortClosed: Boolean;
+        IndentLine: Record "Indent Line";
+    begin
+        if Rec.ShortClose then
+            Error(AlredyShortClosed, Rec."No.");
+        IndentLine.Reset();
+        IndentLine.SetRange("Document No.", Rec."No.");
+        IndentLine.SetFilter("No.", '<>%1', '');
+        IndentLine.SetFilter("Req.Quantity", '<>%1', 0);
+        //IndentLine.SetRange(ShortClose, false);
+        if IndentLine.FindSet() then
+            repeat
+                IndentLine.CalcFields("Qty Issued");
+                IndentLine.TestField("Qty Issued");
+                if IndentLine."Req.Quantity" = Abs(IndentLine."Qty Issued") then
+                    Error(NotApplicableErr, IndentLine."Line No.");
+            until IndentLine.Next = 0;
+        if not Confirm(StrSubstNo(ConfirmText, Rec."No."), false) then
+            exit;
+
+        Clear(ShortClosed);
+        IndentLine.Reset();
+        IndentLine.SetRange("Document No.", Rec."No.");
+        IndentLine.SetFilter("No.", '<>%1', '');
+        IndentLine.SetFilter("Req.Quantity", '<>%1', 0);
+        //IndentLine.SetRange(ShortClose, false);
+        if IndentLine.FindSet() then
+            repeat
+                IndentLine.ShortClose := true;
+                if IndentLine."ShortClose Status" = IndentLine."ShortClose Status"::" " then
+                    IndentLine."ShortClose Status" := IndentLine."ShortClose Status"::ShortClose;
+                IndentLine.CalcFields("Qty Issued");
+                IndentLine."ShortClose Qty" := IndentLine."Req.Quantity" - Abs(IndentLine."Qty Issued");
+                IndentLine."Req.Quantity" := Abs(IndentLine."Qty Issued");
+                IndentLine."ShortClosed By" := UserId;
+                IndentLine."ShortClose Date & Time" := CurrentDateTime;
+                ShortClosed := true;
+                IndentLine.Modify();
+            until IndentLine.Next = 0;
+        if ShortClosed then begin
+            Rec.ShortClose := true;
+            if Rec."ShortClose Status" = Rec."ShortClose Status"::" " then
+                Rec."ShortClose Status" := Rec."ShortClose Status"::ShortClose;
+            Rec.Modify();
+        end;
+        if Rec.ShortClose then
+            Message(SuccessMsg, Rec."No.");
+
+    end;
+
+    local procedure CancelIndentDoc()
+    var
+        ConfirmText: Label 'Do you want to Cancelled the Indent Document No. %1 ?';
+        AlredyCancelledOrder: Label 'Indent Document No.  %1 is already Cancelled';
+        SuccessMsg: Label 'Indent Document No. %1 is Cancelled';
+        ErrorMsg: Label 'Qty Issued Must be Zero, Document No. %1, Line No. %2';
+        CancelOrder: Boolean;
+        IndentLine: Record "Indent Line";
+    begin
+        if Rec.Cancel then
+            Error(AlredyCancelledOrder, Rec."No.");
+        if not Confirm(StrSubstNo(ConfirmText, Rec."No."), false) then
+            exit;
+
+        Clear(CancelOrder);
+        IndentLine.Reset();
+        IndentLine.SetRange("Document No.", Rec."No.");
+        IndentLine.SetFilter("No.", '<>%1', '');
+        IndentLine.SetFilter("Req.Quantity", '<>%1', 0);
+        //IndentLine.SetRange(CancelIndent, false);
+        if IndentLine.FindSet() then
+            repeat
+                IndentLine.CalcFields("Qty Issued");
+                if Abs(IndentLine."Qty Issued") <> 0 then
+                    Error(ErrorMsg, IndentLine."Document No.", IndentLine."Line No.");
+                if Abs(IndentLine."Qty Issued") = 0 then begin
+                    IndentLine.CancelIndent := true;
+                    if IndentLine."ShortClose Status" = IndentLine."ShortClose Status"::" " then
+                        IndentLine."ShortClose Status" := IndentLine."ShortClose Status"::Cancel;
+                    if IndentLine.CancelIndent then
+                        CancelOrder := true;
+                    IndentLine.Modify();
+                end;
+            until IndentLine.Next = 0;
+        if CancelOrder then begin
+            Rec.Cancel := true;
+            if Rec."ShortClose Status" = Rec."ShortClose Status"::" " then
+                Rec."ShortClose Status" := Rec."ShortClose Status"::Cancel;
+            Rec.Modify;
+        end;
+        if Rec.Cancel then
+            Message(SuccessMsg, Rec, "No.");
+
+    end;
 
     trigger OnAfterGetRecord();
     begin

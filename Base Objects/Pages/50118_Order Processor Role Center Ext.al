@@ -224,6 +224,9 @@ pageextension 50118 OrderRoleCenterExt extends "Order Processor Role Center"//B2
                     ToolTip = 'View your company''s assets, liabilities, and equity.';
                 }
             }
+        }
+        addafter(Action63)
+        {
             group("Central Purchase")
             {
                 action(Vendor)
@@ -304,6 +307,7 @@ pageextension 50118 OrderRoleCenterExt extends "Order Processor Role Center"//B2
                 }
 
             }
+
         }
     }
     var

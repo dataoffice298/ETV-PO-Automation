@@ -875,6 +875,21 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
 
                 end;
             }
+
+            //B2BVCOn20June2024 >>
+            action("Import CWIP Details")
+            {
+                ApplicationArea = All;
+                Image = Import;
+                Enabled = Rec.CWIP;
+                Caption = 'Import CWIP Details';
+                trigger OnAction()
+                begin
+                    FixedAssetsReadExcelSheet();
+                    CwIPImportExcelDate();
+                end;
+            }
+            //B2BVCOn20June2024 <<
         }
     }
 
@@ -1406,5 +1421,57 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         end;
         Message(ExcelImportSuccess);
     end;
-    //B2BSSD07Feb2023 Import End>>
+    //B2BSSD7Feb2023 Import End>>
+
+    //B2BVCOn20June2024 >>
+    procedure CwIPImportExcelDate()
+    var
+        RowNo: Integer;
+        ColNo: Integer;
+        LineNo: Integer;
+        MaxRow: Integer;
+        CWIPDetails: Record "CWIP Details";
+        PurchLine: Record "Purchase Line";
+        DocNo: Code[20];
+        DocLineNo: Integer;
+        ExcelImportSuccess: Label 'Excel File Imported Successfully';
+    begin
+        RowNo := 0;
+        ColNo := 0;
+        LineNo := 0;
+        MaxRow := 0;
+        TempExcelBuffer.Reset();
+        if TempExcelBuffer.FindLast() then begin
+            MaxRow := TempExcelBuffer."Row No.";
+        end;
+        PurchLine.Reset();
+        PurchLine.SetRange("Document No.", Rec."Document No.");
+        if PurchLine.Find('-') then
+            repeat
+                Clear(LineNo);
+                CWIPDetails.Reset();
+                CWIPDetails.SetRange("Document No.", PurchLine."Document No.");
+                CWIPDetails.SetRange("Document Line No.", PurchLine."Line No.");
+                if CWIPDetails.FindLast() then
+                    LineNo := CWIPDetails."Line No.";
+                for RowNo := 2 to MaxRow do begin
+                    Evaluate(DocNo, GetCellValue(RowNo, 1));
+                    Evaluate(DocLineNo, GetCellValue(RowNo, 2));
+                    if (PurchLine."Document No." = DocNo) And (PurchLine."Line No." = DocLineNo) then begin
+                        LineNo := LineNo + 10000;
+                        CWIPDetails.Init();
+                        CWIPDetails."Document No." := PurchLine."Document No.";
+                        CWIPDetails."Document Line No." := PurchLine."Line No.";
+                        CWIPDetails."Item No." := PurchLine."No.";
+                        CWIPDetails."Line No." := LineNo;
+                        Evaluate(CWIPDetails.Make, GetCellValue(RowNo, 3));
+                        Evaluate(CWIPDetails.Model, GetCellValue(RowNo, 4));
+                        Evaluate(CWIPDetails."Serial No.", GetCellValue(RowNo, 5));
+                        CWIPDetails.Insert();
+                    end;
+                end;
+            until PurchLine.Next = 0;
+        Message(ExcelImportSuccess);
+    end;
+    //B2BVCOn20June2024 <<
 }

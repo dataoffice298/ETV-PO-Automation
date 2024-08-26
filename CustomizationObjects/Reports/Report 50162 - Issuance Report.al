@@ -34,6 +34,7 @@ report 50162 "Issuance Report"
                     ItemLedgerEntries.SetRange("Indent No.", "Indent Line"."Document No.");
                     ItemLedgerEntries.SetRange("Indent Line No.", "Indent Line"."Line No.");
                     ItemLedgerEntries.SetRange("Entry Type", ItemLedgerEntries."Entry Type"::"Negative Adjmt.");//B2BSCM14SEP2023
+                    ItemLedgerEntries.SetFilter("Posting Date", '%1..%2', StartDate, EndDate);//B2BVCOn25Jun2024
                     if ItemLedgerEntries.FindSet() then
                         repeat
                             //B2BSSD24APR2023<<
@@ -63,17 +64,6 @@ report 50162 "Issuance Report"
                                     InvAdjAcc := GeneralPostingSetup."Inventory Adjmt. Account";
                             end; */
 
-                            //B2BVCOn05July2024 >>
-                            Clear(InvAdjAcc);
-                            GeneralLedgEntry.Reset();
-                            GeneralLedgEntry.SetCurrentKey("Entry No.");
-                            GeneralLedgEntry.SetRange("External Document No.", "Indent Line"."Document No.");
-                            GeneralLedgEntry.SetFilter("Debit Amount", '>%1', 0);
-                            if GeneralLedgEntry.FindFirst() then
-                                InvAdjAcc := GeneralLedgEntry."G/L Account No.";
-                            //B2BVCOn05July2024 <<
-
-
                             Users.Reset();
                             Users.SetRange("User Name", UserId);
                             if Users.FindFirst() then
@@ -82,6 +72,17 @@ report 50162 "Issuance Report"
                             ValueEntryLVar.Reset();
                             ValueEntryLVar.SetRange("Item Ledger Entry No.", ItemLedgerEntries."Entry No.");
                             if ValueEntryLVar.FindFirst() then;
+
+                            //B2BVCOn05July2024 >>
+                            Clear(InvAdjAcc);
+                            GeneralLedgEntry.Reset();
+                            GeneralLedgEntry.SetCurrentKey("Entry No.");
+                            GeneralLedgEntry.SetRange("Document No.", ValueEntryLVar."Document No.");
+                            GeneralLedgEntry.SetRange(Amount, Abs(ValueEntryLVar."Cost Posted to G/L"));
+                            GeneralLedgEntry.SetFilter("Debit Amount", '>%1', 0);
+                            if GeneralLedgEntry.FindFirst() then
+                                InvAdjAcc := GeneralLedgEntry."G/L Account No.";
+                            //B2BVCOn05July2024 <<
 
                             TotalAmount := ItemLedgerEntries.Quantity * ValueEntryLVar."Cost per Unit"; //B2BSCM30MAY2024
                             WindPa.Update(1, "Document No.");
@@ -117,7 +118,7 @@ report 50162 "Issuance Report"
 
             trigger OnPreDataItem()
             begin
-                SetFilter("Document Date", '%1..%2', StartDate, EndDate);
+                //SetFilter("Document Date", '%1..%2', StartDate, EndDate);
                 Clear(SNo);
                 MakeExcelHeaders();
             end;

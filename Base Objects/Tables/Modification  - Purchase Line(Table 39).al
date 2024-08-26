@@ -496,6 +496,10 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(60063; "Posted Invioce"; Boolean)//B2BSSD
+        {
+            DataClassification = CustomerContent;
+        }
         modify(Quantity)
         {
             trigger OnBeforeValidate()

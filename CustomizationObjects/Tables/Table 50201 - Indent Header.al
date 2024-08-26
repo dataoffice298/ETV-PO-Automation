@@ -262,6 +262,38 @@ table 50201 "Indent Header"
             end;
 
         }
+        //B2BVCOn17Jun2024 >>
+        field(50019; ShortClose; Boolean)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50020; Cancel; Boolean)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50021; Closed; Boolean)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50022; "ShortClose Qty"; Decimal)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50023; "ShortClosed By"; Code[50])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50024; "ShortClose Date & Time"; DateTime)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50025; "ShortClose Status"; Option)
+        {
+
+            OptionCaption = ',ShortClose,Cancel,Closed';
+            OptionMembers = " ",ShortClose,Cancel,Closed;
+        }
+        //B2BVCOn17Jun2024 <<
     }
 
     keys

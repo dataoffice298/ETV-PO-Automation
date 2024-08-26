@@ -1,4 +1,4 @@
-report 50201 InwardReceipt1
+report 50127 InwardReceipt1
 {
     UsageCategory = ReportsAndAnalysis;
     ApplicationArea = All;

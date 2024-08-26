@@ -1,4 +1,4 @@
-report 50300 "INWARD RECEIPT New"
+report 50135 "INWARD RECEIPT New"
 {
     UsageCategory = ReportsAndAnalysis;
     ApplicationArea = All;

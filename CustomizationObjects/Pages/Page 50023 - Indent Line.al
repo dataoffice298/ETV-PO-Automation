@@ -179,8 +179,8 @@ page 50023 "Indent Line"
                     //Editable = FieldEditable; //B2BSCM21AUG2023
                     trigger OnValidate()
                     begin
-
-
+                        if (Rec."ShortClose Status" = Rec."ShortClose Status"::ShortClose) OR (Rec."ShortClose Status" = Rec."ShortClose Status"::Cancel) then
+                            Error(TextLbl, Rec."Line No.", Rec."ShortClose Status");
                     end;
                 }
                 field("Qty Issued"; Rec."Qty Issued")
@@ -219,6 +219,16 @@ page 50023 "Indent Line"
                     ApplicationArea = all;
                     Caption = 'To Location';//B2BSSD05APR2023
                     //Editable = FieldEditable; //B2BSCM21AUG2023 //B2BVCOn01Feb2024 Comment
+                    trigger OnValidate()
+                    begin
+                        Rec.CalcFields("Qty Issued");
+                        if Rec."Req.Quantity" = Abs(Rec."Qty Issued") then begin
+                            if Rec."ShortClose Status" = Rec."ShortClose Status"::" " then begin
+                                Rec.Closed := true;
+                                Rec."ShortClose Status" := Rec."ShortClose Status"::Closed;
+                            end;
+                        end;
+                    end;
                 }
                 field("Archive Indent"; "Archive Indent")
                 {
@@ -226,6 +236,27 @@ page 50023 "Indent Line"
                     Caption = 'Archive Indent';
                     Editable = false;
                 }
+                //B2BVCOn17Jun2024 >>
+                field(ShortClose; Rec.ShortClose)
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                }
+                field(CancelIndent; Rec.CancelIndent)
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                }
+                field(Closed; Rec.Closed)
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                }
+                field("ShortClose Status"; Rec."ShortClose Status")
+                {
+                    ApplicationArea = All;
+                }
+                //B2BVCOn17Jun2024 <<
             }
         }
     }
@@ -373,6 +404,31 @@ page 50023 "Indent Line"
                     end;
                 }
                 //B2BSSD31Jan2023>>
+
+                //B2BVCOn17Jun2024 >>
+                action("ShortClose IndentDoc")
+                {
+                    ApplicationArea = All;
+                    Caption = 'ShortClose';
+                    Image = PostOrder;
+                    ToolTip = 'Short Close the order based on Qty Issued';
+                    trigger OnAction()
+                    begin
+                        ShortCloseIndent();
+                    end;
+                }
+                action("Cancle IndentDoc")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Cancle Indent';
+                    Image = CancelLine;
+                    trigger OnAction()
+                    begin
+                        CancleIndentDoc();
+                    end;
+
+                }
+                //B2BVCOn17Jun2024 <<
             }
             //B2BSSD02MAR2023<<
             group("NRGP/RGP")
@@ -853,6 +909,7 @@ page 50023 "Indent Line"
         FixedAsset: Record "Fixed Asset";
 
         GateEntryHeaderOutwardGvar: Record "Gate Entry Header_B2B";
+        TextLbl: Label 'Qty To Issue not allowed, Line No. %1 already %2.';
     //B2BSSD03AUG2023>>
     procedure QTyToIssueNonEditable()
     begin
@@ -868,7 +925,57 @@ page 50023 "Indent Line"
             until IndentLine.Next() = 0;
         end;
     end;
-
-
     //SSD03AUG2023<<
+
+    local procedure ShortCloseIndent()
+    var
+        ConfirmText: Label 'Do you want to Short Close the Indent No. %1 and Line No. %2 ?';
+        NotApplicableErr: Label 'Indent Line No. %1 can not be Shortclosed, Req.Qty and Qty Issue is same';
+        SuccessMsg: Label 'Indent Doucument No. %1 and Line No. %2 is Short Closed';
+        ShortClosed: Boolean;
+        AlredyShortclose: Label 'Indent Document  %1 is already shortclosed';
+    begin
+        if Rec.ShortClose then
+            Error(AlredyShortclose, Rec."Document No.");
+        Rec.TestField("Qty Issued");
+        if Rec."Req.Quantity" = Abs(Rec."Qty Issued") then
+            Error(NotApplicableErr, Rec."Line No.");
+        if not Confirm(StrSubstNo(ConfirmText, Rec."Document No.", Rec."Line No."), false) then
+            exit;
+
+        Rec.ShortClose := true;
+        if Rec."ShortClose Status" = Rec."ShortClose Status"::" " then
+            Rec."ShortClose Status" := Rec."ShortClose Status"::ShortClose;
+        Rec."ShortClose Qty" := Rec."Req.Quantity" - Abs(Rec."Qty Issued");
+        Rec."Req.Quantity" := Abs(Rec."Qty Issued");
+        Rec."ShortClosed By" := UserId;
+        Rec."ShortClose Date & Time" := CurrentDateTime;
+        Rec.Modify();
+        if Rec.ShortClose then
+            Message(SuccessMsg, Rec."Document No.", Rec."Line No.");
+    end;
+
+    local procedure CancleIndentDoc()
+    var
+        ConfirmText: Label 'Do you want to Cancelled the Indent Doc No. %1 and Line No. %2?';
+        AlredyCancelledOrder: Label 'Indent Document  %1 is already Cancelled';
+        SuccessMsg: Label 'Indent Document No. %1 and Line No. %2 is Cancelled';
+        ErrorMsg: Label 'Qty Issued Must be Zero, Document No. %1, Line No. %2';
+    begin
+        if Rec.CancelIndent then
+            Error(AlredyCancelledOrder, Rec."Document No.");
+        if not Confirm(StrSubstNo(ConfirmText, Rec."Document No.", Rec."Line No."), false) then
+            exit;
+        if Abs(Rec."Qty Issued") <> 0 then
+            Error(ErrorMsg, Rec."Document No.", Rec."Line No.");
+
+        if Abs(Rec."Qty Issued") = 0 then begin
+            Rec.CancelIndent := true;
+            if Rec."ShortClose Status" = Rec."ShortClose Status"::" " then
+                Rec."ShortClose Status" := Rec."ShortClose Status"::Cancel;
+            Rec.Modify;
+        end;
+        if Rec.CancelIndent then
+            Message(SuccessMsg, Rec."Document No.", Rec."Line No.");
+    end;
 }

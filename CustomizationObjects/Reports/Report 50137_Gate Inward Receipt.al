@@ -1,4 +1,4 @@
-report 50301 "Gate Inward Receipt"
+report 50137 "Gate Inward Receipt"
 {
     UsageCategory = ReportsAndAnalysis;
     ApplicationArea = All;

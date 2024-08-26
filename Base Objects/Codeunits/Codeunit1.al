@@ -841,7 +841,7 @@ codeunit 50016 "MyBaseSubscr"
         ApprovalEntry: Record "Approval Entry";
     begin
         ApprovalEntry.Reset();
-        ApprovalEntry.SetRange("Table ID", 38);
+        ApprovalEntry.SetRange("Table ID", Database::"Purchase Header");
         ApprovalEntry.SetRange("Document Type", PurchaseHeader."Document Type");
         ApprovalEntry.SetRange("Document No.", PurchaseHeader."No.");
         ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
@@ -941,6 +941,10 @@ codeunit 50016 "MyBaseSubscr"
     procedure OnAfterPostPurchaseDoc(var PurchaseHeader: Record "Purchase Header"; var GenJnlPostLine: Codeunit "Gen. Jnl.-Post Line"; PurchRcpHdrNo: Code[20]; RetShptHdrNo: Code[20]; PurchInvHdrNo: Code[20]; PurchCrMemoHdrNo: Code[20]; CommitIsSupressed: Boolean)
     var
         PurchLine: Record "Purchase Line";
+        //PurchLine: Record "Purchase Line";
+        PurchLine1: Record "Purchase Line";
+        QuantitytoInvoice: Decimal;
+        Text001: Label 'Completed Invioce';
     begin
         //B2BVCOn28Jun2024>>
         PurchLine.Reset();
@@ -956,6 +960,38 @@ codeunit 50016 "MyBaseSubscr"
                 end;
             until PurchLine.Next = 0;
         //B2BVCOn28Jun2024 <<
+        //B2BSSD16Aug2024 >>
+        PurchLine.Reset();
+        PurchLine.SetRange("Document No.", PurchaseHeader."No.");
+        if PurchLine.FindFirst() then begin
+            repeat
+                Clear(QuantitytoInvoice);
+                QuantitytoInvoice := PurchLine.Quantity;
+                if QuantitytoInvoice = PurchLine."Quantity Invoiced" then
+                    PurchLine."Posted Invioce" := true;
+                PurchLine.Modify();
+            until PurchLine.Next() = 0;
+
+            PurchLine1.Reset();
+            PurchLine1.SetRange("Document Type", PurchLine."Document Type"::Order);
+            PurchLine1.SetRange("Document No.", PurchLine."Document No.");
+            PurchLine1.SetRange("Posted Invioce", false);
+            if PurchLine1.FindSet() then begin
+                PurchaseHeader.Reset();
+                PurchaseHeader.SetRange("Document Type", PurchLine."Document Type"::Order);
+                PurchaseHeader.SetRange("No.", PurchLine."Document No.");
+                if PurchaseHeader.FindFirst() then
+                    PurchaseHeader."Posted Invioce" := false;
+                PurchaseHeader.Modify();
+            end else begin
+                PurchaseHeader.SetRange("Document Type", PurchLine."Document Type"::Order);
+                PurchaseHeader.SetRange("No.", PurchLine."Document No.");
+                if PurchaseHeader.FindFirst() then
+                    PurchaseHeader."Posted Invioce" := true;
+                PurchaseHeader.Modify();
+            end;
+        end;
+        //B2BSSD16Aug2024 <<
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Document-Mailing", 'OnBeforeSendEmail', '', false, false)]
@@ -1006,6 +1042,79 @@ codeunit 50016 "MyBaseSubscr"
         if PurchaseHeader."Exchange Rate" then
             IsHandled := true;
     end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Item Jnl.-Post Line", 'OnAfterPostItemJnlLine', '', false, false)]
+    local procedure OnAfterPostItemJnlLines(var ItemJournalLine: Record "Item Journal Line"; ItemLedgerEntry: Record "Item Ledger Entry"; var ValueEntryNo: Integer; var InventoryPostingToGL: Codeunit "Inventory Posting To G/L"; CalledFromAdjustment: Boolean; CalledFromInvtPutawayPick: Boolean; var ItemRegister: Record "Item Register"; var ItemLedgEntryNo: Integer; var ItemApplnEntryNo: Integer)
+    var
+        IndentLine: Record "Indent Line";
+        QtyIssued: Decimal;
+        ILE: Record "Item Ledger Entry";
+        LineCount: Integer;
+        CountVar: Integer;
+        IndentHdr: Record "Indent Header";
+    begin
+        //B2BVCOn19Jun2024 >>
+        Clear(QtyIssued);
+        ILE.Reset();
+        ILE.SetRange("Indent No.", ItemLedgerEntry."Indent No.");
+        ILE.SetRange("Indent Line No.", ItemLedgerEntry."Indent Line No.");
+        ILE.SetFilter(Quantity, '<%1', 0);
+        if ILE.FindSet() then begin
+            repeat
+                QtyIssued += ILE.Quantity;
+            until ILE.Next = 0;
+
+            IndentLine.Reset();
+            IndentLine.SetRange("Document No.", ILE."Indent No.");
+            IndentLine.SetRange("Line No.", ILE."Indent Line No.");
+            if IndentLine.FindFirst() then begin
+                if IndentLine."Req.Quantity" = Abs(QtyIssued) then begin
+                    IndentLine.Closed := true;
+                    if IndentLine."ShortClose Status" = IndentLine."ShortClose Status"::" " then
+                        IndentLine."ShortClose Status" := IndentLine."ShortClose Status"::Closed;
+                    IndentLine.Modify;
+                end;
+            end;
+            LineCount := 0;
+            CountVar := 0;
+            IndentLine.Reset();
+            IndentLine.SetRange("Document No.", ILE."Indent No.");
+            IndentLine.SetFilter("No.", '<>%1', '');
+            if IndentLine.FindSet() then
+                repeat
+                    LineCount += 1;
+                    IndentLine.CalcFields("Qty Issued");
+                    if IndentLine."Req.Quantity" = Abs(IndentLine."Qty Issued") then
+                        CountVar += 1;
+                until IndentLine.Next = 0;
+            if LineCount = CountVar then begin
+                if IndentHdr.Get(ILE."Indent No.") then begin
+                    if IndentHdr."ShortClose Status" = IndentHdr."ShortClose Status"::" " then
+                        IndentHdr."ShortClose Status" := IndentHdr."ShortClose Status"::Closed;
+                    IndentHdr.Modify;
+                end;
+            end;
+
+        end;
+        //B2BVCOn19Jun2024 <<
+    end;
+
+    //To keep Orders after completely invoiced 
+    //using the Below method, sales orders can be kept*********Start*******B2BSSD
+
+    [EventSubscriber(ObjectType::Codeunit, codeunit::"Purch.-Post", 'OnBeforeDeleteAfterPosting', '', false, false)]
+    local procedure OnBeforeDeleteAfterPosting(var PurchaseHeader: Record "Purchase Header"; var PurchInvHeader: Record "Purch. Inv. Header"; var PurchCrMemoHdr: Record "Purch. Cr. Memo Hdr."; var SkipDelete: Boolean; CommitIsSupressed: Boolean; var TempPurchLine: Record "Purchase Line" temporary; var TempPurchLineGlobal: Record "Purchase Line" temporary)
+    begin
+        if PurchaseHeader."Document Type" = PurchaseHeader."Document Type"::Order then
+            SkipDelete := true;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, codeunit::"Purch.-Post", 'OnBeforeFinalizePosting', '', false, false)]
+    local procedure OnBeforeFinalizePosting(var PurchaseHeader: Record "Purchase Header"; var TempPurchLineGlobal: Record "Purchase Line" temporary; var EverythingInvoiced: Boolean; CommitIsSupressed: Boolean; var GenJnlPostLine: Codeunit "Gen. Jnl.-Post Line")
+    begin
+        EverythingInvoiced := false;
+    end;
+    //************END*****************B2BSSD
 
 }
 

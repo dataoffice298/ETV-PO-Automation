@@ -1,4 +1,4 @@
-report 51099 "Category Wise Stock Summary"
+report 50139 "Category Wise Stock Summary"
 {
     UsageCategory = ReportsAndAnalysis;
     ApplicationArea = All;

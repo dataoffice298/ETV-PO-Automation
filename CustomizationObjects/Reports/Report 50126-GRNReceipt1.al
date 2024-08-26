@@ -1,4 +1,4 @@
-report 50200 "GRN RECEIPT1"
+report 50126 "GRN RECEIPT1"
 {
     Caption = 'GRN RECEIPT1';
     UsageCategory = ReportsAndAnalysis;
@@ -198,32 +198,32 @@ report 50200 "GRN RECEIPT1"
                 if PurchaseOrderGRec.FindFirst() then begin
                     VendorInvNo := PurchaseOrderGRec."Vendor Invoice No.";
                     VendorInvDate := PurchaseOrderGRec."Vendor Invoice Date";
-                   // Purpose := PurchaseOrderGRec.Purpose;
-                   PurchaseRcptHdr.Reset();
-                        PurchaseRcptHdr.SetRange("Order No.", PurchaseOrderGRec."No.");
-                        If PurchaseRcptHdr.FindFirst() then
+                    // Purpose := PurchaseOrderGRec.Purpose;
+                    PurchaseRcptHdr.Reset();
+                    PurchaseRcptHdr.SetRange("Order No.", PurchaseOrderGRec."No.");
+                    If PurchaseRcptHdr.FindFirst() then
                         Purpose := PurchaseRcptHdr.Purpose;
-                  /*  PurchaseLineGRec.Reset();
-                    PurchaseLineGRec.SetRange("Document No.", PurchaseOrderGRec."No.");
-                    if PurchaseLineGRec.FindSet() then begin
-                        if (PurchaseLineGRec.Type = PurchaseLineGRec.Type::Item) or (PurchaseLineGRec.Type = PurchaseLineGRec.Type::"Fixed Asset") or (PurchaseLineGRec.Type = PurchaseLineGRec.Type::Description) then begin
-                            IndentHeaderGRec.Reset();
-                            IndentHeaderGRec.SetRange("No.", PurchaseLineGRec."Indent No.");
-                            if IndentHeaderGRec.FindFirst() then begin
-                                IndentNo := IndentHeaderGRec."No.";
-                                IndentDate := IndentHeaderGRec."Document Date";
-                                Indentor := IndentHeaderGRec.Indentor;
-                            end;
-                        end;//B2BSCM25SEP2023
-                        BasicAmount := PurchaseLineGRec."Quantity Received" * PurchaseLineGRec."Direct Unit Cost";
-                        DiscAmount := PurchaseLineGRec."Line Discount Amount";
-                    end;*/
+                    /*  PurchaseLineGRec.Reset();
+                      PurchaseLineGRec.SetRange("Document No.", PurchaseOrderGRec."No.");
+                      if PurchaseLineGRec.FindSet() then begin
+                          if (PurchaseLineGRec.Type = PurchaseLineGRec.Type::Item) or (PurchaseLineGRec.Type = PurchaseLineGRec.Type::"Fixed Asset") or (PurchaseLineGRec.Type = PurchaseLineGRec.Type::Description) then begin
+                              IndentHeaderGRec.Reset();
+                              IndentHeaderGRec.SetRange("No.", PurchaseLineGRec."Indent No.");
+                              if IndentHeaderGRec.FindFirst() then begin
+                                  IndentNo := IndentHeaderGRec."No.";
+                                  IndentDate := IndentHeaderGRec."Document Date";
+                                  Indentor := IndentHeaderGRec.Indentor;
+                              end;
+                          end;//B2BSCM25SEP2023
+                          BasicAmount := PurchaseLineGRec."Quantity Received" * PurchaseLineGRec."Direct Unit Cost";
+                          DiscAmount := PurchaseLineGRec."Line Discount Amount";
+                      end;*/
                     PurchaseRcptLine.Reset();
-                        PurchaseRcptLine.SetRange("Indent Req No", IndNo);
-                        PurchaseRcptLine.SetRange("No.", "No.");
-                        If PurchaseRcptLine.FindSet() then begin
-                            if (PurchaseRcptLine.Type = PurchaseRcptLine.Type::Item) or (PurchaseRcptLine.Type = PurchaseRcptLine.Type::"Fixed Asset") or (PurchaseRcptLine.Type = PurchaseRcptLine.Type::Description) then begin
-                                IndentHeaderGRec.Reset();
+                    PurchaseRcptLine.SetRange("Indent Req No", IndNo);
+                    PurchaseRcptLine.SetRange("No.", "No.");
+                    If PurchaseRcptLine.FindSet() then begin
+                        if (PurchaseRcptLine.Type = PurchaseRcptLine.Type::Item) or (PurchaseRcptLine.Type = PurchaseRcptLine.Type::"Fixed Asset") or (PurchaseRcptLine.Type = PurchaseRcptLine.Type::Description) then begin
+                            IndentHeaderGRec.Reset();
                             IndentHeaderGRec.SetRange("No.", PurchaseRcptLine."Indent No.");
                             if IndentHeaderGRec.FindFirst() then begin
                                 IndentNo := IndentHeaderGRec."No.";
@@ -231,7 +231,7 @@ report 50200 "GRN RECEIPT1"
                                 Indentor := IndentHeaderGRec.Indentor;
                             end;
                         end;
-                        BasicAmount := PurchaseLineGRec."Quantity Received" *PurchaseLineGRec."Direct Unit Cost";
+                        BasicAmount := PurchaseLineGRec."Quantity Received" * PurchaseLineGRec."Direct Unit Cost";
                         DiscAmount := PurchaseLineGRec."Line Discount Amount";
                     end;
 
@@ -246,8 +246,8 @@ report 50200 "GRN RECEIPT1"
                 end;
                 NetTotal := (BasicAmount + CGSTAmt + SGSTAmt);
             end;
-            
-            
+
+
 
             trigger OnPreDataItem();
             begin
@@ -397,8 +397,8 @@ report 50200 "GRN RECEIPT1"
         SNo: Integer;
         Purpose: Text[100];
         InwardNo: Code[30];
-        PurchaseRcptHdr : Record "Purch. Rcpt. Header";
-        PurchaseRcptLine : Record "Purch. Rcpt. Line";
+        PurchaseRcptHdr: Record "Purch. Rcpt. Header";
+        PurchaseRcptLine: Record "Purch. Rcpt. Line";
         IndNo: Code[20];
     //B2BMMOn06Oct2022<<
 }

@@ -124,6 +124,7 @@ pageextension 50119 FixedAssetListExt extends "Fixed Asset List"
         FANo: Code[20];
         FALocation: Code[10];
         FASubLoc: Code[20];
+        PhysicalLoc: Text[50];
     begin
         RowNo := 0;
         ColNo := 0;
@@ -137,22 +138,22 @@ pageextension 50119 FixedAssetListExt extends "Fixed Asset List"
             Evaluate(FANo, GetCellValue(RowNo, 1));
             Evaluate(FALocation, GetCellValue(RowNo, 2));
             Evaluate(FASubLoc, GetCellValue(RowNo, 3));
+            Evaluate(PhysicalLoc, GetCellValue(RowNo, 4));
             FixedAsset.Reset();
             FixedAsset.SetRange("No.", FANo);
             if FixedAsset.FindFirst() then begin
-                //if FixedAsset."FA Location Code" = '' then begin
                 FALocationRec.Reset();
                 FALocationRec.SetRange(Code, FALocation);
                 if FALocationRec.FindFirst() then
                     FixedAsset."FA Location Code" := FALocation;
-                //end;
-                //if FixedAsset."FA Sub Location" = '' then begin
+
                 FASubLocation.Reset();
                 FASubLocation.SetRange("Location Code", FixedAsset."FA Location Code");
                 FASubLocation.SetRange("Sub Location Code", FASubLoc);
                 if FASubLocation.FindFirst() then
                     FixedAsset."FA Sub Location" := FASubLoc;
-                //end;
+
+                FixedAsset."Physical-Location" := PhysicalLoc;
                 FixedAsset.Modify();
             end;
         end;

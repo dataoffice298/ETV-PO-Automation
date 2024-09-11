@@ -22,6 +22,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             field("Spec Id"; rec."Spec Id")
             {
                 ApplicationArea = all;
+                Editable = FieldEditable1; //B2BVCOn07Aug2024
                 trigger OnValidate()
                 var
                     myInt: Integer;
@@ -215,6 +216,14 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 ApplicationArea = All;
                 Caption = 'Line Discount %';
             }
+        }
+        modify("Direct Unit Cost")
+        {
+            Editable = FieldEditable1; //B2BVCOn07Aug2024
+        }
+        modify("Variant Code")
+        {
+            Editable = FieldEditable1; //B2BVCOn07Aug2024
         }
         //B2BSSD14MAR2023>>
         addafter("Quantity Received")//B2BSSD15MAY2023
@@ -893,6 +902,18 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         }
     }
 
+    trigger OnAfterGetRecord()
+    begin
+        //B2BVCOn07Aug2024 >>
+        if PurchHeaderRec.Get(Rec."Document Type"::Order, Rec."Document No.") then begin
+            if PurchHeaderRec.Status = PurchHeaderRec.Status::Open then
+                FieldEditable1 := true
+            else
+                FieldEditable1 := false;
+        end;
+        //B2BVCOn07Aug2024 <<
+    end;
+
     procedure CreateGateEntries(EntryType: Option Inward,Outward; DocType: Option RGP,NRGP)
     var
         GateEntryHeader: Record "Gate Entry Header_B2B";
@@ -1173,6 +1194,8 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
     end;
     //B2BVCOn14Nov2023 <<
     var
+        PurchHeaderRec: Record "Purchase Header";
+        FieldEditable1: Boolean;
         GateEntryType: Option Inward,Outward;
         Text0004: Label 'You dont have Permessions to Open Documebt Tracking';
         Text0005: Label 'You dont have Permessions to Open Import Item Tracking';

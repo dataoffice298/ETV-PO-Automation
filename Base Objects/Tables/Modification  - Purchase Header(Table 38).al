@@ -134,7 +134,7 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
             OptionMembers = ,Open,"Pending Approval",Released;
             OptionCaption = ' ,Open,Pending Approval,Released';
         }
-        field(50120; "PO Narration"; Code[50]) //B2BAJ02012024
+        field(50120; "PO Narration"; Code[150]) //B2BAJ02012024
         {
             Caption = 'PO Narration';
             DataClassification = CustomerContent;
@@ -184,6 +184,10 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
         field(50129; "Posted Invioce"; Boolean)//B2BSSD
         {
             DataClassification = CustomerContent;
+        }
+        field(50133; "Draft Date"; Date)//B2BSPon16Aug2023//savarappa
+        {
+            DataClassification = ToBeClassified;
         }
     }
 

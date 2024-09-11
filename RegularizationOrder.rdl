@@ -1496,7 +1496,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>ADD GST %                    </Value>
+                                  <Value>ADD GST                  </Value>
                                   <Style>
                                     <FontFamily>Times New Roman</FontFamily>
                                   </Style>

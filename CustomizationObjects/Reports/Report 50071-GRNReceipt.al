@@ -184,7 +184,9 @@ report 50071 "GRN RECEIPT"
                 { }
                 column(NetTotal; TotalAmountNew)
                 { }
-                column(NumberText1; NumberText[1])
+                column(TotalAmount; TotalAmount2)
+                { }
+                column(NumberText1; NumberText[1] + '' + NumberText[2])
                 { }
                 column(Rate; "Direct Unit Cost")
                 { }
@@ -263,9 +265,17 @@ report 50071 "GRN RECEIPT"
                     BasicAmount := "Purch. Rcpt. Line"."Direct Unit Cost" * "Purch. Rcpt. Line".Quantity;
                     DiscountVar := (BasicAmount / 100) * ("Purch. Rcpt. Line"."Line Discount %");
                     TotalAmountNew := BasicAmount - DiscountVar;
+                    TotalAmount2 += BasicAmount - DiscountVar;
+                    if "Purch. Rcpt. Header"."Currency Code" = '' then begin
+                        CheckRec.InitTextVariable();
+                        CheckRec.FormatNoTextWithoutCurrency(NumberText, TotalAmount2, '');
+                    end else begin
+                        CheckRec.InitTextVariable;
+                        CheckRec.FormatNoText(NumberText, TotalAmount2, "Purch. Rcpt. Header"."Currency Code");
+                    end;
 
-                    CheckGRec.InitTextVariable;
-                    CheckGRec.FormatNoText(NumberText, Round(TotalAmountNew, 1, '='), "Currency Code");
+                    /* CheckGRec.InitTextVariable;
+                    CheckGRec.FormatNoText(NumberText, Round(TotalAmountNew, 1, '='), "Currency Code"); */
 
                     if "Purch. Rcpt. Line".Quantity = 0 then
                         CurrReport.Skip();
@@ -381,6 +391,7 @@ report 50071 "GRN RECEIPT"
         Baseamount: Decimal;
         DiscountVar: Decimal;
         TotalAmountNew: Decimal;
+        TotalAmount2: Decimal;
         ItemCategory: Code[20];
         ItemSubCategory: Code[20];
         ItemRec: Record Item;
@@ -449,7 +460,8 @@ report 50071 "GRN RECEIPT"
         RamojiFCCapLbl: Label 'RAMOJI FILM CITY - HYDERABAD';
         //B2BMMOn06Oct2022>>
         NumberText: array[2] of Text;
-        CheckGRec: Codeunit "Gate Entry- Post Yes/No";
+        //CheckGRec: Codeunit "Gate Entry- Post Yes/No";
+        CheckRec: Codeunit "Check Codeunit";
         ValueEntry: Record "Value Entry";
         Rate: Decimal;
         PurInvHdr1: Record "Purch. Inv. Header";

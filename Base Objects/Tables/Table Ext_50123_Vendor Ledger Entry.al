@@ -2,7 +2,7 @@ tableextension 50123 VendorLedgerEntry extends "Vendor Ledger Entry"
 {
     fields
     {
-        field(50120; "PO Narration"; Code[50])
+        field(50120; "PO Narration"; Code[150])
         {
             Caption = 'PO Narration';
             DataClassification = CustomerContent;

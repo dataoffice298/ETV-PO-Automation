@@ -11,6 +11,7 @@ codeunit 50009 CWIP
         CWIPDetails: Record "CWIP Details";
         CWIPCount: Integer;
         LastEntryNo: Integer;
+        CurrFact: Decimal;
     begin
         if PurchRcpHdrNo = '' then
             exit;
@@ -46,15 +47,28 @@ codeunit 50009 CWIP
                             if PurchRcptLine."Unit of Measure Code" = 'NOS' then begin
                                 CWIPLedgerEntry.Quantity := 1;
                                 if PurchRcptLine."Line Discount %" = 0 then
-                                    CWIPLedgerEntry.Amount := PurchRcptLine."Direct Unit Cost"
+                                    //B2BSCM27AUG2024>>
+                                    if PurchRcptHeader."Currency Code" = '' then
+                                        CWIPLedgerEntry.Amount := PurchRcptLine."Direct Unit Cost"
+                                    ELSE begin
+                                        //if PurchRcptHeader."Currency Factor" <> CurrFact then
+                                        CWIPLedgerEntry.Amount := Round(((1 / PurchRcptHeader."Currency Factor") * PurchRcptLine."Direct Unit Cost"), 0.01)
+                                    end
                                 else begin
-                                    CWIPLedgerEntry.Amount := Round(PurchRcptLine.Quantity * PurchRcptLine."Direct Unit Cost", 0.01);
+                                    if PurchRcptHeader."Currency Code" = '' then
+                                        CWIPLedgerEntry.Amount := Round(PurchRcptLine.Quantity * PurchRcptLine."Direct Unit Cost", 0.01)
+                                    else
+                                        CWIPLedgerEntry.Amount := Round(((1 / PurchRcptHeader."Currency Factor") * (PurchRcptLine.Quantity * PurchRcptLine."Direct Unit Cost")), 0.01);
+                                    //B2BSCM27AUG2024<<
                                     if CWIPLedgerEntry.Amount <> 0 then
                                         CWIPLedgerEntry.Amount := Round((CWIPLedgerEntry.Amount - (CWIPLedgerEntry.Amount * PurchRcptLine."Line Discount %") / 100) / PurchRcptLine.Quantity, 0.01);
                                 end;
                             end else begin
                                 CWIPLedgerEntry.Quantity := PurchRcptLine.Quantity;
-                                CWIPLedgerEntry.Amount := Round(PurchRcptLine.Quantity * PurchRcptLine."Direct Unit Cost", 0.01);
+                                if PurchRcptHeader."Currency Factor" <> CurrFact then
+                                    CWIPLedgerEntry.Amount := Round(((1 / PurchRcptHeader."Currency Factor") * (PurchRcptLine.Quantity * PurchRcptLine."Direct Unit Cost")), 0.01) //B2BSCM27AUG2024
+                                else
+                                    CWIPLedgerEntry.Amount := Round((PurchRcptLine.Quantity * PurchRcptLine."Direct Unit Cost"), 0.01);
                                 if (CWIPLedgerEntry.Amount <> 0) and (PurchRcptLine."Line Discount %" <> 0) then
                                     CWIPLedgerEntry.Amount := Round((CWIPLedgerEntry.Amount - (CWIPLedgerEntry.Amount * PurchRcptLine."Line Discount %") / 100), 0.01);
                             end;

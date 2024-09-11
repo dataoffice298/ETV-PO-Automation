@@ -1190,7 +1190,7 @@ table 50201 "Indent Header"
         ArchiveVersion: Integer;
         text0001: Label 'Cannot Reopen the indent if the status is Cancel/Closed.';
     Begin
-       //CHP>>
+        //CHP>>
         //if IndentLine."Qty To Issue" = 0 then
         //Exit;
         //CHP<<

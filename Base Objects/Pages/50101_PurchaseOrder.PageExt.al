@@ -126,22 +126,24 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             {
                 ApplicationArea = All;
                 Caption = 'Vendor Quotation No.';
-                //Editable = false;
+                Editable = FieldEditable;
             }
             field("Vendor Quotation Date"; Rec."Vendor Quotation Date") //B2BVCOn18Mar2024
             {
                 ApplicationArea = All;
                 Caption = 'Vendor Quotation Date';
-                //Editable = false;
+                Editable = FieldEditable;
             }
         }
         modify("Shipment Method Code")
         {
             Caption = 'Delivery';
+            Editable = FieldEditable; //B2BVCOn07Aug2024
         }
         modify("Payment Terms Code")
         {
             Caption = 'Payment Term';
+            Editable = FieldEditable; //B2BVCOn07Aug2024
         }
         addafter("Cancelled Order")
         {
@@ -150,6 +152,19 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 ApplicationArea = All;
 
             }
+            field("Draft Date"; Rec."Draft Date")//B2BSPon16Aug2024//savarappa
+            {
+                ApplicationArea = All;
+                Caption = 'Draft Date';
+            }
+        }
+        modify("Purchaser Code") //B2BVCOn07Aug2024
+        {
+            Editable = FieldEditable;
+        }
+        modify("Foreign Trade") //B2BVCOn07Aug2024
+        {
+            Editable = FieldEditable;
         }
 
         //B2BSSD25Jan2023<<
@@ -161,6 +176,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 //SubPageLink = DocumentNo = field("No.");
                 SubPageLink = DocumentType = field("Document Type"), DocumentNo = field("No.");
                 UpdatePropagation = Both;
+                Editable = FieldEditable; //B2BVCOn07Aug2024
             }
         }
         //B2BSSD25Jan2023>>
@@ -659,6 +675,16 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
 
     }
     //B2BVCOn12Mar2024 >>
+
+    //B2BVCOn07Aug2024 >>
+    trigger OnAfterGetRecord()
+    begin
+        if Rec.Status = Rec.Status::Open then
+            FieldEditable := true
+        else
+            FieldEditable := false;
+    end;
+    //B2BVCOn07Aug2024 <<
     local procedure ShortCloseHdr()
     var
         PurchLine: Record "Purchase Line";
@@ -783,6 +809,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         IndentReqLine: Record "Indent Requisitions";
         CWIPDetails: Record "CWIP Details";
         PurchaseLine: Record "Purchase Line";
+        FieldEditable: Boolean;
         ErrLbl: Label 'You must define CWIP details for the Item No. %1 and Line No. %2.';
         Err2Lbl: Label 'CWIP details must be defined for the total receiving quantity of Item No. %1 and Line No. %2.';
 }

@@ -372,8 +372,8 @@ codeunit 50056 "Check Codeunit"
         TransportCaptionLbl: Label 'Transport';
         BlockedEmplForCheckErr: Label 'You cannot print check because employee %1 is blocked due to privacy.', Comment = '%1 - Employee no.';
         AlreadyAppliedToEmployeeErr: Label ' is already applied to %1 %2 for employee %3.', Comment = '%1 = Document type, %2 = Document No., %3 = Employee No.';
-        ZeroLbl: Label 'Zero';
-        HundreadLbl: Label 'Hundred';
+        ZeroLbl: Label 'ZERO';
+        HundreadLbl: Label 'HUNDRED';
         AndLbl: Label 'AND';
     //B2BBaluOnAUG29<< Check Report
 

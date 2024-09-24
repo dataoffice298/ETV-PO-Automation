@@ -1,10 +1,10 @@
-page 50176 "Local Indent Req List"
+page 50199 "Complete CentralIndentReq List"
 {
-    Caption = 'Local Indent Requisition List';
+    Caption = 'Complete Central Indent Requisition List';
     CardPageID = "Indent Requisition Document";
     PageType = List;
     SourceTable = "Indent Req Header";
-    SourceTableView = sorting("Last Modified Date") order(descending) where("Resposibility Center" = const('LOCAL REQ'), Status = const(Release), "Req Status" = filter(<> Completed));
+    SourceTableView = sorting("Document Date") order(descending) where("Resposibility Center" = const('CENTRL REQ'), Status = const(Release), "Req Status" = filter(Completed));
     UsageCategory = Lists;
     ApplicationArea = all;
     Editable = false;
@@ -53,6 +53,7 @@ page 50176 "Local Indent Req List"
     actions
     {
     }
+
     var
         StyleTxt: Text;
 
@@ -60,5 +61,5 @@ page 50176 "Local Indent Req List"
     begin
         StyleTxt := Rec.SetStyle();
     end;
+    
 }
-

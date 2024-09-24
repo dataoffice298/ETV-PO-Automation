@@ -510,7 +510,7 @@ table 50210 "Quotation Comparison Test"
             Caption = 'Variant Description';
             DataClassification = CustomerContent;
         }
-        field(60037; "Vendor Quotation No."; Code[50]) //B2BVCOn11Mar2024
+        field(60037; "Vendor Quotation No."; Code[250]) //B2BVCOn11Mar2024
         {
             Caption = 'Vendor Quotation No.';
             DataClassification = CustomerContent;

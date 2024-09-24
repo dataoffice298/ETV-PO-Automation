@@ -201,6 +201,7 @@ page 50025 "Purchase Enquiry"
                 //SubPageLink = DocumentNo = field("Buy-from Vendor No.");
                 SubPageLink = DocumentType = field("Document Type"), DocumentNo = field("No.");
                 UpdatePropagation = Both;
+                
             }
         }
         //B2BSSD17FEB2023<<

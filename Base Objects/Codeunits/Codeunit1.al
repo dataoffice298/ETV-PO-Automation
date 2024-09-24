@@ -1116,6 +1116,17 @@ codeunit 50016 "MyBaseSubscr"
     end;
     //************END*****************B2BSSD
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnApproveApprovalRequest', '', false, false)]
+    local procedure OnApproveApprovalRequest(var ApprovalEntry: Record "Approval Entry")
+    var
+        IndentReqHead: Record "Indent Req Header";
+    begin
+        if IndentReqHead.Get(ApprovalEntry."Document No.") then begin
+            IndentReqHead."Last Modified Date" := ApprovalEntry."Last Date-Time Modified";
+            IndentReqHead.Modify();
+        end;
+    end;
+
     //>>B2BSpon16Aug2024>> savarappa
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Purchase Document", 'OnAfterReleasePurchaseDoc', '', false, false)]
     local procedure OnAfterReleasePurchaseDoc1(var PurchaseHeader: Record "Purchase Header"; PreviewMode: Boolean)

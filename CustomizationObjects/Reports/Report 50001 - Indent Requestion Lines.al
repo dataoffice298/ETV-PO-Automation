@@ -52,7 +52,13 @@ report 50001 "Indent Requestion Lines"
                         IndentRequisitions.MODIFY;
                     END
                     ELSE BEGIN
-
+                        //B2BVCOn13Jun2024 >>
+                        if (IndentReqHeader."Shortcut Dimension 1 Code" <> '') then begin
+                            if (IndentReqHeader."Shortcut Dimension 1 Code" <> "Indent Header"."Shortcut Dimension 1 Code") OR (IndentReqHeader."Shortcut Dimension 2 Code" <> "Indent Header"."Shortcut Dimension 2 Code") OR
+                                (IndentReqHeader."Shortcut Dimension 3 Code" <> "Indent Header"."Shortcut Dimension 3 Code") OR (IndentReqHeader."Shortcut Dimension 9 Code" <> "Indent Header"."Shortcut Dimension 9 Code") then
+                                Error(Text001, "Indent Header"."Shortcut Dimension 1 Code", "Indent Header"."Shortcut Dimension 2 Code", "Indent Header"."Shortcut Dimension 9 Code", "Indent Header"."Shortcut Dimension 3 Code");
+                        end;
+                        //B2BVCOn13Jun2024 <<
                         IndentRequisitions.INIT;
                         IndentRequisitions."Document No." := IndentReqHeader."No.";
                         IndentRequisitions."Line No." := TempLineNo;
@@ -110,7 +116,13 @@ report 50001 "Indent Requestion Lines"
                             IndentReqHeaderGRec.Validate("Shortcut Dimension 3 Code", "Shortcut Dimension 3 Code"); //B2BVCOn02April2024
                             IndentReqHeaderGRec."programme Name" := "Indent Header"."programme Name";//B2BSSD20MAR2023
                             IndentReqHeaderGRec.Purpose := "Indent Header".Purpose;//B2BSSD21MAR2023
-                            IndentReqHeaderGRec."Indent No." := IndentRequisitions."Indent No.";
+                            //B2BVCOn13Jun2024 >>
+                            if IndentReqHeaderGRec."Indent No." <> '' then begin
+                                IndentNo := IndentReqHeaderGRec."Indent No.";
+                                IndentNo := IndentNo + '|' + IndentRequisitions."Indent No.";
+                                IndentReqHeaderGRec."Indent No." := IndentNo;
+                            end else      //B2BVCOn13Jun2024 <<
+                                IndentReqHeaderGRec."Indent No." := IndentRequisitions."Indent No.";
                             IndentReqHeaderGRec.Modify();  //B2BPAV
                         end;
                     end;
@@ -166,6 +178,8 @@ report 50001 "Indent Requestion Lines"
         ResponsibilityCenter: Code[20];
         Count1: Integer;
         ItemVendorGvar: Record 99;
+        IndentNo: Text;
+        Text001: Label 'Dimensions should be same. Channel Code-%1, Dept Code-%2, Branch Code-%3, Project Code-%4.';
 
     procedure GetValue(var HeaderNo: Code[20]; var RespCenter: Code[20]);
     begin

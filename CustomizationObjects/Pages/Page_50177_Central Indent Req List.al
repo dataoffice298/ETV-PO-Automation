@@ -4,7 +4,7 @@ page 50177 "Centrak Indent Req List"
     CardPageID = "Indent Requisition Document";
     PageType = List;
     SourceTable = "Indent Req Header";
-    SourceTableView = sorting("Document Date") order(descending) where("Resposibility Center" = const('CENTRL REQ'), Status = const(Release));
+    SourceTableView = sorting("Last Modified Date") order(descending) where("Resposibility Center" = const('CENTRL REQ'), Status = const(Release), "Req Status" = filter(<> Completed));
     UsageCategory = Lists;
     ApplicationArea = all;
     Editable = false;

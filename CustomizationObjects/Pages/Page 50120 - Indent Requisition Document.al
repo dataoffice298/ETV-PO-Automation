@@ -92,12 +92,12 @@ page 50120 "Indent Requisition Document"
                     ApplicationArea = All;
                     Caption = 'Purpose';
                 }
-                 field("Req Status"; Rec."Req Status")
+                field("Req Status"; Rec."Req Status")
                 {
                     ApplicationArea = All;
                     Editable = false;
                     StyleExpr = StyleTxt;
-                } 
+                }
             }
             part(Indentrequisations; 50119)
             {
@@ -912,6 +912,7 @@ page 50120 "Indent Requisition Document"
                 PurchLine.Reset();
                 PurchLine.SetRange("Indent Req No", IndentReq."Document No.");
                 PurchLine.SetRange("Indent Req Line No", IndentReq."Line No.");
+                PurchLine.SetRange(CancelOrder, false);
                 if PurchLine.FindSet() then begin
                     repeat
                         PurchOrderCount += 1;

@@ -139,7 +139,7 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
             Caption = 'PO Narration';
             DataClassification = CustomerContent;
         }
-        field(50121; "Vendor Quotation No."; Code[50])
+        field(50121; "Vendor Quotation No."; Code[250])
         {
             DataClassification = CustomerContent;
         }

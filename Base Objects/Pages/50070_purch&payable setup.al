@@ -116,8 +116,19 @@ pageextension 50070 MyExtension1 extends "Purchases & Payables Setup"
                     ApplicationArea = All;
                 }
             }
+
         }
         //B2BMSOn13Sep2022<<
+        addafter(Weightages)
+        {
+            group("Enquiry Note")
+            {
+                field(Note; Rec.Note)
+                {
+                    ApplicationArea = All;
+                }
+            }
+        }
 
     }
 

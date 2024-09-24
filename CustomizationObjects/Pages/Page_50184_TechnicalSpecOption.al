@@ -22,6 +22,10 @@ page 50184 TechnicalSpecificationOpList
                     ApplicationArea = All;
                     Caption = 'Description';
                 }
+                field(Type; Rec.Type)
+                {
+                    ApplicationArea = All;
+                }
             }
         }
     }

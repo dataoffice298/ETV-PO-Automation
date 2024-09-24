@@ -20,7 +20,7 @@ table 50224 "PO Terms And Conditions"
         field(4; LineType; Code[50])
         {
             //B2BSSD13MAR2023<<
-            TableRelation = TechnicalSpecOption;
+            TableRelation = TechnicalSpecOption where(Type = filter("Terms & Conditions"));
             Caption = 'LineType';
             trigger OnValidate()
             var

@@ -21,6 +21,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             field("Spec Id"; rec."Spec Id")
             {
                 ApplicationArea = all;
+                Editable = FieldEditableVar1; //B2BVCOn07Aug2024
                 trigger OnValidate()
                 var
                     myInt: Integer;
@@ -92,6 +93,49 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 ApplicationArea = All;
             }
         }
+        //B2BVCOn07Aug2024 >>
+        modify(Type)
+        {
+            Editable = FieldEditableVar1;
+        }
+        modify("No.")
+        {
+            Editable = FieldEditableVar1;
+        }
+        modify(Description)
+        {
+            Editable = FieldEditableVar1;
+        }
+        modify(Quantity)
+        {
+            Editable = FieldEditableVar1;
+        }
+        modify("Unit of Measure Code")
+        {
+            Editable = FieldEditableVar1;
+        }
+        modify("GST Credit")
+        {
+            Editable = FieldEditableVar1;
+        }
+        modify("Location Code")
+        {
+            Editable = FieldEditableVar1;
+        }
+        modify("Qty. to Invoice")
+        {
+            Editable = FieldEditableVar1;
+        }
+        modify("Shortcut Dimension 1 Code")
+        {
+            Editable = FieldEditableVar1;
+        }
+        modify("Shortcut Dimension 2 Code")
+        {
+            Editable = FieldEditableVar1;
+        }
+        //B2BVCOn07Aug2024 <<
+
 
 
         addbefore("Shortcut Dimension 1 Code")
@@ -158,6 +202,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             {
                 ApplicationArea = All;
                 Caption = 'Project Code';
+                Editable = FieldEditableVar1; //B2BVCOn07Aug2024
                 //Visible = false; //B2BKM25APR2024
             }
         }
@@ -169,6 +214,10 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 Caption = 'Gen. Prod. Posting Group';
             }
         }
+        /*  modify(Control1)
+         {
+             Editable = FieldEditableVar; //B2BVCOn07Aug2024
+         } */
 
         //B2BSSD24FEB2023<<
         addafter(warranty)
@@ -192,6 +241,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")
             {
                 ApplicationArea = All;
+                Editable = FieldEditableVar1; //B2BVCOn07Aug2024
             }
         }
         //B2BSSD14MAR2023<<
@@ -215,6 +265,14 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 Caption = 'Line Discount %';
             }
         }
+        modify("Direct Unit Cost")
+        {
+            Editable = FieldEditableVar1; //B2BVCOn07Aug2024
+        }
+        modify("Variant Code")
+        {
+            Editable = FieldEditable1; //B2BVCOn07Aug2024
+        }
         //B2BSSD14MAR2023>>
         addafter("Quantity Received")//B2BSSD15MAY2023
         {
@@ -222,10 +280,12 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             {
                 ApplicationArea = All;
                 caption = 'Qty to Inward';
+                Editable = FieldEditableVar1; //B2BVCOn07Aug2024
             }
             field("Qty. to Accept B2B"; Rec."Qty. to Accept B2B")
             {
                 ApplicationArea = All;
+                Editable = FieldEditableVar1; //B2BVCOn07Aug2024
                 trigger OnValidate()
                 var
                     myInt: Integer;
@@ -285,6 +345,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             field("Depreciation Book Code"; Rec."Depreciation Book Code")
             {
                 ApplicationArea = All;
+                Editable = FieldEditableVar1; //B2BVCOn07Aug2024
             }
             field("Posted Gate Entry No."; Rec."Posted Gate Entry No.")
             {
@@ -333,15 +394,18 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         modify("GST Group Code")
         {
             ShowMandatory = true;
+            Editable = FieldEditableVar1; //B2BVCOn07Aug2024
         }
         modify("HSN/SAC Code")
         {
             ShowMandatory = true;
+            Editable = FieldEditableVar1; //B2BVCOn07Aug2024
         }
         //B2BSCM11SEP2023<<
 
         modify("Qty. to Receive")
         {
+            Editable = FieldEditableVar1; //B2BVCOn07Aug2024
             trigger OnBeforeValidate()
             begin
                 if PurchHeader.Get(Rec."Document Type", Rec."Document No.") then begin
@@ -355,6 +419,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         {
             Visible = false;
         }
+
         /*  modify(Type)
          {
              trigger OnAfterValidate()
@@ -889,6 +954,32 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         }
     }
 
+    trigger OnAfterGetRecord()
+    begin
+        //B2BVCOn07Aug2024 >>
+        if PurchHeaderRec.Get(Rec."Document Type"::Order, Rec."Document No.") then begin
+            if PurchHeaderRec.Status = PurchHeaderRec.Status::Open then
+                FieldEditable1 := true
+            else
+                FieldEditable1 := false;
+            if PurchHeaderRec."Cancelled Order" then
+                FieldEditableVar := false
+            else
+                FieldEditableVar := true;
+        end;
+        //B2BVCOn07Aug2024 <<
+    end;
+
+    trigger OnAfterGetCurrRecord()
+    begin
+        //B2BVCOn07Aug2024 >>
+        if Rec.CancelOrder then
+            FieldEditableVar1 := false
+        else
+            FieldEditableVar1 := true;
+        //B2BVCOn07Aug2024 <<
+    end;
+
     procedure CreateGateEntries(EntryType: Option Inward,Outward; DocType: Option RGP,NRGP)
     var
         GateEntryHeader: Record "Gate Entry Header_B2B";
@@ -1211,6 +1302,10 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         UserSetupGRec: Record "User Setup";
         FieldEditable: Boolean;
         IndentReqLine: Record "Indent Requisitions";
+        PurchHeaderRec: Record "Purchase Header";
+        FieldEditable1: Boolean;
+        FieldEditableVar: Boolean;
+        FieldEditableVar1: Boolean;
 
     //B2BSSD07Feb2023 Import Start >>
     local procedure FixedAssetsReadExcelSheet()
@@ -1439,20 +1534,21 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         if TempExcelBuffer.FindLast() then begin
             MaxRow := TempExcelBuffer."Row No.";
         end;
-        CurrPage.SetSelectionFilter(PurchLine);
+        PurchLine.Reset();
+        PurchLine.SetRange("Document No.", Rec."Document No.");
         if PurchLine.Find('-') then
             repeat
                 Clear(LineNo);
                 CWIPDetails.Reset();
                 CWIPDetails.SetRange("Document No.", PurchLine."Document No.");
                 CWIPDetails.SetRange("Document Line No.", PurchLine."Line No.");
-                if CWIPDetails.FindFirst() then
+                if CWIPDetails.FindLast() then
                     LineNo := CWIPDetails."Line No.";
                 for RowNo := 2 to MaxRow do begin
                     Evaluate(DocNo, GetCellValue(RowNo, 1));
                     Evaluate(DocLineNo, GetCellValue(RowNo, 2));
-                    LineNo := LineNo + 10000;
                     if (PurchLine."Document No." = DocNo) And (PurchLine."Line No." = DocLineNo) then begin
+                        LineNo := LineNo + 10000;
                         CWIPDetails.Init();
                         CWIPDetails."Document No." := PurchLine."Document No.";
                         CWIPDetails."Document Line No." := PurchLine."Line No.";

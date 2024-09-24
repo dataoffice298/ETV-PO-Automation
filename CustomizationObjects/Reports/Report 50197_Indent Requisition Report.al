@@ -60,7 +60,7 @@ report 50197 "Indent Requisition Report"
             begin
                 Clear(LastApprovalDateTime);
                 ApprovalEntry.Reset();
-                ApprovalEntry.SetRange("Table ID", 50209);
+                ApprovalEntry.SetRange("Table ID", Database::"Indent Req Header");
                 ApprovalEntry.SetRange("Document No.", IndentReqHeader."No.");
                 ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
                 if ApprovalEntry.FindLast() then begin

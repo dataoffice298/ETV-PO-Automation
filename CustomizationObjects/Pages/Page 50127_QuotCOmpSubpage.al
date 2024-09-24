@@ -437,6 +437,10 @@ page 50127 QuotationComparSubForm
                     Editable = false;
                     ApplicationArea = all;
                 }
+                field("Model No."; Rec."Model No.") //B2BVCOn23Aug2024
+                {
+                    ApplicationArea = All;
+                }
 
                 field("Carry Out Action"; Rec."Carry Out Action")
                 {
@@ -538,12 +542,7 @@ page 50127 QuotationComparSubForm
                     Image = Import;
                     Caption = 'Specification';
                     RunObject = page TechnicalSpecifications;
-                    RunPageLink = "Document No." = field("Indent No."), "Line No." = field("Indent Line No.");
-                    trigger OnAction()
-                    var
-                    begin
-
-                    end;
+                    RunPageLink = "Document No." = field("Indent No."), "Item No." = field("Item No."), "Indent Line No." = field("Indent Line No.");
                 }
                 //B2BSSD15FEB2023<<
                 action(Quotation)

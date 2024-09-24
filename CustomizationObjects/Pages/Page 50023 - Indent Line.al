@@ -379,7 +379,7 @@ page 50023 "Indent Line"
                         TechnicalspecRec.Reset();
                         TechnicalspecRec.SetRange("Item No.", Rec."No.");
                         TechnicalspecRec.SetRange("Document No.", Rec."Document No.");
-                        //TechnicalspecRec.SetRange("Line No.", Rec."Line No."); //B2BVCOn13Jun2024
+                        TechnicalspecRec.SetRange("Indent Line No.", Rec."Line No."); //B2BVCOn13Jun2024
                         TechnicalSpec.SetTableView(TechnicalspecRec);
                         TechnicalSpec.Run();
                     end;
@@ -765,6 +765,7 @@ page 50023 "Indent Line"
             TechnicalSpec."Document No." := Rec."Document No.";
             TechnicalSpec."Document Type" := TechnicalSpec."Document Type"::Indent;
             TechnicalSpec."Item No." := Rec."No.";
+            TechnicalSpec."Indent Line No." := Rec."Line No."; //B2BVCOn07Aug2024
             TechnicalSpec."Line No." := LineNo;
             TechnicalSpec."S.No." := SNo;
             Evaluate(TechnicalSpec."Product Name", GetCellValue(RowNo, 1));

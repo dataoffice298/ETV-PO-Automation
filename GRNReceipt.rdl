@@ -1283,7 +1283,7 @@
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=sum(Fields!NetTotal.Value)</Value>
+                                      <Value>=Last(Fields!TotalAmount.Value)</Value>
                                       <Style>
                                         <FontSize>8pt</FontSize>
                                         <Format>0.00;(0.00)</Format>
@@ -1317,7 +1317,7 @@
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Fields!NumberText1.Value</Value>
+                                      <Value>=Last(Fields!NumberText1.Value)</Value>
                                       <Style>
                                         <FontSize>8pt</FontSize>
                                         <FontWeight>Bold</FontWeight>
@@ -1331,9 +1331,9 @@
                               </Paragraphs>
                               <rd:DefaultName>RupeesCapLbl</rd:DefaultName>
                               <Top>12.35287cm</Top>
-                              <Left>5.9049cm</Left>
+                              <Left>2.11217cm</Left>
                               <Height>0.6cm</Height>
-                              <Width>13.75234cm</Width>
+                              <Width>23.53456cm</Width>
                               <ZIndex>7</ZIndex>
                               <Style>
                                 <Border>
@@ -3018,6 +3018,12 @@ End Function
         </Field>
         <Field Name="NetTotalFormat">
           <DataField>NetTotalFormat</DataField>
+        </Field>
+        <Field Name="TotalAmount">
+          <DataField>TotalAmount</DataField>
+        </Field>
+        <Field Name="TotalAmountFormat">
+          <DataField>TotalAmountFormat</DataField>
         </Field>
         <Field Name="NumberText1">
           <DataField>NumberText1</DataField>

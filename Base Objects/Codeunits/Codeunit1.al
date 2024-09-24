@@ -841,7 +841,7 @@ codeunit 50016 "MyBaseSubscr"
         ApprovalEntry: Record "Approval Entry";
     begin
         ApprovalEntry.Reset();
-        ApprovalEntry.SetRange("Table ID", 38);
+        ApprovalEntry.SetRange("Table ID", Database::"Purchase Header");
         ApprovalEntry.SetRange("Document Type", PurchaseHeader."Document Type");
         ApprovalEntry.SetRange("Document No.", PurchaseHeader."No.");
         ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
@@ -1082,6 +1082,27 @@ codeunit 50016 "MyBaseSubscr"
             IndentReqHead.Modify();
         end;
     end;
+
+    //>>B2BSpon16Aug2024>> savarappa
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Purchase Document", 'OnAfterReleasePurchaseDoc', '', false, false)]
+    local procedure OnAfterReleasePurchaseDoc1(var PurchaseHeader: Record "Purchase Header"; PreviewMode: Boolean)
+    var
+        ApprovalEntry: Record "Approval Entry";
+    begin
+        if PurchaseHeader.Status = PurchaseHeader.Status::Released then begin
+            ApprovalEntry.Reset();
+            ApprovalEntry.SetRange("Table ID", Database::"Purchase Header");
+            ApprovalEntry.SetRange("Document Type", PurchaseHeader."Document Type");
+            ApprovalEntry.SetRange("Document No.", PurchaseHeader."No.");
+            ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
+            if ApprovalEntry.FindLast() then begin
+                PurchaseHeader."Draft Date" := DT2Date(ApprovalEntry."Last Date-Time Modified");
+                PurchaseHeader.Modify();
+            end;
+
+        end;
+    end;
+    //<<B2BSpon16Aug2024<<savarappa
 }
 
 

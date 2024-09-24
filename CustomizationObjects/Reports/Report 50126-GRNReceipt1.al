@@ -1,4 +1,4 @@
-report 50200 "GRN RECEIPT1"
+report 50126 "GRN RECEIPT1"
 {
     Caption = 'GRN RECEIPT1';
     UsageCategory = ReportsAndAnalysis;

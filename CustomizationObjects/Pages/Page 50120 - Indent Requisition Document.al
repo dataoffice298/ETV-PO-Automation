@@ -624,8 +624,23 @@ page 50120 "Indent Requisition Document"
                     end;
                 end;
             }
+            action(Print)
+            {
+                Image = Print;
+                ApplicationArea = all;
+                Caption = 'Print';
+                trigger OnAction()
+                var
+                    IndentReqHead: Record "Indent Req Header";
+                begin
+                    IndentReqHead.Reset();
+                    IndentReqHead.SetRange("No.", Rec."No.");
+                    Report.RunModal(Report::"Indent Req Detailed Report", true, false, IndentReqHead);
+                end;
+            }
 
         }
+
         area(navigation)
         {
             group(Orders)
@@ -727,6 +742,7 @@ page 50120 "Indent Requisition Document"
                 }
             }
         }
+
     }
 
     var

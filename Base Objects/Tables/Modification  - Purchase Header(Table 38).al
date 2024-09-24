@@ -134,12 +134,12 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
             OptionMembers = ,Open,"Pending Approval",Released;
             OptionCaption = ' ,Open,Pending Approval,Released';
         }
-        field(50120; "PO Narration"; Code[50]) //B2BAJ02012024
+        field(50120; "PO Narration"; Code[150]) //B2BAJ02012024
         {
             Caption = 'PO Narration';
             DataClassification = CustomerContent;
         }
-        field(50121; "Vendor Quotation No."; Code[50])
+        field(50121; "Vendor Quotation No."; Code[250])
         {
             DataClassification = CustomerContent;
         }
@@ -184,6 +184,26 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
                 if not UserSetup."Exchange Rate" then
                     Error(Text001);
             end;
+        }
+        field(50129; BCD; Decimal)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50130; SWC; Decimal)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50131; "BCD Amount"; Decimal)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50132; "SWC Amount"; Decimal)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50133; "Draft Date"; Date)//B2BSPon16Aug2023//savarappa
+        {
+            DataClassification = ToBeClassified;
         }
     }
 

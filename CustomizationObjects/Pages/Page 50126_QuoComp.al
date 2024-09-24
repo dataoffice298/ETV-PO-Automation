@@ -141,6 +141,10 @@ page 50126 "Quotation Comparision Doc"
                     ApplicationArea = All;
                     Caption = 'Programme Name';
                 }
+                field("Quot Comparitive"; Rec."Quot Comparitive")
+                {
+                    ApplicationArea = All;
+                }
             }
 
 
@@ -323,6 +327,25 @@ page 50126 "Quotation Comparision Doc"
             }
             //B2BMSOn10Nov2022<<
             action("Quot Comparison Statement")
+            {
+                Image = Print;
+                Promoted = true;
+                PromotedCategory = Report;
+                ApplicationArea = all;
+                trigger OnAction()
+                var
+                    //QuoComp: Report "Quot Comparision Statement";
+                    QuoComp: Report ComparitiveStatement;
+                    QuotCompHdr: Record QuotCompHdr;
+                begin
+
+                    QuotCompHdr.Reset();
+                    QuotCompHdr.SetRange("No.", Rec."No.");
+                    Report.RunModal(Report::ComparitiveStatement, true, false, QuotCompHdr);
+
+                end;
+            }
+            action("Comparison Statement")
             {
                 Image = Print;
                 Promoted = true;

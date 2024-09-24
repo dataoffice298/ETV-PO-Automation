@@ -20,6 +20,12 @@ table 50226 TechnicalSpecOption
         {
             DataClassification = CustomerContent;
         }
+        field(50004; Type; Option) //B2BVCOn26Aug2024
+        {
+            DataClassification = CustomerContent;
+            OptionCaption = ' ,Terms & Conditions,Specifications';
+            OptionMembers = " ","Terms & Conditions",Specifications;
+        }
     }
 
     keys

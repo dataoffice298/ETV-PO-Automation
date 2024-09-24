@@ -54,6 +54,17 @@ pageextension 50114 PurchQuoteSubformExtB2B extends "Purchase Quote Subform"
                 ApplicationArea = All;
             }
         }
+        addbefore("GST Group Code")
+        {
+            field("Other Charges"; Rec."Other Charges") //B2BVCOn08Aug2024
+            {
+                ApplicationArea = All;
+            }
+            field(Model;Rec.Model) //B2BVCOn08Aug2024
+            {
+                ApplicationArea = All;
+            }
+        }
 
     }
     //B2BSSD07Feb2023<<
@@ -136,6 +147,14 @@ pageextension 50114 PurchQuoteSubformExtB2B extends "Purchase Quote Subform"
                     end else
                         Error(ErrorMsg, Rec."No.", Rec."Line No.");
                 end;
+            }
+            action(QuoteSpecifications) //B2BVCOn07Aug2024
+            {
+                ApplicationArea = All;
+                Caption = 'Quote Specifications';
+                Image = Import;
+                RunObject = page QuoteSpecifications;
+                RunPageLink = "Document No." = field("Document No."), "Doc Line No." = field("Line No."), "Item No." = field("No.");
             }
         }
         //B2BSSD17FEB2023>>

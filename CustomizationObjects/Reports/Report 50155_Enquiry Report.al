@@ -153,7 +153,7 @@ report 50155 "Enquiry Report"
                     PhoneNo := PurchaseCode."Phone No.";
                 end;
                 ApprovalEntries.Reset();
-                ApprovalEntries.SetRange("Table ID", 38);
+                ApprovalEntries.SetRange("Table ID", Database::"Purchase Header");
                 ApprovalEntries.SetRange("Document No.", "Purchase Header"."No.");
                 ApprovalEntries.SetRange(Status, ApprovalEntries.Status::Approved);
                 if ApprovalEntries.findlast() then begin

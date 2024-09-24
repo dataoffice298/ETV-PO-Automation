@@ -52,7 +52,7 @@ reportextension 50001 PostedVoucherNew extends "Posted Voucher New1"
     }
 
     var
-        PONarration: Code[50];
+        PONarration: Code[150];
         InvoiceNum: Text;
         purInvheader: Record "Purch. Inv. Header";
         PurRcptheader: Record "Purch. Rcpt. Header";

@@ -53,14 +53,10 @@ report 50001 "Indent Requestion Lines"
                     END
                     ELSE BEGIN
                         //B2BVCOn13Jun2024 >>
-                        if IndentReqHeader."Shortcut Dimension 1 Code" <> '' then begin
-                            IndentReqHeader.Reset();
-                            IndentReqHeader.SetRange("Shortcut Dimension 1 Code", "Indent Header"."Shortcut Dimension 1 Code");
-                            IndentReqHeader.SetRange("Shortcut Dimension 2 Code", "Indent Header"."Shortcut Dimension 2 Code");
-                            IndentReqHeader.SetRange("Shortcut Dimension 3 Code", "Indent Header"."Shortcut Dimension 3 Code");
-                            IndentReqHeader.SetRange("Shortcut Dimension 9 Code", "Indent Header"."Shortcut Dimension 9 Code");
-                            if not IndentReqHeader.FindFirst() then
-                                Error(Text001, "Indent Header"."Shortcut Dimension 1 Code", IndentReqHeader."Shortcut Dimension 2 Code", "Indent Header"."Shortcut Dimension 9 Code", "Indent Header"."Shortcut Dimension 3 Code");
+                        if (IndentReqHeader."Shortcut Dimension 1 Code" <> '') then begin
+                            if (IndentReqHeader."Shortcut Dimension 1 Code" <> "Indent Header"."Shortcut Dimension 1 Code") OR (IndentReqHeader."Shortcut Dimension 2 Code" <> "Indent Header"."Shortcut Dimension 2 Code") OR
+                                (IndentReqHeader."Shortcut Dimension 3 Code" <> "Indent Header"."Shortcut Dimension 3 Code") OR (IndentReqHeader."Shortcut Dimension 9 Code" <> "Indent Header"."Shortcut Dimension 9 Code") then
+                                Error(Text001, "Indent Header"."Shortcut Dimension 1 Code", "Indent Header"."Shortcut Dimension 2 Code", "Indent Header"."Shortcut Dimension 9 Code", "Indent Header"."Shortcut Dimension 3 Code");
                         end;
                         //B2BVCOn13Jun2024 <<
                         IndentRequisitions.INIT;

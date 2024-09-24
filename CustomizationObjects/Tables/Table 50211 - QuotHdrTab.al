@@ -161,6 +161,10 @@ table 50211 QuotCompHdr
             Blocked = CONST(false));
             DataClassification = CustomerContent;
         }
+        field(50009; "Quot Comparitive"; Code[250]) //B2BVCOn23Aug2024
+        {
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {

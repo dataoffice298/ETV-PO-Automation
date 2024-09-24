@@ -294,7 +294,7 @@ page 50119 "Indent Requisitions SubForm"
                 Image = Import;
                 Caption = 'Specification';
                 RunObject = page TechnicalSpecifications;
-                RunPageLink = "Document No." = field("Indent No."), "Line No." = field("Indent Line No."), "Item No." = field("Item No.");
+                RunPageLink = "Document No." = field("Indent No."), "Item No." = field("Item No."), "Indent Line No." = field("Indent Line No.");
                 trigger OnAction()
                 var
                 begin

@@ -1,4 +1,4 @@
-report 50201 InwardReceipt1
+report 50127 InwardReceipt1
 {
     UsageCategory = ReportsAndAnalysis;
     ApplicationArea = All;
@@ -112,7 +112,7 @@ report 50201 InwardReceipt1
             { }
             column(RamojiFCCapLbl; RamojiFCCapLbl)
             { }
-            
+
             dataitem("Indent Requisitions"; "Indent Requisitions")
             {
                 DataItemLink = "Indent No." = field("No.");
@@ -121,52 +121,52 @@ report 50201 InwardReceipt1
                 dataitem("Purch. Rcpt. Header"; "Purch. Rcpt. Header")
                 {
                     DataItemLink = "Indent Req No" = field("Document No.");
-                    column(No_;"No.")
+                    column(No_; "No.")
                     { }
-                    column(Order_No_;"Order No.")
+                    column(Order_No_; "Order No.")
                     { }
-                    column(Order_Date;"Order Date")
+                    column(Order_Date; "Order Date")
                     { }
-                    column(Buy_from_Vendor_No_;"Buy-from Vendor No.")
+                    column(Buy_from_Vendor_No_; "Buy-from Vendor No.")
                     { }
-                    column(Location_Code;"Location Code")
+                    column(Location_Code; "Location Code")
                     { }
-                    column(Purpose;Purpose)
+                    column(Purpose; Purpose)
                     { }
-                    column(Indent_Req_No;"Indent Req No")
+                    column(Indent_Req_No; "Indent Req No")
                     { }
-                    column(Vendor_Invoice_No_;"Vendor Invoice No.")
+                    column(Vendor_Invoice_No_; "Vendor Invoice No.")
                     { }
-                    column(Vendor_Invoice_Date;"Vendor Invoice Date")
+                    column(Vendor_Invoice_Date; "Vendor Invoice Date")
                     { }
-                    column(Vehicle_No_;"Vehicle No.")
+                    column(Vehicle_No_; "Vehicle No.")
                     { }
-                    column(Posting_Date;"Posting Date")
+                    column(Posting_Date; "Posting Date")
                     { }
                     dataitem("Purch. Rcpt. Line"; "Purch. Rcpt. Line")
                     {
                         DataItemLink = "Document No." = field("No.");
                         column(Document_No_; "Document No.")
                         { }
-                        column(Line_No_;"Line No.")
+                        column(Line_No_; "Line No.")
                         { }
-                        column(Quantity;Quantity)
+                        column(Quantity; Quantity)
                         { }
-                        column(Unit_of_Measure;"Unit of Measure")
+                        column(Unit_of_Measure; "Unit of Measure")
                         { }
-                        column(Direct_Unit_Cost;"Direct Unit Cost")
+                        column(Direct_Unit_Cost; "Direct Unit Cost")
                         { }
-                        column(Unit_Cost;"Unit Cost")
+                        column(Unit_Cost; "Unit Cost")
                         { }
-                        column(Description;Description)
+                        column(Description; Description)
                         { }
-                        column(VAT__;"VAT %")
+                        column(VAT__; "VAT %")
                         { }
-                        column(Line_Discount__;"Line Discount %")
+                        column(Line_Discount__; "Line Discount %")
                         { }
-                        column(Make_B2B;Make_B2B)
+                        column(Make_B2B; Make_B2B)
                         { }
-                        
+
                     }
                 }
             }

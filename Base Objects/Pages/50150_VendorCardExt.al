@@ -11,6 +11,7 @@ pageextension 50150 "Vendor CardExt" extends "Vendor Card"
                 UpdatePropagation = Both;
             }
         }
+        moveafter("Address 2"; "Address 3")//B2BSP16Aug2024>>//savarappa
     }
 
     actions

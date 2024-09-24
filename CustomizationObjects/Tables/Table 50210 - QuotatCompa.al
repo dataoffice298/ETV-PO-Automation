@@ -510,7 +510,7 @@ table 50210 "Quotation Comparison Test"
             Caption = 'Variant Description';
             DataClassification = CustomerContent;
         }
-        field(60037; "Vendor Quotation No."; Code[50]) //B2BVCOn11Mar2024
+        field(60037; "Vendor Quotation No."; Code[250]) //B2BVCOn11Mar2024
         {
             Caption = 'Vendor Quotation No.';
             DataClassification = CustomerContent;
@@ -525,6 +525,10 @@ table 50210 "Quotation Comparison Test"
             Caption = 'Shortcut Dimension 3 Code';
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(3),
             Blocked = CONST(false));
+            DataClassification = CustomerContent;
+        }
+        field(60040; "Model No."; Code[250]) //B2BVCOn23Aug2024
+        {
             DataClassification = CustomerContent;
         }
     }

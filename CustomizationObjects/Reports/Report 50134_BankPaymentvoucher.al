@@ -527,7 +527,7 @@ report 50134 "Bank Payment voucher New"
         GSTAmountCaptionLbl: Label 'GST Amount (B)';
         GrossAmountCaptionLbl: LAbel 'Gross Amount (C=A-B)';
         TDSAmountCaptionLbl: Label 'TDS Amount (D)';
-        NetAmountCaptionLbl: Label 'Net Amount (E=C_D)';
+        NetAmountCaptionLbl: Label 'Net Amount (E=C-D)';
         BankPaymentAmountCaptionLbl: Label 'Bank Payment Amount';
         BankPAymentDateCaptionLbl: Label 'Bank Payment Date';
         TransIdCaptionLbl: Label 'Trans Id';

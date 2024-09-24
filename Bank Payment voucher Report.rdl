@@ -19,7 +19,7 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>31.1158cm</Width>
+                  <Width>31.15495cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -698,16 +698,16 @@ First(Fields!PymtDiscTitle.Value)+ Chr(177)+
                                     <Width>0.77481in</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>1.51316in</Width>
+                                    <Width>1.44034in</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>0.85245in</Width>
+                                    <Width>0.81415in</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>0.44059in</Width>
+                                    <Width>0.60542in</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>0.80411in</Width>
+                                    <Width>0.76581in</Width>
                                   </TablixColumn>
                                   <TablixColumn>
                                     <Width>1.10431in</Width>
@@ -737,7 +737,7 @@ First(Fields!PymtDiscTitle.Value)+ Chr(177)+
                                     <Width>0.38036in</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>0.75789in</Width>
+                                    <Width>0.74248in</Width>
                                   </TablixColumn>
                                 </TablixColumns>
                                 <TablixRows>
@@ -4993,14 +4993,14 @@ First(Fields!PymtDiscTitle.Value)+ Chr(177)+
               <BreakLocation>End</BreakLocation>
             </PageBreak>
             <Height>5.98255cm</Height>
-            <Width>31.1158cm</Width>
+            <Width>31.15495cm</Width>
             <Style />
           </Tablix>
         </ReportItems>
         <Height>5.98255cm</Height>
         <Style />
       </Body>
-      <Width>31.1158cm</Width>
+      <Width>31.15495cm</Width>
       <Page>
         <PageHeader>
           <Height>7.40074cm</Height>

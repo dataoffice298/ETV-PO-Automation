@@ -54,6 +54,17 @@ pageextension 50114 PurchQuoteSubformExtB2B extends "Purchase Quote Subform"
                 ApplicationArea = All;
             }
         }
+        addbefore("GST Group Code")
+        {
+            field("Other Charges"; Rec."Other Charges") //B2BVCOn08Aug2024
+            {
+                ApplicationArea = All;
+            }
+            field(Model; Rec.Model) //B2BVCOn08Aug2024
+            {
+                ApplicationArea = All;
+            }
+        }
 
     }
     //B2BSSD07Feb2023<<
@@ -104,6 +115,46 @@ pageextension 50114 PurchQuoteSubformExtB2B extends "Purchase Quote Subform"
                         DocumentAttachmentDetails.RunModal();
                     end;
                 end;
+            }
+            action("Create Variant Lines")
+            {
+                ApplicationArea = All;
+                Image = Line;
+                trigger OnAction()
+                var
+                    PurchLine: Record "Purchase Line";
+                    ItmeVariant: Record "Item Variant";
+                    LineNo: Integer;
+                    TextLbl: Label 'Variant Lines Inserted.';
+                    ErrorMsg: Label ' No Variants in Item No %1, Line No %2';
+                begin
+                    LineNo := 1000;
+                    ItmeVariant.Reset();
+                    ItmeVariant.SetRange("Item No.", Rec."No.");
+                    if ItmeVariant.FindSet() then begin
+                        repeat
+                            if ItmeVariant.Code <> Rec."Variant Code" then begin
+                                PurchLine.Init();
+                                PurchLine.TransferFields(Rec);
+                                PurchLine."Line No." := Rec."Line No." + LineNo;
+                                PurchLine."Variant Code" := ItmeVariant.Code;
+                                PurchLine."Variant Description" := ItmeVariant.Description;
+                                PurchLine.Insert(true);
+                                LineNo += 1000;
+                            end;
+                        until ItmeVariant.Next = 0;
+                        Message(TextLbl);
+                    end else
+                        Error(ErrorMsg, Rec."No.", Rec."Line No.");
+                end;
+            }
+            action(QuoteSpecifications) //B2BVCOn07Aug2024
+            {
+                ApplicationArea = All;
+                Caption = 'Quote Specifications';
+                Image = Import;
+                RunObject = page QuoteSpecifications;
+                RunPageLink = "Document No." = field("Document No."), "Doc Line No." = field("Line No."), "Item No." = field("No.");
             }
         }
         //B2BSSD17FEB2023>>

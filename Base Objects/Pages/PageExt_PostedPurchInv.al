@@ -82,5 +82,42 @@ pageextension 50079 postedPurchInvExt extends "Posted Purchase Invoice"
         }//B2BPROn19JAN2024>>>
         */
     }
+    actions
+    {
+        addafter(Vendor)
+        {
+            action("Self Invoice Report")
+            {
+                ApplicationArea = All;
+                Caption = 'Self Invoice Report';
+                Image = Report;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedOnly = true;
+                trigger OnAction()
+                var
+                    GSTLedgerEntry: Record "GST Ledger Entry";
+                    PurchInvHead: Record "Purch. Inv. Header";
+                    ErrorMsg: Label '%1 does not contains Reverse charge', Comment = '%1= No.';
+                begin
+                    GSTLedgerEntry.Reset();
+                    GSTLedgerEntry.SetRange("Document No.", Rec."No.");
+                    GSTLedgerEntry.SetRange("Document Type", GSTLedgerEntry."Document Type"::Invoice);
+                    GSTLedgerEntry.SetRange("Reverse Charge", true);
+                    if not GSTLedgerEntry.FindFirst() then begin
+                        Error(ErrorMsg, Rec."No.");
+                    end else begin
+                        PurchInvHead.Reset();
+                        PurchInvHead.SetRange("No.", Rec."No.");
+                        Report.RunModal(Report::"Self Invoice", true, false, PurchInvHead);
+                    end;
+
+
+                end;
+
+
+            }
+        }
+    }
 
 }

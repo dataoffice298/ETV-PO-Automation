@@ -71,12 +71,13 @@ codeunit 50016 "MyBaseSubscr"
         end;
     end;
 
-    /*[EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPurchRcptHeaderInsert', '', false, false)]
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPurchRcptHeaderInsert', '', false, false)]
     local procedure OnAfterPurchRcptHeaderInsert(var PurchRcptHeader: Record "Purch. Rcpt. Header"; var PurchaseHeader: Record "Purchase Header"; CommitIsSupressed: Boolean)
     var
         FromRecRef: RecordRef;
         ToRecRef: RecordRef;
         IsHandled: Boolean;
+        DocumentAttachmentMgmt: Codeunit "Document Attachment Mgmt";
     begin
         // Triggered when a posted purchase cr. memo / posted purchase invoice is created
         if PurchaseHeader.IsTemporary() then
@@ -90,8 +91,9 @@ codeunit 50016 "MyBaseSubscr"
         FromRecRef.GetTable(PurchaseHeader);
 
         if ToRecRef.Number > 0 then
-            CopyAttachmentsForPostedDocs(FromRecRef, ToRecRef, IsHandled);
-    end;*/
+            DocumentAttachmentMgmt.CopyAttachmentsForPostedDocs(FromRecRef, ToRecRef);
+        //CopyAttachmentsForPostedDocs(FromRecRef, ToRecRef, IsHandled);
+    end;
     //Invoice>>
     [EventSubscriber(ObjectType::Table, Database::"Document Attachment", 'OnAfterInitFieldsFromRecRef', '', false, false)]
     local procedure OnAfterInitFieldsFromRecInv(var DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef)
@@ -109,13 +111,13 @@ codeunit 50016 "MyBaseSubscr"
         end;
     end;
 
-    /*[EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPurchInvHeaderInsert', '', false, false)]
-    //local procedure OnAfterPurchRcptHeaderInsert(var PurchRcptHeader: Record "Purch. Rcpt. Header"; var PurchaseHeader: Record "Purchase Header"; CommitIsSupressed: Boolean)
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPurchInvHeaderInsert', '', false, false)]
     local procedure OnAfterPurchInvHeaderInsert(var PurchInvHeader: Record "Purch. Inv. Header"; var PurchHeader: Record "Purchase Header"; PreviewMode: Boolean)
     var
         FromRecRef: RecordRef;
         ToRecRef: RecordRef;
         IsHandled: Boolean;
+        DocumentAttachmentMgmt: Codeunit "Document Attachment Mgmt";
     begin
         // Triggered when a posted purchase cr. memo / posted purchase invoice is created
         if PurchInvHeader.IsTemporary() then
@@ -129,51 +131,66 @@ codeunit 50016 "MyBaseSubscr"
         FromRecRef.GetTable(PurchHeader);
 
         if ToRecRef.Number > 0 then
-            CopyAttachmentsForPostedDocs(FromRecRef, ToRecRef, IsHandled);
+            DocumentAttachmentMgmt.CopyAttachmentsForPostedDocs(FromRecRef, ToRecRef);
+        //CopyAttachmentsForPostedDocs(FromRecRef, ToRecRef, IsHandled);
     end;
     //invoice end<<
 
-    local procedure CopyAttachmentsForPostedDocs(var FromRecRef: RecordRef; var ToRecRef: RecordRef; var IsHandled: Boolean)
+    //B2BVCOn11Oct2024 >>
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Document Attachment Mgmt", 'OnBeforeDocAttachForPostedPurchaseDocs', '', false, false)]
+    local procedure OnBeforeDocAttachForPostedPurchaseDocs(var PurchaseHeader: Record "Purchase Header"; var PurchInvHeader: Record "Purch. Inv. Header"; var PurchCrMemoHdr: Record "Purch. Cr. Memo Hdr."; var IsHandled: Boolean)
     var
-        FromDocumentAttachment: Record "Document Attachment";
-        ToDocumentAttachment: Record "Document Attachment";
-        FromFieldRef: FieldRef;
-        ToFieldRef: FieldRef;
-        FromDocumentType: Option Quote,"Order",Invoice,"Credit Memo","Blanket Order","Return Order";
-        FromNo: Code[20];
-        ToNo: Code[20];
+        DocAttachment: Record "Document Attachment";
     begin
-        IsHandled := true;
+        DocAttachment.Reset;
+        DocAttachment.SetRange("Table ID", Database::"Purch. Inv. Header");
+        DocAttachment.SetRange("No.", PurchInvHeader."No.");
+        if DocAttachment.FindFirst() then
+            IsHandled := true;
+    end;
+    //B2BVCOn11Oct2024 <<
 
-        FromDocumentAttachment.SetRange("Table ID", FromRecRef.Number);
+    /* local procedure CopyAttachmentsForPostedDocs(var FromRecRef: RecordRef; var ToRecRef: RecordRef; var IsHandled: Boolean)
+     var
+         FromDocumentAttachment: Record "Document Attachment";
+         ToDocumentAttachment: Record "Document Attachment";
+         FromFieldRef: FieldRef;
+         ToFieldRef: FieldRef;
+         FromDocumentType: Option Quote,"Order",Invoice,"Credit Memo","Blanket Order","Return Order";
+         FromNo: Code[20];
+         ToNo: Code[20];
+     begin
+         IsHandled := true;
 
-        FromFieldRef := FromRecRef.Field(1);
-        FromDocumentType := FromFieldRef.Value();
-        FromDocumentAttachment.SetRange("Document Type", FromDocumentType);
+         FromDocumentAttachment.SetRange("Table ID", FromRecRef.Number);
 
-        FromFieldRef := FromRecRef.Field(3);
-        FromNo := FromFieldRef.Value();
-        FromDocumentAttachment.SetRange("No.", FromNo);
+         FromFieldRef := FromRecRef.Field(1);
+         FromDocumentType := FromFieldRef.Value();
+         FromDocumentAttachment.SetRange("Document Type", FromDocumentType);
 
-        // Find any attached docs for headers (sales / purch)
-        if FromDocumentAttachment.FindSet() then begin
-            repeat
-                Clear(ToDocumentAttachment);
-                ToDocumentAttachment.Init();
-                ToDocumentAttachment.TransferFields(FromDocumentAttachment);
-                ToDocumentAttachment.Validate("Table ID", ToRecRef.Number);
+         FromFieldRef := FromRecRef.Field(3);
+         FromNo := FromFieldRef.Value();
+         FromDocumentAttachment.SetRange("No.", FromNo);
 
-                ToFieldRef := ToRecRef.Field(3);
-                ToNo := ToFieldRef.Value();
-                ToDocumentAttachment.Validate("No.", ToNo);
-                ToDocumentAttachment.Validate("Attached Date", CurrentDateTime);
-                if IsNullGuid(ToDocumentAttachment."Attached By") then
-                    ToDocumentAttachment."Attached By" := UserSecurityId;
-                Clear(ToDocumentAttachment."Document Type");
-                ToDocumentAttachment.Insert;
-            until FromDocumentAttachment.Next() = 0;
-        end;
-    end;*/
+         // Find any attached docs for headers (sales / purch)
+         if FromDocumentAttachment.FindSet() then begin
+             repeat
+                 Clear(ToDocumentAttachment);
+                 ToDocumentAttachment.Init();
+                 ToDocumentAttachment.TransferFields(FromDocumentAttachment);
+                 ToDocumentAttachment.Validate("Table ID", ToRecRef.Number);
+
+                 ToFieldRef := ToRecRef.Field(3);
+                 ToNo := ToFieldRef.Value();
+                 ToDocumentAttachment.Validate("No.", ToNo);
+                 ToDocumentAttachment.Validate("Attached Date", CurrentDateTime);
+                 if IsNullGuid(ToDocumentAttachment."Attached By") then
+                     ToDocumentAttachment."Attached By" := UserSecurityId;
+                 Clear(ToDocumentAttachment."Document Type");
+                 ToDocumentAttachment.Insert;
+             until FromDocumentAttachment.Next() = 0;
+         end;
+     end; */
 
     //B2BMSOn06Oct2022>>
     [EventSubscriber(ObjectType::Page, Page::"Document Attachment Factbox", 'OnBeforeDrillDown', '', false, false)]
@@ -421,7 +438,7 @@ codeunit 50016 "MyBaseSubscr"
 
 
     //B2BSSD25Jan2023<<
-    [EventSubscriber(ObjectType::Table, database::"Purchase Header", 'OnAfterInsertEvent', '', false, false)]
+    // [EventSubscriber(ObjectType::Table, database::"Purchase Header", 'OnAfterInsertEvent', '', false, false)]
     local procedure InsertTermsConditions(var Rec: Record "Purchase Header")
     Var
         TermsAndConditions: Record "PO Terms And Conditions";
@@ -840,26 +857,28 @@ codeunit 50016 "MyBaseSubscr"
         Sub: Label 'Request for Purchase Order Approval';
         ApprovalEntry: Record "Approval Entry";
     begin
-        ApprovalEntry.Reset();
-        ApprovalEntry.SetRange("Table ID", Database::"Purchase Header");
-        ApprovalEntry.SetRange("Document Type", PurchaseHeader."Document Type");
-        ApprovalEntry.SetRange("Document No.", PurchaseHeader."No.");
-        ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
-        if ApprovalEntry.FindLast() then begin
-            UserSetup.Get(PurchaseHeader."User Id");
-            UserSetup.TestField("E-Mail");
-            Recipiants.Add(UserSetup."E-Mail");
-            Body += StrSubstNo(Text001, PurchaseHeader."No.", PurchaseHeader."Document Date");
-            EmailMessage.Create(Recipiants, Sub, '', true);
-            EmailMessage.AppendToBody('Dear Indenter,');
-            EmailMessage.AppendToBody('<BR></BR>');
-            EmailMessage.AppendToBody('<BR></BR>');
-            EmailMessage.AppendToBody(Body);
-            EmailMessage.AppendToBody('<BR></BR>');
-            EmailMessage.AppendToBody('<BR></BR>');
-            EmailMessage.AppendToBody('This is auto generated mail by system for information.');
-            Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
-            Message('Email Send Successfully');
+        if not PreviewMode then begin
+            ApprovalEntry.Reset();
+            ApprovalEntry.SetRange("Table ID", Database::"Purchase Header");
+            ApprovalEntry.SetRange("Document Type", PurchaseHeader."Document Type");
+            ApprovalEntry.SetRange("Document No.", PurchaseHeader."No.");
+            ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
+            if ApprovalEntry.FindLast() then begin
+                UserSetup.Get(PurchaseHeader."User Id");
+                UserSetup.TestField("E-Mail");
+                Recipiants.Add(UserSetup."E-Mail");
+                Body += StrSubstNo(Text001, PurchaseHeader."No.", PurchaseHeader."Document Date");
+                EmailMessage.Create(Recipiants, Sub, '', true);
+                EmailMessage.AppendToBody('Dear Indenter,');
+                EmailMessage.AppendToBody('<BR></BR>');
+                EmailMessage.AppendToBody('<BR></BR>');
+                EmailMessage.AppendToBody(Body);
+                EmailMessage.AppendToBody('<BR></BR>');
+                EmailMessage.AppendToBody('<BR></BR>');
+                EmailMessage.AppendToBody('This is auto generated mail by system for information.');
+                Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
+                Message('Email Send Successfully');
+            end;
         end;
     end;
 
@@ -1029,6 +1048,13 @@ codeunit 50016 "MyBaseSubscr"
         end;
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Enum Assignment Management", 'OnGetPurchApprovalDocumentType', '', false, false)]
+    local procedure OnGetPurchApprovalDocumentType(PurchDocumentType: Enum "Purchase Document Type"; var ApprovalDocumentType: Enum "Approval Document Type"; var IsHandled: Boolean)
+    begin
+        if PurchDocumentType = PurchDocumentType::Enquiry then
+            IsHandled := true;
+    end;
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Purchase Document", 'OnBeforeCheckPurchaseHeaderPendingApproval', '', false, false)]
     local procedure OnBeforeCheckPurchaseHeaderPendingApproval(var PurchaseHeader: Record "Purchase Header"; var IsHandled: Boolean)
     begin
@@ -1147,6 +1173,107 @@ codeunit 50016 "MyBaseSubscr"
         end;
     end;
     //<<B2BSpon16Aug2024<<savarappa
+    //B2BVCOn01Oct2024 >>
+    /*  [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnBeforePostPurchaseDoc', '', false, false)]
+     procedure OnBeforePostPurchaseDoc(var PurchaseHeader: Record "Purchase Header"; PreviewMode: Boolean; CommitIsSupressed: Boolean; var HideProgressWindow: Boolean; var ItemJnlPostLine: Codeunit "Item Jnl.-Post Line")
+     var
+         DocAttachment: Record "Document Attachment";
+     begin
+         DocAttachment.RESET;
+         DocAttachment.SETRANGE("No.", PurchaseHeader."No.");
+         DocAttachment.SetRange("Table ID", Database::"Purchase Header");
+         DocAttachment.SetRange("Document Type", DocAttachment."Document Type"::Order);
+         IF NOT DocAttachment.FINDFIRST THEN BEGIN
+             ERROR('Attachment missing.  Kindly attach the document to post the Purchase Order No. %1,', PurchaseHeader."No.");
+         END
+     end; */
+    //B2BVCOn01Oct2024 <<
+    //B2BSpon20Sep2024 savarappa>> 
+    [EventSubscriber(ObjectType::Table, Database::"Purchase Header", 'OnAfterGetReportSelectionsUsageFromDocumentType', '', false, false)]
+    local procedure OnAfterGetReportSelectionsUsageFromDocumentType(PurchaseHeader: Record "Purchase Header"; var ReportSelectionsUsage: Option; var DocTxt: Text[150])
+    var
+        ReportSelections: Record "Report Selections";
+    begin
+        case PurchaseHeader."Document Type" of
+            PurchaseHeader."Document Type"::Enquiry:
+                ReportSelectionsUsage := ReportSelections.Usage::"P.Enquiry";
+
+        end;
+
+    end;
+    //B2BSpon20Sep2024<<
+    //B2BSpon20Sep2024>>
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Report Distribution Management", 'OnAfterGetFullDocumentTypeText', '', false, false)]
+    local procedure OnAfterGetFullDocumentTypeText(DocumentVariant: Variant; var DocumentTypeText: Text[50])
+    var
+        PurchaseHeader: Record "Purchase Header";
+        DocumentRecordRef: RecordRef;
+        PurchaseEnquiryDocTypeTxt: Label 'Purchase Enquiry';
+    begin
+        case DocumentRecordRef.Number of
+            DATABASE::"Purchase Header":
+                begin
+                    case PurchaseHeader."Document Type" of
+                        PurchaseHeader."Document Type"::Enquiry:
+                            DocumentTypeText := PurchaseEnquiryDocTypeTxt;
+                    end;
+
+                end;
+        end;
+    end;
+    //B2BSpon20Sep2024<<
+    //B2BSpon20Sep2024>>
+    [EventSubscriber(ObjectType::Page, Page::"Report Selection - Purchase", 'OnSetUsageFilterOnAfterSetFiltersByReportUsage', '', false, false)]
+    local procedure OnSetUsageFilterOnAfterSetFiltersByReportUsage(ReportUsage2: Enum "Report Selection Usage Purchase"; var Rec: Record "Report Selections")
+    begin
+        case ReportUsage2 of
+            "Report Selection Usage Purchase"::Enquiry:
+                Rec.SetRange(Usage, "Report Selection Usage"::"P.Enquiry");
+        end;
+    end;
+    //B2BSpon20Sep2024 savarappa<<
+    //BNaveenB2B25092024 >>
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Document-Mailing", 'OnBeforeGetEmailSubject', '', false, false)]
+
+    local procedure OnBeforeGetEmailSubject(PostedDocNo: Code[20]; EmailDocumentName: Text[250]; ReportUsage: Integer; var EmailSubject: Text[250]; var IsHandled: Boolean)
+    var
+        ReportUsageEnum: Enum "Report Selection Usage";
+        PurchaseHeaderRec: Record "Purchase Header";
+        OrderDate: Date;
+        ResponsiblityCenter: Code[10];
+    begin
+        Clear(OrderDate);
+        Clear(ResponsiblityCenter);
+        PurchaseHeaderRec.Reset();
+        PurchaseHeaderRec.SetRange("No.", PostedDocNo);
+        if PurchaseHeaderRec.FindFirst() then begin
+            OrderDate := PurchaseHeaderRec."Order Date";
+            ResponsiblityCenter := PurchaseHeaderRec."Responsibility Center";
+        end;
+        ReportUsageEnum := "Report Selection Usage".FromInteger(ReportUsage);
+
+        if ReportUsageEnum <> ReportUsageEnum::"P.Order" then
+            exit;
+        if not PurchaseHeaderRec.Amendment and not PurchaseHeaderRec.Regularization and not PurchaseHeaderRec."Cancelled Order" then
+            EmailSubject := 'Purchase Order ref. No: ' + PostedDocNo + ' dated ' + Format(OrderDate) + ' of ' + ResponsiblityCenter + 'EENADU TELIVISON PRIVATE LIMITED Division.'
+        else
+            if PurchaseHeaderRec.Amendment and PurchaseHeaderRec.Regularization then
+                EmailSubject := 'Amendment cum Regularization Purchase Order ref. No: ' + PostedDocNo + ' dated ' + Format(OrderDate) + ' of ' + ResponsiblityCenter + 'EENADU TELIVISON PRIVATE LIMITED Division.'
+            else
+                if PurchaseHeaderRec.Amendment and not PurchaseHeaderRec.Regularization then
+                    EmailSubject := 'Amendment Purchase Order No: ' + PostedDocNo + ' dated ' + Format(OrderDate) + ' of ' + ResponsiblityCenter + 'EENADU TELIVISON PRIVATE LIMITED Division.'
+                else
+                    if PurchaseHeaderRec.Regularization and not PurchaseHeaderRec.Amendment then
+                        EmailSubject := 'Regularization Purchase Order No: ' + PostedDocNo + ' dated ' + Format(OrderDate) + ' of ' + ResponsiblityCenter + 'EENADU TELIVISON PRIVATE LIMITED Division.'
+                    else
+                        if PurchaseHeaderRec."Cancelled Order" and not PurchaseHeaderRec.Amendment and not PurchaseHeaderRec.Regularization then
+                            EmailSubject := 'Cancellation of Purchase Order No: ' + PostedDocNo + ' dated ' + Format(OrderDate) + ' of ' + ResponsiblityCenter + 'EENADU TELIVISON PRIVATE LIMITED Division.';
+        IsHandled := true;
+
+    end;
+    //BNaveenB2B25092024 <<
+
 
 }
 

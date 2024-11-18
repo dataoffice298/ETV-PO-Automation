@@ -32,7 +32,7 @@ table 50208 "Archive Quotation Comparison"
             Editable = true;
             TableRelation = Item."No.";
         }
-        field(7; Description; Text[50])
+        field(7; Description; Text[100])
         {
             Editable = false;
         }

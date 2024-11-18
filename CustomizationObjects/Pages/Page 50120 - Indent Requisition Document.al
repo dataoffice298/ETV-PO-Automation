@@ -98,6 +98,10 @@ page 50120 "Indent Requisition Document"
                     Editable = false;
                     StyleExpr = StyleTxt;
                 }
+                field(Note; Rec.Note)
+                {
+                    ApplicationArea = All;
+                }
             }
             part(Indentrequisations; 50119)
             {

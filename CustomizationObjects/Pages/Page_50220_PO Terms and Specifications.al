@@ -1,6 +1,5 @@
-page 50179 "Terms and Condition"
+page 50220 "PO Terms and Specifications"
 {
-
     ApplicationArea = All;
     UsageCategory = Administration;
     PageType = ListPart;
@@ -9,7 +8,8 @@ page 50179 "Terms and Condition"
     DelayedInsert = true;
     LinksAllowed = false;
     MultipleNewLines = true;
-    SourceTableView = WHERE(Type = filter("Terms & Conditions"));
+    SourceTableView = WHERE(Type = filter(Specifications));
+    Caption = 'PO Terms and Specifications';
 
     layout
     {
@@ -23,7 +23,7 @@ page 50179 "Terms and Condition"
                     trigger OnLookup(var Text: Text): Boolean
                     begin
                         TechSpecOpt.Reset();
-                        TechSpecOpt.SetRange(Type, TechSpecOpt.Type::"Terms & Conditions");
+                        TechSpecOpt.SetRange(Type, TechSpecOpt.Type::Specifications);
                         if TechSpecOpt.FindSet() then
                             if Page.RunModal(Page::TechnicalSpecificationOpList, TechSpecOpt) = Action::LookupOK then begin
                                 Rec.Validate(LineType, TechSpecOpt.Code);
@@ -51,6 +51,7 @@ page 50179 "Terms and Condition"
                 /* field("SNo."; Rec."SNo.")
                 {
                     ApplicationArea = All;
+                    Caption = 'Priority';
                     Editable = false;
                 } */
             }
@@ -72,6 +73,7 @@ page 50179 "Terms and Condition"
             }
         }
     }
+
 
     var
         TechSpecOpt: Record TechnicalSpecOption;

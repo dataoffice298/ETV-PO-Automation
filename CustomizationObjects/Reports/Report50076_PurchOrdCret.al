@@ -47,6 +47,7 @@ report 50076 "Purchase Order Creation New"
                 IndentReqLine: Record "Indent Requisitions";
                 PurchHeaderQuote: Record "Purchase Header";
                 POAoutomation: Codeunit "PO Automation";
+
             begin
 
                 PurchaseHeader.RESET;
@@ -104,6 +105,7 @@ report 50076 "Purchase Order Creation New"
 
                         PurchaseHeaderOrder.Modify();
                         POAoutomation.CopyTermsandConditionsofVendorDoc(PurchaseHeader, PurchaseHeaderOrder);
+                        POAoutomation.CopyTermsandSpecificationsDoc(PurchaseHeader, PurchaseHeaderOrder); //B2BVCOn23Sep2024
                     end; //B2BMSOn18Oct2022
                     PurchaseLine.Reset();
                     PurchaseLine.SETRANGE("Document Type", PurchaseLine."Document Type"::Quote);

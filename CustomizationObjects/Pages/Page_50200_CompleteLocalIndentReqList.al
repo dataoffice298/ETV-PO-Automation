@@ -4,7 +4,7 @@ page 50200 CompleteLocalIndentReqList
     CardPageID = "Indent Requisition Document";
     PageType = List;
     SourceTable = "Indent Req Header";
-    SourceTableView = sorting("Document Date") order(descending) where("Resposibility Center" = const('LOCAL REQ'), Status = const(Release), "Req Status" = filter(Completed));
+    SourceTableView = where("Resposibility Center" = const('LOCAL REQ'), Status = const(Release), "Req Status" = filter(Completed));
     UsageCategory = Lists;
     ApplicationArea = all;
     Editable = false;

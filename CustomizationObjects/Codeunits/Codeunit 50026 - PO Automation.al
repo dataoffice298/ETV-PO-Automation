@@ -289,8 +289,10 @@ codeunit 50026 "PO Automation"
                         CreateIndents2.SetRange("Document No.", IndentVendorEnquiry."Indent Req No");
                         CreateIndents2.SetRange("Line No.", IndentVendorEnquiry."Indent Req Line No");
                         if CreateIndents2.FindFirst() then begin
-                            if IndentReqHeader.Get(CreateIndents2."Document No.") then
+                            if IndentReqHeader.Get(CreateIndents2."Document No.") then begin
                                 PurchaseHeader."Responsibility Center" := IndentReqHeader."Resposibility Center";
+                                PurchaseHeader.Note := IndentReqHeader.Note; //B2BVCOn03Oct2024
+                            end;
                         end;
                         //B2BVCOn30April2024 <<
                         PurchaseHeader.Modify(true);
@@ -396,6 +398,7 @@ codeunit 50026 "PO Automation"
                             IndentVendorEnquiry.MODIFY;
                         UNTIL IndentVendorEnquiry.NEXT = 0;
                         CopyTermsandConditionsofVendor(PurchaseHeader);
+                        CopyTermsandSpecificationofVendors(PurchaseHeader);
                     END;
                 end;
             UNTIL IndentVendorItems.NEXT = 0;
@@ -414,6 +417,7 @@ codeunit 50026 "PO Automation"
         if VendorRec.Findfirst() then begin
             TermsandConditions.reset();
             TermsandConditions.SetRange(DocumentNo, VendorRec."No.");
+            TermsandConditions.SetRange(Type, TermsandConditions.Type::"Terms & Conditions"); //B2BVCOn23Sep2024
             if TermsandConditions.FindSet() then
                 repeat
                     NewTermsandConditions.Init();
@@ -435,6 +439,7 @@ codeunit 50026 "PO Automation"
         TermsandConditions.reset();
         TermsandConditions.SetRange(DocumentNo, OldPurchaseHeader."No.");
         TermsandConditions.SetRange(DocumentType, OldPurchaseHeader."Document Type");
+        TermsandConditions.SetRange(Type, TermsandConditions.Type::"Terms & Conditions"); //B2BVCOn23Sep2024
         if TermsandConditions.FindSet() then
             repeat
                 NewTermsandConditions.Init();
@@ -445,6 +450,52 @@ codeunit 50026 "PO Automation"
             until TermsandConditions.Next() = 0;
     end;
     //B2BDNRon17thJune<<
+    //B2BVCOn23Sep2024 >>
+    procedure CopyTermsandSpecificationofVendors(PurchaseHeader: Record "Purchase Header")
+    var
+        TermsandConditions: Record "PO Terms And Conditions";
+        NewTermsandConditions: Record "PO Terms And Conditions";
+        VendorRec: Record Vendor;
+        LineNo: Integer;
+    begin
+        VendorRec.Reset();
+        VendorRec.SetRange("No.", PurchaseHeader."Buy-from Vendor No.");
+        if VendorRec.Findfirst() then begin
+            TermsandConditions.reset();
+            TermsandConditions.SetRange(DocumentNo, VendorRec."No.");
+            TermsandConditions.SetRange(Type, TermsandConditions.Type::Specifications);
+            if TermsandConditions.FindSet() then
+                repeat
+                    NewTermsandConditions.Init();
+                    NewTermsandConditions.TransferFields(TermsandConditions);
+                    NewTermsandConditions.DocumentNo := PurchaseHeader."No.";
+                    NewTermsandConditions.DocumentType := PurchaseHeader."Document Type";
+                    NewTermsandConditions.Insert(true);
+                until TermsandConditions.Next() = 0;
+        end;
+    end;
+
+    procedure CopyTermsandSpecificationsDoc(OldPurchHeader: Record "Purchase Header"; NewPurchHeader: Record "Purchase Header")
+    var
+        TermsandConditions: Record "PO Terms And Conditions";
+        NewTermsandConditions: Record "PO Terms And Conditions";
+        VendorRec: Record Vendor;
+        LineNo: Integer;
+    begin
+        TermsandConditions.reset();
+        TermsandConditions.SetRange(DocumentNo, OldPurchHeader."No.");
+        TermsandConditions.SetRange(DocumentType, OldPurchHeader."Document Type");
+        TermsandConditions.SetRange(Type, TermsandConditions.Type::Specifications); //B2BVCOn23Sep2024
+        if TermsandConditions.FindSet() then
+            repeat
+                NewTermsandConditions.Init();
+                NewTermsandConditions.TransferFields(TermsandConditions);
+                NewTermsandConditions.DocumentNo := NewPurchHeader."No.";
+                NewTermsandConditions.DocumentType := NewPurchHeader."Document Type";
+                NewTermsandConditions.Insert(true);
+            until TermsandConditions.Next() = 0;
+    end;
+    //B2BVCOn23Sep2024 <<
 
     procedure CreateQuotes(var CreateIndentsQuotes: Record "Indent Requisitions"; var Vendor: Record 23; var Noseries: Code[20]);
     var
@@ -604,6 +655,7 @@ codeunit 50026 "PO Automation"
                         IndentVendorEnquiry.MODIFY;
                     UNTIL IndentVendorEnquiry.NEXT = 0;
                     CopyTermsandConditionsofVendor(PurchaseHeader);
+                    CopyTermsandSpecificationofVendors(PurchaseHeader);
                 END;
             UNTIL IndentVendorItems.NEXT = 0;
     end;
@@ -719,6 +771,7 @@ codeunit 50026 "PO Automation"
                         IndentVendorEnquiry.MODIFY;
                     UNTIL IndentVendorEnquiry.NEXT = 0;
                     CopyTermsandConditionsofVendor(PurchaseHeader);
+                    CopyTermsandSpecificationofVendors(PurchaseHeader);
                 END;
             UNTIL IndentVendorItems.NEXT = 0;
 
@@ -1615,6 +1668,7 @@ codeunit 50026 "PO Automation"
 
             UNTIL PurchaseLine.NEXT = 0;
         CopyTermsandConditionsofVendorDoc(Rec, PurchaseHeader);
+        CopyTermsandSpecificationsDoc(Rec, PurchaseHeader);
         /*IndentLineRec.Reset();
              IndentLineRec.SetRange("Document No.", PurchaseLine."Indent No.");
              IndentLineRec.SetRange("Line No.", PurchaseLine."Indent Line No.");
@@ -1783,6 +1837,7 @@ codeunit 50026 "PO Automation"
                             //B2BVCOn30April2024 <<
                             PurchaseHeader.Modify(true);
                             CopyTermsandConditionsofVendor(PurchaseHeader);
+                            CopyTermsandSpecificationofVendors(PurchaseHeader);
                         end;
                         PurchaseLine.INIT;
                         PurchaseLine."Document Type" := PurchaseLine."Document Type"::Order;

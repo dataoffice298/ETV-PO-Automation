@@ -173,10 +173,17 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             part(TrermsAndCondition; "Terms and Condition")
             {
                 ApplicationArea = all;
-                //SubPageLink = DocumentNo = field("No.");
-                SubPageLink = DocumentType = field("Document Type"), DocumentNo = field("No.");
+                SubPageLink = DocumentNo = field("No.");
+                SubPageView = WHERE(Type = filter("Terms & Conditions")); //B2BVCOn23Sep2024
                 UpdatePropagation = Both;
                 Editable = FieldEditable; //B2BVCOn07Aug2024
+            }
+             part(PoTermsAndSpecification; "PO Terms and Specifications") //B2BVCOn23Sep2024
+            {
+                ApplicationArea = All;
+                SubPageLink = DocumentNo = field("No.");
+                SubPageView = WHERE(Type = filter(Specifications));
+                UpdatePropagation = Both;
             }
         }
         //B2BSSD25Jan2023>>

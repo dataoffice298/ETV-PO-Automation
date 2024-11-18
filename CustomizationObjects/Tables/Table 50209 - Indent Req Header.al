@@ -151,6 +151,10 @@ table 50209 "Indent Req Header"
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(50010; Note; Text[250]) //B2BVCOn29Aug2024
+        {
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {

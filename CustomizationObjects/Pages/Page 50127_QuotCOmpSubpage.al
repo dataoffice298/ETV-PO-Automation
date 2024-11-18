@@ -437,6 +437,10 @@ page 50127 QuotationComparSubForm
                     Editable = false;
                     ApplicationArea = all;
                 }
+                field("Model No."; Rec."Model No.") //B2BVCOn23Aug2024
+                {
+                    ApplicationArea = All;
+                }
 
                 field("Carry Out Action"; Rec."Carry Out Action")
                 {

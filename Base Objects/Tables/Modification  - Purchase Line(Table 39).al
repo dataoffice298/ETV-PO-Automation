@@ -496,7 +496,16 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             DataClassification = CustomerContent;
             Editable = false;
         }
-        field(60063; "Posted Invioce"; Boolean)//B2BSSD
+        field(60063; "Other Charges"; Decimal) //B2BVCOn08Aug2024
+        {
+            DataClassification = CustomerContent;
+            DecimalPlaces = 0 : 5;
+        }
+        field(60064; Model; Code[250]) //B2BVCOn08Aug2024
+        {
+            DataClassification = CustomerContent;
+        }
+        field(60065; "Posted Invioce"; Boolean)//B2BSSD
         {
             DataClassification = CustomerContent;
         }

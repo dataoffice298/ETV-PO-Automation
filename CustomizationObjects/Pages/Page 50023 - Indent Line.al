@@ -356,8 +356,10 @@ page 50023 "Indent Line"
                     begin
                         if Rec.Select = false then
                             Error(SelectErr);
-                        TechnicalSpec.ReadExcelSheet();
-                        TechnicalSpec.ImportExcelData();
+                        //TechnicalSpec.ReadExcelSheet();
+                        //TechnicalSpec.ImportExcelData();
+                        ReadExcelSheet();   //B2BVCOn13Jun2024
+                        ImportExcelData();  //B2BVCOn13Jun2024
                     end;
                 }
                 action("Item TechnicalSpec")
@@ -699,6 +701,80 @@ page 50023 "Indent Line"
         }
     }
     //B2BSSD02MAR2023<<
+    //B2BVCOn13Jun2024 >>
+    procedure ReadExcelSheet()
+    var
+        FileManagement: Codeunit "File Management";
+        Istream: InStream;
+        FromFile: Text[100];
+    begin
+        UploadIntoStream(uplodMsg, '', '', FromFile, Istream);
+        if FromFile <> '' then begin
+            FileName := FileManagement.GetFileName(FromFile);
+            SheetName := TempExcelBuffer.SelectSheetsNameStream(Istream)
+        end else
+            Error(NoFileMsg);
+        TempExcelBuffer.Reset();
+        TempExcelBuffer.DeleteAll();
+        TempExcelBuffer.OpenBookStream(Istream, SheetName);
+        TempExcelBuffer.ReadSheet();
+    end;
+
+    procedure GetCellValue(RowNo: Integer; ColNo: Integer): Text
+    begin
+        TempExcelBuffer.Reset();
+        if TempExcelBuffer.Get(RowNo, ColNo) then
+            exit(TempExcelBuffer."Cell Value As Text")
+        else
+            exit('');
+    end;
+
+    procedure ImportExcelData()
+    var
+        TechnicalSpec: Record "Technical Specifications";
+        RowNo: Integer;
+        ColNo: Integer;
+        LineNo: Integer;
+        MaxRow: Integer;
+        SNo: Integer;
+    begin
+        RowNo := 0;
+        ColNo := 0;
+        LineNo := 0;
+        MaxRow := 0;
+        TechnicalSpec.Reset();
+        TechnicalSpec.SetRange("Document Type", TechnicalSpec."Document Type");
+        TechnicalSpec.SetRange("Document No.", Rec."Document No.");
+        if TechnicalSpec.FindFirst() then begin
+            LineNo := TechnicalSpec."Line No.";
+            SNo := TechnicalSpec."S.No.";
+        end;
+        TempExcelBuffer.Reset();
+        if TempExcelBuffer.FindLast() then begin
+            MaxRow := TempExcelBuffer."Row No.";
+        end;
+        for RowNo := 2 to MaxRow Do begin
+            LineNo := LineNo + 10000;
+            SNo := SNo + 1;
+
+            TechnicalSpec.Init();
+            //Evaluate(ExcelImport."Transaction Name", TransName1);
+            TechnicalSpec."Document No." := Rec."Document No.";
+            TechnicalSpec."Document Type" := TechnicalSpec."Document Type"::Indent;
+            TechnicalSpec."Item No." := Rec."No.";
+            TechnicalSpec."Indent Line No." := Rec."Line No."; //B2BVCOn07Aug2024
+            TechnicalSpec."Line No." := LineNo;
+            TechnicalSpec."S.No." := SNo;
+            Evaluate(TechnicalSpec."Product Name", GetCellValue(RowNo, 1));
+            Evaluate(TechnicalSpec.Description, GetCellValue(RowNo, 2));
+            Evaluate(TechnicalSpec.Quantity, GetCellValue(RowNo, 3));
+            Evaluate(TechnicalSpec.Units, GetCellValue(RowNo, 4));
+            TechnicalSpec."Imported Date" := Today;
+            TechnicalSpec.Insert();
+        end;
+        Message(ExcelImportSuccess);
+    end;
+    //B2BVCOn13Jun2024 <<
     local procedure CreateRGPfromIndent(EntryType: Option Inward,Outward; DocType: Option RGP,NRGP)
     var
         GateEntryHeader: Record "Gate Entry Header_B2B";
@@ -907,9 +983,15 @@ page 50023 "Indent Line"
         GateEntryType: Option Inward,Outward;
         GateEntryDocType: Option RGP,NRGP;
         FixedAsset: Record "Fixed Asset";
+        uplodMsg: Label 'Please Choose The Excel file';
+        FileName: text[100];
+        SheetName: Text[100];
 
         GateEntryHeaderOutwardGvar: Record "Gate Entry Header_B2B";
         TextLbl: Label 'Qty To Issue not allowed, Line No. %1 already %2.';
+        TempExcelBuffer: Record "Excel Buffer" temporary;
+        NoFileMsg: Label 'No excel File Found';
+        ExcelImportSuccess: Label 'Excel File Imported Successfully';
     //B2BSSD03AUG2023>>
     procedure QTyToIssueNonEditable()
     begin

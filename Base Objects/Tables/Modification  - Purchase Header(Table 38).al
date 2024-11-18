@@ -169,6 +169,10 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
             DataClassification = CustomerContent;
             Caption = 'Amendment';
         }
+        field(50127; Note; Text[500])
+        {
+            DataClassification = CustomerContent;
+        }
         field(50128; "Exchange Rate"; Boolean)
         {
             DataClassification = CustomerContent;
@@ -185,7 +189,31 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
         {
             DataClassification = CustomerContent;
         }
+        field(50130; BCD; Decimal)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50131; SWC; Decimal)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50132; "SWC Amount"; Decimal)
+        {
+            DataClassification = CustomerContent;
+        }
         field(50133; "Draft Date"; Date)//B2BSPon16Aug2023//savarappa
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(50134; "Req Note"; Text[250]) //B2BVCOn29Aug2024
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50135; "BCD Amount"; Decimal)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50136; "Enquiry Note"; Text[1024]) //B2BSPon06Nov2024
         {
             DataClassification = ToBeClassified;
         }

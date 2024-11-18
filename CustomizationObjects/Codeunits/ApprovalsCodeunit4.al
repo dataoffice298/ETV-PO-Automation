@@ -848,6 +848,245 @@ codeunit 50018 "Approvals MGt 4"
         end;
     end;
     //Indent Header Approvals End --- B2BMSOn09Sep2022<<
+    //PurchEnquiry Approvals Start --- B2BVCOn11July2024 >>
+
+    [IntegrationEvent(false, false)]
+    Procedure OnSendPurchEnquiryForApproval(var PurchEnquiry: Record "Purchase Header")
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    Procedure OnCancelPurchEnquiryForApproval(var PurchEnquiry: Record "Purchase Header")
+    begin
+    end;
+
+    //Create events for workflow
+    procedure RunworkflowOnSendPurchEnquiryforApprovalCode(): code[128]
+    begin
+        exit(CopyStr(UpperCase('RunworkflowOnSendPurchEnquiryforApproval'), 1, 128));
+    end;
+
+
+    [EventSubscriber(ObjectType::Codeunit, codeunit::"Approvals MGt 4", 'OnSendPurchEnquiryForApproval', '', true, true)]
+    local procedure RunworkflowonsendPurchEnquiryForApproval(var PurchEnquiry: Record "Purchase Header")
+    begin
+        WorkflowManagement.HandleEvent(RunworkflowOnSendPurchEnquiryforApprovalCode(), PurchEnquiry);
+    end;
+
+    procedure RunworkflowOnCancelPurchEnquiryforApprovalCode(): code[128]
+    begin
+        exit(CopyStr(UpperCase('OnCancelPurchEnquiryForApproval'), 1, 128));
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, codeunit::"Approvals MGt 4", 'OnCancelPurchEnquiryForApproval', '', true, true)]
+
+    local procedure RunworkflowonCancelPurchEnquiryForApproval(var PurchEnquiry: Record "Purchase Header")
+    begin
+        WorkflowManagement.HandleEvent(RunworkflowOncancelPurchEnquiryforApprovalCode(), PurchEnquiry);
+    end;
+
+    //Add events to library
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Event Handling", 'OnAddWorkflowEventsToLibrary', '', false, false)]
+    local procedure OnAddWorkflowEventsToLibraryPurchEnquiry();
+    begin
+        WorkflowevenHandling.AddEventToLibrary(RunworkflowOnSendPurchEnquiryforApprovalCode(), DATABASE::"Purchase Header",
+          CopyStr(PurchEnquirysendforapprovaleventdesctxt, 1, 250), 0, FALSE);
+        WorkflowevenHandling.AddEventToLibrary(RunworkflowOnCancelPurchEnquiryforApprovalCode(), DATABASE::"Purchase Header",
+          CopyStr(PurchEnquiryrequestcanceleventdesctxt, 1, 250), 0, FALSE);
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Event Handling", 'OnAddWorkflowEventPredecessorsToLibrary', '', true, true)]
+    local procedure OnAddworkfloweventprodecessorstolibraryPurchEnquiry(EventFunctionName: code[128]);
+    begin
+        case EventFunctionName of
+            RunworkflowOnCancelPurchEnquiryforApprovalCode():
+                WorkflowevenHandling.AddEventPredecessor(RunworkflowOnCancelPurchEnquiryforApprovalCode(), RunworkflowOnSendPurchEnquiryforApprovalCode());
+            WorkflowevenHandling.RunWorkflowOnApproveApprovalRequestCode():
+                WorkflowevenHandling.AddEventPredecessor(WorkflowevenHandling.RunWorkflowOnApproveApprovalRequestCode(), RunworkflowOnSendPurchEnquiryforApprovalCode());
+            WorkflowevenHandling.RunWorkflowOnRejectApprovalRequestCode():
+                WorkflowevenHandling.AddEventPredecessor(WorkflowevenHandling.RunWorkflowOnRejectApprovalRequestCode(), RunworkflowOnSendPurchEnquiryforApprovalCode());
+            WorkflowevenHandling.RunWorkflowOnDelegateApprovalRequestCode():
+                WorkflowevenHandling.AddEventPredecessor(WorkflowevenHandling.RunWorkflowOnDelegateApprovalRequestCode(), RunworkflowOnSendPurchEnquiryforApprovalCode());
+        end;
+    end;
+
+    procedure ISPurchEnquiryworkflowenabled(var PurchEnquiry: Record "Purchase Header"): Boolean
+    begin
+        if (PurchEnquiry.Status <> PurchEnquiry.Status::Open) then
+            exit(false);
+        exit(WorkflowManagement.CanExecuteWorkflow(PurchEnquiry, RunworkflowOnSendPurchEnquiryforApprovalCode()));
+    end;
+
+    Procedure CheckPurchEnquiryApprovalsWorkflowEnabled(var PurchEnquiry: Record "Purchase Header"): Boolean
+    begin
+        IF not ISPurchEnquiryworkflowenabled(PurchEnquiry) then
+            Error((NoworkfloweableErr));
+        exit(true);
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnpopulateApprovalEntryArgument', '', true, true)]
+    local procedure OnpopulateApprovalEntriesArgumentPurchEnquiry(var RecRef: RecordRef; var ApprovalEntryArgument: Record "Approval Entry"; WorkflowStepInstance: Record "Workflow Step Instance")
+    var
+        PurchEnquiry: Record "Purchase Header";
+    begin
+        case RecRef.Number() of
+            Database::"Purchase Header":
+                begin
+                    RecRef.SetTable(PurchEnquiry);
+                    ApprovalEntryArgument."Document No." := FORMAT(PurchEnquiry."No.");
+                end;
+        end;
+    end;
+
+    //Handling workflow response
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'Onopendocument', '', true, true)]
+    local procedure OnopendocumentPurchEnquiry(RecRef: RecordRef; var Handled: boolean)
+    var
+        PurchEnquiry: Record "Purchase Header";
+    begin
+        case RecRef.Number() of
+            Database::"Purchase Header":
+                begin
+                    RecRef.SetTable(PurchEnquiry);
+                    PurchEnquiry.SetRange("Document Type", PurchEnquiry."Document Type"::Enquiry);
+                    PurchEnquiry.SetRange("No.", PurchEnquiry."No.");
+                    PurchEnquiry.Status := PurchEnquiry.Status::Open;
+                    //PurchEnquiry."Last Modified Date" := WorkDate();
+                    PurchEnquiry.Modify();
+                    Handled := true;
+                end;
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'OnreleaseDocument', '', true, true)]
+    local procedure OnReleasedocumentPurchEnquiry(RecRef: RecordRef; var Handled: boolean)
+    var
+        PurchEnquiry: Record "Purchase Header";
+    begin
+        case RecRef.Number() of
+            Database::"Purchase Header":
+                begin
+                    RecRef.SetTable(PurchEnquiry);
+                    PurchEnquiry.SetRange("Document Type", PurchEnquiry."Document Type"::Enquiry);
+                    PurchEnquiry.SetRange("No.", PurchEnquiry."No.");
+                    PurchEnquiry.Status := PurchEnquiry.Status::Released;
+                    //PurchEnquiry."Last Modified Date" := WORKDATE;
+                    PurchEnquiry.Modify();
+
+                    Handled := true;
+                end;
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'Onsetstatustopendingapproval', '', true, true)]
+    local procedure OnSetstatusToPendingApprovalPurchEnquiry(RecRef: RecordRef; var IsHandled: boolean)
+    var
+        PurchEnquiry: Record "Purchase Header";
+        IndentLine: Record "Indent Line";
+    begin
+        case RecRef.Number() of
+            Database::"Purchase Header":
+                begin
+                    RecRef.SetTable(PurchEnquiry);
+                    PurchEnquiry.SetRange("Document Type", PurchEnquiry."Document Type"::Enquiry);
+                    PurchEnquiry.SetRange("No.", PurchEnquiry."No.");
+                    PurchEnquiry.Status := PurchEnquiry.Status::"Pending Approval";
+                    //PurchEnquiry."Last Modified Date" := WORKDATE;
+                    PurchEnquiry.Modify();
+                    IsHandled := true;
+                end;
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'Onaddworkflowresponsepredecessorstolibrary', '', true, true)]
+    local procedure OnaddworkflowresponseprodecessorstolibraryPurchEnquiry(ResponseFunctionName: Code[128])
+    var
+        workflowresponsehandling: Codeunit "Workflow Response Handling";
+    begin
+        case ResponseFunctionName of
+            workflowresponsehandling.SetStatusToPendingApprovalCode():
+                workflowresponsehandling.AddResponsePredecessor(workflowresponsehandling.SetStatusToPendingApprovalCode(), RunworkflowOnSendPurchEnquiryforApprovalCode());
+            workflowresponsehandling.SendApprovalRequestForApprovalCode():
+                workflowresponsehandling.AddResponsePredecessor(workflowresponsehandling.SendApprovalRequestForApprovalCode(), RunworkflowOnSendPurchEnquiryforApprovalCode());
+            workflowresponsehandling.CancelAllApprovalRequestsCode():
+                workflowresponsehandling.AddResponsePredecessor(workflowresponsehandling.CancelAllApprovalRequestsCode(), RunworkflowOnCancelPurchEnquiryforApprovalCode());
+            workflowresponsehandling.OpenDocumentCode():
+                workflowresponsehandling.AddResponsePredecessor(workflowresponsehandling.OpenDocumentCode(), RunworkflowOnCancelPurchEnquiryforApprovalCode());
+        end;
+    end;
+
+    //Setup workflow
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Setup", 'OnAddworkflowcategoriestolibrary', '', true, true)]
+    local procedure OnaddworkflowCategoryTolibraryPurchEnquiry()
+    begin
+        workflowsetup.InsertWorkflowCategory(CopyStr(PurchEnquiryCategoryTxt, 1, 20), CopyStr(PurchEnquiryCategoryDescTxt, 1, 100));
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Setup", 'Onafterinsertapprovalstablerelations', '', true, true)]
+    local procedure OnInsertApprovaltablerelationsPurchEnquiry()
+    Var
+        ApprovalEntry: record "Approval Entry";
+    begin
+        workflowsetup.InsertTableRelation(Database::"Purchase Header", 0, Database::"Approval Entry", ApprovalEntry.FieldNo("Record ID to Approve"));
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Setup", 'Oninsertworkflowtemplates', '', true, true)]
+    local procedure OnInsertworkflowtemplatePurchEnquiry()
+    begin
+        InsertPurchEnquiryApprovalworkflowtemplate();
+    end;
+
+
+
+    local procedure InsertPurchEnquiryApprovalworkflowtemplate();
+    var
+        workflow: record Workflow;
+    begin
+        workflowsetup.InsertWorkflowTemplate(workflow, CopyStr(PurchEnquiryDocOCRWorkflowCodeTxt, 1, 17), CopyStr(PurchEnquiryApprWorkflowDescTxt, 1, 100), CopyStr(PurchEnquiryCategoryTxt, 1, 20));
+        InsertPurchEnquiryApprovalworkflowDetails(workflow);
+        workflowsetup.MarkWorkflowAsTemplate(workflow);
+    end;
+
+    local procedure InsertPurchEnquiryApprovalworkflowDetails(var workflow: record Workflow);
+    var
+        PurchEnquiry: Record "Purchase Header";
+        workflowstepargument: record "Workflow Step Argument";
+        Blankdateformula: DateFormula;
+    begin
+        workflowsetup.InitWorkflowStepArgument(workflowstepargument, workflowstepargument."Approver Type"::Approver, workflowstepargument."Approver Limit Type"::"Direct Approver", 0, '', Blankdateformula, true);
+
+        workflowsetup.InsertDocApprovalWorkflowSteps(workflow, BuildPurchEnquirytypecondition(PurchEnquiry.Status::Open), RunworkflowOnSendPurchEnquiryforApprovalCode(), BuildPurchEnquirytypecondition(PurchEnquiry.Status::"Pending Approval"), RunworkflowOnCancelPurchEnquiryforApprovalCode(), workflowstepargument, true);
+    end;
+
+
+    local procedure BuildPurchEnquirytypecondition(status: integer): Text
+    var
+        PurchEnquiry: Record "Purchase Header";
+    Begin
+        PurchEnquiry.SetRange(Status, status);
+        exit(StrSubstNo(PurchEnquiryTypeCondnTxt, workflowsetup.Encode(PurchEnquiry.GetView(false))));
+    End;
+
+    //Access record from the approval request page
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Page Management", 'Onaftergetpageid', '', true, true)]
+    local procedure OnaftergetpageidPurchEnquiry(RecordRef: RecordRef; var PageID: Integer)
+    begin
+        if PageID = 0 then
+            PageID := GetConditionalcardPageidPurchEnquiry(RecordRef)
+    end;
+
+    local procedure GetConditionalcardPageidPurchEnquiry(RecordRef: RecordRef): Integer
+    begin
+        Case RecordRef.Number() of
+            database::"Purchase Header":
+                exit(page::"Purchase Enquiry");
+        end;
+    end;
+    //PurchEnquiry Approvals End ---- B2BVCOn11July2024 <<
     var
         WorkflowManagement: Codeunit "Workflow Management";
         WorkflowevenHandling: Codeunit "Workflow Event Handling";
@@ -883,5 +1122,14 @@ codeunit 50018 "Approvals MGt 4"
         IndentRequisitionDoc1CategoryTxt: Label 'IndentRequisitionDoc specifications';
         IndentRequisitionDoc1DocOCRWorkflowCodeTxt: Label 'IndentRequisitionDoc';
         IndentRequisitionDoc1ApprWorkflowDescTxt: Label 'IndentRequisitionDoc Approval Workflow';
-    //IndentRequisition Header Approvals Variables End --- B2BMSOn09Sep2022<<
+        //IndentRequisition Header Approvals Variables End --- B2BMSOn09Sep2022<<
+        //PurchEnquiry Approvals Variables Start ---- B2BVCOn11July2024 >>
+        PurchEnquirysendforapprovaleventdescTxt: Label 'Approval of a PurchEnquiry Document is requested';
+        PurchEnquiryCategoryDescTxt: Label 'PurchEnquiryDocuments';
+        PurchEnquiryTypeCondnTxt: Label '<?xml version="1.0" encoding="utf-8" standalone="yes"?><ReportParameters><DataItems><DataItem name=IndentDoc>%1</DataItem></DataItems></ReportParameters>';
+        PurchEnquiryrequestcanceleventdescTxt: Label 'Approval of a PurchEnquiry Document is Cancelled';
+        PurchEnquiryCategoryTxt: Label 'PurchEnquiry specifications';
+        PurchEnquiryDocOCRWorkflowCodeTxt: Label 'QC PurchEnquiry';
+        PurchEnquiryApprWorkflowDescTxt: Label 'PurchEnquiry Approval Workflow';
+    //PurchEnquiry Approvals Variables End ---- B2BVCOn11July2024 <<
 }

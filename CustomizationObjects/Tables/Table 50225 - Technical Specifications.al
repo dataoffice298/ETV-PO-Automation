@@ -106,11 +106,15 @@ table 50225 "Technical Specifications"//B2BSSD30Jan2023
             Caption = 'Total Amount';
 
         }
+        field(17; "Indent Line No."; Integer)  //B2BVCOn07Aug2024
+        {
+            DataClassification = CustomerContent;
+        }
     }
 
     keys
     {
-        key(PK; "Document No.", "Document Type", "Item No.", "S.No.", "Line No.")
+        key(PK; "Document No.", "Document Type", "Item No.", "S.No.", "Indent Line No.", "Line No.")
         {
             Clustered = true;
         }

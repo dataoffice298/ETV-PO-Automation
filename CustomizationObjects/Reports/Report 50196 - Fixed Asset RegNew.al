@@ -308,9 +308,9 @@ report 50196 "Fixed Assets Register New"
                 FALedgerEntry1.SetRange("Document Type", FALedgerEntry."Document Type"::Invoice);
                 if FALedgerEntry1.FindFirst() then
                     FALedgerEntry1.CalcFields("Vendor No.", "Vendor Name");
-                VendorNo := FALedgerEntry1."Vendor No.";
-                VendorName := FALedgerEntry1."Vendor Name";
-                INVDocumentNO := FALedgerEntry1."Document No.";
+                //VendorNo := FALedgerEntry1."Vendor No.";
+                //VendorName := FALedgerEntry1."Vendor Name";
+                //INVDocumentNO := FALedgerEntry1."Document No.";
                 NetAssetValuebeforeDepreciaton := FALedgerEntry1.Amount;
                 //B2BSSD05JUN2023<<
 
@@ -326,16 +326,107 @@ report 50196 "Fixed Assets Register New"
                 //     until FALedgerEntry1.next() = 0;
                 // end;
 
-                PostedPurchaseInvGrec.Reset();
-                PostedPurchaseInvGrec.SetRange("No.", FALedgerEntry1."Document No.");
-                if PostedPurchaseInvGrec.FindFirst() then begin
-                    PostedPurchaseRecGrec.Reset();
-                    PostedPurchaseRecGrec.SetRange("Order No.", PostedPurchaseInvGrec."Order No.");
-                    if PostedPurchaseRecGrec.FindFirst() then
-                        GRNNOGVar := PostedPurchaseRecGrec."No.";
-                    GRNDateGvar := PostedPurchaseRecGrec."Document Date";
-                    OrderNoGVar := PostedPurchaseRecGrec."Order No.";
-                end;
+                Clear(FAAmount);
+                Clear(AcquisitionCost);
+                Clear(AcquisitionCost1);
+                Clear(FAPostingDate);
+                Clear(INVDocumentNO);
+                Clear(DisposalAmt);
+                Clear(AcquisitionAmt);
+                Clear(GrossValue);
+                Clear(DepreciationAmt);
+                Clear(DepreciationPeriodAmt);
+
+
+                FALedgEntry.Reset();
+                FALedgEntry.SetRange("FA No.", "No.");
+                FALedgEntry.SetFilter("Posting Date", '..%1', EndDate);
+                if FALedgEntry.FindSet() then
+                    repeat
+                        if FALedgEntry."FA Posting Type" = FALedgEntry."FA Posting Type"::Depreciation then
+                            FAAmount += FALedgEntry.Amount;
+                        if FALedgEntry."FA Posting Type" = FALedgEntry."FA Posting Type"::"Acquisition Cost" then
+                            AcquisitionCost += FALedgEntry.Amount;
+                    until FALedgEntry.Next = 0;
+
+                FALedgEntry.Reset();
+                FALedgEntry.SetRange("FA No.", "No.");
+                FALedgEntry.SetRange("FA Posting Type", FALedgEntry."FA Posting Type"::"Acquisition Cost");
+                if FALedgEntry.FindSet() then
+                    repeat
+                        AcquisitionCost1 += FALedgEntry.Amount;
+                    until FALedgEntry.Next = 0;
+
+                FALedgEntry.Reset();
+                FALedgEntry.SetRange("FA No.", "No.");
+                FALedgEntry.SetRange("FA Posting Type", FALedgEntry."FA Posting Type"::"Acquisition Cost");
+                if FALedgEntry.FindFirst() then
+                    FAPostingDate := FALedgEntry."FA Posting Date";
+
+                FALedgEntry.Reset();
+                FALedgEntry.SetRange("FA No.", "No.");
+                FALedgEntry.SetRange("Document Type", FALedgEntry."Document Type"::Invoice);
+                if FALedgEntry.FindFirst() then
+                    repeat
+                        CWIPLine.Reset();
+                        CWIPLine.SetRange("Document No.", FALedgEntry."Document No.");
+                        CWIPLine.SetRange("Fixed Asset No.", FALedgEntry."FA No.");
+                        if CWIPLine.FindFirst() then begin
+                            GRNNOGVar := CWIPLine."Receipt No.";
+                            OrderNoGVar := CWIPLine."Order No.";
+                            VendorNo := CWIPLine."Vendor No.";
+                            VendorName := CWIPLine."Vendor Name";
+                            if PurchRcptHdr.Get(CWIPLine."Receipt No.") then
+                                GRNDateGvar := PurchRcptHdr."Document Date";
+                            PurchInvLine.Reset();
+                            PurchInvLine.SetRange("Receipt No.", CWIPLine."Receipt No.");
+                            PurchInvLine.SetRange("Receipt Line No.", CWIPLine."Receipt Line No.");
+                            if PurchInvLine.FindFirst() then
+                                INVDocumentNO := PurchInvLine."Document No.";
+                        end;
+                    until FALedgEntry.Next = 0;
+
+                FALedgEntry.Reset();
+                FALedgEntry.SetRange("FA No.", "No.");
+                FALedgEntry.SetRange("FA Posting Category", FALedgEntry."FA Posting Category"::Disposal);
+                FALedgEntry.SetFilter("Posting Date", '%1..%2', StartDate, EndDate);
+                if FALedgEntry.FindSet() then
+                    repeat
+                        DisposalAmt += FALedgEntry.Amount;
+                    until FALedgEntry.Next = 0;
+
+                FALedgEntry.Reset();
+                FALedgEntry.SetRange("FA No.", "No.");
+                //FALedgEntry.SetRange("FA Posting Type", FALedgEntry."FA Posting Type"::"Acquisition Cost");
+                FALedgEntry.SetFilter("Posting Date", '%1..%2', StartDate, EndDate);
+                if FALedgEntry.FindSet() then
+                    repeat
+                        if FALedgEntry."FA Posting Type" = FALedgEntry."FA Posting Type"::"Acquisition Cost" then
+                            AcquisitionAmt += FALedgEntry.Amount;
+                        if FALedgEntry."FA Posting Type" = FALedgEntry."FA Posting Type"::Depreciation then
+                            DepreciationPeriodAmt += FALedgEntry.Amount;
+                    until FALedgEntry.Next = 0;
+
+                GrossValue := AcquisitionAmt - DisposalAmt;
+
+                FALedgEntry.Reset();
+                FALedgEntry.SetRange("FA No.", "No.");
+                FALedgEntry.SetRange("FA Posting Type", FALedgEntry."FA Posting Type"::Depreciation);
+                if FALedgEntry.FindSet() then
+                    repeat
+                        DepreciationAmt += FALedgEntry.Amount;
+                    until FALedgEntry.Next = 0;
+
+                /*  PostedPurchaseInvGrec.Reset();
+                 PostedPurchaseInvGrec.SetRange("No.", FALedgerEntry1."Document No.");
+                 if PostedPurchaseInvGrec.FindFirst() then begin
+                     PostedPurchaseRecGrec.Reset();
+                     PostedPurchaseRecGrec.SetRange("Order No.", PostedPurchaseInvGrec."Order No.");
+                     if PostedPurchaseRecGrec.FindFirst() then
+                         GRNNOGVar := PostedPurchaseRecGrec."No.";
+                     GRNDateGvar := PostedPurchaseRecGrec."Document Date";
+                     OrderNoGVar := PostedPurchaseRecGrec."Order No.";
+                 end; */
 
 
                 gtxtEmployeeName := '';
@@ -480,8 +571,8 @@ report 50196 "Fixed Assets Register New"
         grecExcelBuffer.AddColumn("Fixed Asset".Make_B2B, false, '', false, false, false, '', grecExcelBuffer."Cell Type");//B2BSSD07JUL2023
         grecExcelBuffer.AddColumn("Fixed Asset"."Model No.", false, '', false, false, false, '', grecExcelBuffer."Cell Type");//B2BSSD07JUL2023
         grecExcelBuffer.AddColumn("Fixed Asset"."Serial No.", false, '', false, false, false, '@', grecExcelBuffer."Cell Type");
-        grecExcelBuffer.AddColumn(grecFADeprBook."Acquisition Date", false, '', false, false, false, '', grecExcelBuffer."Cell Type");
-        grecExcelBuffer.AddColumn(grecFADeprBook."Depreciation Starting Date", false, '', false, false, false, '', grecExcelBuffer."Cell Type");
+        grecExcelBuffer.AddColumn(FAPostingDate, false, '', false, false, false, '', grecExcelBuffer."Cell Type");
+        grecExcelBuffer.AddColumn(FAPostingDate, false, '', false, false, false, '', grecExcelBuffer."Cell Type");
         grecExcelBuffer.AddColumn("Fixed Asset"."FA Location Code", false, '', false, false, false, '', grecExcelBuffer."Cell Type");
         grecExcelBuffer.AddColumn("Fixed Asset"."FA Sub Location", false, '', false, false, false, '', grecExcelBuffer."Cell Type");//B2BSSD052023
         grecExcelBuffer.AddColumn(grecFADeprBook."Depreciation Starting Date", false, '', false, false, false, '', grecExcelBuffer."Cell Type");//B2BSSD07JUL2023
@@ -490,20 +581,19 @@ report 50196 "Fixed Assets Register New"
         grecExcelBuffer.AddColumn(VendorName, false, '', false, false, false, '', grecExcelBuffer."Cell Type");
         grecExcelBuffer.AddColumn(INVDocumentNO, false, '', false, false, false, '#,##0.00', grecExcelBuffer."Cell Type");//B2BSSD05JUL2023
         grecExcelBuffer.AddColumn(FADeprBook."Depreciation Method", false, '', false, false, false, '#,##0.00', grecExcelBuffer."Cell Type");//B2BSSD05JUL2023
-        grecExcelBuffer.AddColumn(NetAssetValuebeforeDepreciaton, false, '', false, false, false, '#,##0.00', grecExcelBuffer."Cell Type");//B2BSSD05JUL2023
-        grecFADeprBook.CalcFields("Book Value");
-        grecExcelBuffer.AddColumn(grecFADeprBook."Book Value", false, '', false, false, false, '#,##0.00', grecExcelBuffer."Cell Type");//B2BSSD05JUL2023
+        grecExcelBuffer.AddColumn(AcquisitionCost1, false, '', false, false, false, '#,##0.00', grecExcelBuffer."Cell Type");//B2BSSD05JUL2023
+        grecExcelBuffer.AddColumn((AcquisitionCost - Abs(FAAmount)), false, '', false, false, false, '#,##0.00', grecExcelBuffer."Cell Type");//B2BSSD05JUL2023
         grecExcelBuffer.AddColumn(GRNNOGVar, false, '', false, false, false, '', grecExcelBuffer."Cell Type");//B2BSSD05JUL2023
         grecExcelBuffer.AddColumn(GRNDateGvar, false, '', false, false, false, '', grecExcelBuffer."Cell Type");//B2BSSD05JUL2023
         grecExcelBuffer.AddColumn(OrderNoGVar, false, '', false, false, false, '', grecExcelBuffer."Cell Type");//B2BSSD05JUL2023
-        grecExcelBuffer.AddColumn('', false, '', false, false, false, '', grecExcelBuffer."Cell Type");//B2BSSD05JUL2023
+        grecExcelBuffer.AddColumn("Fixed Asset"."Salvage Value", false, '', false, false, false, '#,##0.00', grecExcelBuffer."Cell Type");//B2BSSD05JUL2023
         grecExcelBuffer.AddColumn(grecFADeprBook."No. of Depreciation Years", false, '', false, false, false, '', grecExcelBuffer."Cell Type");//B2BSSD05JUL2023
         grecExcelBuffer.AddColumn(gtxtEmployeeName, false, '', false, false, false, '', grecExcelBuffer."Cell Type");
         grecExcelBuffer.AddColumn(Abs(GrossValueUptoYear), false, '', false, false, false, '#,##0.00', grecExcelBuffer."Cell Type");
-        grecExcelBuffer.AddColumn(Abs(AditionDuringYear), false, '', false, false, false, '#,##0.00', grecExcelBuffer."Cell Type");
-        grecExcelBuffer.AddColumn(Abs(DeletionDuringYear), false, '', false, false, false, '#,##0.00', grecExcelBuffer."Cell Type");
-        grecExcelBuffer.AddColumn(Abs(GrossValueatYearEnd), false, '', false, false, false, '#,##0.00', grecExcelBuffer."Cell Type");
-        grecExcelBuffer.AddColumn(Abs(AcctdDepratPeriodBegin), false, '', false, false, false, '#,##0.00', grecExcelBuffer."Cell Type");
+        grecExcelBuffer.AddColumn(DisposalAmt, false, '', false, false, false, '#,##0.00', grecExcelBuffer."Cell Type");
+        grecExcelBuffer.AddColumn((GrossValue - "Fixed Asset"."Salvage Value"), false, '', false, false, false, '#,##0.00', grecExcelBuffer."Cell Type");
+        grecExcelBuffer.AddColumn(DepreciationAmt, false, '', false, false, false, '#,##0.00', grecExcelBuffer."Cell Type");
+        grecExcelBuffer.AddColumn(DepreciationPeriodAmt, false, '', false, false, false, '#,##0.00', grecExcelBuffer."Cell Type");
         grecExcelBuffer.AddColumn(Abs(DeprForPeriod), false, '', false, false, false, '#,##0.00', grecExcelBuffer."Cell Type");
         grecExcelBuffer.AddColumn(Abs(DeprDisposedAssests), false, '', false, false, false, '#,##0.00', grecExcelBuffer."Cell Type");
         grecExcelBuffer.AddColumn(Abs(AcctdDepratPeriodEnd), false, '', false, false, false, '#,##0.00', grecExcelBuffer."Cell Type");
@@ -573,6 +663,7 @@ report 50196 "Fixed Assets Register New"
     var
         FALedgerEntry: Record "FA Ledger Entry";
         FALedgerEntry1: Record "FA Ledger Entry";
+        FALedgEntry: Record "FA Ledger Entry";
         GrossValueUptoYear: Decimal;
         AditionDuringYear: Decimal;
         DeletionDuringYear: Decimal;
@@ -655,4 +746,16 @@ report 50196 "Fixed Assets Register New"
         OrderNoGVar: Code[30];
         v: Report "Fixed Asset Register Report";
         NewStartDate: Date;
+        FAAmount: Decimal;
+        AcquisitionCost: Decimal;
+        AcquisitionCost1: Decimal;
+        FAPostingDate: Date;
+        CWIPLine: Record "CWIP Line";
+        PurchRcptHdr: Record "Purch. Rcpt. Header";
+        PurchInvLine: Record "Purch. Inv. Line";
+        DisposalAmt: Decimal;
+        AcquisitionAmt: Decimal;
+        GrossValue: Decimal;
+        DepreciationAmt: Decimal;
+        DepreciationPeriodAmt: Decimal;
 }

@@ -6,10 +6,17 @@ pageextension 50100 PosPurchReceipt extends "Posted Purchase Receipt"
         //B2BSSD23FEB2023<<
         addfirst(factboxes)
         {
-            part(AttachmentDocPostedPurOrd; "Document Attachment Factbox")
+            part("Attached Documents"; "Document Attachment Factbox")
             {
                 ApplicationArea = All;
                 Caption = 'Attachments';
+                SubPageLink = "Table ID" = CONST(Database::"Purch. Rcpt. Header"),
+                              "No." = FIELD("No.");
+            }
+            part(AttachmentDocPostedPurOrd; "Document Attachment Factbox")
+            {
+                ApplicationArea = All;
+                Caption = 'Attachments1';
                 Provider = PurchReceiptLines;
                 SubPageLink = "Table ID" = CONST(50202),
                 "No." = FIELD("Indent No."), "Line No." = field("Indent Line No.");

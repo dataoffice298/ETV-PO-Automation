@@ -1,4 +1,4 @@
-page 50200 CompleteLocalIndentReqList
+/*page 50200 CompleteLocalIndentReqList
 {
     Caption = 'Complete Local Indent Requisition List';
     CardPageID = "Indent Requisition Document";
@@ -61,4 +61,4 @@ page 50200 CompleteLocalIndentReqList
     begin
         StyleTxt := Rec.SetStyle();
     end;
-}
+}*/

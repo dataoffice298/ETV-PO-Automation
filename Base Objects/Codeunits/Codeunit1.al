@@ -71,12 +71,13 @@ codeunit 50016 "MyBaseSubscr"
         end;
     end;
 
-    /*[EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPurchRcptHeaderInsert', '', false, false)]
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPurchRcptHeaderInsert', '', false, false)]
     local procedure OnAfterPurchRcptHeaderInsert(var PurchRcptHeader: Record "Purch. Rcpt. Header"; var PurchaseHeader: Record "Purchase Header"; CommitIsSupressed: Boolean)
     var
         FromRecRef: RecordRef;
         ToRecRef: RecordRef;
         IsHandled: Boolean;
+        DocumentAttachmentMgmt: Codeunit "Document Attachment Mgmt";
     begin
         // Triggered when a posted purchase cr. memo / posted purchase invoice is created
         if PurchaseHeader.IsTemporary() then
@@ -90,8 +91,8 @@ codeunit 50016 "MyBaseSubscr"
         FromRecRef.GetTable(PurchaseHeader);
 
         if ToRecRef.Number > 0 then
-            CopyAttachmentsForPostedDocs(FromRecRef, ToRecRef, IsHandled);
-    end;*/
+            DocumentAttachmentMgmt.CopyAttachmentsForPostedDocs(FromRecRef, ToRecRef);
+    end;
     //Invoice>>
     [EventSubscriber(ObjectType::Table, Database::"Document Attachment", 'OnAfterInitFieldsFromRecRef', '', false, false)]
     local procedure OnAfterInitFieldsFromRecInv(var DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef)
@@ -109,13 +110,13 @@ codeunit 50016 "MyBaseSubscr"
         end;
     end;
 
-    /*[EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPurchInvHeaderInsert', '', false, false)]
-    //local procedure OnAfterPurchRcptHeaderInsert(var PurchRcptHeader: Record "Purch. Rcpt. Header"; var PurchaseHeader: Record "Purchase Header"; CommitIsSupressed: Boolean)
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", 'OnAfterPurchInvHeaderInsert', '', false, false)]
     local procedure OnAfterPurchInvHeaderInsert(var PurchInvHeader: Record "Purch. Inv. Header"; var PurchHeader: Record "Purchase Header"; PreviewMode: Boolean)
     var
         FromRecRef: RecordRef;
         ToRecRef: RecordRef;
         IsHandled: Boolean;
+        DocumentAttachmentMgmt: Codeunit "Document Attachment Mgmt";
     begin
         // Triggered when a posted purchase cr. memo / posted purchase invoice is created
         if PurchInvHeader.IsTemporary() then
@@ -129,51 +130,64 @@ codeunit 50016 "MyBaseSubscr"
         FromRecRef.GetTable(PurchHeader);
 
         if ToRecRef.Number > 0 then
-            CopyAttachmentsForPostedDocs(FromRecRef, ToRecRef, IsHandled);
+            DocumentAttachmentMgmt.CopyAttachmentsForPostedDocs(FromRecRef, ToRecRef);
     end;
     //invoice end<<
-
-    local procedure CopyAttachmentsForPostedDocs(var FromRecRef: RecordRef; var ToRecRef: RecordRef; var IsHandled: Boolean)
+    //B2BVCOn11Oct2024 >>
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Document Attachment Mgmt", 'OnBeforeDocAttachForPostedPurchaseDocs', '', false, false)]
+    local procedure OnBeforeDocAttachForPostedPurchaseDocs(var PurchaseHeader: Record "Purchase Header"; var PurchInvHeader: Record "Purch. Inv. Header"; var PurchCrMemoHdr: Record "Purch. Cr. Memo Hdr."; var IsHandled: Boolean)
     var
-        FromDocumentAttachment: Record "Document Attachment";
-        ToDocumentAttachment: Record "Document Attachment";
-        FromFieldRef: FieldRef;
-        ToFieldRef: FieldRef;
-        FromDocumentType: Option Quote,"Order",Invoice,"Credit Memo","Blanket Order","Return Order";
-        FromNo: Code[20];
-        ToNo: Code[20];
+        DocAttachment: Record "Document Attachment";
     begin
-        IsHandled := true;
+        DocAttachment.Reset;
+        DocAttachment.SetRange("Table ID", Database::"Purch. Inv. Header");
+        DocAttachment.SetRange("No.", PurchInvHeader."No.");
+        if DocAttachment.FindFirst() then
+            IsHandled := true;
+    end;
+    //B2BVCOn11Oct2024 <<
 
-        FromDocumentAttachment.SetRange("Table ID", FromRecRef.Number);
+    /* local procedure CopyAttachmentsForPostedDocs(var FromRecRef: RecordRef; var ToRecRef: RecordRef; var IsHandled: Boolean)
+     var
+         FromDocumentAttachment: Record "Document Attachment";
+         ToDocumentAttachment: Record "Document Attachment";
+         FromFieldRef: FieldRef;
+         ToFieldRef: FieldRef;
+         FromDocumentType: Option Quote,"Order",Invoice,"Credit Memo","Blanket Order","Return Order";
+         FromNo: Code[20];
+         ToNo: Code[20];
+     begin
+         IsHandled := true;
 
-        FromFieldRef := FromRecRef.Field(1);
-        FromDocumentType := FromFieldRef.Value();
-        FromDocumentAttachment.SetRange("Document Type", FromDocumentType);
+         FromDocumentAttachment.SetRange("Table ID", FromRecRef.Number);
 
-        FromFieldRef := FromRecRef.Field(3);
-        FromNo := FromFieldRef.Value();
-        FromDocumentAttachment.SetRange("No.", FromNo);
+         FromFieldRef := FromRecRef.Field(1);
+         FromDocumentType := FromFieldRef.Value();
+         FromDocumentAttachment.SetRange("Document Type", FromDocumentType);
 
-        // Find any attached docs for headers (sales / purch)
-        if FromDocumentAttachment.FindSet() then begin
-            repeat
-                Clear(ToDocumentAttachment);
-                ToDocumentAttachment.Init();
-                ToDocumentAttachment.TransferFields(FromDocumentAttachment);
-                ToDocumentAttachment.Validate("Table ID", ToRecRef.Number);
+         FromFieldRef := FromRecRef.Field(3);
+         FromNo := FromFieldRef.Value();
+         FromDocumentAttachment.SetRange("No.", FromNo);
 
-                ToFieldRef := ToRecRef.Field(3);
-                ToNo := ToFieldRef.Value();
-                ToDocumentAttachment.Validate("No.", ToNo);
-                ToDocumentAttachment.Validate("Attached Date", CurrentDateTime);
-                if IsNullGuid(ToDocumentAttachment."Attached By") then
-                    ToDocumentAttachment."Attached By" := UserSecurityId;
-                Clear(ToDocumentAttachment."Document Type");
-                ToDocumentAttachment.Insert;
-            until FromDocumentAttachment.Next() = 0;
-        end;
-    end;*/
+         // Find any attached docs for headers (sales / purch)
+         if FromDocumentAttachment.FindSet() then begin
+             repeat
+                 Clear(ToDocumentAttachment);
+                 ToDocumentAttachment.Init();
+                 ToDocumentAttachment.TransferFields(FromDocumentAttachment);
+                 ToDocumentAttachment.Validate("Table ID", ToRecRef.Number);
+
+                 ToFieldRef := ToRecRef.Field(3);
+                 ToNo := ToFieldRef.Value();
+                 ToDocumentAttachment.Validate("No.", ToNo);
+                 ToDocumentAttachment.Validate("Attached Date", CurrentDateTime);
+                 if IsNullGuid(ToDocumentAttachment."Attached By") then
+                     ToDocumentAttachment."Attached By" := UserSecurityId;
+                 Clear(ToDocumentAttachment."Document Type");
+                 ToDocumentAttachment.Insert;
+             until FromDocumentAttachment.Next() = 0;
+         end;
+     end;*/
 
     //B2BMSOn06Oct2022>>
     [EventSubscriber(ObjectType::Page, Page::"Document Attachment Factbox", 'OnBeforeDrillDown', '', false, false)]
@@ -1116,16 +1130,16 @@ codeunit 50016 "MyBaseSubscr"
     end;
     //************END*****************B2BSSD
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnApproveApprovalRequest', '', false, false)]
-    local procedure OnApproveApprovalRequest(var ApprovalEntry: Record "Approval Entry")
-    var
-        IndentReqHead: Record "Indent Req Header";
-    begin
-        if IndentReqHead.Get(ApprovalEntry."Document No.") then begin
-            IndentReqHead."Last Modified Date" := ApprovalEntry."Last Date-Time Modified";
-            IndentReqHead.Modify();
-        end;
-    end;
+    /*  [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnApproveApprovalRequest', '', false, false)]
+     local procedure OnApproveApprovalRequest(var ApprovalEntry: Record "Approval Entry")
+     var
+         IndentReqHead: Record "Indent Req Header";
+     begin
+         if IndentReqHead.Get(ApprovalEntry."Document No.") then begin
+             IndentReqHead."Last Modified Date" := ApprovalEntry."Last Date-Time Modified";
+             IndentReqHead.Modify();
+         end;
+     end; */
 
     //>>B2BSpon16Aug2024>> savarappa
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Purchase Document", 'OnAfterReleasePurchaseDoc', '', false, false)]
@@ -1147,6 +1161,7 @@ codeunit 50016 "MyBaseSubscr"
         end;
     end;
     //<<B2BSpon16Aug2024<<savarappa
+
 
 }
 

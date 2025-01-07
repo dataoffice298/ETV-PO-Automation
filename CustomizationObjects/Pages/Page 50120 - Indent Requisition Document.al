@@ -912,7 +912,7 @@ page 50120 "Indent Requisition Document"
                 PurchLine.Reset();
                 PurchLine.SetRange("Indent Req No", IndentReq."Document No.");
                 PurchLine.SetRange("Indent Req Line No", IndentReq."Line No.");
-                PurchLine.SetRange(CancelOrder, false);
+                //PurchLine.SetRange(CancelOrder, false);
                 if PurchLine.FindSet() then begin
                     repeat
                         PurchOrderCount += 1;

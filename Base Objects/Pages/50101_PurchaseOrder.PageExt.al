@@ -319,6 +319,20 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                     //until purchaseLinevar.Next() = 0;
                 end;
                 //B2BSSD09AUG2023<<
+
+                //B2BAnusha12262024>>
+                PurchaseLineRec.Reset();
+                PurchaseLineRec.SetRange("Document No.", Rec."No.");
+                if PurchaseLineRec.FindSet() then
+                    repeat
+                        PostedGateEntryRec.Reset();
+                        PostedGateEntryRec.SetRange("No.", PurchaseLineRec."Posted Gate Entry No.");
+                        if PostedGateEntryRec.FindLast() then begin
+                            if Rec."Posting Date" < PostedGateEntryRec."Posting Date" then
+                                Error(Err3lbl);
+                        end;
+                    until PurchaseLineRec.Next() = 0;
+                //B2BAnusha12262024<<
             end;
 
 
@@ -812,4 +826,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         FieldEditable: Boolean;
         ErrLbl: Label 'You must define CWIP details for the Item No. %1 and Line No. %2.';
         Err2Lbl: Label 'CWIP details must be defined for the total receiving quantity of Item No. %1 and Line No. %2.';
+        Err3lbl: Label 'Posting Date Must not be Less than Inward Gate Posting Date';
+        PostedGateEntryRec: Record "Posted Gate Entry Header_B2B";
+        PurchaseLineRec: Record "Purchase Line";
 }

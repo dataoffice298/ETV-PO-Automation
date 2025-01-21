@@ -121,6 +121,7 @@ page 50116 "Indent Header"
                     ApplicationArea = All;
                     Caption = 'Purpose';
                     Editable = PageEditable;
+                    ShowMandatory = true;
                 }
                 field("Delivery Location"; Rec."Delivery Location")//B2BSSD03MAY2023
                 {
@@ -296,6 +297,7 @@ page 50116 "Indent Header"
                     Rec.TESTFIELD(Indentor);
                     Rec.TestField("Shortcut Dimension 1 Code");
                     Rec.TestField("Shortcut Dimension 2 Code");
+                    Rec.TestField(Purpose);
                     Rec.LOCKTABLE;
                     IndentLine.RESET;
                     IndentLine.SETRANGE("Document No.", Rec."No.");
@@ -620,6 +622,7 @@ page 50116 "Indent Header"
                         Rec.TestField("Shortcut Dimension 1 Code");
                         Rec.TestField("Shortcut Dimension 2 Code");
                         Rec.TestField("Shortcut Dimension 9 Code");
+                        Rec.TestField(Purpose);
                         //B2BMSOn13Sep2022>>
                         IF allinoneCU.ISIndentDocworkflowenabled(Rec) then
                             Error(RelError);

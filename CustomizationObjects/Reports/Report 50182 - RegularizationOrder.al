@@ -189,6 +189,8 @@ report 50182 "Regularization Order"
                 { }
                 column(GSTPercent1; GSTPercent1)
                 { }
+                column(GSTAmount; GstTotalSum)
+                { }
 
 
                 /* trigger OnPreDataItem()
@@ -206,25 +208,15 @@ report 50182 "Regularization Order"
                     Clear(SGSTAmt);
                     Clear(IGSSTAmt);
                     Clear(SpecID1);
-
-                    // TotalLineAmount += "Purchase Line"."Line Amount";
-
-                    // GetGSTAmounts("Purchase Line");
-                    // TotalGSTAmount += CGSTAmt + SGSTAmt + IGSSTAmt;
                     GetGSTAmounts("Purchase Line");//Balu
                     Clear(GstTotal);
                     GstTotal := CGSTAmt + SGSTAmt + IGSSTAmt;
                     GstTotalSum := GstTotalSum + GstTotal;
-                    //GSTPerQTY := GstTotal / Quantity;
-                    //GSTPertotal := CGSTPer + SGSTPer + IGSTPer;
-                    //Message('%1', GstTotal);
                     Clear(AmountVendor1);
                     Clear(AmountText);
                     AmountVendor += "Line Amount";
                     AmountVendor1 := AmountVendor + GstTotalSum;
-                    //   GateEntryPostYesNo.InitTextVariable;
-                    //  GateEntryPostYesNo.FormatNoTextInvoice(AmountText, Round(AmountVendor1, 1, '='), "Currency Code");
-                    // GateEntryPostYesNo.FormatNoText(AmountText, AmountVendor1, "Currency Code");
+
                     if "Purchase Header"."Currency Code" = '' then begin
                         CheckRec.InitTextVariable();
                         CheckRec.FormatNoTextWithoutCurrency(AmountText, AmountVendor1, '');
@@ -331,30 +323,22 @@ report 50182 "Regularization Order"
                         PurchLine.Reset();
                         PurchLine.SetCurrentKey("GST Group Code");
                         PurchLine.SetRange("Document No.", "Purchase Line"."Document No.");
-                        // PurchLine.SetRange("Line No.", "Purchase Line"."Line No.");
-                        //PurchLine.SetFilter("GST Group Code", PurchLineGST."GST Group Code");
                         if PurchLine.FindSet() then begin
-                            GetGSTPercents(PurchLine);
-                            if GSTPercent <> 0 then begin
-                                I += 1;
-                                GSTPerText := StrSubstNo(GSTText, GSTPercent);
-                                repeat
-                                    //Balu
-                                    Clear(SGSTAmt);
-                                    Clear(IGSSTAmt);
-                                    Clear(CGSTAmt);//Balu
-                                    GetGSTAmounts(PurchLine);
-                                    GSTAmountLine[I] += SGSTAmt + IGSSTAmt + CGSTAmt;
-                                //LineSNo := DelChr(Format(PurchLine."Line No."), '>', '0');
-                                //GSTPerText += PurchLine."HSN/SAC Code";
-                                until PurchLine.Next() = 0;
-                                //GSTPerText := DelChr(GSTPerText, '>', ' &');
-                                //GSTPerText += PurchLine."HSN/SAC Code";
-                            end;
+                            //GetGSTPercents(PurchLine);
+                            //if GSTPercent <> 0 then begin
+                            I += 1;
+                            GSTPerText := StrSubstNo(GSTText, GSTPercent);
+                            repeat
+                                //Balu
+                                Clear(SGSTAmt);
+                                Clear(IGSSTAmt);
+                                Clear(CGSTAmt);//Balu
+                                GetGSTAmounts(PurchLine);
+                                GSTAmountLine[I] += SGSTAmt + IGSSTAmt + CGSTAmt;
+                            until PurchLine.Next() = 0;
+                            //end;
                         end;
                     end;
-                    //    AmountVendor += "Line Amount";
-                    //  AmountVendor1 := AmountVendor + GstTotalSum;
 
                     if PurchLineGST.Next() = 0 then;
                     //CurrReport.Break();//Balu

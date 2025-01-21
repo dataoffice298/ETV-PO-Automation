@@ -1202,7 +1202,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
 
         Rec.ShortClosed := true;
         Rec.validate(Quantity, Rec."Quantity Invoiced");
-        Rec."Short Close Quantity" := Rec."Quantity Invoiced";
+        Rec."Short Close Quantity" := xRec."Outstanding Quantity";
         if Rec."Short Close Quantity" <> 0 then begin
             Rec."Outstanding Quantity" := 0;
             Rec."Outstanding Qty. (Base)" := 0;

@@ -554,8 +554,8 @@ page 50127 QuotationComparSubForm
                 {
                     ApplicationArea = All;
                     Image = ViewPage;
-                    Promoted = true;
-                    PromotedCategory = Category5;
+                    // Promoted = true;
+                    // PromotedCategory = Category5;
                     RunObject = page "Purchase Quote";
                     RunPageLink = "No." = field("Parent Quote No.");
                 }

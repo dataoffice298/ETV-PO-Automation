@@ -27,7 +27,10 @@ report 50111 "Purchase Enquiry EmailBody"
             { }
             column(PhoneNo; Usersetup."Phone No.")
             { }
-
+            //B2BAnusha23Dec2024>>
+            column(NameLbl; NameLbl) { }
+            column(Designationlbl; Designationlbl) { }
+            //B2BAnusha23Dec2024<<
 
             trigger OnAfterGetRecord()
             begin
@@ -63,6 +66,11 @@ report 50111 "Purchase Enquiry EmailBody"
         DesignateVar: Text[250];
         Doc: Codeunit "Document-Mailing";
         User: Record User;
-    //B2Bspon24Sep2024 Savarappa <<
+        //B2Bspon24Sep2024 Savarappa <<
+
+        //B2BAnusha23Dec2024>>
+        NameLbl: Label 'ASR ANJANEYULU';
+        Designationlbl: Label 'AVP-PURCHASE';
+    //B2BAnusha23Dec2024<<
 
 }

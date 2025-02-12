@@ -7886,7 +7886,7 @@
                       </Style>
                     </TextRun>
                     <TextRun>
-                      <Value>=Fields!Description_QuotationComparison.Value</Value>
+                      <Value>=Fields!QuotCompDescription.Value</Value>
                       <Style>
                         <FontSize>9pt</FontSize>
                         <FontWeight>Bold</FontWeight>
@@ -8552,6 +8552,9 @@ End Function
         </Field>
         <Field Name="QAmount1Format">
           <DataField>QAmount1Format</DataField>
+        </Field>
+        <Field Name="QuotCompDescription">
+          <DataField>QuotCompDescription</DataField>
         </Field>
         <Field Name="Description">
           <DataField>Description</DataField>

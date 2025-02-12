@@ -107,10 +107,10 @@ report 50157 PurchEnquiryReport
             { }
             column(EmailId; EmailId)
             { }
-            column(Signiture; UserSetup."User Signature")
+            /* column(Signiture; UserSetup."User Signature")
             { }
             column(Designation; UserSetup.Designation)
-            { }
+            { } */
             column(FullName; User."Full Name")
             { }
             column(Req_Note; "Req Note")
@@ -150,7 +150,7 @@ report 50157 PurchEnquiryReport
                 if OrderAddress.FindSet() then begin
                     repeat
                         if OrderAddress.Name <> '' then
-                            ContactName := ContactName + OrderAddress.Name + '/';
+                            ContactName := ContactName + OrderAddress."Contact Name" + '/';
                         if OrderAddress."E-Mail" <> '' then
                             ContactEmail := ContactEmail + OrderAddress."E-Mail" + '/';
                         if OrderAddress."Phone No." <> '' then

@@ -1196,7 +1196,7 @@ codeunit 50016 "MyBaseSubscr"
     begin
         case PurchaseHeader."Document Type" of
             PurchaseHeader."Document Type"::Enquiry:
-                ReportSelectionsUsage := ReportSelections.Usage::"P.Enquiry";
+                ReportSelectionsUsage := ReportSelections.Usage::"P.Enquiry".AsInteger();
 
         end;
 
@@ -1273,8 +1273,6 @@ codeunit 50016 "MyBaseSubscr"
 
     end;
     //BNaveenB2B25092024 <<
-
-
 }
 
 

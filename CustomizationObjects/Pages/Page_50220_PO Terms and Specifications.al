@@ -24,14 +24,36 @@ page 50220 "PO Terms and Specifications"
                     begin
                         TechSpecOpt.Reset();
                         TechSpecOpt.SetRange(Type, TechSpecOpt.Type::Specifications);
-                        if TechSpecOpt.FindSet() then
-                            if Page.RunModal(Page::TechnicalSpecificationOpList, TechSpecOpt) = Action::LookupOK then begin
-                                Rec.Validate(LineType, TechSpecOpt.Code);
-                                Rec.Validate(Description, TechSpecOpt.Description);
-                                Rec.Validate(Type, TechSpecOpt.Type);
-                                Rec.Validate("SNo.", TechSpecOpt."SNo.");
+                        if TechSpecOpt.FindSet() then begin
+                            Clear(TechSpecOptList);
+                            TechSpecOptList.LookupMode(true);
+                            TechSpecOptList.SetTableView(TechSpecOpt);
+                            if TechSpecOptList.RunModal() = Action::LookupOK then begin
+                                TechSpecOptList.SetSelectionFilter(TechSpecOpt);
+                                if TechSpecOpt.FindSet() then begin
+                                    repeat
+                                        POTermsCond.Reset();
+                                        POTermsCond.SetRange(DocumentNo, Rec.DocumentNo);
+                                        POTermsCond.SetRange(DocumentType, Rec.DocumentType);
+                                        if POTermsCond.FindLast() then
+                                            LineNoVar := POTermsCond.LineNo + 10000
+                                        else
+                                            LineNoVar := 10000;
+                                        POTermsConditions.Init();
+                                        POTermsConditions.DocumentNo := Rec.DocumentNo;
+                                        POTermsConditions.DocumentType := Rec.DocumentType;
+                                        POTermsConditions.Type := Rec.Type;
+                                        POTermsConditions.LineType := TechSpecOpt.Code;
+                                        POTermsConditions.Description := TechSpecOpt.Description;
+                                        POTermsConditions.LineNo := LineNoVar;
+                                        POTermsConditions.Type := TechSpecOpt.Type;
+                                        POTermsConditions."SNo." := TechSpecOpt."SNo.";
+                                        POTermsConditions.Insert(true);
+                                    until TechSpecOpt.Next = 0;
+                                end;
                             end;
 
+                        end;
                     end;
                 }
                 /*field("Location Code"; Rec."Location Code")
@@ -77,4 +99,8 @@ page 50220 "PO Terms and Specifications"
 
     var
         TechSpecOpt: Record TechnicalSpecOption;
+        TechSpecOptList: Page TechnicalSpecificationOpList;
+        POTermsConditions: Record "PO Terms And Conditions";
+        POTermsCond: Record "PO Terms And Conditions";
+        LineNoVar: Integer;
 }

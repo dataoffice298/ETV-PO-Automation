@@ -10,6 +10,7 @@ page 50179 "Terms and Condition"
     LinksAllowed = false;
     MultipleNewLines = true;
     SourceTableView = WHERE(Type = filter("Terms & Conditions"));
+    Caption = 'Terms and Conditions';
 
     layout
     {
@@ -24,14 +25,39 @@ page 50179 "Terms and Condition"
                     begin
                         TechSpecOpt.Reset();
                         TechSpecOpt.SetRange(Type, TechSpecOpt.Type::"Terms & Conditions");
-                        if TechSpecOpt.FindSet() then
-                            if Page.RunModal(Page::TechnicalSpecificationOpList, TechSpecOpt) = Action::LookupOK then begin
-                                Rec.Validate(LineType, TechSpecOpt.Code);
-                                Rec.Validate(Description, TechSpecOpt.Description);
-                                Rec.Validate(Type, TechSpecOpt.Type);
-                                Rec.Validate("SNo.", TechSpecOpt."SNo.");
+                        if TechSpecOpt.FindSet() then begin
+                            Clear(TechSpecOptList);
+                            TechSpecOptList.LookupMode(true);
+                            TechSpecOptList.SetTableView(TechSpecOpt);
+                            if TechSpecOptList.RunModal() = Action::LookupOK then begin
+                                TechSpecOptList.SetSelectionFilter(TechSpecOpt);
+                                if TechSpecOpt.FindSet() then begin
+                                    repeat
+                                        POTermsCond.Reset();
+                                        POTermsCond.SetRange(DocumentNo, Rec.DocumentNo);
+                                        POTermsCond.SetRange(DocumentType, Rec.DocumentType);
+                                        if POTermsCond.FindLast() then
+                                            LineNoVar := POTermsCond.LineNo + 10000
+                                        else
+                                            LineNoVar := 10000;
+
+                                        POTermsConditions.Init();
+                                        POTermsConditions.DocumentNo := Rec.DocumentNo;
+                                        POTermsConditions.DocumentType := Rec.DocumentType;
+                                        POTermsConditions.Type := Rec.Type;
+                                        POTermsConditions.LineType := TechSpecOpt.Code;
+                                        POTermsConditions.Description := TechSpecOpt.Description;
+                                        POTermsConditions.LineNo := LineNoVar;
+                                        POTermsConditions.Type := TechSpecOpt.Type;
+                                        POTermsConditions."SNo." := TechSpecOpt."SNo.";
+                                        POTermsConditions.Insert(true);
+                                    //LineNoVar += 10000;
+                                    until TechSpecOpt.Next = 0;
+                                end;
+
                             end;
 
+                        end;
                     end;
                 }
                 /*field("Location Code"; Rec."Location Code")
@@ -75,4 +101,8 @@ page 50179 "Terms and Condition"
 
     var
         TechSpecOpt: Record TechnicalSpecOption;
+        TechSpecOptList: Page TechnicalSpecificationOpList;
+        LineNoVar: Integer;
+        POTermsConditions: Record "PO Terms And Conditions";
+        POTermsCond: Record "PO Terms And Conditions";
 }

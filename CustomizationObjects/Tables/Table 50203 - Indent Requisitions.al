@@ -366,6 +366,12 @@ table 50203 "Indent Requisitions"
             OptionMembers = "",Pending,Completed;
             Caption = 'Req Status';
         }
+        field(50027; "Purchaser Code"; Code[30])//B2Banusha22NOV2024
+        {
+            Caption = 'Purchaser Code';
+            DataClassification = ToBeClassified;
+            TableRelation = "Salesperson/Purchaser";
+        }
     }
     //B2BSSD17FEB2023>>
 
@@ -391,6 +397,15 @@ table 50203 "Indent Requisitions"
                 IndentLine."Indent Req Line No" := 0;
                 IndentLine.MODIFY;
             UNTIL IndentLine.NEXT = 0;
+
+        if IndentReqHeader.Get(Rec."Document No.") then begin
+            IndentReqHeader."Indent No." := '';
+            IndentReqHeader."Shortcut Dimension 1 Code" := '';
+            IndentReqHeader."Shortcut Dimension 2 Code" := '';
+            IndentReqHeader."Shortcut Dimension 3 Code" := '';
+            IndentReqHeader."Shortcut Dimension 9 Code" := '';
+            IndentReqHeader.Modify();
+        end;
     end;
 
     var

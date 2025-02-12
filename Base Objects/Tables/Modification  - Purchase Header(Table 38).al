@@ -171,6 +171,7 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
         }
         field(50127; Note; Text[500])
         {
+            Caption = 'Terms & Conditions';
             DataClassification = CustomerContent;
         }
         field(50128; "Exchange Rate"; Boolean)

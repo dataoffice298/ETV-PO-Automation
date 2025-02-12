@@ -103,9 +103,10 @@ page 50025 "Purchase Enquiry"
                 }
                 field(Note; Rec.Note)
                 {
+                    Caption = 'Terms & Conditions';
                     ApplicationArea = All;
                     //Editable = false;
-                    MultiLine = true;
+                    MultiLine = true; //B2BAnusha23Dec24
                 }
             }
             part(PurchLines; "Purchase Enquiry Subform")
@@ -217,6 +218,8 @@ page 50025 "Purchase Enquiry"
                 SubPageLink = DocumentType = field("Document Type"), DocumentNo = field("No.");
                 SubPageView = WHERE(Type = filter("Terms & Conditions"));
                 UpdatePropagation = Both;
+                //B2BAnusha20Jan2025>>
+                Editable = PageEditable1;
             }
             part(PoTermsAndSpecification; "PO Terms and Specifications")
             {
@@ -224,6 +227,8 @@ page 50025 "Purchase Enquiry"
                 SubPageLink = DocumentType = field("Document Type"), DocumentNo = field("No.");
                 SubPageView = WHERE(Type = filter(Specifications));
                 UpdatePropagation = Both;
+                //B2BAnusha20Jan2025>>
+                Editable = PageEditable1;
             }
         }
         //B2BSSD17FEB2023<<
@@ -388,8 +393,8 @@ page 50025 "Purchase Enquiry"
                     PromotedIsBig = true;
                     PromotedCategory = Process;
                     PromotedOnly = true;
-                    RunObject = page "Approval Entries";
-                    RunPageLink = "Document No." = FIELD("No.");
+                    // RunObject = page "Approval Entries";
+                    // RunPageLink = "Document No." = FIELD("No.");
                 }
                 separator("Process3")
                 {
@@ -446,7 +451,8 @@ page 50025 "Purchase Enquiry"
                 trigger OnAction()
                 begin
                     PurchPaySetup.Get();
-                    Rec.Note := PurchPaySetup.Note;
+                    Rec.Note := PurchPaySetup."Terms & Conditions";//B2BAnusha23Dec24
+                    Rec."Req Note" := PurchPaySetup."Req Note";
                     Rec.Modify();
                 end;
             }
@@ -494,10 +500,15 @@ page 50025 "Purchase Enquiry"
         CanCancelapprovalforrecord := approvalmngmt.CanCancelApprovalForRecord(Rec.RecordId());
         workflowwebhookmangt.GetCanRequestAndCanCancel(Rec.RecordId(), CanrequestApprovForFlow, CanCancelapprovalforflow);
 
-        if (Rec.Status = Rec.Status::Released) then
+        if (Rec.Status = Rec.Status::Released) or (Rec."Cancelled Order" = true) then
             PageEditable := false
         else
             PageEditable := true;
+
+        if (Rec.Status = Rec.Status::Released) and (Rec."Cancelled Order" = false) then
+            PageEditable1 := false
+        else
+            PageEditable1 := true;
     end;
 
     //B2BVCOn28Sep22>>>
@@ -526,7 +537,7 @@ page 50025 "Purchase Enquiry"
         MLTransactionType: Option Purchase,Sale;
         PurchHeader: Record 38;
         POAutomation: Codeunit 50026;
-        PageEditable: Boolean;//B2BVCOn28Sep22
+        PageEditable, PageEditable1 : Boolean;//B2BVCOn28Sep22
         PurchPaySetup: Record "Purchases & Payables Setup";
         ApprovalMngt: Codeunit "Approvals MGt 4";
         OpenAppEntrExistsForCurrUser: Boolean;

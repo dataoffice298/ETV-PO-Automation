@@ -67,7 +67,7 @@ pageextension 50111 PostedPurchRcptSubform extends "Posted Purchase Rcpt. Subfor
                 ApplicationArea = All;
                 Caption = 'Attachments';
                 Image = Attach;
-                Promoted = true;
+                //Promoted = true;
                 ToolTip = 'Add a file as an attachment. You can attach images as well as documents.';
                 trigger OnAction()
                 var

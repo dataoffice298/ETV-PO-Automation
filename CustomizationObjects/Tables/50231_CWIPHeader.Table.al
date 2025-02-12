@@ -298,6 +298,7 @@ table 50231 "CWIP Header"
             Error(ErrLbl);
     end;
 
+
     local procedure InsertCWIPLineFromLedgers(CWIPLedgerEntry: Record "CWIP Ledger Entry"; LineNo: Integer)
     var
         CWIPLine: Record "CWIP Line";

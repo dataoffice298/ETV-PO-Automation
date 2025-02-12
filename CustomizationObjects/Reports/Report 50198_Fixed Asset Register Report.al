@@ -20,6 +20,9 @@ report 50198 "Fixed Asset Register New"
                 Clear(StartYear);
                 Clear(EndYear);
                 Clear(FinancialYear);
+                Clear(NetAssetAfterDepreciation);
+                Clear(NetAssetBeforeDepreciation);
+                Clear(GainLoss);
 
                 if Date2DMY(FromDate, 3) = Date2DMY(ToDate, 3) then begin
                     DateGvar := CalcDate('-1Y', FromDate);
@@ -41,17 +44,37 @@ report 50198 "Fixed Asset Register New"
                 FALedgerEntries.SetCurrentKey("Entry No.");
                 FALedgerEntries.SetRange("FA No.", "No.");
                 FALedgerEntries.SetRange("Depreciation Book Code", DepreciationBookCode);
-                //FALedgerEntries.SetFilter("Posting Date", '<=%1', FromDate);
-                FALedgerEntries.SetRange("FA Posting Type", FALedgerEntries."FA Posting Type"::"Acquisition Cost");
-                if FALedgerEntries.FindFirst() then begin
-                    //FALedgerEntries.CalcSums(Amount);
+                FALedgerEntries.SetFilter("Posting Date", '<%1', FromDate);
+                //FALedgerEntries.SetRange("FA Posting Type", FALedgerEntries."FA Posting Type"::"Acquisition Cost");
+                if FALedgerEntries.FindSet() then begin
+                    FALedgerEntries.CalcSums(Amount);
                     OpeningBalance := FALedgerEntries.Amount;
+                end;
+
+                FALedgerEntries.Reset();
+                FALedgerEntries.SetCurrentKey("Entry No.");
+                FALedgerEntries.SetRange("FA No.", "No.");
+                FALedgerEntries.SetRange("Depreciation Book Code", DepreciationBookCode);
+                FALedgerEntries.SetFilter("Posting Date", '<=%1', FromDate);
+                if FALedgerEntries.FindSet() then begin
+                    FALedgerEntries.CalcSums(Amount);
+                    NetAssetBeforeDepreciation := FALedgerEntries.Amount;
+                end;
+
+                FALedgerEntries.Reset();
+                FALedgerEntries.SetCurrentKey("Entry No.");
+                FALedgerEntries.SetRange("FA No.", "No.");
+                FALedgerEntries.SetRange("Depreciation Book Code", DepreciationBookCode);
+                FALedgerEntries.SetFilter("Posting Date", '<=%1', ToDate);
+                if FALedgerEntries.FindSet() then begin
+                    FALedgerEntries.CalcSums(Amount);
+                    NetAssetAfterDepreciation := FALedgerEntries.Amount;
                 end;
 
                 FALedgerEntries.Reset();
                 FALedgerEntries.SetRange("FA No.", "No.");
                 FALedgerEntries.SetRange("Depreciation Book Code", DepreciationBookCode);
-                //FALedgerEntries.SetRange("Posting Date", FromDate, ToDate);
+                FALedgerEntries.SetRange("Posting Date", FromDate, ToDate);
                 FALedgerEntries.SetRange("FA Posting Type", FALedgerEntries."FA Posting Type"::"Acquisition Cost");
                 FALedgerEntries.SetRange("FA Posting Category", FALedgerEntries."FA Posting Category"::Disposal);
                 if FALedgerEntries.FindSet() then begin
@@ -63,13 +86,9 @@ report 50198 "Fixed Asset Register New"
                 FALedgerEntries.SetRange("Depreciation Book Code", DepreciationBookCode);
                 FALedgerEntries.SetFilter("Posting Date", '%1..%2', FromDate, ToDate);
                 FALedgerEntries.SetFilter("FA Posting Type", '%1', FALedgerEntries."FA Posting Type"::"Acquisition Cost");
-                FALedgerEntries.SetFilter("FA Posting Category", '%1', FALedgerEntries."FA Posting Category"::" ");
                 if FALedgerEntries.FindSet() then begin
                     FALedgerEntries.CalcSums(Amount);
-                    if OpeningBalance < FALedgerEntries.Amount then
-                        AdditionDuringYear := FALedgerEntries.Amount - OpeningBalance
-                    else
-                        AdditionDuringYear := FALedgerEntries.Amount;
+                    AdditionDuringYear := FALedgerEntries.Amount;
                 end;
                 FALedgerEntries.Reset();
                 FALedgerEntries.SetRange("FA No.", "No.");
@@ -79,6 +98,15 @@ report 50198 "Fixed Asset Register New"
                 if FALedgerEntries.FindSet() then begin
                     FALedgerEntries.CalcSums(Amount);
                     DeperationAmount := Abs(FALedgerEntries.Amount);
+                end;
+                FALedgerEntries.Reset();
+                FALedgerEntries.SetRange("FA No.", "No.");
+                FALedgerEntries.SetRange("Depreciation Book Code", DepreciationBookCode);
+                FALedgerEntries.SetFilter("Posting Date", '%1..%2', FromDate, ToDate);
+                FALedgerEntries.SetFilter("FA Posting Type", '%1', FALedgerEntries."FA Posting Type"::"Gain/Loss");
+                if FALedgerEntries.FindSet() then begin
+                    FALedgerEntries.CalcSums(Amount);
+                    GainLoss := Abs(FALedgerEntries.Amount);
                 end;
                 FALedgerEntries.Reset();
                 FALedgerEntries.SetRange("FA No.", "No.");
@@ -121,7 +149,7 @@ report 50198 "Fixed Asset Register New"
                 TempExcelBuffer.AddColumn(AdditionDuringYear, false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Number);
                 TempExcelBuffer.AddColumn(DesposalOFtheMonth, false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Number);
                 TempExcelBuffer.AddColumn("Salvage Value", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Number);
-                TempExcelBuffer.AddColumn(OpeningBalance, false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Number);
+                TempExcelBuffer.AddColumn(NetAssetBeforeDepreciation, false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Number);
                 TempExcelBuffer.AddColumn(DepBook."No. of Depreciation Years", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Number);
                 TempExcelBuffer.AddColumn(DepBook."Depreciation Method", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
                 TempExcelBuffer.AddColumn(DepBook."Depreciation Starting Date", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Date);
@@ -129,7 +157,8 @@ report 50198 "Fixed Asset Register New"
                 TempExcelBuffer.AddColumn(DeperationAmount, false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Number);
                 TempExcelBuffer.AddColumn(DeperationOFtheMonth, false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Number);
                 TempExcelBuffer.AddColumn((DeperationAmount + DeperationOFtheMonth), false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Number);
-                TempExcelBuffer.AddColumn((OpeningBalance - (DeperationAmount + DeperationOFtheMonth)), false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Number);
+                TempExcelBuffer.AddColumn(NetAssetAfterDepreciation, false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Number);
+                TempExcelBuffer.AddColumn(GainLoss, false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Number);
                 TempExcelBuffer.AddColumn("FA Location Code", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
                 TempExcelBuffer.AddColumn("FA Sub Location", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
                 TempExcelBuffer.AddColumn(CWIPLine."Receipt No.", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
@@ -238,13 +267,15 @@ report 50198 "Fixed Asset Register New"
         EndYear: Text;
         DateGvar: Date;
         FinancialYear: Text;
+        NetAssetBeforeDepreciation: Decimal;
+        NetAssetAfterDepreciation: Decimal;
+        GainLoss: Decimal;
 
 
     procedure MakeExcelHeader()
     begin
         Window.OPEN('Fixed Asset No. #1##################');
         TempExcelBuffer.DeleteAll();
-        TempExcelBuffer.NewRow();
         TempExcelBuffer.AddColumn(CompanyName, FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.NewRow();
         TempExcelBuffer.AddColumn('FIXED ASSET REGISTER FROM ' + Format(FromDate) + ' TO ' + Format(ToDate), FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
@@ -275,6 +306,7 @@ report 50198 "Fixed Asset Register New"
         TempExcelBuffer.AddColumn('Depreciation during the period ' + Format(FromDate) + ' TO ' + Format(ToDate), FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('Accummulated Depreciation as on ' + Format(ToDate), FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('Net Asset Value After Depreciation as on ' + Format(ToDate), FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+        TempExcelBuffer.AddColumn('Gain/Loss', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('FA Location Code', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('FA Sub Location', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
         TempExcelBuffer.AddColumn('GRN Number', FALSE, '', TRUE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);

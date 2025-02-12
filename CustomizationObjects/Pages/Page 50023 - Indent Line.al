@@ -56,6 +56,15 @@ page 50023 "Indent Line"
                 {
                     ApplicationArea = all;
                     Editable = FieldEditable;
+                    trigger OnValidate()
+                    var
+                        UserSetup: Record "User Setup";
+                    begin
+                        if UserSetup.Get(UserId) then begin
+                            if not UserSetup.Specifications then
+                                Error('do not have permissons to modify spec id');
+                        end;
+                    end;
                 }
                 field(Description; rec.Description)
                 {
@@ -179,7 +188,7 @@ page 50023 "Indent Line"
                     //Editable = FieldEditable; //B2BSCM21AUG2023
                     trigger OnValidate()
                     begin
-                        if (Rec."ShortClose Status" = Rec."ShortClose Status"::ShortClose) OR (Rec."ShortClose Status" = Rec."ShortClose Status"::Cancel) then
+                        if (Rec."ShortClose Status" = Rec."ShortClose Status"::ShortClosed) OR (Rec."ShortClose Status" = Rec."ShortClose Status"::Cancelled) then
                             Error(TextLbl, Rec."Line No.", Rec."ShortClose Status");
                     end;
                 }
@@ -377,7 +386,7 @@ page 50023 "Indent Line"
                         TechnicalspecRec.Reset();
                         TechnicalspecRec.SetRange("Item No.", Rec."No.");
                         TechnicalspecRec.SetRange("Document No.", Rec."Document No.");
-                        TechnicalspecRec.SetRange("Line No.", Rec."Line No.");
+                        TechnicalspecRec.SetRange("Indent Line No.", Rec."Line No."); //B2BVCOn13Jun2024
                         TechnicalSpec.SetTableView(TechnicalspecRec);
                         TechnicalSpec.Run();
                     end;
@@ -1027,7 +1036,7 @@ page 50023 "Indent Line"
 
         Rec.ShortClose := true;
         if Rec."ShortClose Status" = Rec."ShortClose Status"::" " then
-            Rec."ShortClose Status" := Rec."ShortClose Status"::ShortClose;
+            Rec."ShortClose Status" := Rec."ShortClose Status"::ShortClosed;
         Rec."ShortClose Qty" := Rec."Req.Quantity" - Abs(Rec."Qty Issued");
         Rec."Req.Quantity" := Abs(Rec."Qty Issued");
         Rec."ShortClosed By" := UserId;
@@ -1054,7 +1063,7 @@ page 50023 "Indent Line"
         if Abs(Rec."Qty Issued") = 0 then begin
             Rec.CancelIndent := true;
             if Rec."ShortClose Status" = Rec."ShortClose Status"::" " then
-                Rec."ShortClose Status" := Rec."ShortClose Status"::Cancel;
+                Rec."ShortClose Status" := Rec."ShortClose Status"::Cancelled;
             Rec.Modify;
         end;
         if Rec.CancelIndent then

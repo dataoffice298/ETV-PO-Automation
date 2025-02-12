@@ -1794,7 +1794,7 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet_Result</DataSetName>
-            <Top>0.15557cm</Top>
+            <Top>0.25611cm</Top>
             <Left>0.13229cm</Left>
             <Height>10.67806cm</Height>
             <Width>18.24271cm</Width>
@@ -1817,7 +1817,7 @@
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox8">
+                        <Textbox Name="Textbox32">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -1831,10 +1831,7 @@
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox8</rd:DefaultName>
-                          <Visibility>
-                            <Hidden>=Code.Setdata(Cstr(Fields!CompanyAddr_1_.Value)+Chr(177)+Cstr(Fields!CompanyAddr_2_.Value)+Chr(177)+Cstr(Fields!CompanyAddr_3_.Value)+Chr(177)+Cstr(Fields!CompanyAddr_4_.Value)+Chr(177)+Cstr(Fields!CompanyAddr_5_.Value)+Chr(177)+Cstr(Fields!CompanyAddr_6_.Value)+Chr(177)+Cstr(Fields!BuyFromAddr_1_.Value)+Chr(177)+Cstr(Fields!BuyFromAddr_2_.Value)+Chr(177)+Cstr(Fields!BuyFromAddr_3_.Value)+Chr(177)+Cstr(Fields!BuyFromAddr_4_.Value)+Chr(177)+Cstr(Fields!BuyFromAddr_5_.Value)+Chr(177)+Cstr(Fields!BuyFromAddr_6_.Value)+Chr(177)+Cstr(Fields!CompanyInfo_Phone_No.Value)+Chr(177)+Cstr(Fields!CompanyInfo_Fax_No.Value)+Chr(177)+Cstr(Fields!CompanyInfo_EMail.Value)+Chr(177)+Cstr(Fields!No_PurchaseHeader.Value)+Chr(177)+Cstr(Fields!DocumentDate_PurchaseHeader.Value)+Chr(177)+Cstr(Fields!VendorOrderNo_PurchaseHeader.Value)+Chr(177)+Cstr(Fields!CompanyInfo__DL_20B_.Value)+Chr(177)+Cstr(Fields!CompanyInfo__DL_21B_.Value),1)</Hidden>
-                          </Visibility>
+                          <rd:DefaultName>Textbox32</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>

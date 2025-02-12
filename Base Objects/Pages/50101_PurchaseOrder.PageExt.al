@@ -43,6 +43,10 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         }
         addafter(Regularization) //B2BAJ02012024
         {
+            field(Purpose; Rec.Purpose)
+            {
+                ApplicationArea = All;
+            }
             field("PO Narration"; "PO Narration")
             {
                 ApplicationArea = All;
@@ -155,7 +159,9 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             field("Draft Date"; Rec."Draft Date")//B2BSPon16Aug2024//savarappa
             {
                 ApplicationArea = All;
-                Caption = 'Draft Date';
+                //B2BAnusha20Jan2025>>
+                Caption = 'Released Date';
+                Editable = false;
             }
         }
         modify("Purchaser Code") //B2BVCOn07Aug2024
@@ -166,6 +172,11 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         {
             Editable = FieldEditable;
         }
+        //B2BAnusha20Jan2025>>
+        modify("Document Date")
+        {
+            Caption = 'Draft Date';
+        }
 
         //B2BSSD25Jan2023<<
         addafter(PurchLines)
@@ -174,16 +185,17 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             {
                 ApplicationArea = all;
                 SubPageLink = DocumentNo = field("No.");
-                SubPageView = WHERE(Type = filter("Terms & Conditions")); //B2BVCOn23Sep2024
+                SubPageView = WHERE(DocumentType = const(Order), Type = filter("Terms & Conditions")); //B2BVCOn23Sep2024
                 UpdatePropagation = Both;
-                Editable = FieldEditable; //B2BVCOn07Aug2024
+                Editable = FieldEditable1; //B2BVCOn07Aug2024
             }
-             part(PoTermsAndSpecification; "PO Terms and Specifications") //B2BVCOn23Sep2024
+            part(PoTermsAndSpecification; "PO Terms and Specifications") //B2BVCOn23Sep2024
             {
                 ApplicationArea = All;
                 SubPageLink = DocumentNo = field("No.");
-                SubPageView = WHERE(Type = filter(Specifications));
+                SubPageView = WHERE(DocumentType = const(Order), Type = filter(Specifications));
                 UpdatePropagation = Both;
+                Editable = FieldEditable1;
             }
         }
         //B2BSSD25Jan2023>>
@@ -240,6 +252,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             }
         }
         //B2BSSD14FEB2023>>
+
 
 
 
@@ -326,6 +339,20 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                     //until purchaseLinevar.Next() = 0;
                 end;
                 //B2BSSD09AUG2023<<
+
+                //B2BAnusha12262024>>
+                PurchaseLineRec.Reset();
+                PurchaseLineRec.SetRange("Document No.", Rec."No.");
+                if PurchaseLineRec.FindSet() then
+                    repeat
+                        PostedGateEntryRec.Reset();
+                        PostedGateEntryRec.SetRange("No.", PurchaseLineRec."Posted Gate Entry No.");
+                        if PostedGateEntryRec.FindLast() then begin
+                            if Rec."Posting Date" < PostedGateEntryRec."Posting Date" then
+                                Error(Err3lbl);
+                        end;
+                    until PurchaseLineRec.Next() = 0;
+                //B2BAnusha12262024<<
             end;
 
 
@@ -385,9 +412,9 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 //B2BSSD29JUN2023>>
                 // Rec.TestField("Import Type", ErrorInfo.Create(ImportTypeError, true, PurchaseHeader));
                 Rec.TestField("Payment Terms Code");
-                Rec.TestField("Transaction Specification");
+                /* Rec.TestField("Transaction Specification");
                 Rec.TestField("Transaction Type");
-                Rec.TestField("Transport Method");
+                Rec.TestField("Transport Method"); */
                 // Rec.TestField("EPCG Scheme");
                 //B2BSSD29JUN2023<<
 
@@ -456,6 +483,27 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                     PurchaseHeader.SetRange("Document Type", Rec."Document Type");
                     PurchaseHeader.SetRange("No.", Rec."No.");
                     Report.RunModal(Report::"Regularization Order", true, false, PurchaseHeader);
+                end;
+            }
+            action(PrintRegularizationNew)
+            {
+                ApplicationArea = Suite;
+                Caption = 'Print Purchase Order Report New';
+                Ellipsis = true;
+                Image = PrintReport;
+                Promoted = true;
+                PromotedCategory = Category10;
+                ToolTip = 'Prepare to print the regularization document. The report request window for the document opens where you can specify what to include on the print-out.';
+
+                trigger OnAction()
+                var
+                    PurchaseHeader: Record "Purchase Header";
+                    RegErr: Label 'This is not a regularization order';
+                begin
+                    PurchaseHeader.Reset();
+                    PurchaseHeader.SetRange("Document Type", Rec."Document Type");
+                    PurchaseHeader.SetRange("No.", Rec."No.");
+                    Report.RunModal(Report::"Regularization Order New", true, false, PurchaseHeader);
                 end;
             }
 
@@ -600,9 +648,9 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             trigger OnBeforeAction()
             begin
                 Rec.TestField("Payment Terms Code");
-                Rec.TestField("Transaction Specification");
+                /* Rec.TestField("Transaction Specification");
                 Rec.TestField("Transaction Type");
-                Rec.TestField("Transport Method");
+                Rec.TestField("Transport Method"); */
 
                 PurchLine.Reset();
                 PurchLine.SetRange("Document No.", Rec."No.");
@@ -686,10 +734,15 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
     //B2BVCOn07Aug2024 >>
     trigger OnAfterGetRecord()
     begin
-        if Rec.Status = Rec.Status::Open then
-            FieldEditable := true
+        if (Rec.Status = Rec.Status::Released) or (Rec."Cancelled Order" = true) then
+            FieldEditable := false
         else
-            FieldEditable := false;
+            FieldEditable := true;
+
+        if (Rec.Status = Rec.Status::Released) and (Rec."Cancelled Order" = false) then
+            FieldEditable1 := false
+        else
+            FieldEditable1 := true;
     end;
     //B2BVCOn07Aug2024 <<
     local procedure ShortCloseHdr()
@@ -733,6 +786,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
 
                 if PurchLine."Quantity Invoiced" = PurchLine."Quantity Received" then begin
                     PurchLine.ShortClosed := true;
+                    PurchLine."Posted Invioce" := true;
                     PurchLine.Quantity := PurchLine."Quantity Invoiced";
                     PurchLine."Short Close Quantity" := PurchLine."Outstanding Quantity";
                     //if PurchLine."Short Close Quantity" <> 0 then begin
@@ -757,6 +811,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 rec."Short Closed by" := UserId;
                 Rec."Short Closed Date & Time" := CurrentDateTime;
                 Rec.ShortClosed := true;
+                Rec."Posted Invioce" := true;
                 Rec.Modify();
             end;
         end;
@@ -816,7 +871,10 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         IndentReqLine: Record "Indent Requisitions";
         CWIPDetails: Record "CWIP Details";
         PurchaseLine: Record "Purchase Line";
-        FieldEditable: Boolean;
+        FieldEditable, FieldEditable1 : Boolean;
         ErrLbl: Label 'You must define CWIP details for the Item No. %1 and Line No. %2.';
         Err2Lbl: Label 'CWIP details must be defined for the total receiving quantity of Item No. %1 and Line No. %2.';
+        Err3lbl: Label 'Posting Date Must not be Less than Inward Gate Posting Date';
+        PostedGateEntryRec: Record "Posted Gate Entry Header_B2B";
+        PurchaseLineRec: Record "Purchase Line";
 }

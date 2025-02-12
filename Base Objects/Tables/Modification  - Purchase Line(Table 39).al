@@ -571,11 +571,13 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         CWIPDetails: Record "CWIP Details";
         ErrLbl: Label 'CWIP Details are defined for this line. Please check those first.';
     begin
-        CWIPDetails.Reset();
-        CWIPDetails.SetRange("Document No.", Rec."Document No.");
-        CWIPDetails.SetRange("Document Line No.", Rec."Line No.");
-        if not CWIPDetails.IsEmpty then
-            Error(ErrLbl);
+        if Rec.CWIP then begin
+            CWIPDetails.Reset();
+            CWIPDetails.SetRange("Document No.", Rec."Document No.");
+            CWIPDetails.SetRange("Document Line No.", Rec."Line No.");
+            if not CWIPDetails.IsEmpty then
+                Error(ErrLbl);
+        end;
     end;
 
     procedure OpenCWIPDetails()

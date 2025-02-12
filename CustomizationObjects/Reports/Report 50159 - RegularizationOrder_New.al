@@ -1,10 +1,10 @@
-report 50182 "Regularization Order"
+report 50159 "Regularization Order New"
 {
-    Caption = 'Purchase Order Report_50182';
+    Caption = 'Purchase Order Report New_50159';
     UsageCategory = ReportsAndAnalysis;
     ApplicationArea = All;
     DefaultLayout = RDLC;
-    RDLCLayout = './RegularizationOrder.rdl';
+    RDLCLayout = './RegularizationOrderNew.rdl';
 
 
     dataset
@@ -136,6 +136,8 @@ report 50182 "Regularization Order"
             { }
             column(Order_Date; "Order Date")
             { }
+            column(Draft_Date; "Draft Date")
+            { }
             dataitem("Purchase Line"; "Purchase Line")
             {
                 DataItemLink = "Document No." = field("No.");
@@ -193,7 +195,8 @@ report 50182 "Regularization Order"
                 { }
                 column(GSTAmount; GstTotalSum)
                 { }
-
+                /*  column(ItemPicture; ItemTenantMedia.Content)
+                 { } */
 
                 /* trigger OnPreDataItem()
                 begin
@@ -202,7 +205,6 @@ report 50182 "Regularization Order"
 
                 trigger OnAfterGetRecord()
                 var
-
 
                 begin
                     SNo += 1;
@@ -255,9 +257,47 @@ report 50182 "Regularization Order"
                     // GateEntryPostYesNo.FormatNoText(AmountText, Round(TotalOrderAmount, 1, '='), "Currency Code");
                 end;
             }
+            //B2BSPOn16AUg2024>>> //savarappa
+            dataitem("PO Specifications"; "PO Terms And Conditions")
+            {
+                DataItemLink = DocumentNo = field("No.");
+                DataItemTableView = where(Type = filter(Specifications));
+                column(PO_LineType; LineType)
+                { }
+                column(PO_Description11; Description)
+                {
+
+                }
+                column(PO_Line_Type; Line_Type)
+                {
+
+                }
+                column(PO_LineNo; LineNo)
+                { }
+                column(S_No; SNo)
+                { }
+                trigger OnAfterGetRecord()
+                var
+                    i: Integer;
+                    //MidString: array[100] of Text[1024];
+                    MidString: array[2000] of Text;
+                begin
+                    Clear(i);
+                    Clear(Line_Type);
+                    Clear(ListTypeNew);
+                    ListTypeNew := "PO Terms And Conditions".LineType;
+                    //WHILE STRLEN(ListTypeNew) > 0 DO BEGIN
+                    i := i + 1;
+                    MidString[i] := SplitStrings(ListTypeNew, ' ');
+                    Line_Type := Line_Type + ' ' + UPPERCASE(COPYSTR(MidString[i], 1, 1)) + LOWERCASE(COPYSTR(MidString[i], 2));
+                    //END;
+                end;
+            }
+            //B2BSPOn16AUg2024<<< //savarappa
             dataitem("PO Terms And Conditions"; "PO Terms And Conditions") //B2BAJ02012024
             {
                 DataItemLink = DocumentNo = field("No.");
+                DataItemTableView = where(Type = filter("Terms & Conditions"));
                 column(LineType; LineType)
                 {
                 }
@@ -271,6 +311,7 @@ report 50182 "Regularization Order"
                 }
                 column(LineNo; LineNo)
                 { }
+                column(SNo_; "SNo.") { }
                 trigger OnAfterGetRecord()
                 var
                     i: Integer;
@@ -338,7 +379,7 @@ report 50182 "Regularization Order"
                                 GetGSTAmounts(PurchLine);
                                 GSTAmountLine[I] += SGSTAmt + IGSSTAmt + CGSTAmt;
                             until PurchLine.Next() = 0;
-                            //end;
+                            //end
                         end;
                     end;
 
@@ -576,6 +617,15 @@ report 50182 "Regularization Order"
         ContactEmail: Text;
         OrderAddress: Record "Order Address";
         GSTRegNo: Code[20];
+        DocumentAttachment: Record "Document Attachment";
+        TempBlob: Codeunit "Temp Blob";
+        AttcahmentInstream: InStream;
+        AttchmentOutStream: OutStream;
+        FilePathName: Text;
+        TempFile: File;
+        FileName: Text;
+        ItemRec: Record Item;
+        ItemTenantMedia: Record "Tenant Media";
 
 
 

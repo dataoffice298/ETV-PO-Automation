@@ -1058,7 +1058,7 @@ codeunit 50018 "Approvals MGt 4"
     begin
         workflowsetup.InitWorkflowStepArgument(workflowstepargument, workflowstepargument."Approver Type"::Approver, workflowstepargument."Approver Limit Type"::"Direct Approver", 0, '', Blankdateformula, true);
 
-        workflowsetup.InsertDocApprovalWorkflowSteps(workflow, BuildPurchEnquirytypecondition(PurchEnquiry.Status::Open), RunworkflowOnSendPurchEnquiryforApprovalCode(), BuildPurchEnquirytypecondition(PurchEnquiry.Status::"Pending Approval"), RunworkflowOnCancelPurchEnquiryforApprovalCode(), workflowstepargument, true);
+        workflowsetup.InsertDocApprovalWorkflowSteps(workflow, BuildPurchEnquirytypecondition(PurchEnquiry.Status::Open.AsInteger()), RunworkflowOnSendPurchEnquiryforApprovalCode(), BuildPurchEnquirytypecondition(PurchEnquiry.Status::"Pending Approval".AsInteger()), RunworkflowOnCancelPurchEnquiryforApprovalCode(), workflowstepargument, true);
     end;
 
 

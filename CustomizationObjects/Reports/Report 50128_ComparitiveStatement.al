@@ -176,6 +176,7 @@ report 50128 ComparitiveStatement
                 dataitem("PO Terms And Conditions"; "PO Terms And Conditions") //B2BAJ02012024
                 {
                     DataItemLink = DocumentNo = field("Parent Quote No.");
+                    DataItemTableView = where(Type = filter("Terms & Conditions"));
                     column(LineType; LineType)
                     {
                     }
@@ -183,7 +184,6 @@ report 50128 ComparitiveStatement
                     { }
                     column(Description11; Description)
                     {
-
                     }
                     column(Line_Type; Line_Type)
                     {
@@ -191,20 +191,63 @@ report 50128 ComparitiveStatement
                     }
                     column(LineNo; LineNo)
                     { }
+                    column(Type_Terms; Type)
+                    { }
+                    column(SNo_; "SNo.")
+                    { }
                     trigger OnAfterGetRecord()
                     var
                         i: Integer;
-                        MidString: array[100] of Text[1024];
+                        // MidString: array[100] of Text[1024];
+                        MidString: array[2000] of Text;
                     begin
                         Clear(i);
                         Clear(Line_Type);
                         Clear(ListTypeNew);
                         ListTypeNew := "PO Terms And Conditions".LineType;
-                        WHILE STRLEN(ListTypeNew) > 0 DO BEGIN
-                            i := i + 1;
-                            MidString[i] := SplitStrings(ListTypeNew, ' ');
-                            Line_Type := Line_Type + ' ' + UPPERCASE(COPYSTR(MidString[i], 1, 1)) + LOWERCASE(COPYSTR(MidString[i], 2));
-                        END;
+                        // WHILE STRLEN(ListTypeNew) > 0 DO BEGIN
+                        i := i + 1;
+                        MidString[i] := SplitStrings(ListTypeNew, ' ');
+                        Line_Type := Line_Type + ' ' + UPPERCASE(COPYSTR(MidString[i], 1, 1)) + LOWERCASE(COPYSTR(MidString[i], 2));
+                        // END;
+                    end;
+                }
+                dataitem("PO Specifications"; "PO Terms And Conditions")
+                {
+                    DataItemLink = DocumentNo = field("Parent Quote No.");
+                    DataItemTableView = where(Type = filter(Specifications));
+                    column(PO_LineType; LineType)
+                    { }
+                    column(PO_DocumentNo; DocumentNo)
+                    { }
+                    column(PO_Description11; Description)
+                    {
+
+                    }
+                    column(PO_Line_Type; Line_Type)
+                    {
+
+                    }
+                    column(PO_LineNo; LineNo)
+                    { }
+                    column(PO_Type; Type)
+                    { }
+                    trigger OnAfterGetRecord()
+                    var
+                        i: Integer;
+                        // MidString: array[100] of Text[1024];
+
+                        MidString: array[2000] of Text;
+                    begin
+                        Clear(i);
+                        Clear(Line_Type);
+                        Clear(ListTypeNew);
+                        ListTypeNew := "PO Specifications".LineType;
+                        // WHILE STRLEN(ListTypeNew) > 0 DO BEGIN
+                        i := i + 1;
+                        MidString[i] := SplitStrings(ListTypeNew, ' ');
+                        Line_Type := Line_Type + ' ' + UPPERCASE(COPYSTR(MidString[i], 1, 1)) + LOWERCASE(COPYSTR(MidString[i], 2));
+                        //END;
                     end;
                 }
                 dataitem("Purchase Line"; "Purchase Line")
@@ -219,7 +262,6 @@ report 50128 ComparitiveStatement
                     begin
 
                     end;
-
                 }
                 dataitem(GSTLoop; Integer)
                 {

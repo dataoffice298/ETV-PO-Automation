@@ -46,6 +46,10 @@ page 50177 "Centrak Indent Req List"
                     ApplicationArea = All;
                     StyleExpr = StyleTxt;
                 }
+                field(Cancel; Rec.Cancel)
+                {
+                    ApplicationArea = All;
+                }
             }
         }
     }

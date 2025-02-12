@@ -122,9 +122,15 @@ pageextension 50070 MyExtension1 extends "Purchases & Payables Setup"
         {
             group("Enquiry Note")
             {
-                field(Note; Rec.Note)
+                field("Terms & Conditions"; Rec."Terms & Conditions")
                 {
                     ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Terms & Conditions field.';
+                }
+                field("Req Note"; Rec."Req Note")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Req Note field.';
                 }
             }
         }

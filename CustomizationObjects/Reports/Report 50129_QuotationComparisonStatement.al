@@ -269,6 +269,8 @@ report 50129 "Quot Comparision Statement"
                 column(QAmount1; QAmount[Integer.Number])
                 {
                 }
+                column(QuotCompDescription; QuotCompDescription)
+                { }
 
                 dataitem(QuoteSpecifications; QuoteSpecifications)
                 {
@@ -376,6 +378,10 @@ report 50129 "Quot Comparision Statement"
                         UnitPrice := QuoComp.Rate;
                     DeliveryDays := QuoComp."Delivery Date";
                     Indentor := QuoCompHdr."Created By";
+
+                    Clear(QuotCompDescription);
+                    if QuotCompHead.Get("Quot Comp No.") then
+                        QuotCompDescription := QuotCompHead."Quot Comparitive";
 
 
                 end;
@@ -696,6 +702,8 @@ report 50129 "Quot Comparision Statement"
 
         VendorRec: Record Vendor;
         CurrencyRec: Record "Currency Exchange Rate";
+        QuotCompDescription: Text;
+        QuotCompHead: Record QuotCompHdr;
 
 
     procedure SETRFQ(RFQNoL: Code[20]);

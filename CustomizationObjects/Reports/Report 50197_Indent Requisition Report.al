@@ -7,71 +7,77 @@ report 50197 "Indent Requisition Report"
 
     dataset
     {
-        dataitem(IndentReqHeader; "Indent Req Header")
+        dataitem("Approval Entry"; "Approval Entry")
         {
-            dataitem(IndentReqLine; "Indent Requisitions")
+            dataitem(IndentReqHeader; "Indent Req Header")
             {
-                CalcFields = "Received Quantity";
-                DataItemLink = "Document No." = field("No.");
-                DataItemLinkReference = IndentReqHeader;
-                trigger OnAfterGetRecord()
-                begin
-                    if IndentHeader.Get(IndentReqLine."Indent No.") then;
+                DataItemLink = "No." = field("Document No.");
+                DataItemLinkReference = "Approval Entry";
+                dataitem(IndentReqLine; "Indent Requisitions")
+                {
+                    CalcFields = "Received Quantity";
+                    DataItemLink = "Document No." = field("No.");
+                    DataItemLinkReference = IndentReqHeader;
+                    trigger OnAfterGetRecord()
+                    begin
+                        if IndentHeader.Get(IndentReqLine."Indent No.") then;
 
-                    Clear(VendorNo);
-                    Clear(VendorName);
-                    PurchHead.Reset();
-                    PurchHead.SetRange("No.", IndentReqLine."Purch Order No.");
-                    if PurchHead.FindFirst() then begin
-                        VendorNo := PurchHead."Buy-from Vendor No.";
-                        VendorName := PurchHead."Buy-from Vendor Name";
+                        Clear(VendorNo);
+                        Clear(VendorName);
+                        PurchHead.Reset();
+                        PurchHead.SetRange("No.", IndentReqLine."Purch Order No.");
+                        if PurchHead.FindFirst() then begin
+                            VendorNo := PurchHead."Buy-from Vendor No.";
+                            VendorName := PurchHead."Buy-from Vendor Name";
+                        end;
+
+
+
+                        ExcelBuffer.NewRow;
+                        ExcelBuffer.AddColumn(IndentReqHeader."No.", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
+                        ExcelBuffer.AddColumn(IndentReqHeader."Document Date", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Date);
+                        ExcelBuffer.AddColumn(IndentReqHeader."Resposibility Center", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
+                        ExcelBuffer.AddColumn(IndentReqLine."Requisition Type", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
+                        ExcelBuffer.AddColumn(IndentReqLine."Shortcut Dimension 2 Code", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
+                        ExcelBuffer.AddColumn(IndentReqLine."Indent No.", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
+                        ExcelBuffer.AddColumn(IndentHeader."Document Date", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Date);
+                        ExcelBuffer.AddColumn(IndentReqLine."Line No.", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Number);
+                        ExcelBuffer.AddColumn(IndentReqLine."Item No.", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
+                        ExcelBuffer.AddColumn(IndentReqLine.Description, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
+                        ExcelBuffer.AddColumn(IndentReqLine."Variant Description", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
+                        ExcelBuffer.AddColumn(IndentReqLine."Indentor Description", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
+                        ExcelBuffer.AddColumn(IndentReqLine."Spec Id", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
+                        ExcelBuffer.AddColumn(IndentReqLine."Unit of Measure", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
+                        ExcelBuffer.AddColumn(IndentReqLine."Indent Quantity", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Number);
+                        ExcelBuffer.AddColumn(IndentReqLine."Qty. Ordered", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Number);
+                        ExcelBuffer.AddColumn(IndentReqLine."Received Quantity", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Number);
+                        ExcelBuffer.AddColumn(IndentReqLine."Remaining Quantity", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Number);
+                        ExcelBuffer.AddColumn(IndentReqLine."Purch Order No.", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
+                        ExcelBuffer.AddColumn(VendorNo, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
+                        ExcelBuffer.AddColumn(VendorName, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
+                        ExcelBuffer.AddColumn(IndentReqLine."Unit Cost", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Number);
+                        ExcelBuffer.AddColumn("Approval Entry"."Last Date-Time Modified", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
+                        ExcelBuffer.AddColumn(IndentReqHeader.Purpose, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
                     end;
-
-
-
-                    ExcelBuffer.NewRow;
-                    ExcelBuffer.AddColumn(IndentReqHeader."No.", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
-                    ExcelBuffer.AddColumn(IndentReqHeader."Document Date", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Date);
-                    ExcelBuffer.AddColumn(IndentReqHeader."Resposibility Center", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
-                    ExcelBuffer.AddColumn(IndentReqLine."Requisition Type", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
-                    ExcelBuffer.AddColumn(IndentReqLine."Shortcut Dimension 2 Code", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
-                    ExcelBuffer.AddColumn(IndentReqLine."Indent No.", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
-                    ExcelBuffer.AddColumn(IndentHeader."Document Date", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Date);
-                    ExcelBuffer.AddColumn(IndentReqLine."Line No.", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Number);
-                    ExcelBuffer.AddColumn(IndentReqLine."Item No.", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
-                    ExcelBuffer.AddColumn(IndentReqLine.Description, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
-                    ExcelBuffer.AddColumn(IndentReqLine."Variant Code", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
-                    ExcelBuffer.AddColumn(IndentReqLine."Indentor Description", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
-                    ExcelBuffer.AddColumn(IndentReqLine."Spec Id", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
-                    ExcelBuffer.AddColumn(IndentReqLine."Unit of Measure", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
-                    ExcelBuffer.AddColumn(IndentReqLine."Indent Quantity", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Number);
-                    ExcelBuffer.AddColumn(IndentReqLine."Qty. Ordered", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Number);
-                    ExcelBuffer.AddColumn(IndentReqLine."Received Quantity", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Number);
-                    ExcelBuffer.AddColumn(IndentReqLine."Remaining Quantity", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Number);
-                    ExcelBuffer.AddColumn(IndentReqLine."Purch Order No.", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
-                    ExcelBuffer.AddColumn(VendorNo, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
-                    ExcelBuffer.AddColumn(VendorName, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
-                    ExcelBuffer.AddColumn(IndentReqLine."Unit Cost", FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Number);
-                    ExcelBuffer.AddColumn(LastApprovalDateTime, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
-                    ExcelBuffer.AddColumn(IndentReqHeader.Purpose, FALSE, '', FALSE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
-                end;
+                }
+                /* trigger OnAfterGetRecord()
+                begin
+                    Clear(LastApprovalDateTime);
+                    ApprovalEntry.Reset();
+                    ApprovalEntry.SetRange("Table ID", Database::"Indent Req Header");
+                    ApprovalEntry.SetRange("Document No.", IndentReqHeader."No.");
+                    ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
+                    if ApprovalEntry.FindLast() then begin
+                        if IndentReqHeader.Status = IndentReqHeader.Status::Release then
+                            LastApprovalDateTime := ApprovalEntry."Last Date-Time Modified";
+                    end;
+                end; */
             }
-            trigger OnAfterGetRecord()
-            begin
-                Clear(LastApprovalDateTime);
-                ApprovalEntry.Reset();
-                ApprovalEntry.SetRange("Table ID", Database::"Indent Req Header");
-                ApprovalEntry.SetRange("Document No.", IndentReqHeader."No.");
-                ApprovalEntry.SetRange(Status, ApprovalEntry.Status::Approved);
-                if ApprovalEntry.FindLast() then begin
-                    if IndentReqHeader.Status = IndentReqHeader.Status::Release then
-                        LastApprovalDateTime := ApprovalEntry."Last Date-Time Modified";
-                end;
-            end;
-
             trigger OnPreDataItem()
             begin
-                SetFilter("Document Date", '%1..%2', StartDate, EndDate);
+                SetRange("Table ID", Database::"Indent Req Header");
+                SetRange(Status, "Approval Entry".Status::Approved);
+                SetFilter("Last Date-Time Modified", '%1..%2', StartDate, EndDate);
                 MakeIndentExcelDataHeader();
             end;
         }
@@ -120,7 +126,7 @@ report 50197 "Indent Requisition Report"
         ExcelBuffer.NewRow();
         ExcelBuffer.AddColumn('INDENT REQUISITION DETAILED STATUS', FALSE, '', TRUE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
         ExcelBuffer.NewRow();
-        IF (StartDate <> 0D) or (EndDate <> 0D) THEN
+        IF (StartDate <> 0DT) or (EndDate <> 0DT) THEN
             ExcelBuffer.AddColumn('INDENT REQUISITION DETAILED STATUS FROM  ' + Format(StartDate, 0, '<Day,2>-<Month,2>-<Year4>') + '  TO  ' + Format(EndDate, 0, '<Day,2>-<Month,2>-<Year4>'), FALSE, '', TRUE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
         ExcelBuffer.NewRow;
         ExcelBuffer.AddColumn('Indent Requisition No.', FALSE, '', TRUE, FALSE, TRUE, '', ExcelBuffer."Cell Type"::Text);
@@ -152,13 +158,14 @@ report 50197 "Indent Requisition Report"
 
     var
         ExcelBuffer: Record "Excel Buffer" temporary;
-        StartDate: Date;
-        EndDate: Date;
+        StartDate: DateTime;
+        EndDate: DateTime;
         IndentHeader: Record "Indent Header";
         PurchHead: Record "Purchase Header";
         VendorNo: Code[20];
         VendorName: Text;
         ApprovalEntry: Record "Approval Entry";
         LastApprovalDateTime: DateTime;
+        LastApprovalDate: Date;
 
 }

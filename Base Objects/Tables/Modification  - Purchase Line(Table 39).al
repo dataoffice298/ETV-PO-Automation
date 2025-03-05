@@ -496,7 +496,16 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             DataClassification = CustomerContent;
             Editable = false;
         }
-        field(60063; "Posted Invioce"; Boolean)//B2BSSD
+        field(60063; "Other Charges"; Decimal) //B2BVCOn08Aug2024
+        {
+            DataClassification = CustomerContent;
+            DecimalPlaces = 0 : 5;
+        }
+        field(60064; Model; Code[250]) //B2BVCOn08Aug2024
+        {
+            DataClassification = CustomerContent;
+        }
+        field(60065; "Posted Invioce"; Boolean)//B2BSSD
         {
             DataClassification = CustomerContent;
         }
@@ -562,11 +571,13 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         CWIPDetails: Record "CWIP Details";
         ErrLbl: Label 'CWIP Details are defined for this line. Please check those first.';
     begin
-        CWIPDetails.Reset();
-        CWIPDetails.SetRange("Document No.", Rec."Document No.");
-        CWIPDetails.SetRange("Document Line No.", Rec."Line No.");
-        if not CWIPDetails.IsEmpty then
-            Error(ErrLbl);
+        if Rec.CWIP then begin
+            CWIPDetails.Reset();
+            CWIPDetails.SetRange("Document No.", Rec."Document No.");
+            CWIPDetails.SetRange("Document Line No.", Rec."Line No.");
+            if not CWIPDetails.IsEmpty then
+                Error(ErrLbl);
+        end;
     end;
 
     procedure OpenCWIPDetails()

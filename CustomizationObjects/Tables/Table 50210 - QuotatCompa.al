@@ -527,6 +527,10 @@ table 50210 "Quotation Comparison Test"
             Blocked = CONST(false));
             DataClassification = CustomerContent;
         }
+        field(60040; "Model No."; Code[250]) //B2BVCOn23Aug2024
+        {
+            DataClassification = CustomerContent;
+        }
     }
 
     keys

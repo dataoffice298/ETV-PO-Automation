@@ -31,6 +31,8 @@ report 50187 "NonReturnable Gatepass"
                     ExcelBuffer.AddColumn("Posted Gate Entry Line_B2B".Quantity, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
                     //ExcelBuffer.AddColumn("Posted Gate Entry Header_B2B"."Document Date", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
                     ExcelBuffer.AddColumn("Posted Gate Entry Header_B2B"."Location Code", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
+                    ExcelBuffer.AddColumn("Posted Gate Entry Header_B2B"."To Location", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
+                    ExcelBuffer.AddColumn("Posted Gate Entry Header_B2B".Purpose, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
                 end;
             }
             trigger OnPreDataItem()
@@ -120,11 +122,12 @@ report 50187 "NonReturnable Gatepass"
         ExcelBuffer.AddColumn('QTY', FALSE, '', TRUE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
         //ExcelBuffer.AddColumn('RETURN DATE', FALSE, '', TRUE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
         ExcelBuffer.AddColumn('LOCATION', FALSE, '', TRUE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
+        ExcelBuffer.AddColumn('TO LOCATION', FALSE, '', TRUE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
+        ExcelBuffer.AddColumn('PURPOSE', FALSE, '', TRUE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text)
     end;
 
     PROCEDURE CreateExcelbook()
     BEGIN
         ExcelBuffer.CreateBookAndOpenExcel('', 'Stock Summary', '', COMPANYNAME, USERID);
-
     END;
 }

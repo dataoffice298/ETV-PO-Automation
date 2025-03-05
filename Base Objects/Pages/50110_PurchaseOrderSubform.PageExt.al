@@ -77,6 +77,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             field("Indentor Description"; Rec."Indentor Description")//B2BSSD02Feb2023
             {
                 ApplicationArea = All;
+                Editable = FieldEditableVar1;
             }
 
             field(CWIP; Rec.CWIP)
@@ -132,6 +133,10 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             Editable = FieldEditableVar1;
         }
         modify("Shortcut Dimension 2 Code")
+        {
+            Editable = FieldEditableVar1;
+        }
+        modify("Unit Price (LCY)")
         {
             Editable = FieldEditableVar1;
         } */
@@ -250,6 +255,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             field("Variant Description"; Rec."Variant Description") //B2BSCM11JAN2024
             {
                 ApplicationArea = All;
+                Editable = FieldEditableVar1;
             }
         }
         addafter("Direct Unit Cost")
@@ -966,10 +972,10 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
     trigger OnAfterGetCurrRecord()
     begin
         //B2BVCOn07Aug2024 >>
-       /*  if Rec.CancelOrder then
+        if Rec.CancelOrder then
             FieldEditableVar1 := false
         else
-            FieldEditableVar1 := true; */
+            FieldEditableVar1 := true;
         //B2BVCOn07Aug2024 <<
     end;
 
@@ -1189,6 +1195,8 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         SuccessMsg: Label 'Purchase Order %1 is Short Closed';
         ShortClosed: Boolean;
         PurchaseHeaderLRec: Record "Purchase Header";
+        PurchLine: Record "Purchase Line";
+        CWIPVar: Boolean;
     begin
         Rec.TestField("Quantity Received");
         if Rec."Quantity Invoiced" <> Rec."Quantity Received" then
@@ -1201,8 +1209,12 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         end;
 
         Rec.ShortClosed := true;
+        if Rec.CWIP then begin
+            Rec.CWIP := false;
+            CWIPVar := true;
+        end;
         Rec.validate(Quantity, Rec."Quantity Invoiced");
-        Rec."Short Close Quantity" := xRec."Outstanding Quantity";
+        Rec."Short Close Quantity" := Rec."Quantity Invoiced";
         if Rec."Short Close Quantity" <> 0 then begin
             Rec."Outstanding Quantity" := 0;
             Rec."Outstanding Qty. (Base)" := 0;
@@ -1216,7 +1228,19 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             PurchaseHeaderLRec.Status := PurchaseHeaderLRec.Status::Released;
             PurchaseHeaderLRec.Modify();
         end;
-
+        PurchLine.Reset();
+        PurchLine.SetRange("Document Type", Rec."Document Type");
+        PurchLine.SetRange("Document No.", Rec."Document No.");
+        PurchLine.SetRange("Posted Invioce", false);
+        if PurchLine.FindSet() then begin
+            PurchaseHeaderLRec."Posted Invioce" := false;
+            PurchaseHeaderLRec.Modify();
+        end else begin
+            PurchaseHeaderLRec."Posted Invioce" := true;
+            PurchaseHeaderLRec.Modify();
+        end;
+        if CWIPVar then
+            Rec.CWIP := true;
         Message(SuccessMsg, Rec."No.");
     end;
 

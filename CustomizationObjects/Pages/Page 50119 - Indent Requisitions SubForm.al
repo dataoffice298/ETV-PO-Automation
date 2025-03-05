@@ -85,6 +85,11 @@ page 50119 "Indent Requisitions SubForm"
                 {
                     ApplicationArea = All;
                 }
+                field("Purchaser Code"; Rec."Purchaser Code")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Purchaser Code field.';
+                }
                 field("Spec Id"; rec."Spec Id")
                 {
                     ApplicationArea = all;

@@ -98,6 +98,14 @@ page 50120 "Indent Requisition Document"
                     Editable = false;
                     StyleExpr = StyleTxt;
                 }
+                field(Note; Rec.Note)
+                {
+                    ApplicationArea = All;
+                }
+                field(Cancel; Rec.Cancel)
+                {
+                    ApplicationArea = All;
+                }
             }
             part(Indentrequisations; 50119)
             {
@@ -300,6 +308,48 @@ page 50120 "Indent Requisition Document"
                               end;
                           until IndentReqLine.Next() = 0;
                       end;*/
+                end;
+            }
+            action("Purchase Indent Report")//B2Banusha22NOV2024
+            {
+                Caption = 'Purchase Indent Report';
+                ApplicationArea = All;
+                Image = Report;
+                trigger OnAction()
+                var
+                    IndentRequestionLinesRec: Record "Indent Requisitions";
+                    IndentRequestionspage: page "Indent Requisitions SubForm";
+                    IndentReqHeaderRec: Record "Indent Req Header";
+                    PurchaseorderReport: Report "Purchase Order Report";
+                    PurchaserCodevar: Text;
+                    Previouspurchcode, IndentNo : Code[30];
+                    DocumentDate: Date;
+                begin
+                    IndentRequestionLinesRec.Reset();
+                    IndentRequestionLinesRec.SetRange("Document No.", Rec."No.");
+                    IndentRequestionLinesRec.Setfilter("Purchaser Code", '<>%1', '');
+                    IndentRequestionLinesRec.SetCurrentKey("Purchaser Code");
+                    IndentRequestionLinesRec.SetAscending("Purchaser Code", true);
+                    if IndentRequestionLinesRec.FindSet() then
+                        repeat
+                            if Previouspurchcode <> IndentRequestionLinesRec."Purchaser Code" then begin
+                                Previouspurchcode := IndentRequestionLinesRec."Purchaser Code";
+                                if PurchaserCodevar = '' then
+                                    PurchaserCodevar := IndentRequestionLinesRec."Purchaser Code"
+                                else
+                                    PurchaserCodevar := PurchaserCodevar + '|' + IndentRequestionLinesRec."Purchaser Code";
+                            end;
+                        until IndentRequestionLinesRec.Next() = 0;
+
+                    IndentRequestionLinesRec.Reset();
+                    IndentRequestionLinesRec.SetRange("Document No.", Rec."No.");
+                    IndentNo := Rec."No.";
+                    DocumentDate := Rec."Document Date";
+
+                    Clear(PurchaseorderReport);
+                    PurchaseorderReport.SetDocumentDate(DocumentDate, IndentNo);
+                    PurchaseorderReport.Setpurchasercode(PurchaserCodevar);
+                    PurchaseorderReport.RunModal();
                 end;
             }
             action("Create &Purchase Order")
@@ -680,6 +730,39 @@ page 50120 "Indent Requisition Document"
                     end;
                 }
             }
+            group(print)
+            {
+                action("ETPL Indent Report")
+                {
+                    Caption = 'ETPL Indent Report';
+                    ApplicationArea = All;
+                    Image = Print;
+                    trigger OnAction()
+                    var
+                        IndentReqHeader: Record "Indent Req Header";
+                    begin
+                        IndentReqHeader.Reset();
+                        IndentReqHeader.SetRange("No.", Rec."No.");
+                        Report.RunModal(Report::"ETPL Indent Report", true, false, IndentReqHeader);
+                    end;
+                }
+                //B2BAnusha23Jan2025>>
+                action("Indent Requisition Report")
+                {
+                    Caption = 'Indent Requisition Report';
+                    ApplicationArea = All;
+                    Image = Print;
+                    trigger OnAction()
+                    var
+                        IndentReqHeader: Record "Indent Req Header";
+                    begin
+                        IndentReqHeader.Reset();
+                        IndentReqHeader.SetRange("No.", Rec."No.");
+                        Report.RunModal(Report::"Indent Requisition Report", true, false, IndentReqHeader);
+                    end;
+                }
+                //B2BAnusha23Jan2025<<
+            }
         }
         area(Promoted)
         {
@@ -724,6 +807,14 @@ page 50120 "Indent Requisition Document"
                 actionref(OpenQuotes_Promoted; OpenQuotes)
                 {
                 }
+            }
+            group(Category_Category6)
+            {
+                Caption = 'Print', Comment = 'Generated from the PromotedActionCategories property index 5.';
+                actionref(Indent_Promoted; "ETPL Indent Report")
+                {
+                }
+                actionref(Indent_Requestion; "Indent Requisition Report") { }//B2BAnusha23Jan2025>>
             }
         }
     }

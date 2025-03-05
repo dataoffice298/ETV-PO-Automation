@@ -81,7 +81,7 @@ table 50209 "Indent Req Header"
             Caption = 'RFQ No.';
             Description = 'B2BESGOn02Jun2022';
         }
-        field(18; "Indent No."; Code[20])
+        field(18; "Indent No."; Code[100])
         {
 
             TableRelation = "Indent Header";
@@ -150,6 +150,14 @@ table 50209 "Indent Req Header"
         {
             DataClassification = CustomerContent;
             Editable = false;
+        }
+        field(50010; Note; Text[250]) //B2BVCOn29Aug2024
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50011; Cancel; Boolean)
+        {
+            DataClassification = CustomerContent;
         }
     }
     keys

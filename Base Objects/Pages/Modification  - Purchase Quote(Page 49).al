@@ -72,8 +72,16 @@ pageextension 50073 pageextension70000001 extends "Purchase Quote"
             {
                 ApplicationArea = all;
                 SubPageLink = DocumentNo = field("No.");
-                SubPageView = where(DocumentType = const(Quote));
+                SubPageView = where(DocumentType = const(Quote), Type = filter("Terms & Conditions"));
                 UpdatePropagation = Both;
+            }
+            part(PoTermsAndSpecification; "PO Terms and Specifications")
+            {
+                ApplicationArea = All;
+                SubPageLink = DocumentNo = field("No.");
+                SubPageView = WHERE(DocumentType = const(Quote), Type = filter(Specifications));
+                UpdatePropagation = Both;
+
             }
         }
         //B2BSSD25Jan2023>>
@@ -114,6 +122,43 @@ pageextension 50073 pageextension70000001 extends "Purchase Quote"
                 Caption = 'Ammendent Comments';
             }
         }
+        addafter("Invoice Details")
+        {
+            group(Duties)
+            {
+                field(BCD; Rec.BCD)
+                {
+                    ApplicationArea = All;
+                    Caption = 'BCD';
+                    trigger OnValidate()
+                    begin
+                        Currency.Reset();
+                        Currency.SetRange("Currency Code", Rec."Currency Code");
+                        if Currency.FindLast() then;
+
+                    end;
+                }
+                field(SWC; Rec.SWC)
+                {
+                    ApplicationArea = All;
+                    Caption = 'SWC';
+                }
+                field("BCD Amount"; Rec."BCD Amount")
+                {
+                    ApplicationArea = All;
+                    Caption = 'BCD Amount';
+                    Visible = false;
+
+                }
+                field("SWC Amount"; Rec."SWC Amount")
+                {
+                    ApplicationArea = All;
+                    Caption = 'SWC Amount';
+                    Visible = false;
+                }
+            }
+        }
+
     }
     //B2BSSD017Feb2023<<
     actions
@@ -173,6 +218,94 @@ pageextension 50073 pageextension70000001 extends "Purchase Quote"
                 //B2BVCOn12Mar2024 <<
             end;
         }
+        //B2BSSD23Aug2024 >>
+        addafter("&Quote")
+        {
+            action(TermsandCondition)
+            {
+                Image = GetLines;
+                ApplicationArea = All;
+                Caption = 'Get Terms and Condition';
+                trigger OnAction()
+                var
+                    POTermsAndConditionsfrom: Record "PO Terms And Conditions";
+                    PurchaseHeaderLvar: Record "Purchase Header";
+                    POTermsAndConditionsTo: Record "PO Terms And Conditions";
+                    LineNo: Integer;
+                begin
+                    PurchaseHeaderLvar.Reset();
+                    PurchaseHeaderLvar.SetRange("Document Type", PurchaseHeaderLvar."Document Type"::Quote);
+                    PurchaseHeaderLvar.SetRange("RFQ No.", Rec."RFQ No.");
+                    if PurchaseHeaderLvar.FindSet() then;
+                    if page.RunModal(Page::"Purchase Quotes", PurchaseHeaderLvar) = Action::LookupOK then begin
+                        POTermsAndConditionsfrom.Reset();
+                        POTermsAndConditionsfrom.SetRange(DocumentType, POTermsAndConditionsfrom.DocumentType::Quote);
+                        POTermsAndConditionsfrom.SetRange(DocumentNo, PurchaseHeaderLvar."No.");
+                        POTermsAndConditionsfrom.SetRange(Type, POTermsAndConditionsfrom.Type::"Terms & Conditions");
+                        IF POTermsAndConditionsfrom.FindSet() then
+                            //LineNo := POTermsAndConditionsfrom.LineNo + 10000;
+                        repeat
+                            POTermsAndConditionsTo.Init();
+                            POTermsAndConditionsTo.DocumentNo := Rec."No.";
+                            POTermsAndConditionsTo.LineType := POTermsAndConditionsfrom.LineType;
+                            POTermsAndConditionsTo.Description := POTermsAndConditionsfrom.Description;
+                            POTermsAndConditionsTo.Type := POTermsAndConditionsfrom.Type;
+                            POTermsAndConditionsTo.LineNo := POTermsAndConditionsfrom.LineNo;
+                            POTermsAndConditionsTo.Insert();
+                            //LineNo += 10000;
+                            until POTermsAndConditionsfrom.Next() = 0;
+                    end;
+                end;
+            }
+            action(Specifications)
+            {
+                Image = GetLines;
+                ApplicationArea = All;
+                Caption = 'Get Specifications';
+                trigger OnAction()
+                var
+                    POTermsAndConditionsfrom: Record "PO Terms And Conditions";
+                    PurchaseHeaderLvar: Record "Purchase Header";
+                    POTermsAndConditionsTo: Record "PO Terms And Conditions";
+                    LineNo: Integer;
+                begin
+                    PurchaseHeaderLvar.Reset();
+                    PurchaseHeaderLvar.SetRange("Document Type", PurchaseHeaderLvar."Document Type"::Quote);
+                    PurchaseHeaderLvar.SetRange("RFQ No.", Rec."RFQ No.");
+                    if PurchaseHeaderLvar.FindSet() then;
+                    if page.RunModal(Page::"Purchase Quotes", PurchaseHeaderLvar) = Action::LookupOK then begin
+                        POTermsAndConditionsfrom.Reset();
+                        POTermsAndConditionsfrom.SetRange(DocumentType, POTermsAndConditionsfrom.DocumentType::Quote);
+                        POTermsAndConditionsfrom.SetRange(DocumentNo, PurchaseHeaderLvar."No.");
+                        POTermsAndConditionsfrom.SetRange(Type, POTermsAndConditionsfrom.Type::Specifications);
+                        IF POTermsAndConditionsfrom.FindSet() then
+                            //LineNo := POTermsAndConditionsfrom.LineNo + 10000;
+                        repeat
+                            POTermsAndConditionsTo.Init();
+                            POTermsAndConditionsTo.DocumentNo := Rec."No.";
+                            POTermsAndConditionsTo.LineType := POTermsAndConditionsfrom.LineType;
+                            POTermsAndConditionsTo.Description := POTermsAndConditionsfrom.Description;
+                            POTermsAndConditionsTo.Type := POTermsAndConditionsfrom.Type;
+                            POTermsAndConditionsTo.LineNo := POTermsAndConditionsfrom.LineNo;
+                            POTermsAndConditionsTo.Insert();
+                            //LineNo += 10000;
+                            until POTermsAndConditionsfrom.Next() = 0;
+                    end;
+                end;
+            }
+        }
+        addafter(Category_New)
+        {
+            group(TermsandCondition1)
+            {
+                Caption = 'Get Terms and Condition';
+                actionref(TermsandCondition_promated; TermsandCondition)
+                { }
+                actionref(Specifications_promoted; Specifications)
+                { }
+            }
+        }
+        //B2BSSD23Aug2024 <<
 
     }
 
@@ -180,7 +313,7 @@ pageextension 50073 pageextension70000001 extends "Purchase Quote"
 
     //Unsupported feature: PropertyChange. Please convert manually.
     //B2BVCOn03Oct22>>>
-    trigger OnOpenPage()
+    trigger OnAfterGetRecord()
     begin
         if (Rec.Status = Rec.Status::Released) then
             PageEditable := false
@@ -194,5 +327,6 @@ pageextension 50073 pageextension70000001 extends "Purchase Quote"
         PageEditable: Boolean;
 
         PurChQuo: Record "Purchase Header";
+        Currency: Record "Currency Exchange Rate";
 }
 

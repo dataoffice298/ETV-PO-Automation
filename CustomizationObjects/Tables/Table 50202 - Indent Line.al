@@ -491,7 +491,7 @@ table 50202 "Indent Line"
         {
             Caption = 'Variant Description';
             TableRelation = "Item Variant".Description WHERE("Item No." = FIELD("No."));
-            TestTableRelation = false;
+            //TestTableRelation = false;
             ValidateTableRelation = false;
             DataClassification = CustomerContent;
             trigger OnValidate()
@@ -555,8 +555,8 @@ table 50202 "Indent Line"
         field(50034; "ShortClose Status"; Option)
         {
             Editable = false;
-            OptionCaption = ',ShortClose,Cancel,Closed';
-            OptionMembers = " ",ShortClose,Cancel,Closed;
+            OptionCaption = ',Cancelled,Short Closed,Closed';
+            OptionMembers = " ",Cancelled,ShortClosed,Closed;
         }
 
         //B2BVCOn17Jun2024 <<

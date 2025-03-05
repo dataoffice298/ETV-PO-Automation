@@ -34,6 +34,10 @@ page 50118 "Purchase Enquiry List"
                 {
                     ApplicationArea = All;
                 }
+                field("Buy-from Vendor Name"; Rec."Buy-from Vendor Name")
+                {
+                    ApplicationArea = All;
+                }
                 field("No."; Rec."No.")
                 {
                     ApplicationArea = All;

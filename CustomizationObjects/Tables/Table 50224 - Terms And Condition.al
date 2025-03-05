@@ -26,8 +26,11 @@ table 50224 "PO Terms And Conditions"
             var
                 myInt: Integer;
             begin
-                if TechSPecOp.Get(LineType) then
+                /* if TechSPecOp.Get(LineType) then begin
                     Description := TechSPecOp.Description;
+                    Type := TechSPecOp.Type;
+                end; */
+
             end;
             //B2BSSD13MAR2023>>
         }
@@ -61,14 +64,26 @@ table 50224 "PO Terms And Conditions"
             end;
             //end;
         }
+        field(9; Type; Option) //B2BVCOn26Aug2024
+        {
+            DataClassification = CustomerContent;
+            OptionCaption = ' ,Terms & Conditions,Specifications';
+            OptionMembers = " ","Terms & Conditions",Specifications;
+        }
+        field(10; "SNo."; Integer)
+        {
+            DataClassification = CustomerContent;
+        }
     }
 
     keys
     {
-        key(Pk; DocumentNo, DocumentType, LineNo)
+        key(Pk; DocumentNo, DocumentType, Type, LineNo)
         {
             Clustered = true;
         }
+        key(Key2; "SNo.")
+        { }
     }
     var
         TechSPecOp: Record TechnicalSpecOption;

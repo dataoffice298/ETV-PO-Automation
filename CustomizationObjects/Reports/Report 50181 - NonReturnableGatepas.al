@@ -13,13 +13,10 @@ report 50181 "Non Returnable Gatepass"
         {
             DataItemTableView = WHERE("Entry Type" = const(Outward),
                                       Type = FILTER('NRGP'));
-
             column(CompanyInfoName; CompanyInfo.Name)
             { }
             column(CompanyInfoPic; CompanyInfo.Picture)
-            {
-
-            }
+            { }
             column(NonReturnCapLbl; NonReturnCapLbl)
             { }
             column(GatepassCapLbl; GatepassCapLbl)
@@ -112,6 +109,13 @@ report 50181 "Non Returnable Gatepass"
             { }
             column(Location_Code; "Location Code")
             { }
+            //B2BAnusha10FEB2025
+            column(Vehicle_No_; "Vehicle No.") { }
+            column(Cityvar; Cityvar) { }
+            column(PageLbl; PageLbl) { }
+            column(PostCodeVar; PostCodeVar) { }
+            column(Add1Var; Add1Var) { }
+            column(Add2Var; Add2Var) { }
             column(UserName; UserName)//B2BSSD27MAR2023
             { }
             dataitem("Posted Gate Entry Line_B2B"; "Posted Gate Entry Line_B2B")
@@ -124,9 +128,9 @@ report 50181 "Non Returnable Gatepass"
                 column(Source_Name; "Source Name")
                 { }
                 column(Quantity; Quantity)
-                {
-
-                }
+                { }
+                column(Gate_Entry_No_; "Gate Entry No.") { }
+                column(Entry_Type; "Entry Type") { }
                 column(Users; Users."Full Name")
                 { }
                 column(Make; Variant)
@@ -150,9 +154,19 @@ report 50181 "Non Returnable Gatepass"
                 end;
 
             }
+            //B2BAnusha10FEB2025
             trigger OnAfterGetRecord()
+            var
+                LocationRec: Record Location;
             begin
-
+                LocationRec.Reset();
+                LocationRec.SetRange(Code, "Posted Gate Entry Header_B2B"."Location Code");
+                if LocationRec.FindFirst() then begin
+                    Add1Var := LocationRec.Address;
+                    Add2Var := LocationRec."Address 2";
+                    Cityvar := LocationRec.City;
+                    PostCodeVar := LocationRec."Post Code";
+                end;
             end;
 
             trigger OnPreDataItem()
@@ -251,4 +265,7 @@ report 50181 "Non Returnable Gatepass"
         CheckedCapLbl: Label '2)Checked and allowed at the gate on_____________________Time____________________';
         PostedNrgpOutwardNo: Code[30];//B2BSSD20Jan2023
         UserName: Text[50]; //B2BSSD27MAR2023
+        //B2BAnusha10FEB2025
+        Add1Var, Add2Var, Cityvar, PostCodeVar : Text;
+        PageLbl: label 'Page';
 }

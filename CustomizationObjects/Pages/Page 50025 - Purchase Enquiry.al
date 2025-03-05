@@ -91,7 +91,23 @@ page 50025 "Purchase Enquiry"
                     ApplicationArea = All;
                     Caption = 'Project Code';
                 }
-
+                field("Req Note"; Rec."Req Note") //B2BVCOn29Aug2024
+                {
+                    ApplicationArea = All;
+                    MultiLine = true;
+                }
+                field("Enquiry Notes"; Rec."Enquiry Note")
+                {
+                    ApplicationArea = All;
+                    MultiLine = true;
+                }
+                field(Note; Rec.Note)
+                {
+                    Caption = 'Terms & Conditions';
+                    ApplicationArea = All;
+                    //Editable = false;
+                    MultiLine = true; //B2BAnusha23Dec24
+                }
             }
             part(PurchLines; "Purchase Enquiry Subform")
             {
@@ -200,8 +216,19 @@ page 50025 "Purchase Enquiry"
                 ApplicationArea = all;
                 //SubPageLink = DocumentNo = field("Buy-from Vendor No.");
                 SubPageLink = DocumentType = field("Document Type"), DocumentNo = field("No.");
+                SubPageView = WHERE(Type = filter("Terms & Conditions"));
                 UpdatePropagation = Both;
-                
+                //B2BAnusha20Jan2025>>
+                Editable = PageEditable1;
+            }
+            part(PoTermsAndSpecification; "PO Terms and Specifications")
+            {
+                ApplicationArea = All;
+                SubPageLink = DocumentType = field("Document Type"), DocumentNo = field("No.");
+                SubPageView = WHERE(Type = filter(Specifications));
+                UpdatePropagation = Both;
+                //B2BAnusha20Jan2025>>
+                Editable = PageEditable1;
             }
         }
         //B2BSSD17FEB2023<<
@@ -329,6 +356,46 @@ page 50025 "Purchase Enquiry"
                         ReleasePurchDoc.Reopen(Rec);
                     end;
                 }
+                action("Send Approval Request")
+                {
+                    ApplicationArea = All;
+                    Image = SendApprovalRequest;
+                    // Visible = (Not OpenApprEntrEsists);
+                    Promoted = true;
+                    PromotedIsBig = true;
+                    PromotedCategory = Process;
+                    PromotedOnly = true;
+                    trigger OnAction()
+                    begin
+                        IF ApprovalMngt.CheckPurchEnquiryApprovalsWorkflowEnabled(Rec) then
+                            ApprovalMngt.OnSendPurchEnquiryForApproval(Rec);
+                    end;
+                }
+                action("Cancel Approval Request")
+                {
+                    ApplicationArea = All;
+                    Image = CancelApprovalRequest;
+                    Visible = CanCancelapprovalforrecord or CanCancelapprovalforflow;
+                    Promoted = true;
+                    PromotedIsBig = true;
+                    PromotedCategory = Process;
+                    PromotedOnly = true;
+                    trigger OnAction()
+                    begin
+                        ApprovalMngt.OnCancelPurchEnquiryForApproval(Rec);
+                    end;
+                }
+                action(ApprovalEntries)
+                {
+                    ApplicationArea = all;
+                    Image = Approvals;
+                    Promoted = true;
+                    PromotedIsBig = true;
+                    PromotedCategory = Process;
+                    PromotedOnly = true;
+                    // RunObject = page "Approval Entries";
+                    // RunPageLink = "Document No." = FIELD("No.");
+                }
                 separator("Process3")
                 {
                 }
@@ -375,6 +442,52 @@ page 50025 "Purchase Enquiry"
                     REPORT.RUN(50073, TRUE, FALSE, PurchHeader);
                 end;
             }
+            action("Enquiry Note")
+            {
+                Caption = 'Enquiry Note';
+                Promoted = true;
+                PromotedCategory = Process;
+                ApplicationArea = All;
+                trigger OnAction()
+                begin
+                    PurchPaySetup.Get();
+                    Rec.Note := PurchPaySetup."Terms & Conditions";//B2BAnusha23Dec24
+                    Rec."Req Note" := PurchPaySetup."Req Note";
+                    Rec.Modify();
+                end;
+            }
+            action("Purch Enquiry")
+            {
+                Caption = 'Purch Enquiry Report';
+                Promoted = true;
+                PromotedCategory = Process;
+                ApplicationArea = All;
+                Image = Print;
+                trigger OnAction()
+                begin
+                    PurchHeader.SetRange("No.", Rec."No.");
+                    Report.Run(50157, true, false, PurchHeader);
+                end;
+            }
+            //B2BSpon20Sep2024 Savarappa>>
+            action(SendCustom)
+            {
+                ApplicationArea = Basic, Suite;
+                Caption = 'Send';
+                Ellipsis = true;
+                Image = SendToMultiple;
+                ToolTip = 'Prepare to send the document according to the vendor''s sending profile, such as attached to an email. The Send document to window opens first so you can confirm or select a sending profile.';
+
+                trigger OnAction()
+                var
+                    PurchaseHeader: Record "Purchase Header";
+                begin
+                    PurchaseHeader := Rec;
+                    CurrPage.SetSelectionFilter(PurchaseHeader);
+                    PurchaseHeader.SendRecords();
+                end;
+            }
+            //B2BSpon20Sep2024 Savarappa <<
         }
     }
 
@@ -382,10 +495,20 @@ page 50025 "Purchase Enquiry"
     trigger OnAfterGetRecord();
 
     begin
-        if (Rec.Status = Rec.Status::Released) then
+        OpenAppEntrExistsForCurrUser := approvalmngmt.HasOpenApprovalEntriesForCurrentUser(Rec.RecordId());
+        OpenApprEntrEsists := approvalmngmt.HasOpenApprovalEntries(Rec.RecordId());
+        CanCancelapprovalforrecord := approvalmngmt.CanCancelApprovalForRecord(Rec.RecordId());
+        workflowwebhookmangt.GetCanRequestAndCanCancel(Rec.RecordId(), CanrequestApprovForFlow, CanCancelapprovalforflow);
+
+        if (Rec.Status = Rec.Status::Released) or (Rec."Cancelled Order" = true) then
             PageEditable := false
         else
             PageEditable := true;
+
+        if (Rec.Status = Rec.Status::Released) and (Rec."Cancelled Order" = false) then
+            PageEditable1 := false
+        else
+            PageEditable1 := true;
     end;
 
     //B2BVCOn28Sep22>>>
@@ -414,7 +537,16 @@ page 50025 "Purchase Enquiry"
         MLTransactionType: Option Purchase,Sale;
         PurchHeader: Record 38;
         POAutomation: Codeunit 50026;
-        PageEditable: Boolean;//B2BVCOn28Sep22
+        PageEditable, PageEditable1 : Boolean;//B2BVCOn28Sep22
+        PurchPaySetup: Record "Purchases & Payables Setup";
+        ApprovalMngt: Codeunit "Approvals MGt 4";
+        OpenAppEntrExistsForCurrUser: Boolean;
+        OpenApprEntrEsists: Boolean;
+        CanCancelapprovalforrecord: Boolean;
+        CanCancelapprovalforflow: Boolean;
+        CanrequestApprovForFlow: Boolean;
+        approvalmngmt: Codeunit "Approvals Mgmt.";
+        workflowwebhookmangt: Codeunit "Workflow Webhook Management";
 
     local procedure PaytoVendorNoOnAfterValidate();
     begin

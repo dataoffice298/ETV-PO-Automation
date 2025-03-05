@@ -783,7 +783,7 @@ page 50116 "Indent Header"
                     REPORT.RUNMODAL(REPORT::"Material Issue Slip", TRUE, false, IndentHeader);
                 end;
             }
-             //B2BVCOn17Jun2024 >>
+            //B2BVCOn17Jun2024 >>
             action("Short Close")
             {
                 Caption = 'ShortClose';
@@ -815,7 +815,7 @@ page 50116 "Indent Header"
         }
     }
 
-     local procedure ShortcloseIndentHdr()
+    local procedure ShortcloseIndentHdr()
     var
         ConfirmText: Label 'Do you want to Short Close the Indent Document No. %1 ?';
         NotApplicableErr: Label 'Req. Qty and Qty Issued should not be same for Line %1';
@@ -851,7 +851,7 @@ page 50116 "Indent Header"
             repeat
                 IndentLine.ShortClose := true;
                 if IndentLine."ShortClose Status" = IndentLine."ShortClose Status"::" " then
-                    IndentLine."ShortClose Status" := IndentLine."ShortClose Status"::ShortClose;
+                    IndentLine."ShortClose Status" := IndentLine."ShortClose Status"::ShortClosed;
                 IndentLine.CalcFields("Qty Issued");
                 IndentLine."ShortClose Qty" := IndentLine."Req.Quantity" - Abs(IndentLine."Qty Issued");
                 IndentLine."Req.Quantity" := Abs(IndentLine."Qty Issued");
@@ -899,7 +899,7 @@ page 50116 "Indent Header"
                 if Abs(IndentLine."Qty Issued") = 0 then begin
                     IndentLine.CancelIndent := true;
                     if IndentLine."ShortClose Status" = IndentLine."ShortClose Status"::" " then
-                        IndentLine."ShortClose Status" := IndentLine."ShortClose Status"::Cancel;
+                        IndentLine."ShortClose Status" := IndentLine."ShortClose Status"::Cancelled;
                     if IndentLine.CancelIndent then
                         CancelOrder := true;
                     IndentLine.Modify();

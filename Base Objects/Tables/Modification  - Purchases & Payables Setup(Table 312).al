@@ -156,6 +156,17 @@ tableextension 50057 tableextension70000012 extends "Purchases & Payables Setup"
             DataClassification = CustomerContent;
             TableRelation = Location.Code;
         }
+        field(50114; "Terms & Conditions"; Text[500])
+        {
+            Caption = 'Terms & Conditions';
+            DataClassification = CustomerContent;
+        }
+        field(50115; "Req Note"; Text[250])
+        {
+            Caption = 'Req Note';
+            DataClassification = ToBeClassified;
+        }
+
 
     }
 

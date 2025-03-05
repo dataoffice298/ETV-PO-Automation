@@ -118,6 +118,22 @@ pageextension 50070 MyExtension1 extends "Purchases & Payables Setup"
             }
         }
         //B2BMSOn13Sep2022<<
+        addafter(Weightages)
+        {
+            group("Enquiry Note")
+            {
+                field("Terms & Conditions"; Rec."Terms & Conditions")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Terms & Conditions field.';
+                }
+                field("Req Note"; Rec."Req Note")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the Req Note field.';
+                }
+            }
+        }
 
     }
 

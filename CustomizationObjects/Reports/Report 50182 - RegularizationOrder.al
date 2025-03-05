@@ -54,6 +54,8 @@ report 50182 "Regularization Order"
             { }
             column(Buy_from_Address_2; "Buy-from Address 2")
             { }
+            column(Buy_from_Address_3; "Buy-from Address 3")
+            { }
             column(Buy_from_City; "Buy-from City")
             { }
             column(Buy_from_Contact_No_; "Buy-from Contact No.")
@@ -452,7 +454,7 @@ report 50182 "Regularization Order"
                     if OrderAddress.FindSet() then begin
                         repeat
                             if OrderAddress.Name <> '' then
-                                ContactName := ContactName + OrderAddress.Name + '/';
+                                ContactName := ContactName + OrderAddress."Contact Name" + '/';
                             if OrderAddress."E-Mail" <> '' then
                                 ContactEmail := ContactEmail + OrderAddress."E-Mail" + '/';
                             if OrderAddress."Phone No." <> '' then

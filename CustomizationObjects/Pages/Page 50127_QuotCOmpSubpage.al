@@ -437,6 +437,10 @@ page 50127 QuotationComparSubForm
                     Editable = false;
                     ApplicationArea = all;
                 }
+                field("Model No."; Rec."Model No.") //B2BVCOn23Aug2024
+                {
+                    ApplicationArea = All;
+                }
 
                 field("Carry Out Action"; Rec."Carry Out Action")
                 {
@@ -550,8 +554,8 @@ page 50127 QuotationComparSubForm
                 {
                     ApplicationArea = All;
                     Image = ViewPage;
-                    Promoted = true;
-                    PromotedCategory = Category5;
+                    // Promoted = true;
+                    // PromotedCategory = Category5;
                     RunObject = page "Purchase Quote";
                     RunPageLink = "No." = field("Parent Quote No.");
                 }

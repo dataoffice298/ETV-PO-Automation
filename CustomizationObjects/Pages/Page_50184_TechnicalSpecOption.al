@@ -6,6 +6,7 @@ page 50184 TechnicalSpecificationOpList
     SourceTable = TechnicalSpecOption;
     Caption = 'Technical Specification Options List';
 
+
     layout
     {
         area(Content)
@@ -21,6 +22,15 @@ page 50184 TechnicalSpecificationOpList
                 {
                     ApplicationArea = All;
                     Caption = 'Description';
+                }
+                field(Type; Rec.Type)
+                {
+                    ApplicationArea = All;
+                }
+                field("SNo."; Rec."SNo.")
+                {
+                    Caption = 'Priority';
+                    ApplicationArea = All;
                 }
             }
         }

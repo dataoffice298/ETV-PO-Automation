@@ -34,7 +34,8 @@ pageextension 50180 PurchOrderListExt extends "Purchase Order List"
     begin
         Rec.FilterGroup(2);
         Rec.SetRange("Purchase order", false);
-        Rec.SetRange("Posted Invioce",false); //B2BSSD
+        Rec.SetRange("Posted Invioce", false); //B2BSSD
+        Rec.SetRange("Cancelled Order", false);
         Rec.FilterGroup(0);
     end;
     //B2B30APR2024 >>

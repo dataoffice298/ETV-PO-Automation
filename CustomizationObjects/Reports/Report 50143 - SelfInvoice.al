@@ -44,7 +44,7 @@ report 50143 "Self Invoice"
             column(RCM_StatusLbl009; RCM_StatusLbl009) { }
             column(GstNoLbl010; GstNoLbl010) { }
             column(SelfInvoiceNoLbl013; SelfInvoiceNoLbl013) { }
-            column(Self_Invoice_No_; '') { }
+            column(Self_Invoice_No_; "Self Invoice No.") { }
             column(Vendor_Invoice_Date; "Vendor Invoice Date")
             { }
             dataitem("Purch. Inv. Line"; "Purch. Inv. Line")

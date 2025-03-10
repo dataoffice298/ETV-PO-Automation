@@ -132,8 +132,9 @@ codeunit 50016 "MyBaseSubscr"
 
         if ToRecRef.Number > 0 then
             DocumentAttachmentMgmt.CopyAttachmentsForPostedDocs(FromRecRef, ToRecRef);
-        //CopyAttachmentsForPostedDocs(FromRecRef, ToRecRef, IsHandled);
     end;
+    //invoice end<<
+        //CopyAttachmentsForPostedDocs(FromRecRef, ToRecRef, IsHandled);
     //invoice end<<
 
     //B2BVCOn11Oct2024 >>
@@ -190,7 +191,9 @@ codeunit 50016 "MyBaseSubscr"
                  ToDocumentAttachment.Insert;
              until FromDocumentAttachment.Next() = 0;
          end;
-     end; */
+
+     end;*/
+
 
     //B2BMSOn06Oct2022>>
     [EventSubscriber(ObjectType::Page, Page::"Document Attachment Factbox", 'OnBeforeDrillDown', '', false, false)]
@@ -1142,16 +1145,16 @@ codeunit 50016 "MyBaseSubscr"
     end;
     //************END*****************B2BSSD
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnApproveApprovalRequest', '', false, false)]
-    local procedure OnApproveApprovalRequest(var ApprovalEntry: Record "Approval Entry")
-    var
-        IndentReqHead: Record "Indent Req Header";
-    begin
-        if IndentReqHead.Get(ApprovalEntry."Document No.") then begin
-            IndentReqHead."Last Modified Date" := ApprovalEntry."Last Date-Time Modified";
-            IndentReqHead.Modify();
-        end;
-    end;
+    /*  [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnApproveApprovalRequest', '', false, false)]
+     local procedure OnApproveApprovalRequest(var ApprovalEntry: Record "Approval Entry")
+     var
+         IndentReqHead: Record "Indent Req Header";
+     begin
+         if IndentReqHead.Get(ApprovalEntry."Document No.") then begin
+             IndentReqHead."Last Modified Date" := ApprovalEntry."Last Date-Time Modified";
+             IndentReqHead.Modify();
+         end;
+     end; */
 
     //>>B2BSpon16Aug2024>> savarappa
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Purchase Document", 'OnAfterReleasePurchaseDoc', '', false, false)]
@@ -1197,7 +1200,6 @@ codeunit 50016 "MyBaseSubscr"
         case PurchaseHeader."Document Type" of
             PurchaseHeader."Document Type"::Enquiry:
                 ReportSelectionsUsage := ReportSelections.Usage::"P.Enquiry".AsInteger();
-
         end;
 
     end;

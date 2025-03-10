@@ -1,4 +1,4 @@
-page 50199 "Complete CentralIndentReq List"
+/*page 50199 "Complete CentralIndentReq List"
 {
     Caption = 'Complete Central Indent Requisition List';
     CardPageID = "Indent Requisition Document";
@@ -62,4 +62,4 @@ page 50199 "Complete CentralIndentReq List"
         StyleTxt := Rec.SetStyle();
     end;
     
-}
+}*/

@@ -36,7 +36,7 @@ codeunit 50019 "Gate Entry- Post"
                 //B2BSSD07JUN2023<<
 
                 //B2BSSD07JUN2023>>
-                if GateEntryLine1."Entry Type" = GateEntryLine."Entry Type"::Outward then begin//B2BSCM30AUG2023
+                 if GateEntryLine1."Entry Type" = GateEntryLine."Entry Type"::Outward then begin//B2BSCM30AUG2023
                     if GateEntryLine1."Source Type" = GateEntryLine."Source Type"::"Fixed Asset" then begin//B2BSCM30AUG2023
                         FixedAsset.Reset();
                         FixedAsset.SetRange("No.", GateEntryLine."Source No.");
@@ -45,11 +45,11 @@ codeunit 50019 "Gate Entry- Post"
                             FixedAsset.Modify();
                         end;
                     end;
-                end;
+                end; 
                 //B2BSSD07JUN2023<<
 
                 //B2BSSD17APR2023>>
-                if GateEntryLine1."Entry Type" = GateEntryLine1."Entry Type"::Inward then begin //B2BSCM30AUG2023
+                 if GateEntryLine1."Entry Type" = GateEntryLine1."Entry Type"::Inward then begin //B2BSCM30AUG2023
                     if GateEntryLine1."Source Type" = GateEntryLine1."Source Type"::"Fixed Asset" then begin //B2BSCM30AUG2023
                         FixedAsset.Reset();
                         FixedAsset.SetRange("No.", GateEntryLine1."Source No."); //B2BSCM30AUG2023
@@ -58,7 +58,7 @@ codeunit 50019 "Gate Entry- Post"
                             FixedAsset.Modify();
                         end;
                     end;
-                end;
+                end; 
                 //B2BSSD17APR2023<<
 
                 /*if GateEntryLine."Source Type" = GateEntryLine."Source Type"::Description then

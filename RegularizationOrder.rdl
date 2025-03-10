@@ -2102,6 +2102,9 @@
                   </Visibility>
                 </TablixMember>
                 <TablixMember>
+                  <Visibility>
+                    <Hidden>=IIF(Fields!GSTAmountLine.Value &lt;&gt;0, false, true)</Hidden>
+                  </Visibility>
                   <KeepWithGroup>After</KeepWithGroup>
                 </TablixMember>
                 <TablixMember>
@@ -2123,7 +2126,7 @@
                     </TablixMember>
                   </TablixMembers>
                   <Visibility>
-                    <Hidden>=IIF(Fields!GSTPerText.Value &lt;&gt; "", false, true)</Hidden>
+                    <Hidden>=IIF((Fields!GSTPerText.Value &lt;&gt; "") And (Fields!GSTAmountLine.Value &lt;&gt;0), false, true)</Hidden>
                   </Visibility>
                 </TablixMember>
                 <TablixMember />

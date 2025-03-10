@@ -95,6 +95,7 @@ page 50025 "Purchase Enquiry"
                 {
                     ApplicationArea = All;
                     MultiLine = true;
+                    ShowMandatory = true;
                 }
                 field("Enquiry Notes"; Rec."Enquiry Note")
                 {
@@ -107,6 +108,7 @@ page 50025 "Purchase Enquiry"
                     ApplicationArea = All;
                     //Editable = false;
                     MultiLine = true; //B2BAnusha23Dec24
+                    ShowMandatory = true;
                 }
             }
             part(PurchLines; "Purchase Enquiry Subform")
@@ -342,6 +344,22 @@ page 50025 "Purchase Enquiry"
                     RunObject = Codeunit "Release Purchase Document";
                     ShortCutKey = 'Ctrl+F9';
                     ApplicationArea = All;
+                    //B2BAnusha18Feb2025>>
+                    trigger OnAction()
+                    begin
+                        if Rec."Req Note" = '' then begin
+                            Message('Req Note field must be filled.');
+                            Rec.Status := Rec.Status::Open;
+                            Rec.Modify(true);
+                        end
+                        else
+                            if Rec.Note = '' then begin
+                                Message('Note field must be filled.');
+                                Rec.Status := Rec.Status::Open;
+                                Rec.Modify(true);
+                            end;
+                    end;
+                    //B2BAnusha18Feb2025<<
                 }
                 action("Re&open")
                 {
@@ -367,6 +385,8 @@ page 50025 "Purchase Enquiry"
                     PromotedOnly = true;
                     trigger OnAction()
                     begin
+                        Rec.TestField("Req Note");
+                        Rec.TestField(Note);
                         IF ApprovalMngt.CheckPurchEnquiryApprovalsWorkflowEnabled(Rec) then
                             ApprovalMngt.OnSendPurchEnquiryForApproval(Rec);
                     end;

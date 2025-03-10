@@ -51,11 +51,11 @@ report 50192 "FixedAssets&Item LocationWise" //B2BSSD09MAY2023
                             TempExcelBuffer.AddColumn(FixedAsset."Model No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                             TempExcelBuffer.AddColumn(FixedAsset."Serial No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                             TempExcelBuffer.AddColumn(FixedAsset.Make_B2B, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                            if FixedAsset."available/Unavailable" = false then
+                             if FixedAsset."available/Unavailable" = false then
                                 status1 := 'Available'
                             else
                                 if FixedAsset."available/Unavailable" = true then
-                                    status1 := 'Unavailable';
+                                    status1 := 'Unavailable'; 
                             TempExcelBuffer.AddColumn(status1, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                             TempExcelBuffer.AddColumn(PostedRGPNo, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                             TempExcelBuffer.AddColumn(ExpectedReturnDate, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);

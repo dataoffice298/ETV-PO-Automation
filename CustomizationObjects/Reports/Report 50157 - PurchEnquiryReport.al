@@ -117,6 +117,10 @@ report 50157 PurchEnquiryReport
             { }
             column(Enquiry_Note; "Enquiry Note")
             { }
+            column(ThankYouLbl; ThankYouLbl)
+            { }
+            column(ETVLbl; ETVLbl)
+            { }
             dataitem("Purchase Line"; "Purchase Line")
             {
                 DataItemLink = "Document No." = field("No.");
@@ -152,12 +156,15 @@ report 50157 PurchEnquiryReport
                         if OrderAddress.Name <> '' then
                             ContactName := ContactName + OrderAddress."Contact Name" + '/';
                         if OrderAddress."E-Mail" <> '' then
-                            ContactEmail := ContactEmail + OrderAddress."E-Mail" + '/';
+                            ContactEmail := ContactEmail + OrderAddress."E-Mail" + '|';
+                        if OrderAddress.Email2 <> '' then
+                            ContactEmail := ContactEmail + OrderAddress.Email2 + '|';
+
                         if OrderAddress."Phone No." <> '' then
                             ContactPhNo := ContactPhNo + OrderAddress."Phone No." + '/';
                     until OrderAddress.Next = 0;
                     ContactName := DelChr(ContactName, '<>', '/');
-                    ContactEmail := DelChr(ContactEmail, '<>', '/');
+                    ContactEmail := DelChr(ContactEmail, '<>', '|');
                     ContactPhNo := DelChr(ContactPhNo, '<>', '/');
                 end;
                 PurchaseCode.Reset();
@@ -242,4 +249,6 @@ report 50157 PurchEnquiryReport
         Text001Cap: Label 'Your immediate reply will be higly appreciated.';
         RegardsCap: Label 'Regards,';
         ContactCap: Label 'Contact Person for Clarification';
+        ThankYouLbl: Label 'Thanking you,';
+        ETVLbl: Label 'For EENADU TELEVISION PVT. LIMITED';
 }

@@ -154,9 +154,7 @@ report 50159 "Regularization Order New"
 
                 }
                 column(Variant_Description; "Variant Description")
-                {
-
-                }
+                { }
                 column(Document_No_; "Document No.")
                 { }
                 column(Line_No_; "Line No.")
@@ -202,6 +200,7 @@ report 50159 "Regularization Order New"
                 begin
                     SetFilter("No.", '<>%1', '');
                 end; */
+                column(Indentor_Description; "Indentor Description") { }//B2BAnusha18Feb2025
 
                 trigger OnAfterGetRecord()
                 var
@@ -258,7 +257,7 @@ report 50159 "Regularization Order New"
                 end;
             }
             //B2BSPOn16AUg2024>>> //savarappa
-            dataitem("PO Specifications"; "PO Terms And Conditions")
+            dataitem("PO Specifications"; "PO Specifications")
             {
                 DataItemLink = DocumentNo = field("No.");
                 DataItemTableView = where(Type = filter(Specifications));
@@ -274,23 +273,19 @@ report 50159 "Regularization Order New"
                 }
                 column(PO_LineNo; LineNo)
                 { }
-                column(S_No; SNo)
-                { }
+                
                 trigger OnAfterGetRecord()
                 var
                     i: Integer;
-                    //MidString: array[100] of Text[1024];
                     MidString: array[2000] of Text;
                 begin
                     Clear(i);
                     Clear(Line_Type);
                     Clear(ListTypeNew);
                     ListTypeNew := "PO Terms And Conditions".LineType;
-                    //WHILE STRLEN(ListTypeNew) > 0 DO BEGIN
                     i := i + 1;
                     MidString[i] := SplitStrings(ListTypeNew, ' ');
                     Line_Type := Line_Type + ' ' + UPPERCASE(COPYSTR(MidString[i], 1, 1)) + LOWERCASE(COPYSTR(MidString[i], 2));
-                    //END;
                 end;
             }
             //B2BSPOn16AUg2024<<< //savarappa

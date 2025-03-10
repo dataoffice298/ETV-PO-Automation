@@ -52,7 +52,7 @@ reportextension 50002 "Purchase Order Report Ext" extends "Standard Purchase - O
             }
             column(UserName; UserName)
             { }
-            column(Signature; UserSetup."User Signature")
+            column(Signature; '')
             { }
             column(Designation; Designation)
             { }

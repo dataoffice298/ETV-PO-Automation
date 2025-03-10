@@ -313,7 +313,7 @@
                         <Style />
                       </TextRun>
                       <TextRun>
-                        <Value>=Fields!Email_Vendor.Value</Value>
+                        <Value>=Fields!ContactEmail.Value</Value>
                         <Style />
                       </TextRun>
                     </TextRuns>
@@ -326,7 +326,7 @@
                 <Top>4.27622cm</Top>
                 <Left>0.04614cm</Left>
                 <Height>0.45007cm</Height>
-                <Width>7.8975cm</Width>
+                <Width>14.51208cm</Width>
                 <ZIndex>8</ZIndex>
                 <Style>
                   <Border>
@@ -1278,7 +1278,7 @@
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox25</rd:DefaultName>
-                <Top>13.2648cm</Top>
+                <Top>14.9793cm</Top>
                 <Left>0.04085cm</Left>
                 <Height>0.6cm</Height>
                 <Width>5.19874cm</Width>
@@ -1487,7 +1487,7 @@
                     <TablixMember />
                   </TablixMembers>
                 </TablixRowHierarchy>
-                <Top>13.60523cm</Top>
+                <Top>15.31973cm</Top>
                 <Left>12.58741cm</Left>
                 <Height>1.8cm</Height>
                 <Width>6.69332cm</Width>
@@ -1647,7 +1647,7 @@
                     <TablixMember />
                   </TablixMembers>
                 </TablixRowHierarchy>
-                <Top>14.20523cm</Top>
+                <Top>15.91973cm</Top>
                 <Left>0.04085cm</Left>
                 <Height>1.2cm</Height>
                 <Width>5.19874cm</Width>
@@ -1658,10 +1658,70 @@
                   </Border>
                 </Style>
               </Tablix>
+              <Textbox Name="Textbox16">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=Fields!ThankYouLbl.Value</Value>
+                        <Style />
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox16</rd:DefaultName>
+                <Top>13.27482cm</Top>
+                <Left>0.06879cm</Left>
+                <Height>0.6cm</Height>
+                <Width>10.46556cm</Width>
+                <ZIndex>21</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox28">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=Fields!ETVLbl.Value</Value>
+                        <Style />
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox28</rd:DefaultName>
+                <Top>13.9101cm</Top>
+                <Left>0cm</Left>
+                <Height>0.6cm</Height>
+                <Width>10.53435cm</Width>
+                <ZIndex>22</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
             </ReportItems>
             <Top>0.66442cm</Top>
             <Left>0.1941cm</Left>
-            <Height>15.40523cm</Height>
+            <Height>17.15148cm</Height>
             <Width>19.37364cm</Width>
             <Style>
               <Border>
@@ -1670,7 +1730,7 @@
             </Style>
           </Rectangle>
         </ReportItems>
-        <Height>16.14903cm</Height>
+        <Height>18.08049cm</Height>
         <Style />
       </Body>
       <Width>19.56774cm</Width>
@@ -2092,6 +2152,12 @@ End Function
         </Field>
         <Field Name="Enquiry_Note">
           <DataField>Enquiry_Note</DataField>
+        </Field>
+        <Field Name="ThankYouLbl">
+          <DataField>ThankYouLbl</DataField>
+        </Field>
+        <Field Name="ETVLbl">
+          <DataField>ETVLbl</DataField>
         </Field>
         <Field Name="Description">
           <DataField>Description</DataField>

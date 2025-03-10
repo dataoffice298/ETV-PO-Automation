@@ -116,18 +116,18 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         {
             Editable = FieldEditableVar1;
         }
-        modify("GST Credit")
+        /* modify("GST Credit")
         {
             Editable = FieldEditableVar1;
-        }
+        } */
         modify("Location Code")
         {
             Editable = FieldEditableVar1;
         }
-        modify("Qty. to Invoice")
-        {
-            Editable = FieldEditableVar1;
-        }
+        /*  modify("Qty. to Invoice")
+         {
+              Editable = FieldEditableVar1;
+         } */
         modify("Shortcut Dimension 1 Code")
         {
             Editable = FieldEditableVar1;
@@ -281,12 +281,12 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             {
                 ApplicationArea = All;
                 caption = 'Qty to Inward';
-                Editable = FieldEditableVar1; //B2BVCOn07Aug2024
+                // Editable = FieldEditableVar1; //B2BVCOn07Aug2024
             }
             field("Qty. to Accept B2B"; Rec."Qty. to Accept B2B")
             {
                 ApplicationArea = All;
-                Editable = FieldEditableVar1; //B2BVCOn07Aug2024
+                // Editable = FieldEditableVar1; //B2BVCOn07Aug2024
                 trigger OnValidate()
                 var
                     myInt: Integer;
@@ -406,7 +406,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
 
         modify("Qty. to Receive")
         {
-            Editable = FieldEditableVar1; //B2BVCOn07Aug2024
+            //Editable = FieldEditableVar1; //B2BVCOn07Aug2024
             trigger OnBeforeValidate()
             begin
                 if PurchHeader.Get(Rec."Document Type", Rec."Document No.") then begin

@@ -65,6 +65,8 @@ report 50042 "Ammendement Order"
             { }
             column(Buy_from_Contact_No_; "Buy-from Contact No.")
             { }
+            column(Buy_from_Post_Code; "Buy-from Post Code")
+            { }
             column(Buy_from_Email; VendorGRec."E-Mail")
             { }
             column(Posting_Date; "Posting Date")
@@ -114,6 +116,25 @@ report 50042 "Ammendement Order"
             { }
             column(Ammendent_Comments; "Ammendent Comments")
             { }
+            column(ContactName; ContactName)
+            { }
+            column(ContactEmail; ContactEmail)
+            { }
+            column(ContactPhNo; ContactPhNo)
+            { }
+            column(GSTRegNo; GSTRegNo)
+            { }
+            column(Purpose; PurchaseHeader.Purpose)
+            { }
+            column(EmailId; EmailId)
+            { }
+            column(PhoneNo; PhoneNo)
+            { }
+            column(PurchName; PurchName)
+            { }
+            column(AmendmentText; AmendmentText)
+            { }
+
 
             dataitem("Purchase Line Archive"; "Purchase Line Archive")
             {
@@ -179,29 +200,22 @@ report 50042 "Ammendement Order"
                     Clear(CGSTAmt);
                     Clear(SGSTAmt);
                     Clear(IGSSTAmt);
-
-
-                    // TotalLineAmount += "Purchase Line Archive"."Line Amount";
-
-                    // GetGSTAmounts("Purchase Line Archive");
-                    // TotalGSTAmount += CGSTAmt + SGSTAmt + IGSSTAmt;
                     GetGSTAmounts("Purchase Line Archive");//Balu
                     Clear(GstTotal);
                     GstTotal := CGSTAmt + SGSTAmt + IGSSTAmt;
                     GstTotalSum := GstTotalSum + GstTotal;
-                    //GSTPerQTY := GstTotal / Quantity;
-                    //GSTPertotal := CGSTPer + SGSTPer + IGSTPer;
-                    //Message('%1', GstTotal);
                     Clear(AmountVendor1);
                     Clear(AmountText);
                     AmountVendor += "Line Amount";
                     AmountVendor1 := AmountVendor + GstTotalSum;
-                    //   GateEntryPostYesNo.InitTextVariable;
-                    //  GateEntryPostYesNo.FormatNoTextInvoice(AmountText, Round(AmountVendor1, 1, '='), "Currency Code");
-                    // GateEntryPostYesNo.FormatNoText(AmountText, AmountVendor1, "Currency Code");
-                    CheckRec.InitTextVariable;
 
-                    CheckRec.FormatNoText(AmountText, AmountVendor1, "Currency Code");
+                    if "Purchase Header Archive"."Currency Code" = '' then begin
+                        CheckRec.InitTextVariable;
+                        CheckRec.FormatNoTextWithoutCurrency(AmountText, AmountVendor1, '');
+                    end else begin
+                        CheckRec.InitTextVariable();
+                        CheckRec.FormatNoText(AmountText, AmountVendor1, "Currency Code");
+                    end;
 
                     //B2BAJ18012024
                     if ("Purchase Line Archive".Type = "Purchase Line Archive".Type::Item)
@@ -218,7 +232,6 @@ report 50042 "Ammendement Order"
                             SpecID := "Purchase Line Archive"."Spec Id";
                         End;
 
-
                 end;
 
                 trigger OnPostDataItem()
@@ -230,9 +243,42 @@ report 50042 "Ammendement Order"
                     // GateEntryPostYesNo.FormatNoText(AmountText, Round(TotalOrderAmount, 1, '='), "Currency Code");
                 end;
             }
-            dataitem("PO Terms And Conditions"; "PO Terms And Conditions") //B2BAJ02012024
+            dataitem("PO Specifications"; "PO Terms And Conditions")
             {
                 DataItemLink = DocumentNo = field("No.");
+                DataItemTableView = where(Type = filter(Specifications));
+                column(PO_LineType; LineType)
+                { }
+                column(PO_Description11; Description)
+                {
+
+                }
+                column(PO_Line_Type; Line_Type)
+                {
+
+                }
+                column(PO_LineNo; LineNo)
+                { }
+                column(S_No; SNo)
+                { }
+                trigger OnAfterGetRecord()
+                var
+                    i: Integer;
+                    MidString: array[2000] of Text;
+                begin
+                    Clear(i);
+                    Clear(Line_Type);
+                    Clear(ListTypeNew);
+                    ListTypeNew := "PO Terms And Conditions".LineType;
+                    i := i + 1;
+                    MidString[i] := SplitStrings(ListTypeNew, ' ');
+                    Line_Type := Line_Type + ' ' + UPPERCASE(COPYSTR(MidString[i], 1, 1)) + LOWERCASE(COPYSTR(MidString[i], 2));
+                end;
+            }
+            dataitem("PO Terms And Conditions"; "PO Terms And Conditions")
+            {
+                DataItemLink = DocumentNo = field("No.");
+                DataItemTableView = where(Type = filter("Terms & Conditions"));
                 column(LineType; LineType)
                 {
                 }
@@ -244,6 +290,9 @@ report 50042 "Ammendement Order"
                 {
 
                 }
+                column(LineNo; LineNo)
+                { }
+                column(SNo_; "SNo.") { }
                 trigger OnAfterGetRecord()
                 var
                     i: Integer;
@@ -259,8 +308,8 @@ report 50042 "Ammendement Order"
                         Line_Type := Line_Type + ' ' + UPPERCASE(COPYSTR(MidString[i], 1, 1)) + LOWERCASE(COPYSTR(MidString[i], 2));
                     END;
                 end;
-
             }
+
 
             dataitem(GSTLoop; Integer)
             {
@@ -388,6 +437,57 @@ report 50042 "Ammendement Order"
                     CurrencyCode := 'INR'
                 ELSE
                     CurrencyCode := "Purchase Header Archive"."Currency Code";
+
+                Clear(PurchName);
+                Clear(EmailId);
+                Clear(PhoneNo);
+                PurchaseCode.Reset();
+                PurchaseCode.setrange(Code, "Purchase Header Archive"."Purchaser Code");
+                if PurchaseCode.FindFirst() then begin
+                    PurchName := PurchaseCode.Name;
+                    EmailId := PurchaseCode."E-Mail";
+                    PhoneNo := PurchaseCode."Phone No.";
+                end;
+
+                if "Purchase Header Archive"."Order Address Code" = '' then begin
+                    OrderAddress.Reset();
+                    OrderAddress.SetRange("Vendor No.", "Purchase Header Archive"."Buy-from Vendor No.");
+                    if OrderAddress.FindSet() then begin
+                        repeat
+                            if OrderAddress.Name <> '' then
+                                ContactName := ContactName + OrderAddress."Contact Name" + '/';
+                            if OrderAddress."E-Mail" <> '' then
+                                ContactEmail := ContactEmail + OrderAddress."E-Mail" + '/';
+                            if OrderAddress."Phone No." <> '' then
+                                ContactPhNo := ContactPhNo + OrderAddress."Phone No." + '/';
+                        until OrderAddress.Next = 0;
+                        ContactName := DelChr(ContactName, '<>', '/');
+                        ContactEmail := DelChr(ContactEmail, '<>', '/');
+                        ContactPhNo := DelChr(ContactPhNo, '<>', '/');
+                    end;
+                    if VendorRec.Get("Purchase Header Archive"."Buy-from Vendor No.") then
+                        GSTRegNo := VendorRec."GST Registration No.";
+                end else begin
+                    if OrderAddress.Get("Purchase Header Archive"."Buy-from Vendor No.", "Purchase Header Archive"."Order Address Code") then begin
+                        GSTRegNo := OrderAddress."GST Registration No.";
+                        ContactName := OrderAddress."Contact Name";
+                        ContactPhNo := OrderAddress."Phone No.";
+                        ContactEmail := OrderAddress."E-Mail";
+                    end;
+                end;
+
+                if PurchaseHeader.Get(PurchaseHeader."Document Type"::Order, "Purchase Header Archive"."No.") then;
+                if "Purchase Header Archive".Regularization then begin
+                    if "Purchase Header Archive".Amendment then
+                        AmendmentText := 'Amendment Cum Regularization  Order'
+                    else
+                        AmendmentText := 'Regularization Order';
+                end else begin
+                    if "Purchase Header Archive".Amendment then
+                        AmendmentText := 'Amendment Order'
+                    else
+                        AmendmentText := 'Purchase Order';
+                end;
             END;
 
         }
@@ -456,6 +556,17 @@ report 50042 "Ammendement Order"
         I: Integer;
         PONumber: Code[50];//B2BSSD28MAR2023
         PurchaseHeader: Record "Purchase Header";
+        OrderAddress: Record "Order Address";
+        ContactName: Text;
+        ContactEmail: Text;
+        ContactPhNo: Text;
+        GSTRegNo: Code[20];
+        VendorRec: Record Vendor;
+        PurchaseCode: Record "Salesperson/Purchaser";
+        PurchName: Text;
+        EmailId: Text;
+        PhoneNo: Text;
+        AmendmentText: Text;
 
     //GST Starts>>
     local procedure GetGSTAmounts(PurchaseLineArch: Record "Purchase Line Archive")

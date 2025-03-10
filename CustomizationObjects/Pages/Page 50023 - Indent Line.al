@@ -866,12 +866,12 @@ page 50023 "Indent Line"
                     GateEntryLine."Source No." := IndentLine."No.";
 
                     //B2BSSD17APR2023>>
-                    FixedAsset.Reset();
+                     FixedAsset.Reset();
                     FixedAsset.SetRange("No.", GateEntryLine."Source No.");
                     if FixedAsset.FindFirst() then begin
                         FixedAsset."available/Unavailable" := true;
                         FixedAsset.Modify();
-                    end;
+                    end; 
                     //B2BSSD17APR2023<<
 
                     GateEntryLine.Variant := IndentLine."Variant Code";

@@ -13,6 +13,14 @@ pageextension 50183 OrderAddressExtB2B extends "Order Address"
                 ApplicationArea = All;
             }
         }
+        addafter("E-Mail")
+        {
+            field(Email2; Rec.Email2)
+            {
+                ApplicationArea = All;
+                Caption = 'E-Mail2';
+            }
+        }
     }
 
 }

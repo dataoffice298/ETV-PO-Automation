@@ -177,6 +177,7 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         {
             Caption = 'Draft Date';
         }
+       
 
         //B2BSSD25Jan2023<<
         addafter(PurchLines)

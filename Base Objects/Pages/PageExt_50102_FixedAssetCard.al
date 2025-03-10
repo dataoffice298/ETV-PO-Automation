@@ -42,6 +42,7 @@ pageextension 50102 FixedAssetCard extends "Fixed Asset Card"
             {
                 ApplicationArea = All;
                 Caption = 'Avail / Unavail';
+                Editable = false;
             }
         }
 

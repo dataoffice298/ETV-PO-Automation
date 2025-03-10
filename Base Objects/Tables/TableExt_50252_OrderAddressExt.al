@@ -10,5 +10,9 @@ tableextension 50252 OrderAddressExtB2B extends "Order Address"
         {
             DataClassification = ToBeClassified;
         }
+        field(50106; "Email2"; Text[100])
+        {
+            DataClassification = ToBeClassified;
+        }
     }
 }

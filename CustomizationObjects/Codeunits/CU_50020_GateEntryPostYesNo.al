@@ -164,7 +164,7 @@ codeunit 50020 "Gate Entry- Post Yes/No"
         ERRORmsg1: Label 'Fixed Assets is Not Available for Transfer';
     begin
 
-        RgpOutLineGVar.Reset();
+         RgpOutLineGVar.Reset();
         RgpOutLineGVar.SetRange("Gate Entry No.", RGPOutHeaderGvar."No.");
         if RgpOutLineGVar.FindSet() then begin
             FixedAssets.Reset();
@@ -173,7 +173,7 @@ codeunit 50020 "Gate Entry- Post Yes/No"
                 if FixedAssets."available/Unavailable" = true then
                     Error(ERRORmsg1);
             end;
-        end;
+        end; 
         if not CONFIRM(Text16500, false) then
             exit;
         GateEntryPost.RUN(GateEntryHeader);

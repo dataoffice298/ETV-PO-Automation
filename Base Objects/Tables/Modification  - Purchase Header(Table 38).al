@@ -217,7 +217,9 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
         field(50136; "Enquiry Note"; Text[1024]) //B2BSPon06Nov2024
         {
             DataClassification = ToBeClassified;
+            
         }
+        
     }
 
 

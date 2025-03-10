@@ -41,6 +41,8 @@ report 50181 "Non Returnable Gatepass"
             { }
             column(LocationCapLbl; LocationCapLbl)
             { }
+            column(TOLocationCapLbl; TOLocationCapLbl)
+            { }
             column(SUbLocCapLbl; SUbLocCapLbl)
             { }
             column(ToCapLbl; ToCapLbl)
@@ -108,6 +110,8 @@ report 50181 "Non Returnable Gatepass"
             column(GatepassDt; "Document Date")
             { }
             column(Location_Code; "Location Code")
+            { }
+            column(To_Location; "To Location")
             { }
             //B2BAnusha10FEB2025
             column(Vehicle_No_; "Vehicle No.") { }
@@ -244,6 +248,7 @@ report 50181 "Non Returnable Gatepass"
         ShootingCapLbl: Label 'SHOOTING DATE -  FROM';
         ExpecteddateCapLbl: Label 'EXPECTED DATE OF RETURN';
         LocationCapLbl: Label 'LOCATION';
+        TOLocationCapLbl: Label 'TO LOCATION';
         SUbLocCapLbl: Label 'SUB LOCATION';
         ToCapLbl: Label 'To,';
         SucurtyCapLbl: Label 'The Security Inspector/Supervisor.';

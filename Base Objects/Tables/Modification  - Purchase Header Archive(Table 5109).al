@@ -33,6 +33,11 @@ tableextension 50053 tableextension70000014 extends "Purchase Header Archive"
         {
             DataClassification = CustomerContent;
         }
+        field(50125; Amendment; Boolean)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Amendment';
+        }
         field(33002900; "RFQ No."; Code[20])
         {
             Description = 'PO1.0';

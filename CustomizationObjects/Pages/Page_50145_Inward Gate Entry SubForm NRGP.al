@@ -142,6 +142,9 @@ page 50145 "Inward Gate Entry SubFrm-NRGP"
                                         Rec."Source No." := FA."No.";
                                         Rec."Source Name" := FA.Description;
                                         Rec.Description := FA.Description;
+                                        Rec.Make := FA.Make_B2B;
+                                        Rec.ModelNo := FA."Model No.";
+                                        Rec.SerialNo := FA."Serial No.";
                                     end;
                                 end;
                             Rec."Source Type"::Item:
@@ -192,6 +195,10 @@ page 50145 "Inward Gate Entry SubFrm-NRGP"
                 field(Variant; rec.Variant)
                 {
                     ApplicationArea = all;
+                }
+                field(Make; Rec.Make)
+                {
+                    ApplicationArea = All;
                 }
                 field(ModelNo; rec.ModelNo)
                 {

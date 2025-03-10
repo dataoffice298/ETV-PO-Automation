@@ -43,10 +43,19 @@ report 50143 "Self Invoice"
             column(InvoiceDateLbl004; InvoiceDateLbl004) { }
             column(RCM_StatusLbl009; RCM_StatusLbl009) { }
             column(GstNoLbl010; GstNoLbl010) { }
-            column(SelfInvoiceNoLbl013; SelfInvoiceNoLbl013) { }
+            column(SelfInvoiceDateLbl016; SelfInvoiceDateLbl016) { }
+            column(PlaceOfSupplyLbl014; PlaceOfSupplyLbl014) { }
+            column(StateCodeLbl015; StateCodeLbl015) { }
             column(Self_Invoice_No_; "Self Invoice No.") { }
+            column(Location_State_Code; "Location State Code") { }
             column(Vendor_Invoice_Date; "Vendor Invoice Date")
             { }
+            column(Nature_of_Supply; "Nature of Supply") { }
+            column(RemarksLbl019; RemarksLbl019) { }
+            column(Remarks1Lbl020; Remarks1Lbl020) { }
+            column(Remarks2Lbl021; Remarks2Lbl021) { }
+            column(AuthorisedSignatureLbl0022; AuthorisedSignatureLbl0022) { }
+            column(SelfInvoiceNoLbl013; SelfInvoiceNoLbl013) { }
             dataitem("Purch. Inv. Line"; "Purch. Inv. Line")
             {
                 DataItemLink = "Document No." = field("No.");
@@ -60,6 +69,12 @@ report 50143 "Self Invoice"
                 {
                 }
                 column(Amount; Amount)
+                {
+                }
+                column(Quantity; Quantity)
+                {
+                }
+                column(Unit_Cost; "Unit Cost")
                 {
                 }
                 column(GST_Credit; "GST Credit") { }
@@ -97,6 +112,8 @@ report 50143 "Self Invoice"
                 column(HSNCodeLbl007; HSNCodeLbl007) { }
                 column(TaxibleLbl008; TaxibleLbl008) { }
                 column(TotalAmountLbl011; TotalAmountLbl011) { }
+                column(UnitLbl017; UnitLbl017) { }
+                column(RateLbl018; RateLbl018) { }
                 column(AmtInWords; AmountW1)// AmtInWords[1] + ' ' + AmtInWords[2])
                 {
                 }
@@ -207,10 +224,19 @@ report 50143 "Self Invoice"
         HSNCodeLbl007: Label 'HSN Code';
         TaxibleLbl008: Label 'TAXABLE';
         RCM_StatusLbl009: Label 'RCM Status';
-        GstNoLbl010: Label 'GST No.';
+        GstNoLbl010: Label 'Vendor GST No.';
         TotalAmountLbl011: Label 'Total Amount';
         SelfInvoiceNoLbl013: Label 'Self Invoice No.';
         RCM_StatusLbl012: Label 'RCM STATUS:';
+        SelfInvoiceDateLbl016: Label 'Self Invoice Date';
+        PlaceOfSupplyLbl014: Label 'Place of Supply';
+        StateCodeLbl015: Label 'State Code';
+        UnitLbl017: Label 'Unit';
+        RateLbl018: Label 'Rate';
+        RemarksLbl019: Label 'Remarks:';
+        Remarks1Lbl020: Label '1.Supply is label for RCM and recipet is laibel to pay GST.';
+        Remarks2Lbl021: Label '2.The Self Invoice is issued under';
+        AuthorisedSignatureLbl0022: Label 'Authorised Signature';
         CGST: Boolean;
         SGST: Boolean;
         IGST: Boolean;

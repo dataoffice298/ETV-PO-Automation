@@ -17,7 +17,6 @@ page 50121 "Indent Requisition List"
         {
             repeater(Group)
             {
-
                 field("No."; Rec."No.")
                 {
                     ApplicationArea = All;
@@ -38,6 +37,10 @@ page 50121 "Indent Requisition List"
                 {
                     ApplicationArea = All;
                 }
+                field(Cancel; Rec.Cancel)
+                {
+                    ApplicationArea = All;
+                }
             }
         }
     }
@@ -45,5 +48,9 @@ page 50121 "Indent Requisition List"
     actions
     {
     }
+    trigger OnOpenPage()
+    begin
+        Rec.SetRange(Cancel, false);
+    end;
 }
 

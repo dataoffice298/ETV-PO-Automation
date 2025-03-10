@@ -11,6 +11,11 @@ pageextension 50140 "Purchase Order Archive Ext" extends "Purchase Order Archive
                 Caption = 'Regularization';
                 ToolTip = 'Specify The Document Regularization';
             }
+            field(Amendment; Rec.Amendment)
+            {
+                ApplicationArea = All;
+                Caption = 'Amendment';
+            }
         }
     }
     actions
@@ -24,7 +29,7 @@ pageextension 50140 "Purchase Order Archive Ext" extends "Purchase Order Archive
                 Ellipsis = true;
                 Image = PrintReport;
                 ToolTip = 'Prepare to print the Ammendement Cum Order document. The report request window for the document opens where you can specify what to include on the print-out.';
-
+                Visible = false;
                 trigger OnAction()
                 var
                     PurchaseHeaderArchive: Record "Purchase Header Archive";

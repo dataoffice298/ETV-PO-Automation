@@ -4307,7 +4307,6 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -5890,6 +5889,7 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -6622,6 +6622,9 @@ End Function
         </Field>
         <Field Name="Quot_Comparitive">
           <DataField>Quot_Comparitive</DataField>
+        </Field>
+        <Field Name="Quote_No_">
+          <DataField>Quote_No_</DataField>
         </Field>
         <Field Name="Item_No_">
           <DataField>Item_No_</DataField>

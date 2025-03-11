@@ -53,11 +53,11 @@ report 50001 "Indent Requestion Lines"
                     END
                     ELSE BEGIN
                         //B2BVCOn13Jun2024 >>
-                        /* if (IndentReqHeader."Shortcut Dimension 1 Code" <> '') then begin
+                        if (IndentReqHeader."Shortcut Dimension 1 Code" <> '') then begin
                             if (IndentReqHeader."Shortcut Dimension 1 Code" <> "Indent Header"."Shortcut Dimension 1 Code") OR (IndentReqHeader."Shortcut Dimension 2 Code" <> "Indent Header"."Shortcut Dimension 2 Code") OR
                                 (IndentReqHeader."Shortcut Dimension 3 Code" <> "Indent Header"."Shortcut Dimension 3 Code") OR (IndentReqHeader."Shortcut Dimension 9 Code" <> "Indent Header"."Shortcut Dimension 9 Code") then
                                 Error(Text001, "Indent Header"."Shortcut Dimension 1 Code", "Indent Header"."Shortcut Dimension 2 Code", "Indent Header"."Shortcut Dimension 9 Code", "Indent Header"."Shortcut Dimension 3 Code");
-                        end; */
+                        end;
                         //B2BVCOn13Jun2024 <<
                         IndentRequisitions.INIT;
                         IndentRequisitions."Document No." := IndentReqHeader."No.";
@@ -117,11 +117,11 @@ report 50001 "Indent Requestion Lines"
                             IndentReqHeaderGRec."programme Name" := "Indent Header"."programme Name";//B2BSSD20MAR2023
                             IndentReqHeaderGRec.Purpose := "Indent Header".Purpose;//B2BSSD21MAR2023
                             //B2BVCOn13Jun2024 >>
-                            /* if IndentReqHeaderGRec."Indent No." <> '' then begin
+                            if IndentReqHeaderGRec."Indent No." <> '' then begin
                                 IndentNo := IndentReqHeaderGRec."Indent No.";
                                 IndentNo := IndentNo + '|' + IndentRequisitions."Indent No.";
                                 IndentReqHeaderGRec."Indent No." := IndentNo;
-                            end else  */     //B2BVCOn13Jun2024 <<
+                            end else      //B2BVCOn13Jun2024 <<
                                 IndentReqHeaderGRec."Indent No." := IndentRequisitions."Indent No.";
                             IndentReqHeaderGRec.Modify();  //B2BPAV
                         end;

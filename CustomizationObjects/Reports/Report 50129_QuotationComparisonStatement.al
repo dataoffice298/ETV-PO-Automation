@@ -281,6 +281,10 @@ report 50129 "Quot Comparision Statement"
                     { }
                 }
                 trigger OnAfterGetRecord();
+                var
+                    PurchHeaderRec: Record "Purchase Header";
+                    VendorRec: Record Vendor;
+                    OrderAddressRec: Record "Order Address";
                 begin
                     Clear(QRate);
                     Clear(QAmount);
@@ -318,6 +322,7 @@ report 50129 "Quot Comparision Statement"
                         end;
                         if TransactionSpec.Get(PurchHdr."Transaction Specification") then;
                     end;
+
                     PurchLine.Reset();
                     PurchLine.SetRange("Document Type", PurchLine."Document Type"::Quote);
                     PurchLine.SetRange("Document No.", "Parent Quote No.");

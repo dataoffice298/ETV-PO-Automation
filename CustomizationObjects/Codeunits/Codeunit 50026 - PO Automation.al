@@ -453,47 +453,51 @@ codeunit 50026 "PO Automation"
     //B2BVCOn23Sep2024 >>
     procedure CopyTermsandSpecificationofVendors(PurchaseHeader: Record "Purchase Header")
     var
-        TermsandConditions: Record "PO Terms And Conditions";
-        NewTermsandConditions: Record "PO Terms And Conditions";
+        //TermsandConditions: Record "PO Terms And Conditions";
+        //NewTermsandConditions: Record "PO Terms And Conditions";
+        POSpecifications: Record "PO Specifications";
+        NewPOSpecifications: Record "PO Specifications";
         VendorRec: Record Vendor;
         LineNo: Integer;
     begin
         VendorRec.Reset();
         VendorRec.SetRange("No.", PurchaseHeader."Buy-from Vendor No.");
         if VendorRec.Findfirst() then begin
-            TermsandConditions.reset();
-            TermsandConditions.SetRange(DocumentNo, VendorRec."No.");
-            TermsandConditions.SetRange(Type, TermsandConditions.Type::Specifications);
-            if TermsandConditions.FindSet() then
+            POSpecifications.reset();
+            POSpecifications.SetRange(DocumentNo, VendorRec."No.");
+            POSpecifications.SetRange(Type, POSpecifications.Type::Specifications);
+            if POSpecifications.FindSet() then
                 repeat
-                    NewTermsandConditions.Init();
-                    NewTermsandConditions.TransferFields(TermsandConditions);
-                    NewTermsandConditions.DocumentNo := PurchaseHeader."No.";
-                    NewTermsandConditions.DocumentType := PurchaseHeader."Document Type";
-                    NewTermsandConditions.Insert(true);
-                until TermsandConditions.Next() = 0;
+                    NewPOSpecifications.Init();
+                    NewPOSpecifications.TransferFields(POSpecifications);
+                    NewPOSpecifications.DocumentNo := PurchaseHeader."No.";
+                    NewPOSpecifications.DocumentType := PurchaseHeader."Document Type";
+                    NewPOSpecifications.Insert(true);
+                until POSpecifications.Next() = 0;
         end;
     end;
 
     procedure CopyTermsandSpecificationsDoc(OldPurchHeader: Record "Purchase Header"; NewPurchHeader: Record "Purchase Header")
     var
-        TermsandConditions: Record "PO Terms And Conditions";
-        NewTermsandConditions: Record "PO Terms And Conditions";
+        //TermsandConditions: Record "PO Terms And Conditions";
+        //NewTermsandConditions: Record "PO Terms And Conditions";
+        POSpecifications: Record "PO Specifications";
+        NewPOSpecifications: Record "PO Specifications";
         VendorRec: Record Vendor;
         LineNo: Integer;
     begin
-        TermsandConditions.reset();
-        TermsandConditions.SetRange(DocumentNo, OldPurchHeader."No.");
-        TermsandConditions.SetRange(DocumentType, OldPurchHeader."Document Type");
-        TermsandConditions.SetRange(Type, TermsandConditions.Type::Specifications); //B2BVCOn23Sep2024
-        if TermsandConditions.FindSet() then
+        POSpecifications.reset();
+        POSpecifications.SetRange(DocumentNo, OldPurchHeader."No.");
+        POSpecifications.SetRange(DocumentType, OldPurchHeader."Document Type");
+        POSpecifications.SetRange(Type, POSpecifications.Type::Specifications); //B2BVCOn23Sep2024
+        if POSpecifications.FindSet() then
             repeat
-                NewTermsandConditions.Init();
-                NewTermsandConditions.TransferFields(TermsandConditions);
-                NewTermsandConditions.DocumentNo := NewPurchHeader."No.";
-                NewTermsandConditions.DocumentType := NewPurchHeader."Document Type";
-                NewTermsandConditions.Insert(true);
-            until TermsandConditions.Next() = 0;
+                NewPOSpecifications.Init();
+                NewPOSpecifications.TransferFields(POSpecifications);
+                NewPOSpecifications.DocumentNo := NewPurchHeader."No.";
+                NewPOSpecifications.DocumentType := NewPurchHeader."Document Type";
+                NewPOSpecifications.Insert(true);
+            until POSpecifications.Next() = 0;
     end;
     //B2BVCOn23Sep2024 <<
 
@@ -1050,6 +1054,7 @@ codeunit 50026 "PO Automation"
         QuoCompHdr: Record QuotCompHdr;
         IndentLineRec: Record "Indent Line";
         TermsandConditions: Record "PO Terms And Conditions";
+        POSpecifications: Record "PO Specifications";
     begin
         clear(TotalWeightage);
         PurchaseHeader.RESET();
@@ -1125,6 +1130,39 @@ codeunit 50026 "PO Automation"
                             QuoteCompare.INSERT();
                         until TermsandConditions.Next() = 0;
                     //Inserting PO Terms and Conditions<<
+                    //Inserting PO Specifications >>
+                    POSpecifications.Reset();
+                    POSpecifications.SetRange(DocumentType, PurchaseHeader."Document Type");
+                    POSpecifications.SetRange(DocumentNo, PurchaseHeader."No.");
+                    if POSpecifications.FindSet() then
+                        repeat
+                            QuoteCompare.INIT();
+                            QuoteCompare.Type := QuoteCompare.Type::Description;
+                            QuoteCompare."Quot Comp No." := QuotComp."No.";
+                            QuoteCompare."RFQ No." := PurchaseHeader."RFQ No.";
+                            QuoteCompare."Quote No." := PurchaseHeader."No.";
+                            QuoteCompare."Vendor No." := PurchaseHeader."Buy-from Vendor No.";
+                            QuoteCompare."Vendor Name" := PurchaseHeader."Buy-from Vendor Name";
+                            QuoteCompare."Item No." := '';
+                            QuoteCompare.Description := POSpecifications.Description;
+                            QuoteCompare.Quantity := 0;
+                            QuoteCompare.Rate := 0;
+                            QuoteCompare.Amount := 0;
+                            QuoteCompare."Payment Term Code" := '';
+                            QuoteCompare."Parent Quote No." := '';
+                            QuoteCompare."Line Amount" := 0;
+                            QuoteCompare."Delivery Date" := 0D;
+                            QuoteCompare.Level := 0;
+                            QuoteCompare."RFQ No." := RFQNumber;
+                            QuoteCompare."Line No." := QuoteCompare."Line No." + 10000;
+                            QuoteCompare."Location Code" := PurchaseHeader."Location Code";
+                            QuoteCompare."Parent Quote No." := PurchaseHeader."No.";
+                            QuoteCompare."Vendor Quotation No." := PurchaseHeader."Vendor Quotation No."; //B2BVCOn11Mar2024
+                            QuoteCompare."Vendor Quotation Date" := PurchaseHeader."Vendor Quotation Date"; //B2BVCOn18Mar2024
+                            QuoteCompare."Shortcut Dimension 3 Code" := PurchaseHeader."Shortcut Dimension 3 Code";
+                            QuoteCompare.Status := QuoteCompare.Status::Open;
+                            QuoteCompare.INSERT();
+                        until POSpecifications.Next = 0;
 
                     Amount := 0;
                     PurchaseLine.SETRANGE(PurchaseLine."Document Type", PurchaseHeader."Document Type");

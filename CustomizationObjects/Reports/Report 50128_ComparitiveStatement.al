@@ -163,6 +163,7 @@ report 50128 ComparitiveStatement
                 { }
                 column(GSTPercent1; GSTPercent1)
                 { }
+                column(Indentor_Description; "Indentor Description") { }//B2BAnusha18Feb2025
 
                 dataitem(QuoteSpecifications; QuoteSpecifications)
                 {
@@ -212,7 +213,7 @@ report 50128 ComparitiveStatement
                         // END;
                     end;
                 }
-                dataitem("PO Specifications"; "PO Terms And Conditions")
+                dataitem("PO Specifications"; "PO Specifications")
                 {
                     DataItemLink = DocumentNo = field("Parent Quote No.");
                     DataItemTableView = where(Type = filter(Specifications));
@@ -235,19 +236,15 @@ report 50128 ComparitiveStatement
                     trigger OnAfterGetRecord()
                     var
                         i: Integer;
-                        // MidString: array[100] of Text[1024];
-
                         MidString: array[2000] of Text;
                     begin
                         Clear(i);
                         Clear(Line_Type);
                         Clear(ListTypeNew);
                         ListTypeNew := "PO Specifications".LineType;
-                        // WHILE STRLEN(ListTypeNew) > 0 DO BEGIN
                         i := i + 1;
                         MidString[i] := SplitStrings(ListTypeNew, ' ');
                         Line_Type := Line_Type + ' ' + UPPERCASE(COPYSTR(MidString[i], 1, 1)) + LOWERCASE(COPYSTR(MidString[i], 2));
-                        //END;
                     end;
                 }
                 dataitem("Purchase Line"; "Purchase Line")
@@ -324,7 +321,9 @@ report 50128 ComparitiveStatement
 
                 trigger OnAfterGetRecord()
                 var
-
+                    PurchHeaderRec: Record "Purchase Header";
+                    VendorRec: Record Vendor;
+                    OrderAddressRec: Record "Order Address";
                 begin
                     Clear(QAmount);
                     Clear(Amounts);
@@ -344,9 +343,28 @@ report 50128 ComparitiveStatement
                         end;
                     end;
 
+                    // PurchHdr.Reset();
+                    // PurchHdr.SetRange("Document Type", PurchHdr."Document Type"::Quote);
+                    // PurchHdr.SetRange("No.", "Parent Quote No.");
+                    // if PurchHdr.FindFirst() then begin
+                    //     if PurchHdr."Currency Code" <> '' then
+                    //         CurrencyCode := PurchHdr."Currency Code"
+                    //     else
+                    //         CurrencyCode := 'Rs.';
+                    //     Payment := PurchHdr."Payment Terms Code";
+                    //     warranty := PurchHdr.Warranty;
+                    //     if SalesPersonPurch.Get(PurchHdr."Purchaser Code") then begin
+                    //         ContactPerson := SalesPersonPurch.Name;
+                    //         PhoneNo := SalesPersonPurch."Phone No.";
+                    //     end;
+                    //     if TransactionSpec.Get(PurchHdr."Transaction Specification") then;
+                    // end;
+
+                    //B2BAnusha19Feb2025>>
                     PurchHdr.Reset();
                     PurchHdr.SetRange("Document Type", PurchHdr."Document Type"::Quote);
                     PurchHdr.SetRange("No.", "Parent Quote No.");
+                    PurchHdr.setrange("Buy-from Vendor Name", Description);
                     if PurchHdr.FindFirst() then begin
                         if PurchHdr."Currency Code" <> '' then
                             CurrencyCode := PurchHdr."Currency Code"
@@ -354,12 +372,26 @@ report 50128 ComparitiveStatement
                             CurrencyCode := 'Rs.';
                         Payment := PurchHdr."Payment Terms Code";
                         warranty := PurchHdr.Warranty;
-                        if SalesPersonPurch.Get(PurchHdr."Purchaser Code") then begin
-                            ContactPerson := SalesPersonPurch.Name;
-                            PhoneNo := SalesPersonPurch."Phone No.";
+                        if VendorRec.Get(PurchHdr."Buy-from Vendor No.") then begin
+                            OrderAddressRec.Reset();
+                            OrderAddressRec.setrange("Vendor No.", VendorRec."No.");
+                            OrderAddressRec.SetRange("Mail Alert", true);
+                            Clear(ContactPerson);
+                            clear(PhoneNo);
+                            if OrderAddressRec.FindSet() then begin
+                                repeat
+                                    if OrderAddressRec."Contact Name" <> '' then
+                                        ContactPerson := ContactPerson + OrderAddressRec."Contact Name" + ',';
+                                    if OrderAddressRec."Phone No." <> '' then
+                                        PhoneNo := PhoneNo + OrderAddressRec."Phone No." + ',';
+                                until OrderAddressRec.next() = 0;
                         end;
+                            ContactPerson := DelChr(ContactPerson, '<>', ',');
+                            PhoneNo := DelChr(PhoneNo, '<>', ',');
+                            //B2BAnusha19Feb2025<<
                         if TransactionSpec.Get(PurchHdr."Transaction Specification") then;
                     end;
+
                     PurchLine.Reset();
                     PurchLine.SetRange("Document Type", PurchLine."Document Type"::Quote);
                     PurchLine.SetRange("Document No.", "Parent Quote No.");
@@ -452,6 +484,7 @@ report 50128 ComparitiveStatement
 
                         until QuotCompTestLine.Next = 0;
 
+                end;
                 end;
 
                 trigger OnPreDataItem()
@@ -667,7 +700,7 @@ report 50128 ComparitiveStatement
         TotalAmt2: Decimal;
         PurchLineGST: Record "Purchase Line";
 
-        PhoneNo: Text[30];
+        PhoneNo: Text;
         TotalAmount2: Decimal;
         GSTPercent1: Decimal;
         SNo: Integer;
@@ -688,7 +721,7 @@ report 50128 ComparitiveStatement
         GSTPerc: Decimal;
         Payment: code[50];
         SalesPersonPurch: Record "Salesperson/Purchaser";
-        ContactPerson: Text[100];
+        ContactPerson: Text;
         TransactionSpec: Record "Transaction Specification";
         OtherCharge: Label 'Freight, Insurance, Bank Charges, Local Transportation etc.,';
         PurchLine: Record "Purchase Line";

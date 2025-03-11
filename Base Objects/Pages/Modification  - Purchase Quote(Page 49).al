@@ -264,9 +264,11 @@ pageextension 50073 pageextension70000001 extends "Purchase Quote"
                 Caption = 'Get Specifications';
                 trigger OnAction()
                 var
-                    POTermsAndConditionsfrom: Record "PO Terms And Conditions";
+                    //POTermsAndConditionsfrom: Record "PO Terms And Conditions";
+                    POSpecifications: Record "PO Specifications";
                     PurchaseHeaderLvar: Record "Purchase Header";
-                    POTermsAndConditionsTo: Record "PO Terms And Conditions";
+                    //POTermsAndConditionsTo: Record "PO Terms And Conditions";
+                    POSpecificationsTo: Record "PO Specifications";
                     LineNo: Integer;
                 begin
                     PurchaseHeaderLvar.Reset();
@@ -274,22 +276,22 @@ pageextension 50073 pageextension70000001 extends "Purchase Quote"
                     PurchaseHeaderLvar.SetRange("RFQ No.", Rec."RFQ No.");
                     if PurchaseHeaderLvar.FindSet() then;
                     if page.RunModal(Page::"Purchase Quotes", PurchaseHeaderLvar) = Action::LookupOK then begin
-                        POTermsAndConditionsfrom.Reset();
-                        POTermsAndConditionsfrom.SetRange(DocumentType, POTermsAndConditionsfrom.DocumentType::Quote);
-                        POTermsAndConditionsfrom.SetRange(DocumentNo, PurchaseHeaderLvar."No.");
-                        POTermsAndConditionsfrom.SetRange(Type, POTermsAndConditionsfrom.Type::Specifications);
-                        IF POTermsAndConditionsfrom.FindSet() then
+                        POSpecifications.Reset();
+                        POSpecifications.SetRange(DocumentType, POSpecifications.DocumentType::Quote);
+                        POSpecifications.SetRange(DocumentNo, PurchaseHeaderLvar."No.");
+                        POSpecifications.SetRange(Type, POSpecifications.Type::Specifications);
+                        IF POSpecifications.FindSet() then
                             //LineNo := POTermsAndConditionsfrom.LineNo + 10000;
                         repeat
-                            POTermsAndConditionsTo.Init();
-                            POTermsAndConditionsTo.DocumentNo := Rec."No.";
-                            POTermsAndConditionsTo.LineType := POTermsAndConditionsfrom.LineType;
-                            POTermsAndConditionsTo.Description := POTermsAndConditionsfrom.Description;
-                            POTermsAndConditionsTo.Type := POTermsAndConditionsfrom.Type;
-                            POTermsAndConditionsTo.LineNo := POTermsAndConditionsfrom.LineNo;
-                            POTermsAndConditionsTo.Insert();
+                            POSpecificationsTo.Init();
+                            POSpecificationsTo.DocumentNo := Rec."No.";
+                            POSpecificationsTo.LineType := POSpecifications.LineType;
+                            POSpecificationsTo.Description := POSpecifications.Description;
+                            POSpecificationsTo.Type := POSpecifications.Type;
+                            POSpecificationsTo.LineNo := POSpecifications.LineNo;
+                            POSpecificationsTo.Insert();
                             //LineNo += 10000;
-                            until POTermsAndConditionsfrom.Next() = 0;
+                            until POSpecifications.Next() = 0;
                     end;
                 end;
             }
@@ -321,6 +323,8 @@ pageextension 50073 pageextension70000001 extends "Purchase Quote"
             PageEditable := true;
     end;
     //B2BVCOn03Oct22>>>
+    
+
     var
 
         FieldEditable: Boolean;
@@ -328,5 +332,6 @@ pageextension 50073 pageextension70000001 extends "Purchase Quote"
 
         PurChQuo: Record "Purchase Header";
         Currency: Record "Currency Exchange Rate";
+        
 }
 

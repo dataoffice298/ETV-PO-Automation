@@ -8,8 +8,7 @@ report 50001 "Indent Requestion Lines"
         dataitem("Indent Header"; "Indent Header")
         {
             DataItemTableView = SORTING("No.")
-                                ORDER(Ascending)
-                                WHERE("Released Status" = FILTER(Released));
+                                ORDER(Ascending) WHERE("Released Status" = FILTER(Released));
             RequestFilterFields = "No.", "Delivery Location";
             dataitem("Indent Line"; "Indent Line")
             {
@@ -101,6 +100,29 @@ report 50001 "Indent Requestion Lines"
                         IndentRequisitions."Sub Location Code" := "Issue Sub Location";
                         IndentRequisitions."Unit of Measure" := "Unit of Measure";//B2BSSD14MAR2023
                         IndentRequisitions."Spec Id" := "Spec Id";
+                        PurchRcptLine.Reset();
+                        PurchRcptLine.SetCurrentKey("No.");
+                        PurchRcptLine.SetRange("No.", IndentRequisitions."Item No.");
+                        if PurchRcptLine.FindLast() then begin
+                            IndentRequisitions."Last Purchase Price" := PurchRcptLine."Direct Unit Cost";
+                            if RecVendor.Get(PurchRcptLine."Buy-from Vendor No.") then
+                                IndentRequisitions."PO Vendor Name" := RecVendor.Name;
+                        end;
+
+                        DtldGSTLedgerEntry.Reset();
+                        DtldGSTLedgerEntry.SetCurrentKey("Entry No.");
+                        DtldGSTLedgerEntry.SetRange("No.", IndentRequisitions."Item No.");
+                        DtldGSTLedgerEntry.SetRange("Transaction Type", DtldGSTLedgerEntry."Transaction Type"::Purchase);
+                        if DtldGSTLedgerEntry.FindLast() then begin
+                            DtldGSTLedgerEntry2.Reset();
+                            DtldGSTLedgerEntry2.SetRange("Document No.", DtldGSTLedgerEntry."Document No.");
+                            DtldGSTLedgerEntry2.SetRange("No.", DtldGSTLedgerEntry."No.");
+                            if DtldGSTLedgerEntry2.FindSet() then
+                                repeat
+                                    IndentRequisitions."Gst %" += DtldGSTLedgerEntry2."GST %";
+                                until DtldGSTLedgerEntry2.Next() = 0;
+                        end;
+
                         IndentRequisitions.INSERT();
                         TempLineNo += 10000;
                     END;
@@ -143,7 +165,7 @@ report 50001 "Indent Requestion Lines"
 
             trigger OnPreDataItem()
             begin
-                //Message('Hi');
+
             end;
         }
     }
@@ -179,6 +201,10 @@ report 50001 "Indent Requestion Lines"
         Count1: Integer;
         ItemVendorGvar: Record 99;
         IndentNo: Text;
+
+        PurchRcptLine: Record "Purch. Rcpt. Line";
+        DtldGSTLedgerEntry: Record "Detailed GST Ledger Entry";
+        DtldGSTLedgerEntry2: Record "Detailed GST Ledger Entry";
         Text001: Label 'Dimensions should be same. Channel Code-%1, Dept Code-%2, Branch Code-%3, Project Code-%4.';
 
     procedure GetValue(var HeaderNo: Code[20]; var RespCenter: Code[20]);

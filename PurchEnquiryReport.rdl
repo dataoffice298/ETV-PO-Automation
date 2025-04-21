@@ -1187,29 +1187,8 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>Our payment terms will be </Value>
+                        <Value>Please be noted that our requested payments are 30 days credit from the date of receipt of material.</Value>
                         <Style>
-                          <Color>Orange</Color>
-                        </Style>
-                      </TextRun>
-                      <TextRun>
-                        <Value>=Fields!Payment_Terms_Code.Value</Value>
-                        <Style>
-                          <Color>Orange</Color>
-                        </Style>
-                      </TextRun>
-                      <TextRun>
-                        <Value xml:space="preserve"> </Value>
-                        <Style>
-                          <Color>Orange</Color>
-                        </Style>
-                      </TextRun>
-                      <TextRun>
-                        <Value>credit from the date of supply.</Value>
-                        <Style>
-                          <FontStyle>Normal</FontStyle>
-                          <FontWeight>Normal</FontWeight>
-                          <TextDecoration>None</TextDecoration>
                           <Color>Orange</Color>
                         </Style>
                       </TextRun>

@@ -4,13 +4,13 @@ report 50199 "Purchase Order Report"
     ApplicationArea = All;
     DefaultLayout = RDLC;
     RDLCLayout = 'PurchaseOrderReport.rdl';
-    Caption = 'Purchase Order Indent Report';
+    Caption = 'Staff Purchase Indent Report';
     dataset
     {
         dataitem("Purchase Header"; "Purchase Header")
         {
             DataItemTableView = SORTING("Document Type", "No.") ORDER(Ascending) WHERE("Document Type" = CONST(order));
-            column(Responsibility_Center; "Responsibility Center") { }
+            // column(Responsibility_Center; "Responsibility Center") { }
             column(RegularVAr; RegularVAr) { }
             column(PurposeNameVar; PurposeNameVar) { }
             column(Purchaser_Code; "Purchaser Code") { }

@@ -81,12 +81,9 @@ report 50181 "Non Returnable Gatepass"
             { }
             column(CheckedCapLbl; CheckedCapLbl)
             { }
+            column(DesignVar; DesignVar) { }
             column(No_; "No.")
             { }
-            column(Designation; Designation)
-            {
-
-            }
             column(Shortcut_Dimension_1_Code; "Shortcut Dimension 1 Code")
             { }
             column(Shortcut_Dimension_2_Code; "Shortcut Dimension 2 Code")
@@ -162,6 +159,7 @@ report 50181 "Non Returnable Gatepass"
             trigger OnAfterGetRecord()
             var
                 LocationRec: Record Location;
+                UserRec: Record "User Setup";
             begin
                 LocationRec.Reset();
                 LocationRec.SetRange(Code, "Posted Gate Entry Header_B2B"."Location Code");
@@ -171,13 +169,17 @@ report 50181 "Non Returnable Gatepass"
                     Cityvar := LocationRec.City;
                     PostCodeVar := LocationRec."Post Code";
                 end;
+                UserRec.Reset();
+                if UserRec.Get("Posted Gate Entry Header_B2B"."User ID") then
+                    DesignVar := UserRec.Designation;
             end;
 
             trigger OnPreDataItem()
             begin
                 CompanyInfo.get;
                 CompanyInfo.CALCFIELDS(Picture);
-                SetFilter("No.", '%1', PostedNrgpOutwardNo);//B2BSSD20Jan2023
+                if PostedNrgpOutwardNo <> '' then
+                    SetFilter("No.", '%1', PostedNrgpOutwardNo);//B2BSSD20Jan2023
             end;
         }
     }
@@ -219,14 +221,12 @@ report 50181 "Non Returnable Gatepass"
     }
 
 
-
-
     var
 
         PurchaseRetnLRec: record "Return Shipment Header";
         PurchaseRetLinLRec: Record "Return Shipment Line";
         ItemName: Code[20];
-        DescriptionLVar: Text[100];
+        DescriptionLVar, DesignVar : Text[100];
         QtyDispatchLRec: Decimal;
         SalesShipmentHeaderLRec: record "Sales Shipment Header";
         SalesShipmentLinLRec: record "Sales Shipment Line";

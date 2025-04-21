@@ -254,7 +254,7 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>=First(Fields!Designation.Value, "DataSet_Result")</Value>
+                        <Value>=Fields!DesignVar.Value</Value>
                         <Style>
                           <FontSize>8pt</FontSize>
                           <FontWeight>Normal</FontWeight>
@@ -1728,9 +1728,9 @@
                   </Paragraphs>
                   <rd:DefaultName>Textbox1</rd:DefaultName>
                   <Top>0.26141cm</Top>
-                  <Left>1.99495cm</Left>
-                  <Height>0.67938cm</Height>
-                  <Width>16.73459cm</Width>
+                  <Left>1.88443cm</Left>
+                  <Height>0.74994cm</Height>
+                  <Width>16.84511cm</Width>
                   <Style>
                     <Border>
                       <Style>None</Style>
@@ -1778,13 +1778,13 @@
                   </Style>
                 </Textbox>
                 <Image Name="Image1">
-                  <Source>Embedded</Source>
-                  <Value>Logo</Value>
+                  <Source>Database</Source>
+                  <Value>=First(Fields!CompanyInfoPic.Value, "DataSet_Result")</Value>
                   <MIMEType>image/jpeg</MIMEType>
                   <Sizing>Fit</Sizing>
                   <Top>0.26141cm</Top>
                   <Left>5.1565cm</Left>
-                  <Height>0.67938cm</Height>
+                  <Height>0.71466cm</Height>
                   <Width>1.67124cm</Width>
                   <ZIndex>2</ZIndex>
                   <Style>
@@ -2228,11 +2228,11 @@ khCNlXBei7ZDvHklSRKisRJOgxOnrg6a4iUhGixh5+C4Fu0bRiVJQjRQwt1vGkYlSUL00yTM/iThdNP2
         <Field Name="CheckedCapLbl">
           <DataField>CheckedCapLbl</DataField>
         </Field>
+        <Field Name="DesignVar">
+          <DataField>DesignVar</DataField>
+        </Field>
         <Field Name="No_">
           <DataField>No_</DataField>
-        </Field>
-        <Field Name="Designation">
-          <DataField>Designation</DataField>
         </Field>
         <Field Name="Shortcut_Dimension_1_Code">
           <DataField>Shortcut_Dimension_1_Code</DataField>

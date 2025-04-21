@@ -36,6 +36,7 @@ report 50143 "Self Invoice"
             column(CompanyInfo_Add2; CompanyInfo."Address 2") { }
             column(CompanyInfo_City; CompanyInfo.City) { }
             column(CompanyInfo_Postcode; CompanyInfo."Post Code") { }
+            column(VendorStateCode; VendorStateCode) { }
             column(RcmSelfInvoiceLbl000; RcmSelfInvoiceLbl000) { }
             column(DocumentNoLbl001; DocumentNoLbl001) { }
             column(DocumentDateLbl002; DocumentDateLbl002) { }
@@ -48,14 +49,19 @@ report 50143 "Self Invoice"
             column(StateCodeLbl015; StateCodeLbl015) { }
             column(Self_Invoice_No_; "Self Invoice No.") { }
             column(Location_State_Code; "Location State Code") { }
+            column(GST_Order_Address_State; "GST Order Address State")
+            {
+            }
             column(Vendor_Invoice_Date; "Vendor Invoice Date")
             { }
             column(Nature_of_Supply; "Nature of Supply") { }
+            column(Ship_to_City; PurchInvHeader."Location State Code") { }
             column(RemarksLbl019; RemarksLbl019) { }
             column(Remarks1Lbl020; Remarks1Lbl020) { }
             column(Remarks2Lbl021; Remarks2Lbl021) { }
             column(AuthorisedSignatureLbl0022; AuthorisedSignatureLbl0022) { }
             column(SelfInvoiceNoLbl013; SelfInvoiceNoLbl013) { }
+            column(GSTRegNumLbl0023; GSTRegNumLbl0023) { }
             dataitem("Purch. Inv. Line"; "Purch. Inv. Line")
             {
                 DataItemLink = "Document No." = field("No.");
@@ -185,6 +191,16 @@ report 50143 "Self Invoice"
                 Var_AmountGST := 0;
                 Var_CGSTAmt := 0;
             end;
+
+            trigger OnAfterGetRecord()
+            var
+                myInt: Integer;
+            begin
+                Clear(VendorStateCode);
+                if vendor.get(PurchInvHeader."Buy-from Vendor No.") then
+                    VendorStateCode := vendor."State Code";
+
+            end;
         }
     }
     requestpage
@@ -208,6 +224,8 @@ report 50143 "Self Invoice"
     var
         CompanyInfo: Record "Company Information";
         DetailedGstLedgerEntries: Record "Detailed GST Ledger Entry";
+        vendor: Record Vendor;
+        VendorStateCode: code[20];
         CheckCodeUnit: Codeunit "Check Codeunit";
         AmtInWords: array[2] of text[250];
         AmountW1: Text[250];
@@ -234,9 +252,10 @@ report 50143 "Self Invoice"
         UnitLbl017: Label 'Unit';
         RateLbl018: Label 'Rate';
         RemarksLbl019: Label 'Remarks:';
-        Remarks1Lbl020: Label '1.Supply is label for RCM and recipet is laibel to pay GST.';
+        Remarks1Lbl020: Label '1.Supply is label for RCM and recipient is laibel to pay GST.';
         Remarks2Lbl021: Label '2.The Self Invoice is issued under';
         AuthorisedSignatureLbl0022: Label 'Authorised Signature';
+        GSTRegNumLbl0023: Label 'GST Registeration No.';
         CGST: Boolean;
         SGST: Boolean;
         IGST: Boolean;

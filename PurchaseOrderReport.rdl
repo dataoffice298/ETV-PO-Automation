@@ -419,7 +419,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Responsibility_Center.Value</Value>
+                                  <Value>      ETPL</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -762,9 +762,6 @@ End Function
   <DataSets>
     <DataSet Name="DataSet_Result">
       <Fields>
-        <Field Name="Responsibility_Center">
-          <DataField>Responsibility_Center</DataField>
-        </Field>
         <Field Name="RegularVAr">
           <DataField>RegularVAr</DataField>
         </Field>

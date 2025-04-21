@@ -1705,7 +1705,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Location_GST_Reg__No_.Value</Value>
+                                  <Value>=Fields!Vendor_GST_Reg__No_.Value</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -2219,7 +2219,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Nature_of_Supply.Value</Value>
+                                  <Value>=Fields!Ship_to_City.Value</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -2321,7 +2321,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Location_State_Code.Value</Value>
+                                  <Value>=Fields!VendorStateCode.Value</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
@@ -2587,40 +2587,6 @@
                     </TablixCell>
                   </TablixCells>
                 </TablixRow>
-                <TablixRow>
-                  <Height>0.6cm</Height>
-                  <TablixCells>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox82">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!Remarks2Lbl021.Value</Value>
-                                  <Style />
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox82</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                            </Border>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                  </TablixCells>
-                </TablixRow>
               </TablixRows>
             </TablixBody>
             <TablixColumnHierarchy>
@@ -2632,12 +2598,11 @@
               <TablixMembers>
                 <TablixMember />
                 <TablixMember />
-                <TablixMember />
               </TablixMembers>
             </TablixRowHierarchy>
-            <Top>9.73349cm</Top>
+            <Top>10.55899cm</Top>
             <Left>1.17686cm</Left>
-            <Height>1.69417cm</Height>
+            <Height>1.09417cm</Height>
             <Width>12.99663cm</Width>
             <ZIndex>14</ZIndex>
             <Style>
@@ -2678,11 +2643,78 @@
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
+          <Textbox Name="Textbox59">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Fields!GSTRegNumLbl0023.Value</Value>
+                    <Style>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox59</rd:DefaultName>
+            <Top>9.40763cm</Top>
+            <Left>1.17686cm</Left>
+            <Height>0.48665cm</Height>
+            <Width>3.3997cm</Width>
+            <ZIndex>16</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox72">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Fields!Location_GST_Reg__No_.Value</Value>
+                    <Style>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox50</rd:DefaultName>
+            <Top>9.40763cm</Top>
+            <Left>4.57656cm</Left>
+            <Height>0.48665cm</Height>
+            <Width>4.32142cm</Width>
+            <ZIndex>17</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <VerticalAlign>Bottom</VerticalAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
         </ReportItems>
         <Height>15.01662cm</Height>
         <Style />
       </Body>
-      <Width>25.32974cm</Width>
+      <Width>23.32716cm</Width>
       <Page>
         <PageHeader>
           <Height>3.67771cm</Height>
@@ -2936,6 +2968,9 @@ End Function
         <Field Name="CompanyInfo_Postcode">
           <DataField>CompanyInfo_Postcode</DataField>
         </Field>
+        <Field Name="VendorStateCode">
+          <DataField>VendorStateCode</DataField>
+        </Field>
         <Field Name="RcmSelfInvoiceLbl000">
           <DataField>RcmSelfInvoiceLbl000</DataField>
         </Field>
@@ -2972,11 +3007,17 @@ End Function
         <Field Name="Location_State_Code">
           <DataField>Location_State_Code</DataField>
         </Field>
+        <Field Name="GST_Order_Address_State">
+          <DataField>GST_Order_Address_State</DataField>
+        </Field>
         <Field Name="Vendor_Invoice_Date">
           <DataField>Vendor_Invoice_Date</DataField>
         </Field>
         <Field Name="Nature_of_Supply">
           <DataField>Nature_of_Supply</DataField>
+        </Field>
+        <Field Name="Ship_to_City">
+          <DataField>Ship_to_City</DataField>
         </Field>
         <Field Name="RemarksLbl019">
           <DataField>RemarksLbl019</DataField>
@@ -2992,6 +3033,9 @@ End Function
         </Field>
         <Field Name="SelfInvoiceNoLbl013">
           <DataField>SelfInvoiceNoLbl013</DataField>
+        </Field>
+        <Field Name="GSTRegNumLbl0023">
+          <DataField>GSTRegNumLbl0023</DataField>
         </Field>
         <Field Name="Document_No_">
           <DataField>Document_No_</DataField>

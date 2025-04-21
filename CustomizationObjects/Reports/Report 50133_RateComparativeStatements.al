@@ -37,6 +37,8 @@ report 50133 "Rate Comparative Statement"
             { }
             column(FreightLbl; FreightLbl)
             { }
+            column(IndentNoCapLbl; IndentNoCapLbl)
+            { }
             column(TransportationCapLbl; TransitCapLbl)
             { }
             column(DeliveryCapLbl; DeliveryCapLbl)
@@ -49,8 +51,7 @@ report 50133 "Rate Comparative Statement"
             { }
             column(PhoneNoCapLbl; PhoneNoCapLbl)
             { }
-            column(Document_Date; "Document Date")
-            { }
+
             column(Purpose; Purpose)
             { }
             column(Indenter; "Created By")
@@ -62,13 +63,15 @@ report 50133 "Rate Comparative Statement"
             dataitem(QuotcompTest; "Quotation Comparison Test")
             {
                 DataItemLink = "Quot Comp No." = field("No.");
-                DataItemTableView = SORTING("RFQ No.", "Item No.", "Variant Code")
+                DataItemTableView = SORTING("Vendor No.", "RFQ No.", "Item No.", "Variant Code")
                                     ORDER(Ascending);
                 PrintOnlyIfDetail = false;
                 column(Quote_No_; "Quote No.") { }
                 column(Item_No_; "Item No.")
                 { }
                 column(LineNo_Quote; "Line No.")
+                { }
+                column(Picture_Quote; Picture)
                 { }
                 column(Description_QuotComp; Description)
                 { }
@@ -86,6 +89,8 @@ report 50133 "Rate Comparative Statement"
                 { }
                 column(Quantity; Quantity)
                 { }
+                column(Indent_No_; "Indent No.")
+                { }
                 column(Vendor_No_; "Vendor No.")
                 { }
                 column(Vendor_Name; "Vendor Name")
@@ -98,6 +103,8 @@ report 50133 "Rate Comparative Statement"
                 { }
                 column(OtherCharge; OtherCharge)
                 { }
+                column(Document_Date; "Document Date")
+                { }
                 column(OtherCharges; OtherCharges)
                 { }
                 column(QAmount; Amount)
@@ -105,6 +112,8 @@ report 50133 "Rate Comparative Statement"
                 column(Amounts; Amounts)
                 { }
                 column(TotalAmount; TotalAmount)
+                { }
+                column(TotalAmtSum; TotalAmtSum)
                 { }
                 column(UOM; UOM)
                 { }
@@ -139,6 +148,8 @@ report 50133 "Rate Comparative Statement"
                 column(ExciseDuty1; "Excise Duty")
                 { }
                 column(GST; PurchLine."GST Group Code")
+                { }
+                column(Picture; PurchLine.Picture)
                 { }
 
                 column(Frieght1; Freight)
@@ -209,19 +220,7 @@ report 50133 "Rate Comparative Statement"
                     column(No_PurchCommentLine; PurchCommentLine."No.")
                     { }
                 }
-                /* dataitem("Specification Worksheet"; "Specification Worksheet")
-                {
-                    DataItemLink = Code = field("RFQ No."), "Vendor No." = field("Vendor No."), "Item No." = field("Item No.");
-                    column(Spec_ID; "Spec ID")
-                    { }
-                    column(Description_Spec; Description)
-                    { }
-                    column(VendorNo_spec; "Vendor No.")
-                    { }
-                    column(ItemNo_Spec; "Item No.")
-                    { }
-                } */
-                dataitem("PO Terms And Conditions"; "PO Terms And Conditions") //B2BAJ02012024
+                dataitem("PO Terms And Conditions"; "PO Terms And Conditions")
                 {
                     DataItemLink = DocumentNo = field("Parent Quote No.");
                     DataItemTableView = where(Type = filter("Terms & Conditions"));
@@ -246,23 +245,15 @@ report 50133 "Rate Comparative Statement"
                     trigger OnAfterGetRecord()
                     var
                         i: Integer;
-                        // MidString: array[100] of Text[1024];
                         MidString: array[2000] of Text;
                     begin
                         Clear(i);
                         Clear(Line_Type);
                         Clear(ListTypeNew);
                         ListTypeNew := "PO Terms And Conditions".LineType;
-                        // WHILE STRLEN(ListTypeNew) > 0 DO BEGIN
                         i := i + 1;
                         MidString[i] := SplitStrings(ListTypeNew, ' ');
                         Line_Type := Line_Type + ' ' + UPPERCASE(COPYSTR(MidString[i], 1, 1)) + LOWERCASE(COPYSTR(MidString[i], 2));
-                        // END;
-                    end;
-
-                    trigger OnPreDataItem()
-                    begin
-                        // SetRange(Type, "PO Terms And Conditions".Type::"Terms & Conditions");
                     end;
                 }
                 dataitem("PO Specifications"; "PO Specifications")
@@ -274,13 +265,9 @@ report 50133 "Rate Comparative Statement"
                     column(PO_DocumentNo; DocumentNo)
                     { }
                     column(PO_Description11; Description)
-                    {
-
-                    }
+                    { }
                     column(PO_Line_Type; Line_Type)
-                    {
-
-                    }
+                    { }
                     column(PO_LineNo; LineNo)
                     { }
                     column(PO_Type; Type)
@@ -306,6 +293,7 @@ report 50133 "Rate Comparative Statement"
                     DataItemTableView = sorting("Document Type", "Document No.", "Line No.");
                     column(GSTPerc; GSTPerc)
                     { }
+
                 }
                 dataitem(GSTLoop; Integer)
                 {
@@ -359,11 +347,11 @@ report 50133 "Rate Comparative Statement"
                                 end;
                             end;
                         end;
+
                         if PurchLineGST.Next() = 0 then;
 
                     end;
                 }
-
 
                 trigger OnAfterGetRecord()
                 var
@@ -392,24 +380,11 @@ report 50133 "Rate Comparative Statement"
                         end;
                     end;
 
-                    // PurchHdr.Reset();
-                    // PurchHdr.SetRange("Document Type", PurchHdr."Document Type"::Quote);
-                    // PurchHdr.SetRange("No.", "Parent Quote No.");
-                    // if PurchHdr.FindFirst() then begin
-                    //     QuotNo := PurchHdr."Vendor Quotation No.";
-                    //     QuotDate := PurchHdr."Vendor Quotation Date";
-                    //     if SalesPersonPurch.Get(PurchHdr."Purchaser Code") then begin
-                    //         ContactPerson := SalesPersonPurch.Name;
-                    //         PhoneNo := SalesPersonPurch."Phone No.";
-                    //     end;
-                    //     if TransactionSpec.Get(PurchHdr."Transaction Specification") then;
-                    // end;
-
                     //B2BAnusha19Feb2025>>
                     PurchHdr.Reset();
                     PurchHdr.SetRange("Document Type", PurchHdr."Document Type"::Quote);
-                    PurchHdr.SetRange("No.", "Parent Quote No.");
-                    PurchHdr.setrange("Buy-from Vendor Name", Description);
+                    PurchHdr.SetRange("No.", QuotcompTest."Parent Quote No.");
+                    PurchHdr.setrange("Buy-from Vendor No.", QuotcompTest."Vendor No.");
                     if PurchHdr.FindFirst() then begin
                         QuotNo := PurchHdr."Vendor Quotation No.";
                         QuotDate := PurchHdr."Vendor Quotation Date";
@@ -426,7 +401,7 @@ report 50133 "Rate Comparative Statement"
                                     if OrderAddressRec."Phone No." <> '' then
                                         PhoneNo := PhoneNo + OrderAddressRec."Phone No." + ',';
                                 until OrderAddressRec.next() = 0;
-                        end;
+                            end;
                             ContactPerson := DelChr(ContactPerson, '<>', ',');
                             PhoneNo := DelChr(PhoneNo, '<>', ',');
                         end;
@@ -445,17 +420,14 @@ report 50133 "Rate Comparative Statement"
                         IndentDesc := PurchLine."Indentor Description";
                         if PurchLine."Spec Id" <> '' then
                             SpecId := PurchLine."Spec Id";
-                        /* PurchCommentLine.Reset();
-                        PurchCommentLine.SetRange("Document Type", PurchLine."Document Type");
-                        PurchCommentLine.SetRange("No.", PurchLine."Document No.");
-                        PurchCommentLine.SetRange("Document Line No.", PurchLine."Line No.");
-                        IF PurchCommentLine.FindSet() then; */
+
                     end;
 
                     PurchLine1.Reset;
                     PurchLine1.Setrange("Document No.", QuotcompTest."Parent Quote No.");
                     PurchLine1.SetRange("Line No.", QuotcompTest."Parent Quote Line No");
                     PurchLine1.SetRange("No.", QuotcompTest."Item No.");
+                    PurchLine1.SetRange("Buy-from Vendor No.", QuotcompTest."Vendor No.");
                     if PurchLine1.FindFirst() then begin
                         Clear(CGSTAmt);
                         clear(SGSTAmt);
@@ -464,6 +436,20 @@ report 50133 "Rate Comparative Statement"
                         GstTotal := CGSTAmt + SGSTAmt + IGSTAmt;
                         GSTPercent1 += SGSTPer + CGSTPer + IGSTPer;
                         TotalAmount := PurchLine1."Line Amount" + GstTotal;
+                        if VendorNo = '' then begin
+                            VendorNo := QuotcompTest."Vendor No.";
+                            TotalAmtSum += TotalAmount;
+                        end else begin
+                            if VendorNo = QuotcompTest."Vendor No." then begin
+                                TotalAmtSum += TotalAmount;
+                            end else begin
+                                if VendorNo <> QuotcompTest."Vendor No." then begin
+                                    VendorNo := QuotcompTest."Vendor No.";
+                                    Clear(TotalAmtSum);
+                                    TotalAmtSum += TotalAmount;
+                                end;
+                            end;
+                        end;
                     end;
                 end;
 
@@ -472,7 +458,10 @@ report 50133 "Rate Comparative Statement"
                     Clear(TotalLineAmt2);
                     Clear(TotalLineAmt);
                     Clear(SNo);
-                    //SetFilter("Item No.", '<>%1', '');
+                    SetFilter("Item No.", '<>%1', '');
+                    SetFilter(Quantity, '<>%1', 0);
+                    SetFilter("Quote No.", '');
+                    SetFilter("Parent Quote Line No", '<>%1', 0);
                 end;
 
             }
@@ -629,10 +618,10 @@ report 50133 "Rate Comparative Statement"
     begin
         Clear(Pos);
         Pos := STRPOS(String, Separator);
-        if Pos > 0 then begin //Whether there is a separator
-            SplitedString := COPYSTR(String, 1, Pos - 1);//Copy the string before the separator
-            if Pos + 1 <= STRLEN(String) then //Is it all
-                String := COPYSTR(String, Pos + 1)//Copy the string after the separator
+        if Pos > 0 then begin
+            SplitedString := COPYSTR(String, 1, Pos - 1);
+            if Pos + 1 <= STRLEN(String) then
+                String := COPYSTR(String, Pos + 1)
             else
                 Clear(String);
         end else begin
@@ -683,7 +672,7 @@ report 50133 "Rate Comparative Statement"
         UnitPrice: Decimal;
         TotalAmt2: Decimal;
         PurchLineGST: Record "Purchase Line";
-
+        IndentNoCapLbl: Label 'Indent No.';
         PhoneNo: Text;
         TotalAmount2: Decimal;
         GSTPercent1: Decimal;
@@ -741,7 +730,9 @@ report 50133 "Rate Comparative Statement"
         QuotDate: Date;
         RFQNOG: Code[20];
         PurchaseLine: Record "Purchase Line";
-    //PurchCommentLine: Record "Purch. Comment Line";
+        TotalAmtSum: Decimal;
+        VendorNo: Code[20];
+
 
 
 }

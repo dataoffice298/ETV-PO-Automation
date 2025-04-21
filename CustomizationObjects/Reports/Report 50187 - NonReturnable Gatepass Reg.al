@@ -37,7 +37,8 @@ report 50187 "NonReturnable Gatepass"
             }
             trigger OnPreDataItem()
             begin
-                SetFilter("Posting Date", '%1..%2', StartDate, EndDate);
+                if (StartDate <> 0D) or (EndDate <> 0D) then
+                    SetFilter("Posting Date", '%1..%2', StartDate, EndDate);
                 clear(SNo);
                 MakeInTransitHeader();
             end;

@@ -138,6 +138,8 @@ report 50159 "Regularization Order New"
             { }
             column(Draft_Date; "Draft Date")
             { }
+            column(Image; Image)
+            { }
             dataitem("Purchase Line"; "Purchase Line")
             {
                 DataItemLink = "Document No." = field("No.");
@@ -175,6 +177,8 @@ report 50159 "Regularization Order New"
                 { }
                 column(Line_Amount; "Line Amount")
                 { }
+                column(Line_Discount__; "Line Discount %")
+                { }
                 column(CGSTAmt; CGSTAmt)
                 { }
                 column(SGSTAmt; SGSTAmt)
@@ -193,6 +197,9 @@ report 50159 "Regularization Order New"
                 { }
                 column(GSTAmount; GstTotalSum)
                 { }
+                column(Picture; Picture)
+                { }
+
                 /*  column(ItemPicture; ItemTenantMedia.Content)
                  { } */
 
@@ -273,7 +280,7 @@ report 50159 "Regularization Order New"
                 }
                 column(PO_LineNo; LineNo)
                 { }
-                
+
                 trigger OnAfterGetRecord()
                 var
                     i: Integer;
@@ -511,6 +518,15 @@ report 50159 "Regularization Order New"
                     end;
 
                 end;
+
+                PurchaseLineRec.Reset();
+                PurchaseLineRec.SetRange("Document Type", "Purchase Header"."Document Type");
+                PurchaseLineRec.SetRange("Document No.", "Purchase Header"."No.");
+                if PurchaseLineRec.FindSet() then
+                    repeat
+                        if PurchaseLineRec.Picture.Count > 0 then
+                            Image := true;
+                    until PurchaseLineRec.Next = 0;
             end;
         }
 
@@ -621,6 +637,8 @@ report 50159 "Regularization Order New"
         FileName: Text;
         ItemRec: Record Item;
         ItemTenantMedia: Record "Tenant Media";
+        Image: Boolean;
+        PurchaseLineRec: Record "Purchase Line";
 
 
 

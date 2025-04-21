@@ -56,7 +56,6 @@ pageextension 50070 MyExtension1 extends "Purchases & Payables Setup"
                     Caption = 'PO Workflow User Group';
                 }
 
-
             }
         }
 
@@ -135,7 +134,17 @@ pageextension 50070 MyExtension1 extends "Purchases & Payables Setup"
             }
         }
 
+        addlast("Number Series")
+        {
+            field("RFQ Nos."; Rec."RFQ Nos.")
+            {
+                ApplicationArea = All;
+            }
+        }
+
     }
+
+
 
     actions
     {

@@ -184,7 +184,22 @@ page 50119 "Indent Requisitions SubForm"
                 {
                     ApplicationArea = All;
                     Editable = false;
-                    Caption = 'Pervious PO Vendor';
+                    Caption = 'Previous PO Vendor';
+                }
+                field("PO Vendor Name"; Rec."PO Vendor Name")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                }
+                field("Last Purchase Price"; Rec."Last Purchase Price")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                }
+                field("Gst %"; Rec."Gst %")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
                 }
                 field("Shortcut Dimension 3 Code"; Rec."Shortcut Dimension 3 Code")
                 {

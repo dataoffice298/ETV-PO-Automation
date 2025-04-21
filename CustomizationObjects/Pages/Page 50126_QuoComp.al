@@ -144,6 +144,7 @@ page 50126 "Quotation Comparision Doc"
                 field("Quot Comparitive"; Rec."Quot Comparitive")
                 {
                     ApplicationArea = All;
+                    ShowMandatory = true;
                 }
             }
 
@@ -168,6 +169,12 @@ page 50126 "Quotation Comparision Doc"
             systempart(Control1905767507; Notes)
             {
                 ApplicationArea = Notes;
+            }
+            part(QuotCompLinePicture; "Quot Comparision Line Picture")
+            {
+                ApplicationArea = All;
+                Provider = QuotationComparSubForm;
+                SubPageLink = "Quot Comp No." = FIELD("Quot Comp No."), "Line No." = FIELD("Line No."), "Item No." = FIELD("Item No.");
             }
         }
         //B2BSSD14Feb2023>>
@@ -316,14 +323,14 @@ page 50126 "Quotation Comparision Doc"
                 PromotedCategory = Report;
                 ApplicationArea = all;
 
-                trigger OnAction()
+                /* trigger OnAction()
                 var
                     QuoComp: Report "Quotation Comparision";
                 begin
                     Clear(QuoComp);
                     QuoComp.SETRFQ(Rec.RFQNumber);
                     QuoComp.Run();
-                end;
+                end; */
             }
             //B2BMSOn10Nov2022<<
             action("Quot Comparison Statement")
@@ -377,6 +384,25 @@ page 50126 "Quotation Comparision Doc"
                 end;
             }
 
+            action("Single Vendor Quotation")
+            {
+                Image = Print;
+                Promoted = true;
+                PromotedCategory = Report;
+                ApplicationArea = all;
+                Caption = 'Single Vendor Quotation';
+                trigger OnAction()
+                var
+                    SingleVendQuot: Report "Single Quotation Report";
+                    QuotCompHdr: Record QuotCompHdr;
+                begin
+                    QuotCompHdr.Reset();
+                    QuotCompHdr.SetRange("No.", Rec."No.");
+                    Report.RunModal(Report::"Single Quotation Report", true, false, QuotCompHdr);
+                end;
+            }
+
+
             separator("-")
             {
                 Caption = '-';
@@ -408,6 +434,7 @@ page 50126 "Quotation Comparision Doc"
                 var
                     QuoteCompLnLRec: Record "Quotation Comparison Test";
                 begin
+                    Rec.TestField("Quot Comparitive");
                     QuoteCompLnLRec.Reset();
                     QuoteCompLnLRec.SetRange("Quot Comp No.", Rec."No.");
                     QuoteCompLnLRec.SetRange("Carry Out Action", true);
@@ -453,6 +480,7 @@ page 50126 "Quotation Comparision Doc"
                 var
                     QuotationLines: Record "Quotation Comparison Test";
                 begin
+                    Rec.TestField("Quot Comparitive");
                     IF WorkflowManagement.CanExecuteWorkflow(Rec, allinoneCU.RunworkflowOnSendQuoteComparisionCusforApprovalCode()) then
                         error('Workflow is enabled. You can not release manually.');
 

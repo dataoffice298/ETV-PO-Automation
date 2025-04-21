@@ -39,7 +39,11 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 Visible = false;
             }
             //B2BVCOn12Mar2024 <<
-
+            field("Cancellation Reason"; Rec."Cancellation Reason")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Cancellation Reason field.';
+            }
         }
         addafter(Regularization) //B2BAJ02012024
         {
@@ -177,7 +181,15 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
         {
             Caption = 'Draft Date';
         }
-       
+        addafter("Buy-from Address 2")
+        {
+            field("Buy-from Address 3"; Rec."Buy-from Address 3")
+            {
+                ApplicationArea = All;
+                Caption = 'Address 3';
+            }
+        }
+
 
         //B2BSSD25Jan2023<<
         addafter(PurchLines)
@@ -253,6 +265,16 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
             }
         }
         //B2BSSD14FEB2023>>
+        addafter(Control3)
+        {
+            part(PurchLineItemPicture; "Purchase Line Item Picture")
+            {
+                ApplicationArea = All;
+                Provider = PurchLines;
+                SubPageLink = "Document Type" = field("Document Type"), "Document No." = FIELD("Document No."),
+                              "Line No." = FIELD("Line No.");
+            }
+        }
 
 
 

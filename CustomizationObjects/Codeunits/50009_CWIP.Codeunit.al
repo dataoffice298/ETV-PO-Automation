@@ -24,6 +24,7 @@ codeunit 50009 CWIP
 
             PurchRcptLine.Reset();
             PurchRcptLine.SetRange("Document No.", PurchRcptHeader."No.");
+            PurchRcptLine.SetFilter(Quantity, '<>%1', 0); //B2BVCOn25Mar2025
             PurchRcptLine.SetRange(CWIP, true);
             if PurchRcptLine.FindSet() then
                 repeat

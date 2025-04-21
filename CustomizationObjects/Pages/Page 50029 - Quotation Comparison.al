@@ -323,7 +323,7 @@ page 50029 "Quotation Comparison"
                         // ReqLine.RESET;
                         // ReqLine.SETRANGE("RFQ No.",RFQNumber);
                         // REPORT.RUN(33002901,TRUE,FALSE,ReqLine);
-                        PrintQC;//B2B1.0 GR 16Dec2016
+                        //PrintQC;//B2B1.0 GR 16Dec2016
                     end;
                 }
             }
@@ -671,13 +671,13 @@ page 50029 "Quotation Comparison"
     begin
     end;
 
-    local procedure PrintQC();
+   /*  local procedure PrintQC();
     var
         QuotationComparisonCopy1: Report 50075;
     begin
         CLEAR(QuotationComparisonCopy1);
         QuotationComparisonCopy1.SETRFQ(RFQNumber);
         QuotationComparisonCopy1.RUN;
-    end;
+    end; */
 }
 

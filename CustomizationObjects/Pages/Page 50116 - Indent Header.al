@@ -146,6 +146,11 @@ page 50116 "Indent Header"
                     Editable = false;
                 }
                 //B2BVCOn17Jun2024 <<
+                field("Closed Indent"; Rec."Closed Indent")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Closed Indent';
+                }
             }
             //B2BPAV<<
             part(indentLine; "Indent Line")
@@ -917,6 +922,7 @@ page 50116 "Indent Header"
     end;
 
     trigger OnAfterGetRecord();
+    var
     begin
         //Approval visible conditions - B2BMSOn09Sep2022>>
         OpenAppEntrExistsForCurrUser := approvalmngmt.HasOpenApprovalEntriesForCurrentUser(Rec.RecordId());
@@ -930,19 +936,35 @@ page 50116 "Indent Header"
             PageEditable := false
         else
             PageEditable := true;
-        //CurrPage.indentLine.Page.QTyToIssueNonEditable();
     end;
     //B2BVCOn28Sep22>>>
+
     trigger OnOpenPage()
+    var
+        IndentLine: Record "Indent Line";
+        LineCount: Integer;
+        Count: Integer;
     begin
-        /*if (Rec."Released Status" = Rec."Released Status"::Released) then
-            PageEditable := false
-        else
-            PageEditable := true;*/ //B2BPGON10OCT2022
+        Clear(LineCount);
+        Clear(Count);
+        IndentLine.Reset();
+        IndentLine.SetRange("Document No.", Rec."No.");
+        IndentLine.SetFilter("Req.Quantity", '<>%1', 0);
+        if IndentLine.FindSet() then begin
+            repeat
+                LineCount += 1;
+                if (IndentLine.ShortClose) OR (IndentLine.CancelIndent) OR (IndentLine.Closed) then
+                    Count += 1;
+            until IndentLine.Next() = 0;
+
+            if LineCount = Count then
+                Rec."Closed Indent" := true
+            else
+                Rec."Closed Indent" := false;
+            Rec.Modify();
+        end;
+
     end;
-    //B2BVCOn28Sep22>>>
-
-
 
     var
         IndentLine: Record "Indent Line";

@@ -1,12 +1,13 @@
-page 50172 "Released Indent List"
+page 50221 "Closed Indent List"
 {
-    CardPageId = "Indent Header";
+    CardPageID = "Indent Header";
+    Editable = false;
     PageType = List;
-    ApplicationArea = All;
-    UsageCategory = Lists;
-    Caption = 'Released Indent List';
     SourceTable = "Indent Header";
-    SourceTableView = where("Indent Transfer" = const(false), "Closed Indent" = const(false), "Released Status" = filter(Released));
+    UsageCategory = Lists;
+    ApplicationArea = all;
+    SourceTableView = where("Indent Transfer" = const(false), "Closed Indent" = const(true));
+    Caption = 'Closed Indent List';
 
     layout
     {
@@ -25,6 +26,11 @@ page 50172 "Released Indent List"
                 field(Description; rec.Description)
                 {
                     ApplicationArea = all;
+                    Visible = false;
+                }
+                field(Purpose; Rec.Purpose)
+                {
+                    ApplicationArea = all;
                 }
                 field("Due Date"; rec."Due Date")
                 {
@@ -34,30 +40,30 @@ page 50172 "Released Indent List"
                 {
                     ApplicationArea = all;
                 }
+                field("Closed Indent"; Rec."Closed Indent")
+                {
+                    ApplicationArea = All;
+                }
             }
         }
     }
 
     actions
     {
-        area(navigation)
+        area(Processing)
         {
-            group("&Line")
+            action(ActionName)
             {
-                Caption = '&Line';
-                action(Card)
-                {
-                    Caption = 'Card';
-                    Image = EditLines;
-                    ShortCutKey = 'Shift+F7';
-                    ApplicationArea = All;
+                ApplicationArea = All;
 
-                    trigger OnAction();
-                    begin
-                        PAGE.RUN(PAGE::"Indent Header", Rec);
-                    end;
-                }
+                trigger OnAction()
+                begin
+
+                end;
             }
         }
     }
+
+    var
+        myInt: Integer;
 }

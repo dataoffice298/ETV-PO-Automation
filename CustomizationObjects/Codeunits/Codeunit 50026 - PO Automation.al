@@ -292,6 +292,7 @@ codeunit 50026 "PO Automation"
                             if IndentReqHeader.Get(CreateIndents2."Document No.") then begin
                                 PurchaseHeader."Responsibility Center" := IndentReqHeader."Resposibility Center";
                                 PurchaseHeader.Note := IndentReqHeader.Note; //B2BVCOn03Oct2024
+                                PurchaseHeader."RFQ No." := IndentReqHeader."RFQ No."; //B2BVCOn11April2025
                             end;
                         end;
                         //B2BVCOn30April2024 <<
@@ -556,8 +557,10 @@ codeunit 50026 "PO Automation"
                     CreateIndents2.SetRange("Document No.", IndentVendorEnquiry."Indent Req No");
                     CreateIndents2.SetRange("Line No.", IndentVendorEnquiry."Indent Req Line No");
                     if CreateIndents2.FindFirst() then begin
-                        if IndentReqHeader.Get(CreateIndents2."Document No.") then
+                        if IndentReqHeader.Get(CreateIndents2."Document No.") then begin
                             PurchaseHeader."Responsibility Center" := IndentReqHeader."Resposibility Center";
+                            PurchaseHeader."RFQ No." := IndentReqHeader."RFQ No.";
+                        end;
                     end;
                     //B2BVCOn30April2024 <<
                     PurchaseHeader.Modify(true);
@@ -866,8 +869,7 @@ codeunit 50026 "PO Automation"
                             QuoteCompare.Delivery
                              := CalculateDelivery(PurchaseLine."Buy-from Vendor No.", PurchaseLine."No.", PurchaseHeader."RFQ No.");
                         IF PurchaseSetup."Quality Required" = TRUE THEN
-                            QuoteCompare.Quality := CalculateQuality(PurchaseLine."Buy-from Vendor No.", PurchaseLine."No.", PurchaseHeader."RFQ No.")
-                  ;
+                            QuoteCompare.Quality := CalculateQuality(PurchaseLine."Buy-from Vendor No.", PurchaseLine."No.", PurchaseHeader."RFQ No.");
 
                         QuoteCompare.Structure := '';
                         QuoteCompare."Line Amount" := 0;
@@ -1604,6 +1606,7 @@ codeunit 50026 "PO Automation"
         DimentionSetEntry: Record "Dimension Set Entry";//B2BSSD20Feb2023
         IndentLineRec: Record "Indent Line";
         IndentReqLine: Record "Indent Requisitions";
+        IndentReqHead: Record "Indent Req Header";
     begin
         PurchaseHeader.INIT;
         PurchaseHeader."Document Type" := PurchaseHeader."Document Type"::Quote;
@@ -1629,6 +1632,7 @@ codeunit 50026 "PO Automation"
         PurchaseHeader."Programme Name" := Rec."Programme Name";//B2BSSD20MAR2023
         PurchaseHeader.Purpose := Rec.Purpose;//B2BSSD21MAR2023
         PurchaseHeader."Responsibility Center" := Rec."Responsibility Center"; //B2BVCOn30April2024
+        PurchaseHeader."Enquiry No." := Rec."No.";
         PurchaseHeader.Modify(true);//B2BSSD21FEB2023
 
 
@@ -1674,6 +1678,7 @@ codeunit 50026 "PO Automation"
                 PurchaseLineQuote.VALIDATE("Location Code");
                 PurchaseLineQuote."Variant Code" := PurchaseLine."Variant Code";
                 PurchaseLineQuote."Variant Description" := PurchaseLine."Variant Description"; //B2BSCM11JAN2024
+                PurchaseLineQuote."Enquiry No." := PurchaseHeader."Enquiry No.";
                 PurchaseLineQuote.modify(true);
 
                 IndentLine.RESET;
@@ -1701,6 +1706,10 @@ codeunit 50026 "PO Automation"
                 if IndentReqLine.Get(PurchaseLineQuote."Indent Req No", PurchaseLineQuote."Indent Req Line No") then begin
                     IndentReqLine."Requisition Type" := IndentReqLine."Requisition Type"::Quote;
                     IndentReqLine.Modify();
+                    if IndentReqHead.Get(IndentReqLine."Document No.") then begin
+                        PurchaseHeader."RFQ No." := IndentReqHead."RFQ No.";
+                        PurchaseHeader.Modify();
+                    end;
                 end;
             //B2BVCOn15Mar2024 <<
 
@@ -1869,8 +1878,11 @@ codeunit 50026 "PO Automation"
                             CreateIndents2.SetRange("Document No.", IndentVendorEnquiry."Indent Req No");
                             CreateIndents2.SetRange("Line No.", IndentVendorEnquiry."Indent Req Line No");
                             if CreateIndents2.FindFirst() then begin
-                                if IndentReqHeader.Get(CreateIndents2."Document No.") then
+                                if IndentReqHeader.Get(CreateIndents2."Document No.") then begin
                                     PurchaseHeader."Responsibility Center" := IndentReqHeader."Resposibility Center";
+                                    PurchaseHeader."RFQ No." := IndentReqHeader."RFQ No.";
+                                end;
+
                             end;
                             //B2BVCOn30April2024 <<
                             PurchaseHeader.Modify(true);

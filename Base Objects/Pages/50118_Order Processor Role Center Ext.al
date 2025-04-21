@@ -47,14 +47,14 @@ pageextension 50118 OrderRoleCenterExt extends "Order Processor Role Center"//B2
                     RunObject = Report "Purchase Enquiry B2B";
                     ToolTip = 'View your company''s assets, liabilities, and equity.';
                 }
-                action(QuotationComparison)
+                /* action(QuotationComparison)
                 {
                     ApplicationArea = Basic, Suite;
                     Caption = 'Quotation Comparison';
                     Image = "Report";
                     RunObject = Report "Quotation Comparision";
                     ToolTip = 'View your company''s assets, liabilities, and equity.';
-                }
+                } */
                 action(Indent)
                 {
                     ApplicationArea = Basic, Suite;

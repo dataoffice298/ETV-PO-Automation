@@ -80,6 +80,14 @@ table 50209 "Indent Req Header"
         {
             Caption = 'RFQ No.';
             Description = 'B2BESGOn02Jun2022';
+            trigger OnValidate()
+            begin
+                if "RFQ No." <> xRec."RFQ No." then begin
+                    PurchaseSetup.GET;
+                    NoSeriesMgt.TestManual(PurchaseSetup."RFQ Nos.");
+                    "No.Series" := '';
+                end;
+            end;
         }
         field(18; "Indent No."; Code[100])
         {
@@ -183,7 +191,9 @@ table 50209 "Indent Req Header"
         PurchaseSetup.GET;
         IF "No." = '' THEN BEGIN
             PurchaseSetup.TESTFIELD("Indent Req No.");
+            PurchaseSetup.TestField("RFQ Nos.");
             NoSeriesMgt.InitSeries(PurchaseSetup."Indent Req No.", xRec."No.Series", 0D, "No.", "No.Series");
+            NoSeriesMgt.InitSeries(PurchaseSetup."RFQ Nos.", xRec."No.Series", 0D, "RFQ No.", "No.Series");
             "No.Series" := ''
         END;
         "Document Date" := TODAY;
@@ -207,6 +217,20 @@ table 50209 "Indent Req Header"
             PurchaseSetup.GET;
             PurchaseSetup.TESTFIELD("Indent Req No.");
             NoSeriesMgt.SetSeries(IndentReq."No.");
+            Rec := IndentReq;
+            EXIT(TRUE);
+        END;
+    end;
+
+    procedure AssistEditRFQ(OldIndentReq: Record "Indent Req Header"): Boolean;
+    begin
+        IndentReq := Rec;
+        PurchaseSetup.GET;
+        PurchaseSetup.TESTFIELD("RFQ Nos.");
+        IF NoSeriesMgt.SelectSeries(PurchaseSetup."RFQ Nos.", OldIndentReq."RFQ No.", IndentReq."RFQ No.") THEN BEGIN
+            PurchaseSetup.GET;
+            PurchaseSetup.TESTFIELD("RFQ Nos.");
+            NoSeriesMgt.SetSeries(IndentReq."RFQ No.");
             Rec := IndentReq;
             EXIT(TRUE);
         END;

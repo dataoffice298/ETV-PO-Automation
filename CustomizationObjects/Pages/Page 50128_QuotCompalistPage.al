@@ -43,6 +43,10 @@ page 50128 "Quotation Comparisions"
                     ToolTip = 'Specifies the value of the Orders Created field.';
                     ApplicationArea = All;
                 }
+                field("Quot Comparitive"; Rec."Quot Comparitive")
+                {
+                    ApplicationArea = All;
+                }
                 field("Purch. Req. Ref. No."; Rec."Purch. Req. Ref. No.")
                 {
                     ToolTip = 'Specifies the value of the Purch. Req. Ref. No. field.';

@@ -8,7 +8,7 @@ page 50024 "Indent List"
     SourceTable = "Indent Header";
     UsageCategory = Lists;
     ApplicationArea = all;
-    SourceTableView = where("Indent Transfer" = const(false));//BaluOn19Oct2022>>
+    SourceTableView = where("Indent Transfer" = const(false), "Closed Indent" = const(false), "Released Status" = filter(<> Released));//BaluOn19Oct2022>>
 
     layout
     {
@@ -40,6 +40,18 @@ page 50024 "Indent List"
                 field(Indentor; rec.Indentor)
                 {
                     ApplicationArea = all;
+                }
+                field("Closed Indent"; Rec."Closed Indent")
+                {
+                    ApplicationArea = All;
+                }
+                field(ShortClose; Rec.ShortClose)
+                {
+                    ApplicationArea = All;
+                }
+                field(Cancel; Cancel)
+                {
+                    ApplicationArea = All;
                 }
             }
         }

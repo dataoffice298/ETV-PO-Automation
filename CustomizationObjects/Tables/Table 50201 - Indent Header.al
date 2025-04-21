@@ -2,8 +2,8 @@ table 50201 "Indent Header"
 {
     // version PH1.0,PO1.0
 
-    LookupPageID = "Indent List";
-    DrillDownPageId = "Indent List";
+    // LookupPageID = "Indent List";
+    // DrillDownPageId = "Indent List";
 
 
     fields
@@ -294,6 +294,11 @@ table 50201 "Indent Header"
             OptionMembers = " ",ShortClose,Cancel,Closed;
         }
         //B2BVCOn17Jun2024 <<
+        field(50026; "Closed Indent"; Boolean)
+        {
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
     }
 
     keys

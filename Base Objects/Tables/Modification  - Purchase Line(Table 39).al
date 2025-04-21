@@ -509,6 +509,11 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
         {
             DataClassification = CustomerContent;
         }
+        field(60066; Picture; MediaSet)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Picture';
+        }
         modify(Quantity)
         {
             trigger OnBeforeValidate()
@@ -519,6 +524,11 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
                 //CheckCWIPDetailsExists(); //april27
 
             end;
+        }
+        field(60067; "Enquiry No."; Code[30])
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Enquiry No.';
         }
 
     }

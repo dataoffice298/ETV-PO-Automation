@@ -20,6 +20,16 @@ pageextension 50073 pageextension70000001 extends "Purchase Quote"
                 "No." = FIELD("Indent No."), "Line No." = field("Indent Line No.");
             }
         }
+        addafter(Control5)
+        {
+            part(PurchLineItemPicture; "Purchase Line Item Picture")
+            {
+                ApplicationArea = All;
+                Provider = PurchLines;
+                SubPageLink = "Document Type" = field("Document Type"), "Document No." = FIELD("Document No."),
+                              "Line No." = FIELD("Line No.");
+            }
+        }
         //B2BSSD17FEB2023>>
 
         /*modify(General)
@@ -323,7 +333,7 @@ pageextension 50073 pageextension70000001 extends "Purchase Quote"
             PageEditable := true;
     end;
     //B2BVCOn03Oct22>>>
-    
+
 
     var
 
@@ -332,6 +342,6 @@ pageextension 50073 pageextension70000001 extends "Purchase Quote"
 
         PurChQuo: Record "Purchase Header";
         Currency: Record "Currency Exchange Rate";
-        
+
 }
 

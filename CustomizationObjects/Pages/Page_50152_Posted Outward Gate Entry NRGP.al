@@ -166,6 +166,46 @@ page 50152 "Posted Outward Gate Entry-NRGP"
                 }*/
             }
         }
+        area(Reporting)
+        {
+            action("Non Returnable Gatepass")
+            {
+                ApplicationArea = All;
+                Caption = 'Non Returnable Gatepass_50181';
+                Image = Report;
+                trigger OnAction()
+                var
+                    PostednrgpoutwardRec: Record "Posted Gate Entry Header_B2B";
+                    NonReturnGatepassReport: Report "Non Returnable Gatepass";
+                begin
+                    PostednrgpoutwardRec.Reset();
+                    PostednrgpoutwardRec.SetRange("No.", Rec."No.");
+                    if PostednrgpoutwardRec.FindFirst() then begin
+                        NonReturnGatepassReport.SetTableView(PostednrgpoutwardRec);
+                        NonReturnGatepassReport.Run();
+                    end;
+                end;
+            }
+            action("NonReturnable Gatepass")
+            {
+                ApplicationArea = All;
+                Caption = 'NonReturnable Gatepass_F4';
+                Image = Report;
+                trigger OnAction()
+                var
+                    PostednrgpoutwardRec: Record "Posted Gate Entry Header_B2B";
+                    NonReturnGatepassFReport: Report "NonReturnable Gatepass";
+                begin
+                    PostednrgpoutwardRec.Reset();
+                    PostednrgpoutwardRec.SetRange("No.", Rec."No.");
+                    if PostednrgpoutwardRec.FindFirst() then begin
+                        NonReturnGatepassFReport.SetTableView(PostednrgpoutwardRec);
+                        NonReturnGatepassFReport.Run();
+                    end;
+                end;
+            }
+
+        }
     }
     var
         GateEntryHeaderGRec: Record "Posted Gate Entry Header_B2B";

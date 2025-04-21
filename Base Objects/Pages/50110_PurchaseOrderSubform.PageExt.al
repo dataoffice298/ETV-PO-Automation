@@ -139,7 +139,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         modify("Unit Price (LCY)")
         {
             Editable = FieldEditableVar1;
-        } 
+        }
         //B2BVCOn07Aug2024 <<
 
         addbefore("Shortcut Dimension 1 Code")
@@ -392,16 +392,16 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             }
         }
         //B2BSCM11SEP2023>>
-        modify("GST Group Code")
-        {
-            ShowMandatory = true;
-            Editable = FieldEditableVar1; //B2BVCOn07Aug2024
-        }
-        modify("HSN/SAC Code")
-        {
-            ShowMandatory = true;
-            Editable = FieldEditableVar1; //B2BVCOn07Aug2024
-        }
+        /* modify("GST Group Code")
+         {
+             ShowMandatory = true;
+             Editable = FieldEditableVar1; //B2BVCOn07Aug2024
+         }
+         modify("HSN/SAC Code")
+         {
+             ShowMandatory = true;
+             Editable = FieldEditableVar1; //B2BVCOn07Aug2024
+         }*/
         //B2BSCM11SEP2023<<
 
         modify("Qty. to Receive")
@@ -974,11 +974,11 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
         //B2BVCOn07Aug2024 >>
         if PurchHeaderRec.Get(Rec."Document Type"::Order, Rec."Document No.") then begin
             if (Rec.CancelOrder) or (PurchHeaderRec.Status = PurchHeaderRec.Status::Released) then
-            FieldEditableVar1 := false
-        else
-            FieldEditableVar1 := true;
-        //B2BVCOn07Aug2024 <<
-    end;
+                FieldEditableVar1 := false
+            else
+                FieldEditableVar1 := true;
+            //B2BVCOn07Aug2024 <<
+        end;
     end;
 
     procedure CreateGateEntries(EntryType: Option Inward,Outward; DocType: Option RGP,NRGP)

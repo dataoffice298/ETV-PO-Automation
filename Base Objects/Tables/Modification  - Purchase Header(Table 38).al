@@ -73,6 +73,11 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
         field(50119; "Ammendent Comments"; Code[500])//B2BSSD29JUN2023
         {
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                if Rec."Ammendent Comments" <> '' then
+                    Rec."Ammendent Reason" := Rec."Ammendent Comments";
+            end;
         }
         field(50148; "Short Closed by"; Code[50])
         {
@@ -98,22 +103,22 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
         {
             NotBlank = true;//B2BSSD08Feb2023
             Description = 'PO1.0';
-            TableRelation = "RFQ Numbers"."RFQ No." WHERE(Completed = FILTER(false));
+            // TableRelation = "RFQ Numbers"."RFQ No." WHERE(Completed = FILTER(false));
 
-            trigger OnValidate();
-            var
-                RFQNumbers: Record "RFQ Numbers";
-            begin
-                IF RFQNumbers.GET("RFQ No.") THEN BEGIN
-                    IF RFQNumbers."Location Code" <> '' THEN BEGIN
-                        RFQNumbers.MODIFY;
-                        IF RFQNumbers."Location Code" <> "Location Code" THEN
-                            ERROR('Should not use this RFQ Numbers at this location');
-                    END ELSE
-                        RFQNumbers."Location Code" := "Location Code";
-                    RFQNumbers.MODIFY;
-                END;
-            end;
+            // trigger OnValidate();
+            // var
+            //     RFQNumbers: Record "RFQ Numbers";
+            // begin
+            //     IF RFQNumbers.GET("RFQ No.") THEN BEGIN
+            //         IF RFQNumbers."Location Code" <> '' THEN BEGIN
+            //             RFQNumbers.MODIFY;
+            //             IF RFQNumbers."Location Code" <> "Location Code" THEN
+            //                 ERROR('Should not use this RFQ Numbers at this location');
+            //         END ELSE
+            //             RFQNumbers."Location Code" := "Location Code";
+            //         RFQNumbers.MODIFY;
+            //     END;
+            // end;
         }
         field(33002901; "Quotation No."; Code[20])
         {
@@ -217,9 +222,19 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
         field(50136; "Enquiry Note"; Text[1024]) //B2BSPon06Nov2024
         {
             DataClassification = ToBeClassified;
-            
         }
-        
+        field(50137; "Ammendent Reason"; Code[500])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50138; "Cancellation Reason"; Text[1024])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50139; "Enquiry No."; Code[30])
+        {
+            DataClassification = CustomerContent;
+        }
     }
 
 
@@ -333,7 +348,11 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
 
     //Unsupported feature: PropertyChange. Please convert manually.
 
-
+    fieldgroups
+    {
+        addlast(DropDown; "RFQ No.")
+        { }
+    }
     var
         Text000: TextConst ENU = 'Do you want to print receipt %1?', ENN = 'Do you want to print receipt %1?';
         Text001: TextConst ENU = 'Do you want to print invoice %1?', ENN = 'Do you want to print invoice %1?';

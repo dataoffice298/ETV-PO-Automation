@@ -81,7 +81,8 @@ table 50211 QuotCompHdr
         }
         field(20; RFQNumber; Code[20])
         {
-            TableRelation = "RFQ Numbers" where(Completed = filter(false));
+            //TableRelation = "RFQ Numbers" where(Completed = filter(false));
+            //TableRelation = "Purchase Header"."RFQ No." where("Document Type" = const(Quote));
             DataClassification = CustomerContent;
             trigger Onvalidate()
             var
@@ -172,6 +173,7 @@ table 50211 QuotCompHdr
         {
             Clustered = true;
         }
+
     }
 
     var

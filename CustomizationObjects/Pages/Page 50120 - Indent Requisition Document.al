@@ -51,6 +51,17 @@ page 50120 "Indent Requisition Document"
                 {
                     ApplicationArea = All;
                 }
+                field("RFQ No."; Rec."RFQ No.")
+                {
+                    ApplicationArea = All;
+                    ShowMandatory = true;
+                    Editable = false;
+                    trigger OnAssistEdit()
+                    begin
+                        IF Rec.AssistEditRFQ(xRec) THEN
+                            CurrPage.UPDATE;
+                    end;
+                }
                 field("Indent No."; "Indent No.")
                 {
                     ApplicationArea = all;
@@ -312,7 +323,7 @@ page 50120 "Indent Requisition Document"
             }
             action("Purchase Indent Report")//B2Banusha22NOV2024
             {
-                Caption = 'Purchase Indent Report';
+                Caption = 'Staff Purchase Indent Report';
                 ApplicationArea = All;
                 Image = Report;
                 trigger OnAction()

@@ -531,6 +531,11 @@ table 50210 "Quotation Comparison Test"
         {
             DataClassification = CustomerContent;
         }
+        field(60041; Picture; MediaSet)
+        {
+            DataClassification = CustomerContent;
+            Caption = 'Picture';
+        }
     }
 
     keys

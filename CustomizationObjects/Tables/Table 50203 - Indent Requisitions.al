@@ -372,6 +372,18 @@ table 50203 "Indent Requisitions"
             DataClassification = ToBeClassified;
             TableRelation = "Salesperson/Purchaser";
         }
+        field(50028; "Last Purchase Price"; Decimal)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50029; "Gst %"; Decimal)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50030; "PO Vendor Name"; Text[100])
+        {
+            DataClassification = CustomerContent;
+        }
     }
     //B2BSSD17FEB2023>>
 

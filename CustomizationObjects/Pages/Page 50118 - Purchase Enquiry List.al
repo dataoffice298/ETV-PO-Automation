@@ -46,6 +46,10 @@ page 50118 "Purchase Enquiry List"
                 {
                     ApplicationArea = All;
                 }
+                field("Document Date";Rec."Document Date")
+                {
+                    ApplicationArea = All;
+                }
                 field("Posting Date"; Rec."Posting Date")
                 {
                     ApplicationArea = All;

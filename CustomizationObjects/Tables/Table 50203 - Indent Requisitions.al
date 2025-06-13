@@ -54,7 +54,7 @@ table 50203 "Indent Requisitions"
                         if FixedAssets.Get("Item No.") then begin
                             FixedAssets.TestField(Blocked, false);
                             Description := FixedAssets.Description;
-                            "Variant Code" := FixedAssets.Make_B2B;
+                            "Variant Code" := FixedAssets.Make_B2B; //22-04-2025
                         end;
                     "Line Type"::"G/L Account":
                         if GLAccount.Get("Item No.") then begin
@@ -384,6 +384,22 @@ table 50203 "Indent Requisitions"
         {
             DataClassification = CustomerContent;
         }
+        field(50031; "PO Order Date"; Date)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50032; "PO Order No."; code[20])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50033; "RFQ No."; code[20])
+        {
+            DataClassification = CustomerContent;
+        }
+        field(50034; "RFQ Date"; Date)
+        {
+            DataClassification = CustomerContent;
+        }
     }
     //B2BSSD17FEB2023>>
 
@@ -426,6 +442,8 @@ table 50203 "Indent Requisitions"
         IndentLine: Record "Indent Line";
         IndentReqHeader: Record "Indent Req Header";
         Vendor: Record 23;
+        PurchaseSetup: Record "Purchases & Payables Setup";
+        NoSeriesMgt: Codeunit NoSeriesManagement;
 
     procedure TestStatusOpen();
     begin

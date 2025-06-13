@@ -2,6 +2,18 @@ tableextension 50062 SalesHeaderExt extends "Sales Header"
 {
     fields
     {
+        modify("Sell-to Customer No.")
+        {
+            trigger OnBeforeValidate()
+            var
+                myInt: Integer;
+                CUST: Record Customer;
+            begin
+                if CUST.Get(rec."Sell-to Customer No.") then
+                    if CUST."Approval Status" <> CUST."Approval Status"::Released then
+                        Error('Customer Approval Status must be Released');
+            end;
+        }
         field(50100; "LC No."; Code[20])
         {
             Caption = 'LC No.';

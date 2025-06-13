@@ -300,8 +300,8 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
                 else
                     if Rec.Type = Rec.Type::"Fixed Asset" then
                         if FALRec.Get(Rec."No.") then
-                            Rec.Make_B2B := FALRec.Make_B2B;
-                Rec."Model No." := FALRec."Model No.";
+                            Rec.Make_B2B := FALRec.Make_B2B; //22-04-2025
+                Rec."Model No." := FALRec."Model No.";  //22-04-2025
                 Rec."Serial No." := FALRec."Serial No.";
                 "FA Class Code" := FALRec."FA Class Code";//B2BSSD16JUN2023
                 "FA SubClass Code" := FALRec."FA Subclass Code";
@@ -530,7 +530,11 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             DataClassification = CustomerContent;
             Caption = 'Enquiry No.';
         }
-
+        field(60068; "RFQ Date"; Date)
+        {
+            Caption = 'RFQ Date';
+            DataClassification = CustomerContent;
+        }
     }
 
 

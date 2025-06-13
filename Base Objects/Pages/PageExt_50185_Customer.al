@@ -1,11 +1,9 @@
-pageextension 50150 "Vendor CardExt" extends "Vendor Card"
+pageextension 50185 CustomerExt extends "Customer Card"
 {
-
-    //Editable = false;
     layout
     {
-
-        addafter("Assesse Code")
+        // Add changes to page layout here
+        addafter(Blocked)
         {
             field("Approval Status"; "Approval Status")
             {
@@ -13,26 +11,7 @@ pageextension 50150 "Vendor CardExt" extends "Vendor Card"
                 Editable = false;
             }
         }
-        addafter("Tax Information")
-        {
-
-            part(TrermsAndCondition; "Terms and Condition")
-            {
-                ApplicationArea = all;
-                SubPageLink = DocumentNo = field("No.");
-                SubPageView = where(Type = filter("Terms & Conditions"));
-                UpdatePropagation = Both;
-            }
-            part(termAndSpecifications; "PO Terms and Specifications") //B2BVCOn23Sep2024
-            {
-                ApplicationArea = All;
-                SubPageLink = DocumentNo = field("No.");
-                SubPageView = where(Type = filter(Specifications));
-                UpdatePropagation = Both;
-            }
-        }
     }
-
 
     actions
     {
@@ -55,10 +34,12 @@ pageextension 50150 "Vendor CardExt" extends "Vendor Card"
                     WorkflowManagement: Codeunit "Workflow Management";
                     ApprovalsMgmt: Codeunit "Approvals Mgmt.";
                 begin
-                    if ApprovalsMgmt.CheckVendorApprovalsWorkflowEnabled(Rec) then
+                    if ApprovalsMgmt.CheckCustomerApprovalsWorkflowEnabled(Rec) then
+                        //   CheckVendorApprovalsWorkflowEnabled(Rec) then
                         error('Workflow is enabled. You can not release manually.');
                     IF Rec."Approval Status" <> Rec."Approval Status"::Released then BEGIN
                         Rec."Approval Status" := Rec."Approval Status"::Released;
+
                         Rec.Modify();
                         Message('Document has been Released.');
                     end;
@@ -79,7 +60,7 @@ pageextension 50150 "Vendor CardExt" extends "Vendor Card"
                     RecordRest: Record "Restricted Record";
                 begin
                     RecordRest.Reset();
-                    RecordRest.SetRange(ID, 23);
+                    RecordRest.SetRange(ID, 18);
                     RecordRest.SetRange("Record ID", Rec.RecordId());
                     IF RecordRest.FindFirst() THEN
                         error('This record is under in workflow process. Please cancel approval request if not required.');
@@ -100,20 +81,12 @@ pageextension 50150 "Vendor CardExt" extends "Vendor Card"
             end;
         }
     }
-    trigger OnOpenPage()
+    trigger OnAfterGetCurrRecord()
     var
         myInt: Integer;
     begin
         if Rec."Approval Status" = Rec."Approval Status"::Released then
-            // CurrPage.Editable(false);
             CurrPage.Editable(false);
     end;
-
-
-
-
-
-    var
-        POTerms: Record "PO Terms And Conditions";
-        EDITABLE: Boolean;
 }
+

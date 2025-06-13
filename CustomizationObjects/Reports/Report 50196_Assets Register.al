@@ -87,8 +87,8 @@ report 50196 "Assets Register"
                 TempExcelBuffer.NewRow();
                 TempExcelBuffer.AddColumn("No.", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
                 TempExcelBuffer.AddColumn(Description, false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
-                TempExcelBuffer.AddColumn(Make_B2B, false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
-                TempExcelBuffer.AddColumn("Model No.", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
+                 TempExcelBuffer.AddColumn(Make_B2B, false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text); //22-04-2025
+                 TempExcelBuffer.AddColumn("Model No.", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text); //22-04-2025
                 TempExcelBuffer.AddColumn("Serial No.", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
                 TempExcelBuffer.AddColumn("FA Location Code", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
                 TempExcelBuffer.AddColumn("FA Sub Location", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);

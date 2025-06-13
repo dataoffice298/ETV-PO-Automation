@@ -32,6 +32,10 @@ page 50153 "Posted Outward Gate SubFm-NRGP"
                 {
                     ApplicationArea = All;
                 }
+                field("Unit of Measure"; Rec."Unit of Measure")
+                {
+                    ApplicationArea = All;
+                }
                 field(ModelNo; ModelNo)
                 {
                     ApplicationArea = All;

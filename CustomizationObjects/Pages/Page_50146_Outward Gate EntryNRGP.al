@@ -37,6 +37,11 @@ page 50146 "Outward Gate Entry - NRGP"
                 {
                     ApplicationArea = All;
                 }
+                field("Vendor No"; Rec."Vendor No")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Vendor No.';
+                }
                 field(Type; Rec.Type)
                 {
                     ApplicationArea = all;

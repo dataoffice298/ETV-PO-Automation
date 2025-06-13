@@ -222,20 +222,11 @@ table 50221 "Gate Entry Header_B2B"
         // {
         //     DataClassification = CustomerContent;
         // }
-        // field(31; "Vendor No"; code[20])
-        // {
-        //     DataClassification = CustomerContent;
-        //     TableRelation = Vendor;
-        //     trigger OnValidate()
-        //     Var
-        //         VendRec: Record Vendor;
-        //     begin
-        //         IF VendRec.GET("Vendor No") THEN
-        //             "Vendor Name" := VendRec.Name;
-        //         //"Vend Type" := VendRec."Vendor Type";
-
-        //     end;
-        // }
+        field(31; "Vendor No"; code[20])
+        {
+            DataClassification = CustomerContent;
+            TableRelation = Vendor;
+        }
         // field(32; "Vendor Name"; Text[100])
         // {
         //     DataClassification = CustomerContent;
@@ -428,6 +419,7 @@ table 50221 "Gate Entry Header_B2B"
             DataClassification = CustomerContent;
             Caption = 'Purch Cr. Memo No.';
         }
+
     }
 
     keys

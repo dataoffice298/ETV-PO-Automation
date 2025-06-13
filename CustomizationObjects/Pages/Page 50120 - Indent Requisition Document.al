@@ -62,6 +62,11 @@ page 50120 "Indent Requisition Document"
                             CurrPage.UPDATE;
                     end;
                 }
+                field("RFQ Date"; Rec."RFQ Date")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Specifies the value of the RFQ Date field.';
+                }
                 field("Indent No."; "Indent No.")
                 {
                     ApplicationArea = all;
@@ -189,8 +194,6 @@ page 50120 "Indent Requisition Document"
                 Caption = 'Create &Enquiry';
                 ApplicationArea = All;
                 Image = Create;
-                //   Visible = ShowAct;
-                //
                 trigger OnAction();
                 var
                     IndentReqLine: Record "Indent Requisitions";
@@ -212,44 +215,29 @@ page 50120 "Indent Requisition Document"
                     IF Indentreqline.FIND('-') THEN BEGIN
                         IF NOT CONFIRM(Text003) THEN
                             EXIT;
-                        // CreateIndents.RESET;
-                        // CreateIndents.SETRANGE("Document No.", Rec."No.");
-                        // CreateIndents.SETRANGE("Carry out Action", TRUE);
                         CurrPage.Indentrequisations.Page.SetSelectionFilter(CreateIndents);//B2BSSD18APR2023
                         if CreateIndents.Find('-') then
                             repeat
                                 if CreateIndents."Remaining Quantity" = 0 then
                                     Error('Purchase Order Already Created,Indent Line No.%1', CreateIndents."Line No.");
                             until CreateIndents.Next = 0;
-                        CLEAR(VendorList);
-                        VendorList.Editable(false);
-                        VendorList.LOOKUPMODE(TRUE);
-                        IF VendorList.RUNMODAL = ACTION::LookupOK THEN BEGIN
-                            VendorList.SetSelectionFilter(Vendor);
-                            IF Vendor.COUNT >= 1 THEN BEGIN
+                        CLEAR(VendorListNew);
+                        VendorListNew.LOOKUPMODE(TRUE);
+                        IF VendorListNew.RUNMODAL = ACTION::LookupOK THEN BEGIN
+                            VendorListNew.SetSelectionFilter(Vendor);
+                            Vendor.Reset();
+                            Vendor.SetRange(Selected, true);
+                            if Vendor.FindSet() then begin
                                 POAutomation.CreateEnquiries(CreateIndents, Vendor, Rec."No.Series");
+                                Vendor.Reset();
+                                Vendor.SetRange(Selected, true);
+                                if Vendor.FindSet() then
+                                    Vendor.ModifyAll(Selected, false);
                                 MESSAGE(Text0010);
                             END ELSE
                                 EXIT;
                         END;
                     END;
-                    /* IndentReqLine.Reset();
-                     IndentReqLine.SetRange("Document No.", Rec."No.");
-                     if IndentReqLine.FindSet() then begin
-                         repeat
-                             IndentLineRec.Reset();
-                             IndentLineRec.SetRange("Document No.", IndentReqLine."Indent No.");
-                             IndentLineRec.SetRange("Line No.", IndentReqLine."Indent Line No.");
-                             if IndentLineRec.FindSet() then begin
-                                 repeat
-                                     //    SetSelectionFilter(IndentLineRec);
-
-                                     IndentLineRec.Status := IndentLineRec.Status::Enqiury;
-                                     IndentLineRec.Modify();
-                                 until IndentLineRec.Next() = 0;
-                             end;
-                         until IndentReqLine.Next() = 0;
-                     end;*/
                 end;
             }
             action("Create &Quote")
@@ -258,8 +246,6 @@ page 50120 "Indent Requisition Document"
 
                 ApplicationArea = All;
                 Image = NewSalesQuote;
-                // Visible = ShowAct;
-
                 trigger OnAction();
                 var
                     IndentReqLinerec: Record "Indent Requisitions";
@@ -283,42 +269,29 @@ page 50120 "Indent Requisition Document"
                     IF Indentreqline.FIND('-') THEN BEGIN
                         IF NOT CONFIRM(Text004) THEN
                             EXIT;
-                        //CreateIndents.RESET;
-                        //CreateIndents.SETRANGE("Document No.", Rec."No.");
-                        //CreateIndents.SETRANGE("Carry out Action", TRUE);
                         CurrPage.Indentrequisations.Page.SetSelectionFilter(CreateIndents);
                         if CreateIndents.Find('-') then
                             repeat
                                 if CreateIndents."Remaining Quantity" = 0 then
                                     Error('Purchase Order Already Created,Indent Line No.%1', CreateIndents."Line No.");
                             until CreateIndents.Next = 0;
-                        CLEAR(VendorList);
-                        VendorList.Editable(false);
-                        VendorList.LOOKUPMODE(TRUE);
-                        IF VendorList.RUNMODAL = ACTION::LookupOK THEN BEGIN
-                            VendorList.SetSelectionFilter(Vendor);
-                            IF Vendor.COUNT >= 1 THEN BEGIN
+                        CLEAR(VendorListNew);
+                        VendorListNew.LOOKUPMODE(TRUE);
+                        IF VendorListNew.RUNMODAL = ACTION::LookupOK THEN BEGIN
+                            VendorListNew.SetSelectionFilter(Vendor);
+                            Vendor.Reset();
+                            Vendor.SetRange(Selected, true);
+                            IF Vendor.FindSet() THEN BEGIN
                                 POAutomation.CreateQuotes(CreateIndents, Vendor, Rec."No.Series");
+                                Vendor.Reset();
+                                Vendor.SetRange(Selected, true);
+                                if Vendor.FindSet() then
+                                    Vendor.ModifyAll(Selected, false);
                                 MESSAGE(Text0011);
                             END ELSE
                                 EXIT;
                         end;
                     END;
-                    /*  IndentReqLine.Reset();
-                      IndentReqLine.SetRange("Document No.", Rec."No.");
-                      if IndentReqLine.FindSet() then begin
-                          repeat
-                              IndentLineRec.Reset();
-                              IndentLineRec.SetRange("Document No.", IndentReqLine."Indent No.");
-                              IndentLineRec.SetRange("Line No.", IndentReqLine."Indent Line No.");
-                              if IndentLineRec.FindSet() then begin
-                                  //  repeat
-                                  IndentLineRec.Status := IndentLineRec.Status::Quote;
-                                  IndentLineRec.Modify();
-                                  ///  until IndentLineRec.Next() = 0;
-                              end;
-                          until IndentReqLine.Next() = 0;
-                      end;*/
                 end;
             }
             action("Purchase Indent Report")//B2Banusha22NOV2024
@@ -507,35 +480,70 @@ page 50120 "Indent Requisition Document"
                     //IF WorkflowManagement.CanExecuteWorkflow(Rec, Approvalmgmt.run) then
                     //if allinoneCU.CheckIndentRequisitionDoc1ApprovalsWorkflowEnabled(Rec) then
                     //  error('Workflow is enabled. You can not release manually.');
-                    Rec.TestField("No.Series");
-                    Rec.TestField(Status, Rec.Status::Open);
-                    IndentReqLine.Reset();
-                    IndentReqLine.SetRange("Document No.", Rec."No.");
-                    if not IndentReqLine.FindFirst() then begin
-                        Error('No Lines Found');
-                    end;
-                    //B2BSCM20SEP2023>>
-                    if IndentReqLine.FindSet() then begin
-                        repeat
-                            IndentReqLine.TestField("Qty. To Order");
-                        until IndentReqLine.Next() = 0;
-                    end; //B2BSCM20SEP2023<<
-                    Rec.TestField("Resposibility Center");
-                    Rec.TESTFIELD("Document Date");
-                    if Rec."Resposibility Center" = 'LOCAL REQ' then
-                        Message(RelText1);
-                    if Rec."Resposibility Center" = 'CENTRL REQ' then
-                        Message(RelText2);
+                    if (Rec.Type = Rec.Type::Enquiry) or (Rec.Type = Rec.Type::Quote) then begin
+                        Rec.TestField("RFQ No.");
+                        Rec.TestField("No.Series");
+                        Rec.TestField(Status, Rec.Status::Open);
+                        IndentReqLine.Reset();
+                        IndentReqLine.SetRange("Document No.", Rec."No.");
+                        if not IndentReqLine.FindFirst() then begin
+                            Error('No Lines Found');
+                        end;
+                        //B2BSCM20SEP2023>>
+                        if IndentReqLine.FindSet() then begin
+                            repeat
+                                IndentReqLine.TestField("Qty. To Order");
+                            until IndentReqLine.Next() = 0;
+                        end; //B2BSCM20SEP2023<<
+                        Rec.TestField("Resposibility Center");
+                        Rec.TESTFIELD("Document Date");
+                        if Rec."Resposibility Center" = 'LOCAL REQ' then
+                            Message(RelText1);
+                        if Rec."Resposibility Center" = 'CENTRL REQ' then
+                            Message(RelText2);
 
 
-                    IF WorkflowManagement.CanExecuteWorkflow(Rec, allinoneCU.RunworkflowOnSendIndentRequisitionDoc1forApprovalCode()) then
-                        error('Workflow is enabled. You can not release manually.');
+                        IF WorkflowManagement.CanExecuteWorkflow(Rec, allinoneCU.RunworkflowOnSendIndentRequisitionDoc1forApprovalCode()) then
+                            error('Workflow is enabled. You can not release manually.');
 
-                    IF Rec.Status <> Rec.Status::Release then BEGIN
-                        Rec.Status := Rec.Status::Release;
-                        //Rec.Modify();
-                        Message('Document has been Released.');
-                    end;
+                        IF Rec.Status <> Rec.Status::Release then BEGIN
+                            Rec.Status := Rec.Status::Release;
+                            //Rec.Modify();
+                            Message('Document has been Released.');
+                        end;
+                    end
+                    else
+                        if Rec.Type = Rec.Type::Order then begin
+                            Rec.TestField("No.Series");
+                            Rec.TestField(Status, Rec.Status::Open);
+                            IndentReqLine.Reset();
+                            IndentReqLine.SetRange("Document No.", Rec."No.");
+                            if not IndentReqLine.FindFirst() then begin
+                                Error('No Lines Found');
+                            end;
+                            //B2BSCM20SEP2023>>
+                            if IndentReqLine.FindSet() then begin
+                                repeat
+                                    IndentReqLine.TestField("Qty. To Order");
+                                until IndentReqLine.Next() = 0;
+                            end; //B2BSCM20SEP2023<<
+                            Rec.TestField("Resposibility Center");
+                            Rec.TESTFIELD("Document Date");
+                            if Rec."Resposibility Center" = 'LOCAL REQ' then
+                                Message(RelText1);
+                            if Rec."Resposibility Center" = 'CENTRL REQ' then
+                                Message(RelText2);
+
+
+                            IF WorkflowManagement.CanExecuteWorkflow(Rec, allinoneCU.RunworkflowOnSendIndentRequisitionDoc1forApprovalCode()) then
+                                error('Workflow is enabled. You can not release manually.');
+
+                            IF Rec.Status <> Rec.Status::Release then BEGIN
+                                Rec.Status := Rec.Status::Release;
+                                //Rec.Modify();
+                                Message('Document has been Released.');
+                            end;
+                        end;
                 end;
             }
             action(Approve)
@@ -838,6 +846,7 @@ page 50120 "Indent Requisition Document"
         CreateIndents: Record "Indent Requisitions";
         Vendor: Record 23;
         VendorList: Page 27;
+        VendorListNew: page "Vendor List_B2B";
         PurchaseOrder: Record 38;
         Usermgt: Codeunit 5700;
         "-----Mail": Integer;

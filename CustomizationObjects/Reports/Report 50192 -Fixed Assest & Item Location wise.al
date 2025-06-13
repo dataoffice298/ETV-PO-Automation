@@ -48,9 +48,9 @@ report 50192 "FixedAssets&Item LocationWise" //B2BSSD09MAY2023
                             TempExcelBuffer.AddColumn(FixedAsset."No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                             TempExcelBuffer.AddColumn(FixedAsset.Description, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
                             TempExcelBuffer.AddColumn(FixedAsset."FA Location Code", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                            TempExcelBuffer.AddColumn(FixedAsset."Model No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn(FixedAsset."Model No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text); //22-04-2025
                             TempExcelBuffer.AddColumn(FixedAsset."Serial No.", FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
-                            TempExcelBuffer.AddColumn(FixedAsset.Make_B2B, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text);
+                            TempExcelBuffer.AddColumn(FixedAsset.Make_B2B, FALSE, '', FALSE, FALSE, FALSE, '', TempExcelBuffer."Cell Type"::Text); //22-04-2025
                              if FixedAsset."available/Unavailable" = false then
                                 status1 := 'Available'
                             else

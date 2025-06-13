@@ -65,6 +65,10 @@ pageextension 50070 MyExtension1 extends "Purchases & Payables Setup"
             {
                 ApplicationArea = all;
             }
+            field("Transfer Indent"; "Transfer Indent")
+            {
+                ApplicationArea = all;
+            }
             field("Indent Req No."; Rec."Indent Req No.")
             {
                 ApplicationArea = all;

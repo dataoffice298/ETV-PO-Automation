@@ -81,7 +81,7 @@ codeunit 50020 "Gate Entry- Post Yes/No"
         Text060: Label 'MILLION';
         Text061: Label 'BILLION';
         RGPOutHeaderGvar: Record "Gate Entry Header_B2B";
-        RgpOutLineGVar: Record "Gate Entry Line_B2B";
+        RgpOutLineGVar, RGPINLineVar : Record "Gate Entry Line_B2B";
         FixedAssets: Record "Fixed Asset";
         CompanyInfo: Record "Company Information";
         CurrencyExchangeRate: Record "Currency Exchange Rate";
@@ -161,19 +161,24 @@ codeunit 50020 "Gate Entry- Post Yes/No"
     local procedure "Code"();
     var
         PostedGateEntryHeader: Record "Posted Gate Entry Header_B2B";
-        ERRORmsg1: Label 'Fixed Assets is Not Available for Transfer';
+        //ERRORmsg1: Label 'Fixed Assets is Not Available for Transfer';
+        ERRORmsg1: Label 'Fixed Assets is Not Available for Transfer, Source No. %1 and Line No. %2';
     begin
 
-         RgpOutLineGVar.Reset();
-        RgpOutLineGVar.SetRange("Gate Entry No.", RGPOutHeaderGvar."No.");
+        RgpOutLineGVar.Reset();
+        RgpOutLineGVar.SetRange("Gate Entry No.", GateEntryHeader."No.");
+        RgpOutLineGVar.SetRange("Entry Type", RgpOutLineGVar."Entry Type"::Outward);
         if RgpOutLineGVar.FindSet() then begin
-            FixedAssets.Reset();
-            FixedAssets.SetRange("No.", RgpOutLineGVar."Source No.");
-            if FixedAssets.FindSet() then begin
-                if FixedAssets."available/Unavailable" = true then
-                    Error(ERRORmsg1);
-            end;
-        end; 
+            repeat
+                FixedAssets.Reset();
+                FixedAssets.SetRange("No.", RgpOutLineGVar."Source No.");
+                if FixedAssets.FindSet() then begin
+                    if FixedAssets."available/Unavailable" = true then
+                        Error(ERRORmsg1, RgpOutLineGVar."Source No.", RgpOutLineGVar."Line No.");
+                end;
+            until RgpOutLineGVar.Next() = 0;
+        end;
+
         if not CONFIRM(Text16500, false) then
             exit;
         GateEntryPost.RUN(GateEntryHeader);

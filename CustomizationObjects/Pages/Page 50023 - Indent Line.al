@@ -28,6 +28,10 @@ page 50023 "Indent Line"
                 {
                     ApplicationArea = All;
                     Editable = FieldEditable;
+                    trigger OnValidate()
+                    begin
+                        SourceNoValidation();
+                    end;
                 }
                 field("No."; rec."No.")
                 {
@@ -51,6 +55,10 @@ page 50023 "Indent Line"
                 {
                     ApplicationArea = All;
                     Editable = true;
+                    trigger OnValidate()
+                    begin
+                        SourceNoValidation();
+                    end;
                 }
                 field("Spec Id"; rec."Spec Id")
                 {
@@ -60,6 +68,7 @@ page 50023 "Indent Line"
                     var
                         UserSetup: Record "User Setup";
                     begin
+                        SourceNoValidation();
                         if UserSetup.Get(UserId) then begin
                             if not UserSetup.Specifications then
                                 Error('do not have permissons to modify spec id');
@@ -71,6 +80,10 @@ page 50023 "Indent Line"
                     ApplicationArea = All;
                     Editable = FieldEditable;
                     QuickEntry = true;
+                    trigger OnValidate()
+                    begin
+                        SourceNoValidation();
+                    end;
 
                 }
                 field(Acquired; Rec.Acquired)//B2BSSD01MAR2023
@@ -78,6 +91,7 @@ page 50023 "Indent Line"
                     ApplicationArea = All;
                     // Editable = FieldEditable;
                     Editable = false; //B2BSCM07SEP2023
+
                 }
                 field("Variant Code"; Rec."Variant Code")
                 {
@@ -85,6 +99,7 @@ page 50023 "Indent Line"
                     ApplicationArea = All;
                     // Editable = FieldEditable;
                     Editable = false;
+
                 }
                 //B2B
                 field("Variant Description"; "Variant Description")
@@ -92,11 +107,16 @@ page 50023 "Indent Line"
                     Caption = 'Variant Description';
                     ApplicationArea = All;
                     Editable = FieldEditable; //B2B22AUG2023
+                    trigger OnValidate()
+                    begin
+                        SourceNoValidation();
+                    end;
                 }
                 field(Status; Status)
                 {
                     ApplicationArea = all;
                     Editable = false;
+
                 }
 
                 field(Department; rec.Department)
@@ -104,29 +124,43 @@ page 50023 "Indent Line"
                     Visible = false;
                     ApplicationArea = All;
                     Editable = FieldEditable;
+                    trigger OnValidate()
+                    begin
+                        SourceNoValidation();
+                    end;
                 }
                 field("Delivery Location"; rec."Delivery Location")
                 {
                     Caption = 'Location Code';
                     ApplicationArea = All;
                     Editable = FieldEditable;
+                    trigger OnValidate()
+                    begin
+                        SourceNoValidation();
+                    end;
                 }
                 field("Avail.Qty"; Rec."Avail.Qty")
                 {
                     ApplicationArea = all;
                     // Editable = FieldEditable;
                     Editable = false;//B2BSCM30AUG2023
+
                 }
                 field("Avail/UnAvail"; Rec."Avail/UnAvail")//B2BSSD02AUG2023
                 {
                     ApplicationArea = All;
                     Caption = 'Avail/UnAvail';
                     Editable = false;
+
                 }
                 field("Req.Quantity"; rec."Req.Quantity")
                 {
                     ApplicationArea = All;
                     Editable = FieldEditable;
+                    trigger OnValidate()
+                    begin
+                        SourceNoValidation();
+                    end;
                     //B2BSSD25Apr2023<<
                     // trigger OnValidate()
                     // var
@@ -143,43 +177,75 @@ page 50023 "Indent Line"
                 {
                     ApplicationArea = All;
                     Editable = FieldEditable; //B2BSCM21AUG2023
+                    trigger OnValidate()
+                    begin
+                        SourceNoValidation();
+                    end;
                 }
                 field("Due Date"; rec."Due Date")
                 {
                     ApplicationArea = All;
                     Editable = FieldEditable; //B2BSCM21AUG2023
+                    trigger OnValidate()
+                    begin
+                        SourceNoValidation();
+                    end;
                 }
                 field("Indent Status"; rec."Indent Status")
                 {
                     ApplicationArea = All;
                     Editable = FieldEditable; //B2BSCM21AUG2023
+                    trigger OnValidate()
+                    begin
+                        SourceNoValidation();
+                    end;
                 }
                 field(Remarks; rec.Remarks)
                 {
                     ApplicationArea = All;
                     Editable = FieldEditable; //B2BSCM21AUG2023
+                    trigger OnValidate()
+                    begin
+                        SourceNoValidation();
+                    end;
                 }
                 field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {
                     ApplicationArea = all;
                     Editable = FieldEditable; //B2BSCM21AUG2023
+                    trigger OnValidate()
+                    begin
+                        SourceNoValidation();
+                    end;
                 }
                 field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = all;
                     Editable = FieldEditable; //B2BSCM21AUG2023
+                    trigger OnValidate()
+                    begin
+                        SourceNoValidation();
+                    end;
                 }
                 field("Shortcut Dimension 9 Code"; Rec."Shortcut Dimension 9 Code")//B2BSSD20Feb2023
                 {
                     ApplicationArea = All;
                     Caption = 'Shortcut Dimension 9 Code';
                     Editable = FieldEditable; //B2BSCM21AUG2023
+                    trigger OnValidate()
+                    begin
+                        SourceNoValidation();
+                    end;
                 }
                 field("Shortcut Dimension 3 Code"; Rec."Shortcut Dimension 3 Code")
                 {
                     ApplicationArea = All;
                     Caption = 'Project Code';
                     Editable = false;
+                    trigger OnValidate()
+                    begin
+                        SourceNoValidation();
+                    end;
                 }
                 field("Qty To Issue"; Rec."Qty To Issue")
                 {
@@ -188,6 +254,7 @@ page 50023 "Indent Line"
                     //Editable = FieldEditable; //B2BSCM21AUG2023
                     trigger OnValidate()
                     begin
+                        SourceNoValidation();
                         if (Rec."ShortClose Status" = Rec."ShortClose Status"::ShortClosed) OR (Rec."ShortClose Status" = Rec."ShortClose Status"::Cancelled) then
                             Error(TextLbl, Rec."Line No.", Rec."ShortClose Status");
                     end;
@@ -202,6 +269,10 @@ page 50023 "Indent Line"
                 {
                     ApplicationArea = all;
                     Caption = 'Qty To Return';
+                    trigger OnValidate()
+                    begin
+                        SourceNoValidation();
+                    end;
                 }
                 field("Qty Returned"; Rec."Qty Returned")
                 {
@@ -218,6 +289,7 @@ page 50023 "Indent Line"
                         UserWiseLocation: Record "Location Wise User";
                         UserwiseSecurity: Codeunit UserWiseSecuritySetup;
                     begin
+                        SourceNoValidation();
                         if not UserwiseSecurity.CheckUserLocation(UserId, Rec."Issue Location", 5) then
                             Error('User %1 dont have permission to location %2', UserId, Rec."Issue Location");
                     end;
@@ -230,6 +302,7 @@ page 50023 "Indent Line"
                     //Editable = FieldEditable; //B2BSCM21AUG2023 //B2BVCOn01Feb2024 Comment
                     trigger OnValidate()
                     begin
+                        SourceNoValidation();
                         Rec.CalcFields("Qty Issued");
                         if Rec."Req.Quantity" = Abs(Rec."Qty Issued") then begin
                             if Rec."ShortClose Status" = Rec."ShortClose Status"::" " then begin
@@ -322,7 +395,7 @@ page 50023 "Indent Line"
                         Page.RunModal(40, ItemJournalLine);
                     END;
                 }
-                /*action(createFAMovement)
+                action(createFAMovement)
                 {
                     ApplicationArea = ALL;
                     Caption = 'create FA Movement';
@@ -351,7 +424,7 @@ page 50023 "Indent Line"
                         if FAMovement.FindSet() then
                             Page.Run(0, FAMovement);
                     END;
-                }*/
+                }
 
                 //B2BSSD30Jan2023<<
                 action("Item Specification")
@@ -866,12 +939,12 @@ page 50023 "Indent Line"
                     GateEntryLine."Source No." := IndentLine."No.";
 
                     //B2BSSD17APR2023>>
-                     FixedAsset.Reset();
+                    FixedAsset.Reset();
                     FixedAsset.SetRange("No.", GateEntryLine."Source No.");
                     if FixedAsset.FindFirst() then begin
                         FixedAsset."available/Unavailable" := true;
                         FixedAsset.Modify();
-                    end; 
+                    end;
                     //B2BSSD17APR2023<<
 
                     GateEntryLine.Variant := IndentLine."Variant Code";
@@ -893,9 +966,9 @@ page 50023 "Indent Line"
                     GateEntryLine."Avail Qty" := IndentLine."Avail.Qty";//B2BSSD03APR2023
                     GateEntryLine."Unit of Measure" := Rec."Unit of Measure";
                     if FA.Get(GateEntryLine."Source No.") then
-                        GateEntryLine.ModelNo := FA."Model No.";
+                        GateEntryLine.ModelNo := FA."Model No."; //22-04-2025
                     GateEntryLine.SerialNo := FA."Serial No.";
-                    GateEntryLine.Variant := FA.Make_B2B;
+                    GateEntryLine.Variant := FA.Make_B2B; //22-04-2025
                     GateEntryLine.Modify();
 
 
@@ -935,6 +1008,16 @@ page 50023 "Indent Line"
     //B2BSSD02MAR2023>>
 
     //B2BMSOn04Nov2022>>
+
+    procedure SourceNoValidation()
+    begin
+        if (Rec.Type = Rec.Type::Item) OR (Rec.Type = Rec.Type::"Fixed Assets") OR (Rec.Type = Rec.Type::"G/L Account") then begin
+            if Rec."No." = '' then
+                Error('No. Cannot be empty.');
+        end;
+
+    end;
+
     trigger OnInit()
     begin
         FieldEditable := true;

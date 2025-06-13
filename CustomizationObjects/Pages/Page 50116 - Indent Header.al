@@ -604,6 +604,29 @@ page 50116 "Indent Header"
                         Rec.CopyIndent;
                     end;
                 }
+                // action("FA Issue")
+                // {
+                //     ApplicationArea = All;
+
+                //     trigger OnAction()
+                //     var
+                //         Indent: Record "Indent Line";
+                //     begin
+                //         Indent.Reset();
+                //         Indent.SetRange("Document No.", rec."No.");
+                //         Indent.SetFilter("Req.Quantity", '<>%1', 0);
+                //         if Indent.FindSet() then
+                //             repeat
+                //                 if not Confirm('Do You Want Issue Fixed Asset', true) then
+                //                     exit;
+                //                 Indent."FA Issued" := Indent."Req.Quantity";
+                //                 Indent."Req.Quantity" := 0;
+                //                 Indent.Modify();
+                //             until Indent.next() = 0;
+
+
+                //     end;
+                // }
                 separator("Approvals")
                 {
                 }

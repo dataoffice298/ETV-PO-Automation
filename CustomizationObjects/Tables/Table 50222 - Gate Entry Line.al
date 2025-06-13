@@ -59,10 +59,10 @@ table 50222 "Gate Entry Line_B2B"
                             IF FALRec.GET("Source No.") THEN BEGIN
                                 "Source No." := FALRec."No.";
                                 Description := FALRec.Description;
-                                Variant := FALRec.Make_B2B;
+                                Variant := FALRec.Make_B2B;  //22-04-2025
                                 "Source Name" := FALRec.Description;
                                 Description := FALRec."Description";
-                                ModelNo := FALRec."Model No.";
+                                ModelNo := FALRec."Model No."; //22-04-2025
                                 SerialNo := FALRec."Serial No.";
                                 "Avail/UnAvail" := FALRec."available/Unavailable";//B2BSSD07JUN2023
                             END;
@@ -93,11 +93,11 @@ table 50222 "Gate Entry Line_B2B"
                             //if Rec."Source Type" = Rec."Source Type"::"Fixed Asset" then
                             Validate(Quantity, 1);
                             if FALRec.Get(Rec."Source No.") then
-                                Rec.ModelNo := FALRec."Model No.";
-                            Rec.SerialNo := FALRec."Serial No.";
+                                // Rec.ModelNo := FALRec."Model No."; //22-04-2025
+                                Rec.SerialNo := FALRec."Serial No.";
                             Rec."Source Name" := FALRec."Description";
                             Rec.Description := FALRec."Description";
-                            Rec.Variant := FALRec.Make_B2B;
+                            //Rec.Variant := FALRec.Make_B2B; //22-04-2025
                         end;
                     END;
                 end;

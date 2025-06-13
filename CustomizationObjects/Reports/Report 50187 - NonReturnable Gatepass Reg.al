@@ -17,6 +17,8 @@ report 50187 "NonReturnable Gatepass"
                 trigger OnAfterGetRecord()
                 var
                 begin
+                    if LocationRec.Get("Posted Gate Entry Header_B2B"."Location Code") then;
+                    if ToLocationRec.Get("Posted Gate Entry Header_B2B"."To Location") then;
                     SNo += 1;
                     ExcelBuffer.NewRow();
                     ExcelBuffer.AddColumn(SNo, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
@@ -30,8 +32,8 @@ report 50187 "NonReturnable Gatepass"
                     ExcelBuffer.AddColumn("Posted Gate Entry Line_B2B".SerialNo, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
                     ExcelBuffer.AddColumn("Posted Gate Entry Line_B2B".Quantity, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
                     //ExcelBuffer.AddColumn("Posted Gate Entry Header_B2B"."Document Date", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Number);
-                    ExcelBuffer.AddColumn("Posted Gate Entry Header_B2B"."Location Code", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
-                    ExcelBuffer.AddColumn("Posted Gate Entry Header_B2B"."To Location", FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
+                    ExcelBuffer.AddColumn(LocationRec.Name, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
+                    ExcelBuffer.AddColumn(ToLocationRec.Name, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
                     ExcelBuffer.AddColumn("Posted Gate Entry Header_B2B".Purpose, FALSE, '', FALSE, FALSE, FALSE, '', ExcelBuffer."Cell Type"::Text);
                 end;
             }
@@ -86,6 +88,8 @@ report 50187 "NonReturnable Gatepass"
         StartDate: Date;
         EndDate: Date;
         ExcelBuffer: Record "Excel Buffer" temporary;
+        LocationRec: Record Location;
+        ToLocationRec: Record Location;
 
 
     PROCEDURE MakeInTransitHeader()

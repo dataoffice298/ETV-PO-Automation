@@ -142,8 +142,8 @@ page 50145 "Inward Gate Entry SubFrm-NRGP"
                                         Rec."Source No." := FA."No.";
                                         Rec."Source Name" := FA.Description;
                                         Rec.Description := FA.Description;
-                                        Rec.Make := FA.Make_B2B;
-                                        Rec.ModelNo := FA."Model No.";
+                                        Rec.Make := FA.Make_B2B; //22-04-2025
+                                        Rec.ModelNo := FA."Model No."; //22-04-2025
                                         Rec.SerialNo := FA."Serial No.";
                                     end;
                                 end;

@@ -2,7 +2,7 @@ table 50201 "Indent Header"
 {
     // version PH1.0,PO1.0
 
-    // LookupPageID = "Indent List";
+    LookupPageID = "Released Indent List";
     // DrillDownPageId = "Indent List";
 
 
@@ -13,12 +13,23 @@ table 50201 "Indent Header"
 
             trigger OnValidate();
             begin
-                IF "No." <> xRec."No." THEN BEGIN
-                    PurchaseSetup.GET;
-                    NoSeriesMgt.TestManual(PurchaseSetup."Indent Nos.");
-                    "No. Series" := '';
+                if rec."Indent Transfer" = false then begin
+                    IF "No." <> xRec."No." THEN BEGIN
+                        PurchaseSetup.GET;
+                        NoSeriesMgt.TestManual(PurchaseSetup."Indent Nos.");
+                        "No. Series" := '';
+                    end;
                 END;
+                if rec."Indent Transfer" = false then begin
+
+                    IF "No." <> xRec."No." THEN BEGIN
+                        PurchaseSetup.GET;
+                        NoSeriesMgt.TestManual(PurchaseSetup."Transfer Indent");
+                        "No. Series" := '';
+                    end;
+                end;
             end;
+
         }
         field(2; Description; Text[50])
         {
@@ -166,7 +177,9 @@ table 50201 "Indent Header"
         field(50003; "Transfer-from Code"; Code[10])
         {
             Caption = 'Transfer-from Code';
-            TableRelation = Location WHERE("Use As In-Transit" = CONST(false));
+            TableRelation = "FA Location";
+
+            // Location WHERE("Use As In-Transit" = CONST(false));
             //B2BSSD30MAR2023<<
             // trigger OnValidate()
             // var
@@ -182,7 +195,9 @@ table 50201 "Indent Header"
         field(50004; "Transfer-to Code"; Code[10])
         {
             Caption = 'Transfer-to Code';
-            TableRelation = Location WHERE("Use As In-Transit" = CONST(false));
+            //  TableRelation = Location WHERE("Use As In-Transit" = CONST(false));
+            TableRelation = "FA Location";
+
         }
         field(50005; "In-Transit Code"; Code[10])
         {
@@ -299,6 +314,31 @@ table 50201 "Indent Header"
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(50027; "Sub Location code"; Code[30])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = "FA Sub Location"."Sub Location Code";
+        }
+
+        field(50028; "FA Sub Location code"; Code[30])
+        {
+            DataClassification = ToBeClassified;
+            TableRelation = "FA Sub Location"."Sub Location Code";
+
+            //TableRelation = Location;
+        }
+        field(50029; "Physical Location"; Code[30])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(50030; "FA Physical Location"; Code[30])
+        {
+            DataClassification = ToBeClassified;
+        }
+        field(50031; "Post"; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
     }
 
     keys
@@ -327,11 +367,20 @@ table 50201 "Indent Header"
 
     trigger OnInsert();
     begin
-        PurchaseSetup.GET;
-        IF "No." = '' THEN BEGIN
-            PurchaseSetup.TESTFIELD("Indent Nos.");
-            NoSeriesMgt.InitSeries(PurchaseSetup."Indent Nos.", xRec."No. Series", 0D, "No.", "No. Series");
-        END;
+        if "Indent Transfer" = false then begin
+            PurchaseSetup.GET;
+            IF "No." = '' THEN BEGIN
+                PurchaseSetup.TESTFIELD("Indent Nos.");
+                NoSeriesMgt.InitSeries(PurchaseSetup."Indent Nos.", xRec."No. Series", 0D, "No.", "No. Series");
+            END;
+        end;
+        if "Indent Transfer" = false then begin
+            PurchaseSetup.GET;
+            IF "No." = '' THEN BEGIN
+                PurchaseSetup.TESTFIELD("Indent Nos.");
+                NoSeriesMgt.InitSeries(PurchaseSetup."Transfer Indent", xRec."No. Series", 0D, "No.", "No. Series");
+            END;
+        end;
         "User Id" := USERID;
         "Document Date" := WORKDATE;
         Indentor := USERID;
@@ -396,9 +445,7 @@ table 50201 "Indent Header"
         ItemJnlBatch.SetRange(ItemJnlBatch."Journal Template Name", PurchPaySetup."Indent Return Jnl. Template");
         ItemJnlBatch.SetRange(ItemJnlBatch.Name, PurchPaySetup."Indent Return Jnl. Batch");
         if ItemJnlBatch.FindFirst() then;
-
         DocNo := NoSeriesMgt.GetNextNo(ItemJnlBatch."No. Series", TODAY(), false);
-
         LineNo := 0;
         //B2BSSD04JUL2023>>
         ItemJnlLine.Reset();
@@ -1132,7 +1179,6 @@ table 50201 "Indent Header"
                 TransLine.Validate("Shortcut Dimension 2 Code", "Shortcut Dimension 2 Code"); //B2BMSOn10Oct2022
                 TransLine.Validate("Shortcut Dimension 9 Code", "Shortcut Dimension 9 Code"); //B2BSSD21MAR2023
                 IndentLine.Modify(true);
-
             until IndentLine.Next() = 0;
             Message('Transfer Order %1 Generated', TransferOrderNo);
         end else
@@ -1144,18 +1190,41 @@ table 50201 "Indent Header"
     var
         IndentHdr: Record "Indent Header";
     begin
-        IndentHdr := Rec;
-        PurchaseSetup.GET;
-        PurchaseSetup.TESTFIELD("Indent Nos.");
-        IF NoSeriesMgt.SelectSeries(PurchaseSetup."Indent Nos.", OldIndentHdr."No.", IndentHdr."No.") THEN BEGIN
+        if "Indent Transfer" = false then begin
+            IndentHdr := Rec;
             PurchaseSetup.GET;
             PurchaseSetup.TESTFIELD("Indent Nos.");
-            NoSeriesMgt.SetSeries(IndentHdr."No.");
-            Rec := IndentHdr;
-            EXIT(TRUE);
-        END;
+            IF NoSeriesMgt.SelectSeries(PurchaseSetup."Indent Nos.", OldIndentHdr."No.", IndentHdr."No.") THEN BEGIN
+                PurchaseSetup.GET;
+                PurchaseSetup.TESTFIELD("Indent Nos.");
+                NoSeriesMgt.SetSeries(IndentHdr."No.");
+                Rec := IndentHdr;
+                EXIT(TRUE);
+            END;
+        end;
+
     end;
     //B2BSCM23AUG2023>>
+
+    procedure AssistEditTransferINd(OldIndentHdr: Record "Indent Header"): Boolean;
+    var
+        IndentHdr: Record "Indent Header";
+    begin
+        if "Indent Transfer" = true then begin
+            IndentHdr := Rec;
+            PurchaseSetup.GET;
+            PurchaseSetup.TESTFIELD("Transfer Indent");
+            IF NoSeriesMgt.SelectSeries(PurchaseSetup."Transfer Indent", OldIndentHdr."No.", IndentHdr."No.") THEN BEGIN
+                PurchaseSetup.GET;
+                PurchaseSetup.TESTFIELD("Transfer Indent");
+                NoSeriesMgt.SetSeries(IndentHdr."No.");
+                Rec := IndentHdr;
+                EXIT(TRUE);
+            END;
+        end;
+
+    end;
+
     procedure MaterialIssue()
     var
         LocationWiseUser: Record "Location Wise User";

@@ -292,7 +292,10 @@ codeunit 50026 "PO Automation"
                             if IndentReqHeader.Get(CreateIndents2."Document No.") then begin
                                 PurchaseHeader."Responsibility Center" := IndentReqHeader."Resposibility Center";
                                 PurchaseHeader.Note := IndentReqHeader.Note; //B2BVCOn03Oct2024
-                                PurchaseHeader."RFQ No." := IndentReqHeader."RFQ No."; //B2BVCOn11April2025
+                                if CreateIndents2."RFQ No." = '' then
+                                    PurchaseHeader."RFQ No." := IndentReqHeader."RFQ No." //B2BVCOn11April2025
+                                else
+                                    PurchaseHeader."RFQ No." := CreateIndents2."RFQ No.";
                             end;
                         end;
                         //B2BVCOn30April2024 <<
@@ -349,14 +352,15 @@ codeunit 50026 "PO Automation"
                             PurchaseLine."Unit of Measure Code" := IndentVendorEnquiry."Unit Of Measure";//B2BSSD20APR2023
                             PurchaseLine."Shortcut Dimension 3 Code" := IndentVendorEnquiry."Shortcut Dimension 3 Code";//B2BKM25APR2024
 
+                            PurchaseLine."RFQ No." := PurchaseHeader."RFQ No.";
+                            PurchaseLine."RFQ Date" := PurchaseHeader."Document Date";
 
                             IndentLineRec.Reset();
                             IndentLineRec.SetRange("Document No.", PurchaseLine."Indent No.");
                             IndentLineRec.SetRange("Line No.", PurchaseLine."Indent Line No.");
                             if IndentLineRec.FindSet() then begin
                                 repeat
-                                    //    SetSelectionFilter(IndentLineRec);
-
+                                    //SetSelectionFilter(IndentLineRec);
                                     IndentLineRec.Status := IndentLineRec.Status::Enqiury;
                                     IndentLineRec.Modify();
                                 until IndentLineRec.Next() = 0;
@@ -374,7 +378,7 @@ codeunit 50026 "PO Automation"
                             if CreateIndents2.FindFirst() then
                                 PurchaseLine.Validate("Indentor Description", CreateIndents2."Indentor Description");
                             PurchaseLine.Description := CreateIndents2.Description;//B2BSSD20APR2023
-                            //B2BSSD03Feb2023<<
+                                                                                   //B2BSSD03Feb2023<<
 
                             PurchaseLine."Shortcut Dimension 1 Code" := IndentVendorEnquiry."Shortcut Dimension 1 Code";
                             PurchaseLine."Shortcut Dimension 2 Code" := IndentVendorEnquiry."Shortcut Dimension 2 Code";
@@ -386,6 +390,9 @@ codeunit 50026 "PO Automation"
                                 REPEAT
                                     CreateIndents4."Document Type" := PurchaseLine."Document Type"::Enquiry.AsInteger();
                                     CreateIndents4."Order No" := PurchaseLine."Document No.";
+
+                                    CreateIndents4."RFQ No." := PurchaseLine."RFQ No.";
+                                    CreateIndents4."RFQ Date" := PurchaseLine."RFQ Date";
                                     CreateIndents4.MODIFY;
                                 UNTIL CreateIndents4.NEXT = 0;
                             //B2BVCOn15Mar2024 >>
@@ -401,6 +408,8 @@ codeunit 50026 "PO Automation"
                         CopyTermsandConditionsofVendor(PurchaseHeader);
                         CopyTermsandSpecificationofVendors(PurchaseHeader);
                     END;
+                    IndentReqHeader."RFQ Date" := PurchaseHeader."Document Date";
+                    IndentReqHeader.Modify();
                 end;
             UNTIL IndentVendorItems.NEXT = 0;
     end;
@@ -559,7 +568,10 @@ codeunit 50026 "PO Automation"
                     if CreateIndents2.FindFirst() then begin
                         if IndentReqHeader.Get(CreateIndents2."Document No.") then begin
                             PurchaseHeader."Responsibility Center" := IndentReqHeader."Resposibility Center";
-                            PurchaseHeader."RFQ No." := IndentReqHeader."RFQ No.";
+                            if CreateIndents2."RFQ No." = '' then
+                                PurchaseHeader."RFQ No." := IndentReqHeader."RFQ No."
+                            else
+                                PurchaseHeader."RFQ No." := CreateIndents2."RFQ No.";
                         end;
                     end;
                     //B2BVCOn30April2024 <<
@@ -623,6 +635,8 @@ codeunit 50026 "PO Automation"
                         PurchaseLine."Location Code" := IndentVendorEnquiry."Location Code";
                         PurchaseLine."Sub Location Code" := IndentVendorEnquiry."Sub Location Code";
                         PurchaseLine."Unit of Measure Code" := IndentVendorEnquiry."Unit Of Measure";//B2BSSD20APR2023
+                        PurchaseLine."RFQ No." := PurchaseHeader."RFQ No.";
+                        PurchaseLine."RFQ Date" := PurchaseHeader."Document Date";
                         IndentLineRec.Reset();
                         IndentLineRec.SetRange("Document No.", PurchaseLine."Indent No.");
                         IndentLineRec.SetRange("Line No.", PurchaseLine."Indent Line No.");
@@ -642,6 +656,9 @@ codeunit 50026 "PO Automation"
                             REPEAT
                                 CreateIndents4."Document Type" := PurchaseLine."Document Type"::Quote.AsInteger();
                                 CreateIndents4."Order No" := PurchaseLine."Document No.";
+
+                                CreateIndents4."RFQ No." := PurchaseLine."RFQ No.";
+                                CreateIndents4."RFQ Date" := PurchaseLine."RFQ Date";
                                 CreateIndents4.MODIFY;
                             UNTIL CreateIndents4.NEXT = 0;
                         //B2BVCOn15Mar2024 >>
@@ -663,6 +680,8 @@ codeunit 50026 "PO Automation"
                     UNTIL IndentVendorEnquiry.NEXT = 0;
                     CopyTermsandConditionsofVendor(PurchaseHeader);
                     CopyTermsandSpecificationofVendors(PurchaseHeader);
+                    IndentReqHeader."RFQ Date" := PurchaseHeader."Document Date";
+                    IndentReqHeader.Modify();
                 END;
             UNTIL IndentVendorItems.NEXT = 0;
     end;
@@ -2196,9 +2215,9 @@ codeunit 50026 "PO Automation"
     begin
         if PurchaseLine.Type = PurchaseLine.Type::"Fixed Asset" then begin
             if FixedAssets.Get(PurchaseLine."No.") then begin
-                FixedAssets.Make_B2B := PurchaseLine.Make_B2B;
+                FixedAssets.Make_B2B := PurchaseLine.Make_B2B; //22-04-2025
                 FixedAssets."Serial No." := PurchaseLine."Serial No.";
-                FixedAssets."Model No." := PurchaseLine."Model No.";
+                FixedAssets."Model No." := PurchaseLine."Model No."; //22-04-2025
                 FixedAssets."FA Location Code" := PurchaseLine."Location Code";//B2BSSD09MAY2023
                 FixedAssets.Modify();
                 //B2BSSD14JUN2023>>
@@ -2206,7 +2225,7 @@ codeunit 50026 "PO Automation"
                     RecRef.GetTable(FixedAssets);
                 CF := 150;
                 LF := 200;
-                QRText := FixedAssets."No." + ',' + 'Description : ' + FixedAssets.Description + ',' + 'Model No. : ' + FixedAsset."Model No." + ',' + 'Serial No. : ' + FixedAsset."Serial No." + ',' + 'Make. :' + FixedAsset.Make_B2B;//B2BSSD13JUN2023
+                QRText := FixedAssets."No." + ',' + 'Description : ' + FixedAssets.Description + ',' + 'Model No. : ' + FixedAsset."Model No." + ',' + 'Serial No. : ' + FixedAsset."Serial No." + ',' + 'Make. :' + FixedAsset.Make_B2B;//B2BSSD13JUN2023 //22-04-2025
                 QRGenerator.GenerateQRCodeImage(QRText, TempBlob);
                 FieldRef := RecRef.Field(FixedAssets.FieldNo("QR Code"));
                 TempBlob.ToRecordRef(RecRef, FixedAssets.FieldNo("QR Code"));

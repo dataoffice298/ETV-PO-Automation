@@ -58,7 +58,7 @@ pageextension 50119 FixedAssetListExt extends "Fixed Asset List"
                             RecRef.GetTable(FixedAsset);
                             CF := 150;
                             LF := 200;
-                            QRText := FixedAsset."No." + ',' + 'Description : ' + FixedAsset.Description + ',' + 'Model No. : ' + FixedAsset."Model No." + ',' + 'Serial No. : ' + FixedAsset."Serial No." + ',' + 'Make. :' + FixedAsset.Make_B2B;//B2BSSD13JUN2023
+                            QRText := FixedAsset."No." + ',' + 'Description : ' + FixedAsset.Description + ',' + 'Model No. : ' + FixedAsset."Model No." + ',' + 'Serial No. : ' + FixedAsset."Serial No." + ',' + 'Make. :' + FixedAsset.Make_B2B;//B2BSSD13JUN2023 //22-04-2025
                             QRGenerator.GenerateQRCodeImage(QRText, TempBlob);
                             FieldRef := RecRef.Field(FixedAsset.FieldNo("QR Code"));
                             TempBlob.ToRecordRef(RecRef, FixedAsset.FieldNo("QR Code"));
@@ -82,7 +82,7 @@ pageextension 50119 FixedAssetListExt extends "Fixed Asset List"
                 trigger OnAction()
                 begin
                     ReadExcelSheet();
-                    ImportExcelData();
+                    ImportingExcelData();
                 end;
             }
         }
@@ -115,7 +115,7 @@ pageextension 50119 FixedAssetListExt extends "Fixed Asset List"
             exit('');
     end;
 
-    procedure ImportExcelData()
+    procedure ImportingExcelData()
     var
         RowNo: Integer;
         ColNo: Integer;
@@ -144,17 +144,19 @@ pageextension 50119 FixedAssetListExt extends "Fixed Asset List"
             if FixedAsset.FindFirst() then begin
                 FALocationRec.Reset();
                 FALocationRec.SetRange(Code, FALocation);
-                if FALocationRec.FindFirst() then
+                if FALocationRec.FindFirst() then begin
                     FixedAsset."FA Location Code" := FALocation;
+                    FixedAsset.Modify();
+                end;
 
                 FASubLocation.Reset();
                 FASubLocation.SetRange("Location Code", FixedAsset."FA Location Code");
                 FASubLocation.SetRange("Sub Location Code", FASubLoc);
-                if FASubLocation.FindFirst() then
+                if FASubLocation.FindFirst() then begin
                     FixedAsset."FA Sub Location" := FASubLoc;
-
-                FixedAsset."Physical-Location" := PhysicalLoc;
-                FixedAsset.Modify();
+                    FixedAsset."Physical-Location" := PhysicalLoc;
+                    FixedAsset.Modify();
+                end;
             end;
         end;
         Message(ExcelImportSuccess);

@@ -203,6 +203,10 @@ page 50147 "Outward Gate Entry SubFrm-NRGP"
                 {
                     ApplicationArea = All;
                 }
+                field("Unit of Measure"; Rec."Unit of Measure")
+                {
+                    ApplicationArea = All;
+                }
                 field(Variant; Variant)
                 {
                     ApplicationArea = All;

@@ -36,6 +36,10 @@ page 50176 "Local Indent Req List"
                 {
                     ApplicationArea = All;
                 }
+                field("RFQ Date"; Rec."RFQ Date")
+                {
+                    ApplicationArea = All;
+                }
                 field("Indent No."; "Indent No.")
                 {
                     ApplicationArea = all;

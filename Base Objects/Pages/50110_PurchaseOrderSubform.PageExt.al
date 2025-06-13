@@ -41,6 +41,11 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             {
                 ApplicationArea = all;
             }
+            field("RFQ Date"; Rec."RFQ Date")
+            {
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the RFQ Date field.';
+            }
             field("Ref. Posted Gate Entry"; Rec."Ref. Posted Gate Entry")
             {
                 ApplicationArea = All;
@@ -1118,11 +1123,11 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         GateEntryLine."Source Name" := FALRec.Description;
                         GateEntryLine.Description := FALRec.Description;
                         GateEntryLine."Unit of Measure" := Rec."Unit of Measure Code";
-                        GateEntryLine.ModelNo := FALRec."Model No.";
+                       GateEntryLine.ModelNo := FALRec."Model No."; //22-04-2025
                         GateEntryLine.SerialNo := FALRec."Serial No.";
                         GateEntryLine."Purchase Order No." := PurchLine."Document No.";
                         GateEntryLine."Purchase Order Line No." := PurchLine."Line No.";
-                        GateEntryLine.Make := FALRec.Make_B2B;
+                        GateEntryLine.Make := FALRec.Make_B2B; //22-04-2025
                         Inwardqty := (PurchLine."Qty to Inward_B2B" + PurchLine."Qty Accepted Inward_B2B");//B2BSSD25MAY2023
                         GateEntryLine.Insert(true);
                         LineNo += 10000;
@@ -1516,8 +1521,8 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
 
                         if FixedAsset.Get(PurchaseLine."No.") then begin
                             FixedAsset."Serial No." := PurchaseLine."Serial No.";
-                            FixedAsset.Make_B2B := PurchaseLine.Make_B2B;
-                            FixedAsset."Model No." := PurchaseLine."Model No.";
+                            FixedAsset.Make_B2B := PurchaseLine.Make_B2B; //22-04-2025
+                            FixedAsset."Model No." := PurchaseLine."Model No."; //22-04-2025
                             FixedAsset."HSN/SAC Code" := PurchaseLine."HSN/SAC Code";
                             FixedAsset."GST Group Code" := PurchaseLine."GST Group Code";
                             FixedAsset."GST Credit" := PurchaseLine."GST Credit";

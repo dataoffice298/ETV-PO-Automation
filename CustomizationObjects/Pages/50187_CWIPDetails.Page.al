@@ -57,5 +57,32 @@ page 50187 "CWIP Details"
             }
         }
     }
+    // >>B2BSCM 30/04/2025
+    actions
+    {
+        area(Processing)
+        {
+            action(Posted)
+            {
+                ApplicationArea = All;
+                Image = Post;
+                Caption = 'Posted';
+                trigger OnAction()
+                begin
+                    if Rec.Posted then begin
+                        Rec.Posted := false;
+                        Rec.Modify()
+                    end
+                    else begin
+                        Rec.Posted := true;
+                        Rec.Modify()
+                    end;
+
+
+                end;
+            }
+        }
+    }
+    // <<B2BSCM 30/04/2025
 }
 

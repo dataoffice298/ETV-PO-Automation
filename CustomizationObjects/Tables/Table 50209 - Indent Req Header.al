@@ -167,6 +167,10 @@ table 50209 "Indent Req Header"
         {
             DataClassification = CustomerContent;
         }
+        field(50012; "RFQ Date"; Date)
+        {
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {

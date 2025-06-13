@@ -60,6 +60,12 @@ report 50133 "Rate Comparative Statement"
             { }
             column(Quot_Comparitive; "Quot Comparitive")
             { }
+            column(NoteLbl; NoteLbl) { }
+            column(Note; Note) { }
+            column(ApprovalDate; ApprovalDate)
+            { }
+            column(ApprovalComment; Comment)
+            { }
             dataitem(QuotcompTest; "Quotation Comparison Test")
             {
                 DataItemLink = "Quot Comp No." = field("No.");
@@ -94,6 +100,8 @@ report 50133 "Rate Comparative Statement"
                 column(Vendor_No_; "Vendor No.")
                 { }
                 column(Vendor_Name; "Vendor Name")
+                { }
+                column(City; City)
                 { }
                 column(Rate; Rate)
                 { }
@@ -370,6 +378,7 @@ report 50133 "Rate Comparative Statement"
                     Clear(SpecId);
                     Clear(QuotNo);
                     Clear(QuotDate);
+                    Clear(City);
 
 
                     if "Item No." <> '' then begin
@@ -388,6 +397,7 @@ report 50133 "Rate Comparative Statement"
                     if PurchHdr.FindFirst() then begin
                         QuotNo := PurchHdr."Vendor Quotation No.";
                         QuotDate := PurchHdr."Vendor Quotation Date";
+                        City := PurchHdr."Buy-from City";
                         if VendorRec.Get(PurchHdr."Buy-from Vendor No.") then begin
                             OrderAddressRec.Reset();
                             OrderAddressRec.setrange("Vendor No.", VendorRec."No.");
@@ -468,8 +478,26 @@ report 50133 "Rate Comparative Statement"
 
             trigger OnAfterGetRecord()
             begin
-                CompanyInfo.get;
-                CompanyInfo.CalcFields(Picture);
+                // CompanyInfo.get;
+                // CompanyInfo.CalcFields(Picture);
+
+                Clear(ApprovalDate);
+                clear(Comment);
+                ApprovalEntry.Reset();
+                ApprovalEntry.SetRange("Document No.", QuotCompHdr."No.");
+                ApprovalEntry.SetRange(Comment, true);
+                if ApprovalEntry.FindLast() then begin
+                    if (ApprovalEntry.Status = ApprovalEntry.Status::Approved) OR (ApprovalEntry.Status = ApprovalEntry.Status::Rejected) then begin
+                        ApprovalDate := DT2Date(ApprovalEntry."Last Date-Time Modified");
+
+                        ApprovalCommentLine.Reset();
+                        ApprovalCommentLine.SetCurrentKey("Entry No.");
+                        ApprovalCommentLine.SetRange("Table ID", ApprovalEntry."Table ID");
+                        ApprovalCommentLine.SetRange("Record ID to Approve", ApprovalEntry."Record ID to Approve");
+                        if ApprovalCommentLine.FindFirst() then
+                            Comment := ApprovalCommentLine.Comment;
+                    end;
+                end;
             end;
 
             trigger OnPreDataItem()
@@ -694,9 +722,10 @@ report 50133 "Rate Comparative Statement"
         GSTPerc: Decimal;
         Payment: code[50];
         SalesPersonPurch: Record "Salesperson/Purchaser";
-        ContactPerson: Text;
+        ContactPerson, Note : Text;
         TransactionSpec: Record "Transaction Specification";
         OtherCharge: Label 'Freight, Insurance, Bank Charges, Local Transportation etc.,';
+        NoteLbl: Label 'Note:';
         PurchLine: Record "Purchase Line";
         PurchHdr: Record "Purchase Header";
         OtherCharges: Decimal;
@@ -732,6 +761,11 @@ report 50133 "Rate Comparative Statement"
         PurchaseLine: Record "Purchase Line";
         TotalAmtSum: Decimal;
         VendorNo: Code[20];
+        City: Text;
+        ApprovalEntry: Record "Approval Entry";
+        ApprovalCommentLine: Record "Approval Comment Line";
+        Comment: Text;
+        ApprovalDate: Date;
 
 
 

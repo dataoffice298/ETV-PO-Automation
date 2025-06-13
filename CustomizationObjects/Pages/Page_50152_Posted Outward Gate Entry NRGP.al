@@ -28,6 +28,11 @@ page 50152 "Posted Outward Gate Entry-NRGP"
                 {
                     ApplicationArea = ALL;//Balu 05092021
                 }
+                field("Vendor No";Rec."Vendor No")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Vendor No.';
+                }
                 field("Location Code"; Rec."Location Code")
                 {
                     ApplicationArea = ALL;

@@ -36,6 +36,10 @@ page 50177 "Centrak Indent Req List"
                 {
                     ApplicationArea = All;
                 }
+                field("RFQ Date"; Rec."RFQ Date")
+                {
+                    ApplicationArea = All;
+                }
                 field("Indent No."; "Indent No.")
                 {
                     ApplicationArea = all;

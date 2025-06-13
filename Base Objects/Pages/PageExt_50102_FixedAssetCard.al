@@ -3,7 +3,7 @@ pageextension 50102 FixedAssetCard extends "Fixed Asset Card"
     layout
     {
         addbefore("Serial No.")
-        {
+        {  //22-04-2025
             field("Model No."; Rec."Model No.")
             {
                 ApplicationArea = all;
@@ -103,7 +103,7 @@ pageextension 50102 FixedAssetCard extends "Fixed Asset Card"
                         RecRef.GetTable(FixedAsset);
                         CF := 150;
                         LF := 200;
-                        QRText := FixedAsset."No." + ',' + 'Description : ' + FixedAsset.Description + ',' + 'Model No. : ' + FixedAsset."Model No." + ',' + 'Serial No. : ' + FixedAsset."Serial No." + ',' + 'Make. :' + FixedAsset.Make_B2B;//B2BSSD13JUN2023
+                        QRText := FixedAsset."No." + ',' + 'Description : ' + FixedAsset.Description + ',' + 'Model No. : ' + FixedAsset."Model No." + ',' + 'Serial No. : ' + FixedAsset."Serial No." + ',' + 'Make. :' + FixedAsset.Make_B2B;//B2BSSD13JUN2023   //22-04-2025
                         QRGenerator.GenerateQRCodeImage(QRText, TempBlob);
                         FieldRef := RecRef.Field(FixedAsset.FieldNo("QR Code"));
                         TempBlob.ToRecordRef(RecRef, FixedAsset.FieldNo("QR Code"));

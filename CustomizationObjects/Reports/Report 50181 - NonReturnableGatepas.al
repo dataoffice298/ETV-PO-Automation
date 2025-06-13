@@ -81,6 +81,10 @@ report 50181 "Non Returnable Gatepass"
             { }
             column(CheckedCapLbl; CheckedCapLbl)
             { }
+            column(VendorNameCapLbl; VendorNameCapLbl)
+            { }
+            column(UOMCapLbl; UOMCapLbl)
+            { }
             column(DesignVar; DesignVar) { }
             column(No_; "No.")
             { }
@@ -106,9 +110,9 @@ report 50181 "Non Returnable Gatepass"
             { }
             column(GatepassDt; "Document Date")
             { }
-            column(Location_Code; "Location Code")
+            column(Location_Code; LocName)
             { }
-            column(To_Location; "To Location")
+            column(To_Location; ToLocationRec.Name)
             { }
             //B2BAnusha10FEB2025
             column(Vehicle_No_; "Vehicle No.") { }
@@ -119,6 +123,8 @@ report 50181 "Non Returnable Gatepass"
             column(Add2Var; Add2Var) { }
             column(UserName; UserName)//B2BSSD27MAR2023
             { }
+            column(VendorName; VendorName)
+            { }
             dataitem("Posted Gate Entry Line_B2B"; "Posted Gate Entry Line_B2B")
             {
                 DataItemLink = "Entry Type" = FIELD("Entry Type"),
@@ -126,8 +132,8 @@ report 50181 "Non Returnable Gatepass"
                               "Gate Entry No." = FIELD("No.");
                 column(Source_No_; "Source No.")
                 { }
-                column(Source_Name; "Source Name")
-                { }
+                // column(Source_Name; "Source Name")
+                // { }
                 column(Quantity; Quantity)
                 { }
                 column(Gate_Entry_No_; "Gate Entry No.") { }
@@ -146,12 +152,20 @@ report 50181 "Non Returnable Gatepass"
                 { }
                 column(ItemName; ItemName)
                 { }
+                column(Unit_of_Measure; "Unit of Measure")
+                { }
+                column(SourceNameVar; SourceNameVar) { }
                 trigger OnAfterGetRecord()
                 begin
                     Users.Reset();
                     Users.SetRange("User Name", "Posted Gate Entry Header_B2B"."User ID");
                     if Users.FindFirst() then
                         UserName := Users."Full Name";//B2BSSD27MAR2023
+
+                    if "Posted Gate Entry Line_B2B"."Source Type" = "Posted Gate Entry Line_B2B"."Source Type"::Others then
+                        SourceNameVar := "Posted Gate Entry Line_B2B".Description
+                    else
+                        SourceNameVar := "Posted Gate Entry Line_B2B"."Source Name";
                 end;
 
             }
@@ -160,7 +174,10 @@ report 50181 "Non Returnable Gatepass"
             var
                 LocationRec: Record Location;
                 UserRec: Record "User Setup";
+
             begin
+                Clear(LocName);
+                Clear(VendorName);
                 LocationRec.Reset();
                 LocationRec.SetRange(Code, "Posted Gate Entry Header_B2B"."Location Code");
                 if LocationRec.FindFirst() then begin
@@ -168,10 +185,17 @@ report 50181 "Non Returnable Gatepass"
                     Add2Var := LocationRec."Address 2";
                     Cityvar := LocationRec.City;
                     PostCodeVar := LocationRec."Post Code";
+                    LocName := LocationRec.Name; //B2BVCOn21April2025
                 end;
                 UserRec.Reset();
                 if UserRec.Get("Posted Gate Entry Header_B2B"."User ID") then
                     DesignVar := UserRec.Designation;
+
+                if ToLocationRec.Get("To Location") then;
+
+                if VendorRec.Get("Vendor No") then begin
+                    VendorName := VendorRec.Name;
+                end;
             end;
 
             trigger OnPreDataItem()
@@ -226,6 +250,7 @@ report 50181 "Non Returnable Gatepass"
         PurchaseRetnLRec: record "Return Shipment Header";
         PurchaseRetLinLRec: Record "Return Shipment Line";
         ItemName: Code[20];
+        SourceNameVar: Text;
         DescriptionLVar, DesignVar : Text[100];
         QtyDispatchLRec: Decimal;
         SalesShipmentHeaderLRec: record "Sales Shipment Header";
@@ -251,12 +276,14 @@ report 50181 "Non Returnable Gatepass"
         TOLocationCapLbl: Label 'TO LOCATION';
         SUbLocCapLbl: Label 'SUB LOCATION';
         ToCapLbl: Label 'To,';
+        VendorNameCapLbl: Label 'VENDOR NAME';
         SucurtyCapLbl: Label 'The Security Inspector/Supervisor.';
         MrCapLbl: Label 'MR/MS';
         IsauthCapLbl: Label 'is authorised to take the following material from the office by hand/vehicle';
         SNOCapLbl: Label 'SNO.';
         ItemcodeCapLbl: Label 'ITEM CODE';
         ItemNameCapLbl: Label 'ITEM NAME';
+        UOMCapLbl: Label 'Unit of Measure';
         QtyCapLbl: Label 'QTY';
         MakeCapLbl: Label 'MAKE';
         ModelNoCapLbl: Label 'MODEL NO.';
@@ -271,6 +298,9 @@ report 50181 "Non Returnable Gatepass"
         PostedNrgpOutwardNo: Code[30];//B2BSSD20Jan2023
         UserName: Text[50]; //B2BSSD27MAR2023
         //B2BAnusha10FEB2025
-        Add1Var, Add2Var, Cityvar, PostCodeVar : Text;
+        Add1Var, Add2Var, Cityvar, PostCodeVar, LocName : Text;
         PageLbl: label 'Page';
+        ToLocationRec: Record Location;
+        VendorRec: Record Vendor;
+        VendorName: Text[100];
 }

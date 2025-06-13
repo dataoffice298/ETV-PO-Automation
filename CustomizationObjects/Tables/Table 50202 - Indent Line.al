@@ -24,18 +24,100 @@ table 50202 "Indent Line"
             Description = 'PO1.0';
             TableRelation = IF (Type = CONST(Item)) Item where(Blocked = const(false))
             ELSE
-            IF (Type = CONST("Fixed Assets")) "Fixed Asset"
+            IF (Type = CONST("Fixed Assets")) "Fixed Asset" where("FA Location Code" = field("Issue Sub Location"))
             ELSE
             IF (Type = CONST("G/L Account")) "G/L Account"
             ELSE
             IF (Type = CONST(Resource)) Resource;//B2BSSD09Feb2023
             ValidateTableRelation = false;
 
+            trigger OnLookup()
+            var
+                indentHdr: Record "Indent Header";
+                FA: Record "Fixed Asset";
+                ItemRec: Record Item;
+                FARec: Record "Fixed Asset";
+                GLRec: Record "G/L Account";
+                ResRec: Record Resource;
+                SelectionMade: Boolean;
+
+            begin
+                case Type of
+                    Type::Item:
+                        begin
+                            ItemRec.SetRange(Blocked, false);
+                            if Page.RunModal(Page::"Item List", ItemRec) = Action::LookupOK then begin
+                                Rec."No." := ItemRec."No.";
+                                SelectionMade := true;
+                            end;
+                        end;
+
+                    Type::"Fixed Assets":
+                        begin
+                            /*  FARec.SetRange("FA Location Code", Rec."Issue Sub Location");
+                             if Page.RunModal(Page::"Fixed Asset List", FARec) = Action::LookupOK then begin
+                                 Rec."No." := FARec."No.";
+                                 SelectionMade := true;
+                             end; */
+
+                            ////  indentHdr.Reset();
+                            // indentHdr.SetRange("No.", Rec."Document No.");
+                            if indentHdr.Get(rec."Document No.") then begin
+                                FA.Reset();
+                                FA.SetRange("FA Location Code", indentHdr."Transfer-from Code");
+                                FA.SetRange("FA Sub Location", indentHdr."Sub Location code");
+                                if Page.RunModal(Page::"Fixed Asset List", FA) = Action::LookupOK then begin
+                                    Rec."No." := FA."No.";
+                                    Rec.Description := FA.Description;
+                                    SelectionMade := true;
+
+                                end;
+                                // if indentHdr.FindFirst() then begin
+
+
+                                // rec."G/L account name" := GLACoount.Name;
+                            end;
+
+
+                        end;
+
+                    Type::"G/L Account":
+                        begin
+                            if Page.RunModal(Page::"G/L Account List", GLRec) = Action::LookupOK then begin
+                                Rec."No." := GLRec."No.";
+                                SelectionMade := true;
+                            end;
+                        end;
+
+                    Type::Resource:
+                        begin
+                            if Page.RunModal(Page::"Resource List", ResRec) = Action::LookupOK then begin
+                                Rec."No." := ResRec."No.";
+                                SelectionMade := true;
+                            end;
+                        end;
+
+                end;
+
+                ;
+            end;
+
             trigger OnValidate();
             var
                 ItemUnitofMeasure: Record 5404;
                 textvar: Text;
+                indentHdr: Record "Indent Header";
+                FA: Record "Fixed Asset";
             begin
+
+                if indentHdr.Get(rec."Document No.") then begin
+                    FA.Reset();
+                    FA.SetRange("FA Location Code", indentHdr."Transfer-from Code");
+                    FA.SetRange("FA Sub Location", indentHdr."Sub Location code");
+                    if rec."No." <> FA."No." then
+                        Error('FA Number not found in releated table With filters %1,%2', indentHdr."Transfer-from Code", indentHdr."Sub Location code");
+                end;
+
                 TestStatusOpen();
                 //B2BSSD06APR2023<<
                 if (StrPos("No.", ',')) > 1 then begin
@@ -62,19 +144,20 @@ table 50202 "Indent Line"
                             "Vendor No." := Item."Vendor No.";
                         END;
                     //<<PO1.0
-                    Type::"Fixed Assets":
-                        IF Fixedasset.GET("No.") THEN BEGIN
-                            Fixedasset.TESTFIELD(Blocked, FALSE);
-                            Description := Fixedasset.Description;
-                            "Description 2" := Fixedasset."Description 2";
-                            "Variant Code" := Fixedasset.Make_B2B;//B2BVOn20Dec22
-                            Validate("Req.Quantity", 1);
-                            //B2BSS01MAR2023<<
-                            Fixedasset.CalcFields(Acquired);
-                            Acquired := Fixedasset.Acquired;
-                            //B2BSSD01MAR2023>>
-                            "Avail/UnAvail" := Fixedasset."available/Unavailable";//B2BSSD17APR2023
-                        END;
+                    /* Type::"Fixed Assets":
+                         IF Fixedasset.GET("No.") THEN BEGIN
+                             Fixedasset.TESTFIELD(Blocked, FALSE);
+                             Description := Fixedasset.Description;
+                             "Description 2" := Fixedasset."Description 2";
+                             "Variant Code" := Fixedasset.Make_B2B;//B2BVOn20Dec22 //22-04-2025
+                             Validate("Req.Quantity", 1);
+                             //B2BSS01MAR2023<<
+                             Fixedasset.CalcFields(Acquired);
+                             Acquired := Fixedasset.Acquired;
+                             //B2BSSD01MAR2023>>
+                             "Avail/UnAvail" := Fixedasset."available/Unavailable";//B2BSSD17APR2023/* 
+
+                         END;*/
                     Type::"G/L Account":
                         IF GLAccount.GET("No.") THEN BEGIN
                             GLAccount.TESTFIELD(Blocked, FALSE);
@@ -102,6 +185,8 @@ table 50202 "Indent Line"
 
 
             end;
+
+
         }
         field(4; Description; Text[100])
         {
@@ -560,7 +645,10 @@ table 50202 "Indent Line"
         }
 
         //B2BVCOn17Jun2024 <<
-
+        field(50035; Post; Boolean)
+        {
+            DataClassification = ToBeClassified;
+        }
     }
 
     keys

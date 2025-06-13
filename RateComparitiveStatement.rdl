@@ -45,7 +45,7 @@
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>0.6cm</Height>
+                  <Height>0.84694cm</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -387,6 +387,21 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Vendor_Name.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value xml:space="preserve">
+</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>=Fields!City.Value</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
@@ -1608,7 +1623,7 @@
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.78521cm</Height>
+                  <Height>1.10271cm</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -4621,7 +4636,7 @@
             <DataSetName>DataSet_Result</DataSetName>
             <Top>2.40711cm</Top>
             <Left>0.0635cm</Left>
-            <Height>4.48943cm</Height>
+            <Height>5.05387cm</Height>
             <Width>15.38689cm</Width>
             <Style>
               <Border>
@@ -5197,7 +5212,7 @@
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <Top>6.95391cm</Top>
+            <Top>7.49366cm</Top>
             <Left>0.0635cm</Left>
             <Height>0.67083cm</Height>
             <Width>15.38689cm</Width>
@@ -6841,7 +6856,7 @@
                 <TablixMember />
               </TablixMembers>
             </TablixRowHierarchy>
-            <Top>7.68471cm</Top>
+            <Top>8.22446cm</Top>
             <Left>0.0635cm</Left>
             <Height>1.90667cm</Height>
             <Width>15.38689cm</Width>
@@ -7099,8 +7114,72 @@
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
+          <Textbox Name="Textbox37">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Recomandation </Value>
+                    <Style>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>Underline</TextDecoration>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>: </Value>
+                    <Style>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>=Fields!ApprovalComment.Value</Value>
+                    <Style>
+                      <FontWeight>Normal</FontWeight>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value xml:space="preserve"> </Value>
+                    <Style>
+                      <FontWeight>Normal</FontWeight>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>Date :</Value>
+                    <Style>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>=Fields!ApprovalDate.Value</Value>
+                    <Style>
+                      <FontWeight>Normal</FontWeight>
+                      <Format>dd-MM-yyyy</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox37</rd:DefaultName>
+            <Top>10.48314cm</Top>
+            <Left>0.0635cm</Left>
+            <Height>0.6cm</Height>
+            <Width>15.38689cm</Width>
+            <ZIndex>8</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
         </ReportItems>
-        <Height>9.81484cm</Height>
+        <Height>11.57873cm</Height>
         <Style>
           <Border>
             <Style>None</Style>
@@ -7292,6 +7371,18 @@ End Function
         <Field Name="Quot_Comparitive">
           <DataField>Quot_Comparitive</DataField>
         </Field>
+        <Field Name="NoteLbl">
+          <DataField>NoteLbl</DataField>
+        </Field>
+        <Field Name="Note">
+          <DataField>Note</DataField>
+        </Field>
+        <Field Name="ApprovalDate">
+          <DataField>ApprovalDate</DataField>
+        </Field>
+        <Field Name="ApprovalComment">
+          <DataField>ApprovalComment</DataField>
+        </Field>
         <Field Name="Quote_No_">
           <DataField>Quote_No_</DataField>
         </Field>
@@ -7336,6 +7427,9 @@ End Function
         </Field>
         <Field Name="Vendor_Name">
           <DataField>Vendor_Name</DataField>
+        </Field>
+        <Field Name="City">
+          <DataField>City</DataField>
         </Field>
         <Field Name="Rate">
           <DataField>Rate</DataField>

@@ -287,6 +287,7 @@ table 50219 "Posted Gate Entry Header_B2B"
             DataClassification = CustomerContent;
             TableRelation = Location;
         }
+        
     }
 
     keys

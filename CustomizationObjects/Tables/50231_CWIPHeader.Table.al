@@ -404,8 +404,8 @@ table 50231 "CWIP Header"
                 FixedAsset.Validate("FA Class Code", CWIPLine."FA Class Code");
                 FixedAsset.Validate("FA Subclass Code", CWIPLine."FA Sub Class Code");
                 FixedAsset.Validate("FA Posting Group", CWIPLine."FA Posting Group");
-                FixedAsset.Validate(Make_B2B, CWIPLine.Make);
-                FixedAsset.Validate("Model No.", CWIPLine.Model);
+                FixedAsset.Validate(Make_B2B, CWIPLine.Make);  //22-04-2025
+                FixedAsset.Validate("Model No.", CWIPLine.Model); //22-04-2025
                 FixedAsset.Validate("Serial No.", CWIPLine."Serial No.");
                 FixedAsset.Modify(true);
                 FADepreciationBook.Init();

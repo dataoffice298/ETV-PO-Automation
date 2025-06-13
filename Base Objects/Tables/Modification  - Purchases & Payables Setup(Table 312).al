@@ -166,6 +166,14 @@ tableextension 50057 tableextension70000012 extends "Purchases & Payables Setup"
             Caption = 'Req Note';
             DataClassification = ToBeClassified;
         }
+        field(50116; "Transfer Indent"; Text[250])
+        {
+
+            TableRelation = "No. Series";
+
+            DataClassification = ToBeClassified;
+        }
+
 
 
     }

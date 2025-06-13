@@ -1,15 +1,15 @@
-page 50173 "Transfer Indent List"
+page 50224 "Posted Transfer Indent List"
 {
     // version PH1.0,PO1.0
 
-    CardPageID = "Transfer Indent Header";
+    CardPageID = "Posted Transfer Indent Header";
     Editable = false;
     PageType = List;
     SourceTable = "Indent Header";
     UsageCategory = Lists;
     ApplicationArea = all;
-    Caption = 'CAM REQUEST';
-    SourceTableView = where("Indent Transfer" = const(true), Post = const(false));//BaluOn19Oct2022>>
+    Caption = ' Posted Cam Request  List';
+    SourceTableView = where("Indent Transfer" = const(true), Post = const(true));//BaluOn19Oct2022>>
 
     layout
     {
@@ -63,6 +63,22 @@ page 50173 "Transfer Indent List"
                     begin
                         PAGE.RUN(PAGE::"Indent Header", Rec);
                     end;
+                }
+                action("Capital Asset Movement")
+                {
+                    ApplicationArea = All;
+                    Caption = 'Capital Asset Movement';
+
+                    trigger OnAction()
+                    var
+                        INdent: Record "Indent Header";
+
+                    begin
+
+                        Report.RunModal(Report::"CAPITAL ASSET MOVEMENT");
+
+                    end;
+
                 }
 
             }

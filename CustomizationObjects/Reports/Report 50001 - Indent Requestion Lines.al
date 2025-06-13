@@ -105,8 +105,12 @@ report 50001 "Indent Requestion Lines"
                         PurchRcptLine.SetRange("No.", IndentRequisitions."Item No.");
                         if PurchRcptLine.FindLast() then begin
                             IndentRequisitions."Last Purchase Price" := PurchRcptLine."Direct Unit Cost";
-                            if RecVendor.Get(PurchRcptLine."Buy-from Vendor No.") then
+                            if RecVendor.Get(PurchRcptLine."Buy-from Vendor No.") then begin
+                                IndentRequisitions."PO Vendor" := PurchRcptLine."Buy-from Vendor No.";
+                                IndentRequisitions."PO Order No." := PurchRcptLine."Order No.";
+                                IndentRequisitions."PO Order Date" := PurchRcptLine."Posting Date";
                                 IndentRequisitions."PO Vendor Name" := RecVendor.Name;
+                            end;
                         end;
 
                         DtldGSTLedgerEntry.Reset();
@@ -138,7 +142,7 @@ report 50001 "Indent Requestion Lines"
                             IndentReqHeaderGRec.Validate("Shortcut Dimension 3 Code", "Shortcut Dimension 3 Code"); //B2BVCOn02April2024
                             IndentReqHeaderGRec."programme Name" := "Indent Header"."programme Name";//B2BSSD20MAR2023
                             IndentReqHeaderGRec.Purpose := "Indent Header".Purpose;//B2BSSD21MAR2023
-                            //B2BVCOn13Jun2024 >>
+                                                                                   //B2BVCOn13Jun2024 >>
                             if IndentReqHeaderGRec."Indent No." <> '' then begin
                                 IndentNo := IndentReqHeaderGRec."Indent No.";
                                 IndentNo := IndentNo + '|' + IndentRequisitions."Indent No.";

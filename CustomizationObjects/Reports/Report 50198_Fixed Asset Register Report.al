@@ -138,8 +138,8 @@ report 50198 "Fixed Asset Register New"
                 TempExcelBuffer.AddColumn("FA Class Code", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
                 TempExcelBuffer.AddColumn("FA Subclass Code", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
                 TempExcelBuffer.AddColumn(Description, false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
-                TempExcelBuffer.AddColumn(Make_B2B, false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
-                TempExcelBuffer.AddColumn("Model No.", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
+             TempExcelBuffer.AddColumn(Make_B2B, false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);  //22-04-2025
+                 TempExcelBuffer.AddColumn("Model No.", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);  //22-04-2025
                 TempExcelBuffer.AddColumn("Serial No.", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
                 TempExcelBuffer.AddColumn(CWIPLine."Vendor No.", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);
                 TempExcelBuffer.AddColumn(CWIPLine."Vendor Name", false, '', false, false, false, '', TempExcelBuffer."Cell Type"::Text);

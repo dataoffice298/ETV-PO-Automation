@@ -1,25 +1,13 @@
-tableextension 50180 "Vendor Ext" extends Vendor
+tableextension 50256 CustomertbExt extends Customer
 {
     fields
     {
-        field(50100; "Document Type"; Enum "Purchase Document Type")
-        {
-            DataClassification = ToBeClassified;
-
-        }
-        field(50111; Selected; Boolean)
-        {
-            DataClassification = CustomerContent;
-        }
+        // Add changes to table fields here
         field(50112; "Approval Status"; Option)
         {
             OptionMembers = Open,"Pending Approval",Released;
             OptionCaption = 'Open,Pending Approval,Released';
         }
-
-
-
-
     }
 
     keys
@@ -31,8 +19,6 @@ tableextension 50180 "Vendor Ext" extends Vendor
     {
         // Add changes to field groups here
     }
-
-
 
     var
         myInt: Integer;

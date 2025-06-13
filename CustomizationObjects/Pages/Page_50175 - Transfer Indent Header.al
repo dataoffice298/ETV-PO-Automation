@@ -4,7 +4,7 @@ page 50175 "Transfer Indent Header"
 
     PageType = ListPlus;
     SourceTable = "Indent Header";
-    Caption = 'Transfer Indent Document';
+    Caption = 'CAM REQUEST';
     SourceTableView = where("Indent Transfer" = const(true));
 
 
@@ -23,8 +23,16 @@ page 50175 "Transfer Indent Header"
                     ApplicationArea = All;
                     trigger OnAssistEdit();
                     begin
-                        IF rec.AssistEdit(xRec) THEN
-                            CurrPage.UPDATE;
+
+                        if "Indent Transfer" = false then begin
+                            IF rec.AssistEdit(Rec) THEN
+                                CurrPage.UPDATE;
+                        end;
+
+                        if "Indent Transfer" = true then begin
+                            IF rec.AssistEditTransferINd(Rec) THEN
+                                CurrPage.UPDATE;
+                        end;
                     end;
                 }
                 field(Description; rec.Description)
@@ -122,12 +130,20 @@ page 50175 "Transfer Indent Header"
                                 Error('Transfer-From and Transfer-To Codes must not be the same.');
                         end;
                         //B2BSSD11APR2023<<
-                        if not Userwisesetup.CheckUserLocation(UserId, Rec."Transfer-from Code", 1) then
-                            Error('User %1 dont have permission to location %2', UserId, Rec."Transfer-from Code");
+                        // if not Userwisesetup.CheckUserLocation(UserId, Rec."Transfer-from Code", 1) then
+                        //     Error('User %1 dont have permission to location %2', UserId, Rec."Transfer-from Code");
                         //B2BSSD11APR2023>>
                     end;
                     //B2BMSOn27Oct2022<<
 
+                }
+                field("Sub Location code"; "Sub Location code")
+                {
+                    ApplicationArea = all;
+                }
+                field("Physical Location"; "Physical Location")
+                {
+                    ApplicationArea = all;
                 }
                 field("Transfer-to Code"; Rec."Transfer-to Code")
                 {
@@ -148,6 +164,15 @@ page 50175 "Transfer Indent Header"
                     //B2BMSOn27Oct2022<<
 
                 }
+                field("FA Sub Location code"; "FA Sub Location code")
+                {
+                    ApplicationArea = all;
+                }
+                field("FA Physical Location"; "FA Physical Location")
+                {
+                    ApplicationArea = all;
+                }
+
                 field("In-Transit Code"; Rec."In-Transit Code")
                 {
                     ApplicationArea = Location;
@@ -167,6 +192,10 @@ page 50175 "Transfer Indent Header"
                     ApplicationArea = All;
                     Caption = 'Purpose';
                 }
+                /*   field(Post; Post)
+                  {
+                      ApplicationArea = all;
+                  } */
             }
             //B2BPAV<<
             part(TransferindentLine; "Transfer Indent Line")
@@ -474,6 +503,53 @@ page 50175 "Transfer Indent Header"
                         Rec.CreateTransferOrder();
                     end;
                 }
+                action(FaPost)
+                {
+                    Caption = 'POST';
+                    ApplicationArea = All;
+                    Image = Post;
+
+                    trigger OnAction()
+                    var
+                        Text003: Label 'Do you want to post the Indent?';
+                        Fa: Record "Fixed Asset";
+
+                        transfeIndentLine: Record "Indent Line";
+                        errorlbl: Label 'Type must be equal to Fixed Asset in Indent Line: Document No.=%1, Line No.=%2';
+
+                    begin
+                        rec.TestField("Released Status");
+                        rec.TestField("FA Physical Location");
+                        rec.TestField("FA Sub Location code");
+                        rec.TestField("Physical Location");
+                        rec.TestField("Sub Location code");
+                        IF NOT CONFIRM(Text003) THEN
+                            EXIT;
+
+                        transfeIndentLine.Reset();
+                        transfeIndentLine.SetRange("Document No.", rec."No.");
+                        if transfeIndentLine.FindSet() then begin
+                            repeat
+                                if not (transfeIndentLine.type = transfeIndentLine.Type::"Fixed Assets") then
+                                    Error(errorlbl, transfeIndentLine."Document No.", transfeIndentLine."Line No.");
+                                Fa.Reset();
+                                Fa.SetRange("No.", transfeIndentLine."No.");
+                                if Fa.FindFirst() then begin
+                                    Fa."FA Location Code" := rec."Transfer-to Code";
+                                    fa."FA Sub Location" := rec."FA Sub Location code";
+                                    fa."Physical-Location" := rec."FA Physical Location";
+                                    fa.Modify();
+
+                                end;
+                                Post := true;
+                                transfeIndentLine.Post := true;
+                            until transfeIndentLine.Next() = 0;
+                        end;
+
+
+                    end;
+                }
+                
                 action("Copy BOM Lines")
                 {
                     Visible = false;//BaluOn19Oct2022
@@ -637,13 +713,22 @@ page 50175 "Transfer Indent Header"
     //BaluOn19Oct2022>>
     trigger OnInsertRecord(BelowxRec: Boolean): Boolean
     begin
-        rec."Indent Transfer" := true;
+        //  rec."Indent Transfer" := true;
         //B2BMSOn27Oct2022>>
         LocationRec.Reset();
         LocationRec.SetRange("Use As In-Transit", true);
         if LocationRec.FindFirst() then
             Rec."In-Transit Code" := LocationRec.Code;
         //B2BMSOn27Oct2022<<
+    end;
+
+    trigger OnNewRecord(BelowxRec: Boolean)
+    var
+        myInt: Integer;
+    begin
+        rec."Indent Transfer" := true;
+
+
     end;
     //BaluOn19Oct2022<<
 

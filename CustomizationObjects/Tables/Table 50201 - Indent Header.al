@@ -331,11 +331,11 @@ table 50201 "Indent Header"
         {
             DataClassification = ToBeClassified;
         }
-        field(50030; "FA Physical Location"; Code[30])
+        field(50035; "FA Physical Location"; Code[30])
         {
             DataClassification = ToBeClassified;
         }
-        field(50031; "Post"; Boolean)
+        field(50036; "Post"; Boolean)
         {
             DataClassification = ToBeClassified;
         }

@@ -352,6 +352,7 @@ codeunit 50026 "PO Automation"
                             PurchaseLine."Unit of Measure Code" := IndentVendorEnquiry."Unit Of Measure";//B2BSSD20APR2023
                             PurchaseLine."Shortcut Dimension 3 Code" := IndentVendorEnquiry."Shortcut Dimension 3 Code";//B2BKM25APR2024
 
+
                             PurchaseLine."RFQ No." := PurchaseHeader."RFQ No.";
                             PurchaseLine."RFQ Date" := PurchaseHeader."Document Date";
 
@@ -390,8 +391,11 @@ codeunit 50026 "PO Automation"
                                 REPEAT
                                     CreateIndents4."Document Type" := PurchaseLine."Document Type"::Enquiry.AsInteger();
                                     CreateIndents4."Order No" := PurchaseLine."Document No.";
+                                    if CreateIndents4.Rfq = false then begin
+                                        CreateIndents4."RFQ No." := PurchaseLine."RFQ No.";
+                                        CreateIndents4.Rfq := true;
 
-                                    CreateIndents4."RFQ No." := PurchaseLine."RFQ No.";
+                                    end;
                                     CreateIndents4."RFQ Date" := PurchaseLine."RFQ Date";
                                     CreateIndents4.MODIFY;
                                 UNTIL CreateIndents4.NEXT = 0;
@@ -657,7 +661,11 @@ codeunit 50026 "PO Automation"
                                 CreateIndents4."Document Type" := PurchaseLine."Document Type"::Quote.AsInteger();
                                 CreateIndents4."Order No" := PurchaseLine."Document No.";
 
-                                CreateIndents4."RFQ No." := PurchaseLine."RFQ No.";
+                                if CreateIndents4.Rfq = false then begin
+                                    CreateIndents4."RFQ No." := PurchaseLine."RFQ No.";
+                                    CreateIndents4.Rfq := true;
+
+                                end;
                                 CreateIndents4."RFQ Date" := PurchaseLine."RFQ Date";
                                 CreateIndents4.MODIFY;
                             UNTIL CreateIndents4.NEXT = 0;

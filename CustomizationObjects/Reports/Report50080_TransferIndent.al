@@ -1,4 +1,4 @@
-report 50300 "CAPITAL ASSET MOVEMENT"
+report 50137 "CAPITAL ASSET MOVEMENT"
 {
     UsageCategory = ReportsAndAnalysis;
     ApplicationArea = All;

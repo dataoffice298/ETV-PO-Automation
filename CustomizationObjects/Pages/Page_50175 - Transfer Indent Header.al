@@ -125,21 +125,22 @@ page 50175 "Transfer Indent Header"
                     var
                         Userwisesetup: Codeunit UserWiseSecuritySetup;
                     begin
+                        UpdateIndentLineLocation();
                         if (Rec."Transfer-from Code" <> '') and (Rec."Transfer-to Code" <> '') then begin
                             if Rec."Transfer-from Code" = Rec."Transfer-to Code" then
                                 Error('Transfer-From and Transfer-To Codes must not be the same.');
                         end;
-                        //B2BSSD11APR2023<<
-                        // if not Userwisesetup.CheckUserLocation(UserId, Rec."Transfer-from Code", 1) then
-                        //     Error('User %1 dont have permission to location %2', UserId, Rec."Transfer-from Code");
-                        //B2BSSD11APR2023>>
+
                     end;
                     //B2BMSOn27Oct2022<<
-
                 }
                 field("Sub Location code"; "Sub Location code")
                 {
                     ApplicationArea = all;
+                    trigger OnValidate()
+                    begin
+                        UpdateIndentLineLocation();
+                    end;
                 }
                 field("Physical Location"; "Physical Location")
                 {
@@ -154,24 +155,37 @@ page 50175 "Transfer Indent Header"
                     //Editable = PageEditable;//B2BVCOn28Sep22
 
                     //B2BMSOn27Oct2022>>
-                    trigger OnValidate()
+                    /*trigger OnValidate()
                     begin
                         if (Rec."Transfer-from Code" <> '') and (Rec."Transfer-to Code" <> '') then begin
                             if Rec."Transfer-from Code" = Rec."Transfer-to Code" then
                                 Error('Transfer-From and Transfer-To Codes must not be the same.');
                         end;
-                    end;
+                    end;*/
                     //B2BMSOn27Oct2022<<
 
                 }
                 field("FA Sub Location code"; "FA Sub Location code")
                 {
                     ApplicationArea = all;
+                    trigger OnValidate()
+                    var
+                        ab: Code[50];
+                        cd: Code[50];
+                    begin
+                        ab := CopyStr(format("Transfer-from Code") + Format("Sub Location code"), 1, 50);
+
+                        cd := CopyStr(format("Transfer-to Code") + Format("FA Sub Location code"), 1, 50);
+                        if ab = cd then
+                            error('FA Location & FA Sub location must not be same as transfer from location & sublocation');
+
+                    end;
                 }
                 field("FA Physical Location"; "FA Physical Location")
                 {
                     ApplicationArea = all;
                 }
+
 
                 field("In-Transit Code"; Rec."In-Transit Code")
                 {
@@ -549,7 +563,7 @@ page 50175 "Transfer Indent Header"
 
                     end;
                 }
-                
+
                 action("Copy BOM Lines")
                 {
                     Visible = false;//BaluOn19Oct2022
@@ -731,6 +745,20 @@ page 50175 "Transfer Indent Header"
 
     end;
     //BaluOn19Oct2022<<
+
+    procedure UpdateIndentLineLocation()
+    var
+        IndentLine: Record "Indent Line";
+    begin
+        IndentLine.Reset();
+        IndentLine.SetRange("Document No.", Rec."No.");
+        if IndentLine.FindSet() then
+            repeat
+                IndentLine."Transfer-from Code" := Rec."Transfer-from Code";
+                IndentLine."Sub Location code" := Rec."Sub Location code";
+                IndentLine.Modify();
+            until IndentLine.Next() = 0;
+    end;
 
     var
         IndentLine: Record "Indent Line";

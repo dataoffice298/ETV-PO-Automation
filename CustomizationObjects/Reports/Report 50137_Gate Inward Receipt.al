@@ -1,4 +1,4 @@
-report 50137 "Gate Inward Receipt"
+/* report 50137 "Gate Inward Receipt"
 {
     UsageCategory = ReportsAndAnalysis;
     ApplicationArea = All;
@@ -400,4 +400,4 @@ report 50137 "Gate Inward Receipt"
         TempPurchLine: Record "Purchase Line" temporary;
         ItemNo: Code[20];
         PostedGateEntryLine: Record "Posted Gate Entry Line_B2B";
-}
+} */

@@ -400,6 +400,10 @@ table 50203 "Indent Requisitions"
         {
             DataClassification = CustomerContent;
         }
+        field(50035; Rfq; Boolean)
+        {
+
+        }
     }
     //B2BSSD17FEB2023>>
 

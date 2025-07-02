@@ -253,10 +253,14 @@ page 50023 "Indent Line"
                     Caption = 'Qty. to Issue';
                     //Editable = FieldEditable; //B2BSCM21AUG2023
                     trigger OnValidate()
+                    var
+                        Text0001: Label 'Quantity to  issue should not be greaterthan Required Quantity %1  for Line No. %2';
                     begin
                         SourceNoValidation();
                         if (Rec."ShortClose Status" = Rec."ShortClose Status"::ShortClosed) OR (Rec."ShortClose Status" = Rec."ShortClose Status"::Cancelled) then
                             Error(TextLbl, Rec."Line No.", Rec."ShortClose Status");
+                        if Rec."Req.Quantity" < (Rec."Qty To Issue" + Rec."Non-Inventory Item Qty Issued") then
+                            Error(Text0001, Rec."Req.Quantity", Rec."Line No.");
                     end;
                 }
                 field("Qty Issued"; Rec."Qty Issued")
@@ -264,6 +268,12 @@ page 50023 "Indent Line"
                     ApplicationArea = all;
                     Editable = false;
 
+                }
+                field("Non-Inventory Item Qty Issued"; Rec."Non-Inventory Item Qty Issued")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                    Caption = 'Non-Inventory Item Qty Issued';
                 }
                 field("Qty To Return"; Rec."Qty To Return")
                 {

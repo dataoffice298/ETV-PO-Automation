@@ -134,38 +134,9 @@ pageextension 50073 pageextension70000001 extends "Purchase Quote"
         }
         addafter("Invoice Details")
         {
-            group(Duties)
+            field(IGST;Rec.IGST)
             {
-                field(BCD; Rec.BCD)
-                {
-                    ApplicationArea = All;
-                    Caption = 'BCD';
-                    trigger OnValidate()
-                    begin
-                        Currency.Reset();
-                        Currency.SetRange("Currency Code", Rec."Currency Code");
-                        if Currency.FindLast() then;
-
-                    end;
-                }
-                field(SWC; Rec.SWC)
-                {
-                    ApplicationArea = All;
-                    Caption = 'SWC';
-                }
-                field("BCD Amount"; Rec."BCD Amount")
-                {
-                    ApplicationArea = All;
-                    Caption = 'BCD Amount';
-                    Visible = false;
-
-                }
-                field("SWC Amount"; Rec."SWC Amount")
-                {
-                    ApplicationArea = All;
-                    Caption = 'SWC Amount';
-                    Visible = false;
-                }
+                ApplicationArea = All;
             }
         }
 

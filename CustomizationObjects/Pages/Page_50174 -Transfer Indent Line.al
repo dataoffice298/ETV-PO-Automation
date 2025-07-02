@@ -25,6 +25,18 @@ page 50174 "Transfer Indent Line"
                 field("No."; rec."No.")
                 {
                     ApplicationArea = All;
+                    trigger OnValidate()
+                    var
+                        FixedAsset: Record "Fixed Asset";
+                        Text001: Label 'Fixed Asset No not avalable at FA Location Code %1, and FA Sub Location %2.';
+                    begin
+                        if Rec.Type = Rec.Type::"Fixed Assets" then begin
+                            if FixedAsset.Get(Rec."No.") then begin
+                                if (FixedAsset."FA Location Code" <> Rec."Transfer-from Code") OR (FixedAsset."FA Sub Location" <> Rec."Sub Location code") then
+                                    Error(Text001, Rec."Transfer-from Code", Rec."Sub Location code");
+                            end;
+                        end;
+                    end;
                 }
                 field(Description; rec.Description)
                 {
@@ -133,6 +145,16 @@ page 50174 "Transfer Indent Line"
                 {
                     ApplicationArea = All;
                     Editable = false;
+                }
+                field("Transfer-from Code"; "Transfer-from Code")
+                {
+                    ApplicationArea = All;
+                    Editable = false;
+                }
+                field("Sub Location code"; "Sub Location code")
+                {
+                    ApplicationArea = All;
+                    Editable = False;
                 }
             }
         }

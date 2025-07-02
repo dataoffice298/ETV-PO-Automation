@@ -1,7 +1,7 @@
 page 50046 "Archive Indent"
 {
 
-     PageType = ListPlus;
+    PageType = ListPlus;
     SourceTable = "Archive Indent Header";
     Caption = 'Archive Indent Document';
     //Editable = false;
@@ -136,11 +136,13 @@ page 50046 "Archive Indent"
                 {
                     ApplicationArea = All;
                     Caption = 'Issue Doc No.';
+                    Editable = false;
                 }
                 field("Issue Date"; Rec."Issue Date")
                 {
                     ApplicationArea = All;
                     Caption = 'Issue Date';
+                    Editable = false;
                 }
             }
             part(ArchiveIndentSubform; "Archive Indent Subform")

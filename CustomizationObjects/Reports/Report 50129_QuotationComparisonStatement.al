@@ -142,6 +142,10 @@ report 50129 "Quot Comparision Statement"
                 column(UOM; UOM)
                 {
                 }
+                column(BCD; BCD)
+                { }
+                column(SWCBCD; SWCBCD)
+                { }
                 column(Vendor1; Vendor[Integer.Number])
                 {
                 }
@@ -237,6 +241,8 @@ report 50129 "Quot Comparision Statement"
                 { }
                 column(Model; PurchLine.Model)
                 { }
+                column(Desc; DescriptionVar)
+                { }
                 column(ExchRate; ExRate)
                 { }
                 column(Totalamt1; TotalAmt[Integer.Number])
@@ -245,7 +251,11 @@ report 50129 "Quot Comparision Statement"
                 { }
                 column(SWCAmt1; SWCAmt[Integer.Number])
                 { }
-                column(BCD; PurchHdr.BCD)
+                column(TotalBCDAmt; TotalBCDAmt[Integer.Number])
+                { }
+                column(TotalSWCBCDAmt; TotalSWCBCDAmt[Integer.Number])
+                { }
+                column(IGST; PurchHdr.IGST)
                 { }
                 column(SWC; PurchHdr.SWC)
                 { }
@@ -258,6 +268,10 @@ report 50129 "Quot Comparision Statement"
                 column(TotalAmount1; TotalAmount)
                 { }
                 column(TotalAmt2; TotalAmt2[Integer.Number])
+                { }
+                column(IGSTAmount; IGSTAmount[Integer.Number])
+                { }
+                column(Landingcost; Landingcost[Integer.Number])
                 { }
                 column(Vendor_Name; "Vendor Name")
                 { }
@@ -309,7 +323,11 @@ report 50129 "Quot Comparision Statement"
 
                     Clear(HSNCode);
                     Clear(UOM);
+                    Clear(BCD);
+                    Clear(SWCBCD);
 
+                    if DescriptionVar = '' then
+                        DescriptionVar := Description;
                     PurchHdr.Reset();
                     PurchHdr.SetRange("Document Type", PurchHdr."Document Type"::Quote);
                     PurchHdr.SetRange("No.", "Parent Quote No.");
@@ -332,24 +350,36 @@ report 50129 "Quot Comparision Statement"
                         HSNCode := PurchLine."HSN/SAC Code";
                         UOM := PurchLine."Unit of Measure Code";
                         GST := PurchLine."GST Group Code";
+                        BCD := PurchLine.BCD;
+                        SWCBCD := PurchLine."SWC on BCD";
                         "Total Amount1"[Integer.Number] := (Quantity * Rate) + PurchLine."Other Charges";
                         if (PurchHdr."Currency Code" <> 'IND') AND (PurchHdr."Currency Code" <> '') then begin
-                            ExRate := (1 / PurchHdr."Currency Factor");
+                            ExRate := Round((1 / PurchHdr."Currency Factor"), 0.1);
                             TotalAmt[Integer.Number] := "Total Amount1"[Integer.Number] * (1 / PurchHdr."Currency Factor");
                         end;
                     end;
 
                     if PurchHdr.Get(PurchHdr."Document Type"::Quote, "Parent Quote No.") then begin
                         if (PurchHdr."Currency Code" <> 'IND') AND (PurchHdr."Currency Code" <> '') then begin
-                            BCDAmt[Integer.Number] := (TotalAmt[Integer.Number] / 100) * PurchHdr.BCD;
-                            SWCAmt[Integer.Number] := (BCDAmt[Integer.Number] / 100) * PurchHdr.SWC;
-                            TotalConversionAmt[Integer.Number] := TotalAmt[Integer.Number] + BCDAmt[Integer.Number] + SWCAmt[Integer.Number];
+                            BCDAmt[Integer.Number] := Round((TotalAmt[Integer.Number] / 100) * BCD, 0.1);
+                            TotalBCDAmt[Integer.Number] += BCDAmt[Integer.Number];
+                            SWCAmt[Integer.Number] := Round((BCDAmt[Integer.Number] / 100) * SWCBCD, 0.1);
+                            TotalSWCBCDAmt[Integer.Number] += SWCAmt[Integer.Number];
+                            TotalConversionAmt[Integer.Number] += TotalAmt[Integer.Number];
+                            //TotalConversionAmt[Integer.Number] := TotalAmt[Integer.Number] + BCDAmt[Integer.Number] + SWCAmt[Integer.Number];
                         end;
                     end;
                     if (PurchHdr."Currency Code" <> 'IND') AND (PurchHdr."Currency Code" <> '') then
-                        TotalAmt2[Integer.Number] += TotalConversionAmt[Integer.Number]
+                        TotalAmt2[Integer.Number] := TotalConversionAmt[Integer.Number] + TotalBCDAmt[Integer.Number] + TotalSWCBCDAmt[Integer.Number]
                     else
                         TotalAmt2[Integer.Number] += "Total Amount1"[Integer.Number];
+
+                    if PurchHdr.IGST <> 0 then
+                        IGSTAmount[Integer.Number] := (TotalAmt2[Integer.Number] / 100) * PurchHdr.IGST;
+
+                    Landingcost[Integer.Number] := TotalAmt2[Integer.Number] + IGSTAmount[Integer.Number];
+
+
 
                     GSTSetup.get();
                     Clear(GSTPerText);
@@ -608,7 +638,11 @@ report 50129 "Quot Comparision Statement"
         TotalAmt: array[10] of Decimal;
         BCDAmt: array[10] of Decimal;
         SWCAmt: array[10] of Decimal;
+        TotalBCDAmt: array[10] of Decimal;
+        TotalSWCBCDAmt: array[10] of Decimal;
         TotalConversionAmt: array[10] of Decimal;
+        IGSTAmount: array[10] of Decimal;
+        Landingcost: array[10] of Decimal;
         TotalAmount: Decimal;
 
         i: Integer;
@@ -617,6 +651,8 @@ report 50129 "Quot Comparision Statement"
         l: Integer;
         ItemRec: Record 27;
         UOM: Code[20];
+        BCD: Decimal;
+        SWCBCD: Decimal;
 
         PaymentTermCode: array[10] of Code[50];
         QuotationComparisonStatementCaptionLbl: Label 'Quotation Comparison Statement';
@@ -685,6 +721,7 @@ report 50129 "Quot Comparision Statement"
         GSTLbl: Label 'GST';
         GSTCESSLbl: Label 'GST CESS';
         SGSTPer: Decimal;
+        DescriptionVar: Text;
         IGSTPer: Decimal;
         CGSTPer: Decimal;
         GSTSetup: Record "GST Setup";

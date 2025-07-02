@@ -3,7 +3,7 @@ table 50201 "Indent Header"
     // version PH1.0,PO1.0
 
     LookupPageID = "Released Indent List";
-    // DrillDownPageId = "Indent List";
+    DrillDownPageId = "Indent List";
 
 
     fields
@@ -1364,6 +1364,105 @@ table 50201 "Indent Header"
         end;
     end;
 
+    procedure ArchiveNonInventoryQtyIssued()
+    var
+        IndentLine: Record "Indent Line";
+        ArchiveIndHdr: Record "Archive Indent Header";
+        ArchiveIndLine: Record "Archive Indent Line";
+        IndentLineRec: Record "Indent Line";
+        ArchiveVersion: Integer;
+        ArchiveDoc: Boolean;
+    begin
+        IF NOT (Rec."Indent Status" = Rec."Indent Status"::Close) OR (Rec."Indent Status" = Rec."Indent Status"::Cancel) THEN BEGIN
+            ArchiveDoc := false;
+            IndentLine.Reset();
+            IndentLine.SetRange("Document No.", Rec."No.");
+            IndentLine.SetFilter("Qty To Issue", '>%1', 0);
+            if IndentLine.FindSet() then begin
+                repeat
+                    ArchiveIndLine.Reset();
+                    ArchiveIndLine.SetRange("Document No.", IndentLine."Document No.");
+                    ArchiveIndLine.SetRange("Line No.", IndentLine."Line No.");
+                    ArchiveIndLine.SetRange("Archived Qty Issued", IndentLine."Qty To Issue");
+                    if not ArchiveIndLine.FindFirst() then begin
+                        if ArchiveDoc = false then begin
+                            ArchiveIndHdr.Reset();
+                            ArchiveIndHdr.SetCurrentKey("Archived Version");
+                            ArchiveIndHdr.SetRange("No.", Rec."No.");
+                            if ArchiveIndHdr.FindLast() then
+                                ArchiveVersion := ArchiveIndHdr."Archived Version" + 1
+                            else
+                                ArchiveVersion := 1;
+
+                            ArchiveIndHdr.Init();
+                            ArchiveIndHdr.TransferFields(Rec);
+                            ArchiveIndHdr."Archived Version" := ArchiveVersion;
+                            ArchiveIndHdr."Archived By" := UserId;
+                            ArchiveIndHdr."Indent Issued" := true;
+                            ArchiveIndHdr.Insert();
+                            ArchiveDoc := true;
+                        end;
+                        ArchiveIndLine.Init();
+                        ArchiveIndLine.TransferFields(IndentLine);
+                        ArchiveIndLine."Archived Version" := ArchiveVersion;
+                        ArchiveIndLine."Archived By" := UserId;
+                        ArchiveIndLine."Archived Qty Issued" := IndentLine."Qty To Issue";
+                        ArchiveIndLine.Insert();
+                        IndentLine."Archive Indent" := false;
+                        IndentLine."Non-Inventory Item Qty Issued" += IndentLine."Qty To Issue";
+                        IndentLine."Qty To Issue" := 0;
+                        IndentLine.Modify;
+                    end else begin
+                        ArchiveIndLine.Reset();
+                        ArchiveIndLine.SetRange("Document No.", IndentLine."Document No.");
+                        ArchiveIndLine.SetRange("Line No.", IndentLine."Line No.");
+                        ArchiveIndLine.SetRange("Archived Qty Issued", IndentLine."Qty To Issue");
+                        if ArchiveIndLine.FindFirst() then begin
+                            ArchiveIndHdr.Reset();
+                            ArchiveIndHdr.SetCurrentKey("Archived Version");
+                            ArchiveIndHdr.SetRange("No.", Rec."No.");
+                            if ArchiveIndHdr.FindLast() then
+                                ArchiveVersion := ArchiveIndHdr."Archived Version" + 1
+                            else
+                                ArchiveVersion := 1;
+
+                            ArchiveIndHdr.Init();
+                            ArchiveIndHdr.TransferFields(Rec);
+                            ArchiveIndHdr."Archived Version" := ArchiveVersion;
+                            ArchiveIndHdr."Archived By" := UserId;
+                            ArchiveIndHdr."Indent Issued" := true;
+                            ArchiveIndHdr.Insert();
+
+                            ArchiveIndLine.Init();
+                            ArchiveIndLine.TransferFields(IndentLine);
+                            ArchiveIndLine."Archived Version" := ArchiveVersion;
+                            ArchiveIndLine."Archived By" := UserId;
+                            ArchiveIndLine."Archived Qty Issued" := IndentLine."Qty To Issue";
+                            ArchiveIndLine.Insert();
+                            IndentLine."Archive Indent" := false;
+                            IndentLine."Non-Inventory Item Qty Issued" += IndentLine."Qty To Issue";
+                            IndentLine."Qty To Issue" := 0;
+                            IndentLine.Modify;
+                        end;
+                    end;
+                    IndentLineRec.Reset();
+                    IndentLineRec.SetRange("Document No.", IndentLine."Document No.");
+                    IndentLineRec.SetRange("Line No.", IndentLine."Line No.");
+                    if IndentLineRec.FindFirst() then begin
+                        if IndentLineRec."Req.Quantity" = IndentLineRec."Non-Inventory Item Qty Issued" then begin
+                            IndentLineRec.Closed := true;
+                            if IndentLineRec."ShortClose Status" = IndentLineRec."ShortClose Status"::" " then
+                                IndentLineRec."ShortClose Status" := IndentLineRec."ShortClose Status"::Closed;
+                            IndentLineRec.Modify;
+                        end;
+                    end;
+                until IndentLine.Next() = 0;
+                Message('Document Archived %1', Rec."No.");
+            end else
+                Error('Noting to transfer');
+
+        end;
+    end;
 }
 
 

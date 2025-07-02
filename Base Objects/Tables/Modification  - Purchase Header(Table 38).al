@@ -235,6 +235,10 @@ tableextension 50054 tableextension70000010 extends "Purchase Header"
         {
             DataClassification = CustomerContent;
         }
+        field(50140; IGST; Decimal)
+        {
+            DataClassification = CustomerContent;
+        }
     }
 
 

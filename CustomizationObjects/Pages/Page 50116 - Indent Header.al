@@ -157,6 +157,7 @@ page 50116 "Indent Header"
             {
                 SubPageLink = "Document No." = FIELD("No.");
                 ApplicationArea = All;
+                UpdatePropagation = Both;
                 // Editable = PageEditable; //B2BSCM21AUG2023
             }
         }
@@ -839,6 +840,32 @@ page 50116 "Indent Header"
                 end;
             }
             //B2BVCOn17Jun2024 <<
+            action("Non-Inv Item Issued")
+            {
+                Caption = 'Non-Inventory Item Issued';
+                ApplicationArea = All;
+                Image = Inventory;
+                Promoted = true;
+                PromotedCategory = Process;
+                trigger OnAction()
+                var
+                    IndentLine: Record "Indent Line";
+                    ItemRec: Record Item;
+                    NonInventoryIssue: Report NonInventoryItemIssue;
+                begin
+                    Rec.TestField("Released Status", Rec."Released Status"::Released);
+                    IndentLine.Reset();
+                    IndentLine.SetRange("Document No.", Rec."No.");
+                    IndentLine.SetFilter("Qty To Issue", '>%1', 0);
+                    if IndentLine.FindSet() then
+                        repeat
+                            if ItemRec.Get(IndentLine."No.") then
+                                ItemRec.TestField(Type, ItemRec.Type::"Non-Inventory");
+                        until IndentLine.Next() = 0;
+                    NonInventoryIssue.GetValue(Rec."No.");
+                    NonInventoryIssue.Run();
+                end;
+            }
 
         }
     }

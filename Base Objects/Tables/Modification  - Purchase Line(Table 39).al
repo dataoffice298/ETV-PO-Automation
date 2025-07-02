@@ -535,6 +535,14 @@ tableextension 50056 tableextension70000011 extends "Purchase Line" //39
             Caption = 'RFQ Date';
             DataClassification = CustomerContent;
         }
+        field(60069; BCD; Decimal)
+        {
+            DataClassification = CustomerContent;
+        }
+        field(60070; "SWC on BCD"; Decimal)
+        {
+            DataClassification = CustomerContent;
+        }
     }
 
 

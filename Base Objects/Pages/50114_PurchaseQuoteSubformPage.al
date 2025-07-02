@@ -64,6 +64,16 @@ pageextension 50114 PurchQuoteSubformExtB2B extends "Purchase Quote Subform"
             {
                 ApplicationArea = All;
             }
+            field(BCD; Rec.BCD)
+            {
+                ApplicationArea = All;
+                Caption = 'BCD';
+            }
+            field("SWC on BCD"; Rec."SWC on BCD")
+            {
+                ApplicationArea = All;
+                Caption = 'SWC on BCD';
+            }
         }
 
     }

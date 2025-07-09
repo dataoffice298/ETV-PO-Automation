@@ -203,7 +203,7 @@ page 50171 "Vendor List_B2B"
                     ApplicationArea = Basic, Suite;
                     ToolTip = 'Specifies the sum of payments paid to the vendor.';
                 }
-                field("Coupled to CRM"; Rec."Coupled to CRM")
+                field("Coupled to CRM"; Rec."Coupled to Dataverse")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies that the vendor is coupled to an account in Dataverse.';
@@ -261,15 +261,15 @@ page 50171 "Vendor List_B2B"
                               "Global Dimension 2 Filter" = FIELD("Global Dimension 2 Filter");
                 Visible = false;
             }
-
-            part("Power BI Report FactBox"; "Power BI Report FactBox")
+            //B2BKMUPG
+          /*   part("Power BI Report FactBox"; "Power BI Report FactBox")
             {
                 ApplicationArea = Basic, Suite;
                 Visible = false;
                 ObsoleteReason = 'Use the part PowerBIEmbeddedReportPart instead';
                 ObsoleteState = Pending;
                 ObsoleteTag = '21.0';
-            }
+            } */
             systempart(Control1900383207; Links)
             {
                 ApplicationArea = RecordLinks;

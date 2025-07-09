@@ -56,11 +56,11 @@ pageextension 50101 PostedOrderPageExt extends "Purchase Order"
                 ApplicationArea = All;
                 ToolTip = 'Specifies the Value of PO Narration';
             }
-            field("Your Reference"; "Your Reference")
+           /*  field("Your Reference"; "Your Reference")
             {
                 ApplicationArea = All;
                 ToolTip = 'Specifies the Value of Your Reference';
-            }
+            } */
         }
 
         //B2BSSD28FEB2023>>

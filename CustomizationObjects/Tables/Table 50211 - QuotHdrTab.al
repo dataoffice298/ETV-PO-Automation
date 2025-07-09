@@ -166,6 +166,10 @@ table 50211 QuotCompHdr
         {
             DataClassification = CustomerContent;
         }
+        field(50010; "Workflow Enabled"; Boolean)
+        {
+            DataClassification = CustomerContent;
+        }
     }
     keys
     {

@@ -146,6 +146,10 @@ page 50126 "Quotation Comparision Doc"
                     ApplicationArea = All;
                     ShowMandatory = true;
                 }
+                field("Workflow Enabled"; Rec."Workflow Enabled")
+                {
+                    ApplicationArea = All;
+                }
             }
 
 

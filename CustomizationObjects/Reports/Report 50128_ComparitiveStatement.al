@@ -385,106 +385,106 @@ report 50128 ComparitiveStatement
                                     if OrderAddressRec."Phone No." <> '' then
                                         PhoneNo := PhoneNo + OrderAddressRec."Phone No." + ',';
                                 until OrderAddressRec.next() = 0;
-                        end;
+                            end;
                             ContactPerson := DelChr(ContactPerson, '<>', ',');
                             PhoneNo := DelChr(PhoneNo, '<>', ',');
                             //B2BAnusha19Feb2025<<
-                        if TransactionSpec.Get(PurchHdr."Transaction Specification") then;
+                            if TransactionSpec.Get(PurchHdr."Transaction Specification") then;
+                        end;
+
+                        PurchLine.Reset();
+                        PurchLine.SetRange("Document Type", PurchLine."Document Type"::Quote);
+                        PurchLine.SetRange("Document No.", "Parent Quote No.");
+                        PurchLine.SetRange("Line No.", "Parent Quote Line No");
+                        if PurchLine.FindFirst() then begin
+                            OtherCharges := PurchLine."Other Charges";
+                            HSNCode := PurchLine."HSN/SAC Code";
+                            UOM := PurchLine."Unit of Measure Code";
+                            ModelRec := PurchLine.Model;
+                        end;
+                        if Amount <> 0 then
+                            Amounts := Amount + PurchLine."Other Charges";
+                        /* if (PurchHdr."Currency Code" = 'IND') OR (PurchHdr."Currency Code" = '') then
+                            TotalLineAmt2 := TotalLineAmt2 + Amounts; */
+
+                        if (PurchHdr."Currency Code" <> 'IND') AND (PurchHdr."Currency Code" <> '') then begin
+                            ExRate := (1 / PurchHdr."Currency Factor");
+                            TotalAmount := Amounts * (1 / PurchHdr."Currency Factor");
+                            //TotalLineAmt += TotalAmount;
+                        end;
+
+
+                        QuoComp.Reset();
+                        QuoComp.SetRange("Quot Comp No.", "Quot Comp No.");
+                        If QuoComp.Findset() then
+                            UnitPrice := QuoComp.Rate;
+                        DeliveryDays := QuoComp."Delivery Date";
+
+                        Clear(ExRate1);
+                        Clear(Amounts1);
+                        Clear(QAmount1);
+                        Clear(TotalAmount1);
+                        Clear(TotalLineAmt);
+                        Clear(TotalLineAmt2);
+                        Clear(TotalAmountRec);
+                        Clear(TotalAmount2);
+                        Clear(GstTotal);
+                        Clear(GstTotalSum);
+                        Clear(GstTotal);
+                        clear(GstTotalSum);
+
+                        QuotCompTestLine.Reset();
+                        QuotCompTestLine.SetRange("Quot Comp No.", QuotcompTest."Quot Comp No.");
+                        QuotCompTestLine.SetRange("Vendor No.", QuotcompTest."Vendor No.");
+                        QuotCompTestLine.SetFilter("Item No.", '<>%1', '');
+                        if QuotCompTestLine.FindSet() then
+                            repeat
+                                //QAmount1 := QuotCompTestLine.Quantity * QuotCompTestLine.Rate;
+                                PurchLine.Reset();
+                                PurchLine.SetRange("Document Type", PurchLine."Document Type"::Quote);
+                                PurchLine.SetRange("Document No.", QuotCompTestLine."Parent Quote No.");
+                                PurchLine.SetRange("Line No.", QuotCompTestLine."Parent Quote Line No");
+                                if PurchLine.FindFirst() then;
+                                Amounts1 := QuotCompTestLine.Amount + PurchLine."Other Charges";
+                                if PurchHdr.Get(PurchHdr."Document Type"::Quote, PurchLine."Document No.") then;
+                                if (PurchHdr."Currency Code" <> 'IND') AND (PurchHdr."Currency Code" <> '') then begin
+                                    ExRate1 := (1 / PurchHdr."Currency Factor");
+                                    TotalAmount1 := Amounts1 * (1 / PurchHdr."Currency Factor");
+                                    TotalLineAmt += TotalAmount1;
+                                end;
+                                if (PurchHdr."Currency Code" = 'IND') OR (PurchHdr."Currency Code" = '') then begin
+                                    TotalLineAmt2 += Amounts1;
+                                    TotalConversionAmt := TotalLineAmt2;
+                                end;
+
+                                if (PurchHdr."Currency Code" <> 'IND') AND (PurchHdr."Currency Code" <> '') then begin
+                                    BCDAmt := (TotalLineAmt / 100) * PurchHdr.BCD;
+                                    SWCAmt := (BCDAmt / 100) * PurchHdr.SWC;
+                                    TotalConversionAmt := TotalLineAmt + BCDAmt + SWCAmt;
+                                end;
+                                PurchLine1.Reset;
+                                PurchLine1.Setrange("Document No.", QuotCompTestLine."Parent Quote No.");
+                                PurchLine1.SetRange("Line No.", QuotCompTestLine."Parent Quote Line No");
+                                PurchLine1.SetRange("No.", QuotCompTestLine."Item No.");
+                                if PurchLine1.FindFirst() then begin
+                                    Clear(CGSTAmt);
+                                    clear(SGSTAmt);
+                                    clear(IGSTAmt);
+                                    GetGSTAmounts(PurchLine1);
+                                    GstTotal := CGSTAmt + SGSTAmt + IGSTAmt;
+                                    GSTPercent1 += SGSTPer + CGSTPer + IGSTPer;
+                                    GstTotalSum += GstTotal;
+                                end;
+
+                                if (PurchHdr."Currency Code" <> 'IND') AND (PurchHdr."Currency Code" <> '') then
+                                    TotalAmount2 := TotalConversionAmt + GstTotalSum;
+                                if (PurchHdr."Currency Code" = 'IND') OR (PurchHdr."Currency Code" = '') then
+                                    TotalAmount2 := TotalLineAmt2 + GstTotalSum;
+                            //TotalAmountRec := TotalLineAmt2 + GstTotalSum;
+
+                            until QuotCompTestLine.Next = 0;
+
                     end;
-
-                    PurchLine.Reset();
-                    PurchLine.SetRange("Document Type", PurchLine."Document Type"::Quote);
-                    PurchLine.SetRange("Document No.", "Parent Quote No.");
-                    PurchLine.SetRange("Line No.", "Parent Quote Line No");
-                    if PurchLine.FindFirst() then begin
-                        OtherCharges := PurchLine."Other Charges";
-                        HSNCode := PurchLine."HSN/SAC Code";
-                        UOM := PurchLine."Unit of Measure Code";
-                        ModelRec := PurchLine.Model;
-                    end;
-                    if Amount <> 0 then
-                        Amounts := Amount + PurchLine."Other Charges";
-                    /* if (PurchHdr."Currency Code" = 'IND') OR (PurchHdr."Currency Code" = '') then
-                        TotalLineAmt2 := TotalLineAmt2 + Amounts; */
-
-                    if (PurchHdr."Currency Code" <> 'IND') AND (PurchHdr."Currency Code" <> '') then begin
-                        ExRate := (1 / PurchHdr."Currency Factor");
-                        TotalAmount := Amounts * (1 / PurchHdr."Currency Factor");
-                        //TotalLineAmt += TotalAmount;
-                    end;
-
-
-                    QuoComp.Reset();
-                    QuoComp.SetRange("Quot Comp No.", "Quot Comp No.");
-                    If QuoComp.Findset() then
-                        UnitPrice := QuoComp.Rate;
-                    DeliveryDays := QuoComp."Delivery Date";
-
-                    Clear(ExRate1);
-                    Clear(Amounts1);
-                    Clear(QAmount1);
-                    Clear(TotalAmount1);
-                    Clear(TotalLineAmt);
-                    Clear(TotalLineAmt2);
-                    Clear(TotalAmountRec);
-                    Clear(TotalAmount2);
-                    Clear(GstTotal);
-                    Clear(GstTotalSum);
-                    Clear(GstTotal);
-                    clear(GstTotalSum);
-
-                    QuotCompTestLine.Reset();
-                    QuotCompTestLine.SetRange("Quot Comp No.", QuotcompTest."Quot Comp No.");
-                    QuotCompTestLine.SetRange("Vendor No.", QuotcompTest."Vendor No.");
-                    QuotCompTestLine.SetFilter("Item No.", '<>%1', '');
-                    if QuotCompTestLine.FindSet() then
-                        repeat
-                            //QAmount1 := QuotCompTestLine.Quantity * QuotCompTestLine.Rate;
-                            PurchLine.Reset();
-                            PurchLine.SetRange("Document Type", PurchLine."Document Type"::Quote);
-                            PurchLine.SetRange("Document No.", QuotCompTestLine."Parent Quote No.");
-                            PurchLine.SetRange("Line No.", QuotCompTestLine."Parent Quote Line No");
-                            if PurchLine.FindFirst() then;
-                            Amounts1 := QuotCompTestLine.Amount + PurchLine."Other Charges";
-                            if PurchHdr.Get(PurchHdr."Document Type"::Quote, PurchLine."Document No.") then;
-                            if (PurchHdr."Currency Code" <> 'IND') AND (PurchHdr."Currency Code" <> '') then begin
-                                ExRate1 := (1 / PurchHdr."Currency Factor");
-                                TotalAmount1 := Amounts1 * (1 / PurchHdr."Currency Factor");
-                                TotalLineAmt += TotalAmount1;
-                            end;
-                            if (PurchHdr."Currency Code" = 'IND') OR (PurchHdr."Currency Code" = '') then begin
-                                TotalLineAmt2 += Amounts1;
-                                TotalConversionAmt := TotalLineAmt2;
-                            end;
-
-                            if (PurchHdr."Currency Code" <> 'IND') AND (PurchHdr."Currency Code" <> '') then begin
-                                BCDAmt := (TotalLineAmt / 100) * PurchHdr.BCD;
-                                SWCAmt := (BCDAmt / 100) * PurchHdr.SWC;
-                                TotalConversionAmt := TotalLineAmt + BCDAmt + SWCAmt;
-                            end;
-                            PurchLine1.Reset;
-                            PurchLine1.Setrange("Document No.", QuotCompTestLine."Parent Quote No.");
-                            PurchLine1.SetRange("Line No.", QuotCompTestLine."Parent Quote Line No");
-                            PurchLine1.SetRange("No.", QuotCompTestLine."Item No.");
-                            if PurchLine1.FindFirst() then begin
-                                Clear(CGSTAmt);
-                                clear(SGSTAmt);
-                                clear(IGSTAmt);
-                                GetGSTAmounts(PurchLine1);
-                                GstTotal := CGSTAmt + SGSTAmt + IGSTAmt;
-                                GSTPercent1 += SGSTPer + CGSTPer + IGSTPer;
-                                GstTotalSum += GstTotal;
-                            end;
-
-                            if (PurchHdr."Currency Code" <> 'IND') AND (PurchHdr."Currency Code" <> '') then
-                                TotalAmount2 := TotalConversionAmt + GstTotalSum;
-                            if (PurchHdr."Currency Code" = 'IND') OR (PurchHdr."Currency Code" = '') then
-                                TotalAmount2 := TotalLineAmt2 + GstTotalSum;
-                        //TotalAmountRec := TotalLineAmt2 + GstTotalSum;
-
-                        until QuotCompTestLine.Next = 0;
-
-                end;
                 end;
 
                 trigger OnPreDataItem()

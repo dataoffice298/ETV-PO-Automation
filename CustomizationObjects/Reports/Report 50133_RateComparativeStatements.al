@@ -494,7 +494,7 @@ report 50133 "Rate Comparative Statement"
                         ApprovalCommentLine.SetCurrentKey("Entry No.");
                         ApprovalCommentLine.SetRange("Table ID", ApprovalEntry."Table ID");
                         ApprovalCommentLine.SetRange("Record ID to Approve", ApprovalEntry."Record ID to Approve");
-                        if ApprovalCommentLine.FindFirst() then
+                        if ApprovalCommentLine.FindLast() then
                             Comment := ApprovalCommentLine.Comment;
                     end;
                 end;
@@ -695,8 +695,8 @@ report 50133 "Rate Comparative Statement"
         DeliveryCapLbl: Label ' Delivery:';
         PaymentCapLbl: Label ' Payment:';
         WarrantyCapLbl: Label ' Warranty:';
-        ContactPersonCapLbl: Label ' Contact Person:';
-        PhoneNoCapLbl: Label ' Phone No.:';
+        ContactPersonCapLbl: Label ' CONTACT PERSON';
+        PhoneNoCapLbl: Label ' PHONE NO';
         UnitPrice: Decimal;
         TotalAmt2: Decimal;
         PurchLineGST: Record "Purchase Line";

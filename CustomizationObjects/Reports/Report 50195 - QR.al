@@ -29,7 +29,7 @@ report 50195 QRReport
             begin
                 "Fixed Asset".CalcFields("Qr Code");
                 DescriptionGvar := CopyStr(Description, 1, 30);
-               ModelNoGVar := CopyStr("Model No.", 1, 13);  //22-04-2025
+                ModelNoGVar := CopyStr("Model No.", 1, 13);  //22-04-2025
                 MakeB2BGvar := CopyStr("Model No.", 1, 13); //B2BVCon01Feb2024
                 MakeB2BGvar := CopyStr(Make_B2B, 1, 13); //B2BVCon01Feb2024  //22-04-2025
                 SerialNoGVar := CopyStr("Serial No.", 1, 13);

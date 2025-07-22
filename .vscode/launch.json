@@ -6,15 +6,15 @@
             "request": "launch",
             "type": "al",
             "environmentType": "OnPrem",
-            "server": "http://b2bsrv-325:8080/ETPLBCLIVE",
-            "serverInstance": "ETPLBCLIVE",
+            "server": "http://localhost:8080/BC260/",
+            "serverInstance": "BC260",
             "authentication": "Windows",
             "breakOnError": true,
             "launchBrowser": true,
             "enableLongRunningSqlStatements": true,
             "enableSqlInformationDebugger": true,
             "tenant": "default",
-            "port": 8749,
+            "port": 1439,
             "schemaUpdateMode": "ForceSync"
         }
     ]

@@ -215,14 +215,14 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                 //Visible = false; //B2BKM25APR2024
             }
         }
-        addafter("Gen. Prod. Posting Group")//B2BSSD24Feb2023
+        /* addafter("Gen. Prod. Posting Group")//B2BSSD24Feb2023
         {
             field("Gen. Bus. Posting Group"; Rec."Gen. Bus. Posting Group")
             {
                 ApplicationArea = All;
                 Caption = 'Gen. Prod. Posting Group';
             }
-        }
+        } */
 
         //B2BSSD24FEB2023<<
         addafter(warranty)
@@ -346,7 +346,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
             }
         }
         //B2BSSD16MAY2023<<
-        addafter("Gen. Prod. Posting Group")
+        addafter("Gen. Bus. Posting Group")
         {
             field("Depreciation Book Code"; Rec."Depreciation Book Code")
             {
@@ -1123,7 +1123,7 @@ pageextension 50110 PurchaseOrderSubform1 extends "Purchase Order Subform"
                         GateEntryLine."Source Name" := FALRec.Description;
                         GateEntryLine.Description := FALRec.Description;
                         GateEntryLine."Unit of Measure" := Rec."Unit of Measure Code";
-                       GateEntryLine.ModelNo := FALRec."Model No."; //22-04-2025
+                        GateEntryLine.ModelNo := FALRec."Model No."; //22-04-2025
                         GateEntryLine.SerialNo := FALRec."Serial No.";
                         GateEntryLine."Purchase Order No." := PurchLine."Document No.";
                         GateEntryLine."Purchase Order Line No." := PurchLine."Line No.";

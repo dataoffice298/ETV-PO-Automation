@@ -391,17 +391,17 @@ codeunit 50026 "PO Automation"
                                 REPEAT
                                     CreateIndents4."Document Type" := PurchaseLine."Document Type"::Enquiry.AsInteger();
                                     CreateIndents4."Order No" := PurchaseLine."Document No.";
-                                    if CreateIndents4.Rfq = false then begin
-                                        CreateIndents4."RFQ No." := PurchaseLine."RFQ No.";
-                                        CreateIndents4.Rfq := true;
-
-                                    end;
-                                    CreateIndents4."RFQ Date" := PurchaseLine."RFQ Date";
                                     CreateIndents4.MODIFY;
                                 UNTIL CreateIndents4.NEXT = 0;
                             //B2BVCOn15Mar2024 >>
                             if IndentReqLine.Get(PurchaseLine."Indent Req No", PurchaseLine."Indent Req Line No") then begin
                                 IndentReqLine."Requisition Type" := IndentReqLine."Requisition Type"::Enquiry;
+                                if IndentReqLine.Rfq = false then begin
+                                    IndentReqLine."RFQ No." := PurchaseLine."RFQ No.";
+                                    IndentReqLine.Rfq := true;
+
+                                end;
+                                IndentReqLine."RFQ Date" := PurchaseLine."RFQ Date";
                                 IndentReqLine.Modify();
                             end;
                             //B2BVCOn15Mar2024 <<
@@ -660,18 +660,16 @@ codeunit 50026 "PO Automation"
                             REPEAT
                                 CreateIndents4."Document Type" := PurchaseLine."Document Type"::Quote.AsInteger();
                                 CreateIndents4."Order No" := PurchaseLine."Document No.";
-
-                                if CreateIndents4.Rfq = false then begin
-                                    CreateIndents4."RFQ No." := PurchaseLine."RFQ No.";
-                                    CreateIndents4.Rfq := true;
-
-                                end;
-                                CreateIndents4."RFQ Date" := PurchaseLine."RFQ Date";
                                 CreateIndents4.MODIFY;
                             UNTIL CreateIndents4.NEXT = 0;
                         //B2BVCOn15Mar2024 >>
                         if IndentReqLine.Get(PurchaseLine."Indent Req No", PurchaseLine."Indent Req Line No") then begin
                             IndentReqLine."Requisition Type" := IndentReqLine."Requisition Type"::Quote;
+                            if IndentReqLine.Rfq = false then begin
+                                IndentReqLine."RFQ No." := PurchaseLine."RFQ No.";
+                                IndentReqLine.Rfq := true;
+                            end;
+                            IndentReqLine."RFQ Date" := PurchaseLine."RFQ Date";
                             IndentReqLine.Modify();
                         end;
                         //B2BVCOn15Mar2024 <<

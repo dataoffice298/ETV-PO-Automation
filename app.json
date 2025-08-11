@@ -73,11 +73,6 @@
       "to": 99999
     }
   ],
-  "resourceExposurePolicy": {
-    "allowDebugging": true,
-    "allowDownloadingSource": true,
-    "includeSourceInSymbolFile": true
-  },
-  "runtime": "15.0",
+
   "target": "OnPrem"
 }

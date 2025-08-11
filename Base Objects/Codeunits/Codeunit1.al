@@ -1275,119 +1275,119 @@ codeunit 50016 "MyBaseSubscr"
     //BNaveenB2B25092024 <<
     //Vendor Approvals
 
-    [EventSubscriber(ObjectType::Table, Database::"Purchase Header", 'OnBeforeValidateBuyFromVendorNo', '', false, false)]
-    local procedure OnBeforeValidateBuyFromVendorNo(var PurchaseHeader: Record "Purchase Header"; xPurchaseHeader: Record "Purchase Header"; CallingFieldNo: Integer; var SkipBuyFromContact: Boolean)
+    // [EventSubscriber(ObjectType::Table, Database::"Purchase Header", 'OnBeforeValidateBuyFromVendorNo', '', false, false)]
+    // local procedure OnBeforeValidateBuyFromVendorNo(var PurchaseHeader: Record "Purchase Header"; xPurchaseHeader: Record "Purchase Header"; CallingFieldNo: Integer; var SkipBuyFromContact: Boolean)
 
-    //  local procedure OnBeforeValidateBuyFromVendorNo(var PurchaseHeader: Record "Purchase Header"; xPurchaseHeader: Record "Purchase Header"; CallingFieldNo: Integer; var SkipBuyFromContact: Boolean; var IsHandled: Boolean)
-    var
-        vendor: Record Vendor;
-    begin
-        if vendor.Get(PurchaseHeader."Buy-from Vendor No.") then
-            if vendor."Approval Status" <> vendor."Approval Status"::Released then
-                Error('Vendor Approval Status must be Released');
-    end;
+    // //  local procedure OnBeforeValidateBuyFromVendorNo(var PurchaseHeader: Record "Purchase Header"; xPurchaseHeader: Record "Purchase Header"; CallingFieldNo: Integer; var SkipBuyFromContact: Boolean; var IsHandled: Boolean)
+    // var
+    //     vendor: Record Vendor;
+    // begin
+    //     if vendor.Get(PurchaseHeader."Buy-from Vendor No.") then
+    //         if vendor."Approval Status" <> vendor."Approval Status"::Released then
+    //             Error('Vendor Approval Status must be Released');
+    // end;
 
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnSetStatusToPendingApproval', '', false, false)]
-    local procedure OnSetstatusTPendingApprovalVendor(RecRef: RecordRef; var IsHandled: boolean)
-    var
-        VendorRec: Record Vendor;
-    begin
-        case RecRef.Number() of
-            Database::Vendor:
-                begin
-                    RecRef.SetTable(VendorRec);
-                    VendorRec."Approval Status" := VendorRec."Approval Status"::"Pending Approval";
-                    VendorRec.Modify();
-                    IsHandled := true;
-                end;
-        end;
-    end;
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnSetStatusToPendingApproval', '', false, false)]
+    // local procedure OnSetstatusTPendingApprovalVendor(RecRef: RecordRef; var IsHandled: boolean)
+    // var
+    //     VendorRec: Record Vendor;
+    // begin
+    //     case RecRef.Number() of
+    //         Database::Vendor:
+    //             begin
+    //                 RecRef.SetTable(VendorRec);
+    //                 VendorRec."Approval Status" := VendorRec."Approval Status"::"Pending Approval";
+    //                 VendorRec.Modify();
+    //                 IsHandled := true;
+    //             end;
+    //     end;
+    // end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'OnReleaseDocument', '', false, false)]
-    local procedure OnReleasedocumentVendor(RecRef: RecordRef; var Handled: boolean)
-    var
-        VendorRec: Record Vendor;
-    begin
-        case RecRef.Number() of
-            Database::Vendor:
-                begin
-                    RecRef.SetTable(VendorRec);
-                    VendorRec."Approval Status" := VendorRec."Approval Status"::Released;
-                    VendorRec.Blocked := VendorRec.Blocked::" ";
-                    VendorRec.Modify();
-                    Handled := true;
-                end;
-        end;
-    end;
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'OnReleaseDocument', '', false, false)]
+    // local procedure OnReleasedocumentVendor(RecRef: RecordRef; var Handled: boolean)
+    // var
+    //     VendorRec: Record Vendor;
+    // begin
+    //     case RecRef.Number() of
+    //         Database::Vendor:
+    //             begin
+    //                 RecRef.SetTable(VendorRec);
+    //                 VendorRec."Approval Status" := VendorRec."Approval Status"::Released;
+    //                 VendorRec.Blocked := VendorRec.Blocked::" ";
+    //                 VendorRec.Modify();
+    //                 Handled := true;
+    //             end;
+    //     end;
+    // end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'OnOpenDocument', '', false, false)]
-    local procedure OnopendocumentFAGLJournalLine(RecRef: RecordRef; var Handled: boolean)
-    var
-        VendorRec: Record Vendor;
-    begin
-        case RecRef.Number() of
-            Database::Vendor:
-                begin
-                    RecRef.SetTable(VendorRec);
-                    VendorRec."Approval Status" := VendorRec."Approval Status"::Open;
-                    VendorRec.Blocked := VendorRec.Blocked::All;
-                    VendorRec.Modify();
-                    Handled := true;
-                end;
-        end;
-    end;
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'OnOpenDocument', '', false, false)]
+    // local procedure OnopendocumentFAGLJournalLine(RecRef: RecordRef; var Handled: boolean)
+    // var
+    //     VendorRec: Record Vendor;
+    // begin
+    //     case RecRef.Number() of
+    //         Database::Vendor:
+    //             begin
+    //                 RecRef.SetTable(VendorRec);
+    //                 VendorRec."Approval Status" := VendorRec."Approval Status"::Open;
+    //                 VendorRec.Blocked := VendorRec.Blocked::All;
+    //                 VendorRec.Modify();
+    //                 Handled := true;
+    //             end;
+    //     end;
+    // end;
 
-    //customer
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnSetStatusToPendingApproval', '', false, false)]
-    local procedure OnSetstatusToPendingApprovalcust(RecRef: RecordRef; var IsHandled: boolean)
-    var
-        CustomerRec: Record Customer;
-    begin
-        case RecRef.Number() of
-            Database::Customer:
-                begin
-                    RecRef.SetTable(CustomerRec);
-                    CustomerRec."Approval Status" := CustomerRec."Approval Status"::"Pending Approval";
-                    CustomerRec.Modify();
-                    IsHandled := true;
-                end;
-        end;
-    end;
+    // //customer
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Approvals Mgmt.", 'OnSetStatusToPendingApproval', '', false, false)]
+    // local procedure OnSetstatusToPendingApprovalcust(RecRef: RecordRef; var IsHandled: boolean)
+    // var
+    //     CustomerRec: Record Customer;
+    // begin
+    //     case RecRef.Number() of
+    //         Database::Customer:
+    //             begin
+    //                 RecRef.SetTable(CustomerRec);
+    //                 CustomerRec."Approval Status" := CustomerRec."Approval Status"::"Pending Approval";
+    //                 CustomerRec.Modify();
+    //                 IsHandled := true;
+    //             end;
+    //     end;
+    // end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'OnReleaseDocument', '', false, false)]
-    local procedure OnReleasedocumentcust(RecRef: RecordRef; var Handled: boolean)
-    var
-        CustomerRec: Record Customer;
-    begin
-        case RecRef.Number() of
-            Database::Customer:
-                begin
-                    RecRef.SetTable(CustomerRec);
-                    CustomerRec."Approval Status" := CustomerRec."Approval Status"::Released;
-                    CustomerRec.Blocked := CustomerRec.Blocked::" ";
-                    CustomerRec.Modify();
-                    Handled := true;
-                end;
-        end;
-    end;
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'OnReleaseDocument', '', false, false)]
+    // local procedure OnReleasedocumentcust(RecRef: RecordRef; var Handled: boolean)
+    // var
+    //     CustomerRec: Record Customer;
+    // begin
+    //     case RecRef.Number() of
+    //         Database::Customer:
+    //             begin
+    //                 RecRef.SetTable(CustomerRec);
+    //                 CustomerRec."Approval Status" := CustomerRec."Approval Status"::Released;
+    //                 CustomerRec.Blocked := CustomerRec.Blocked::" ";
+    //                 CustomerRec.Modify();
+    //                 Handled := true;
+    //             end;
+    //     end;
+    // end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'OnOpenDocument', '', false, false)]
-    local procedure OnopendocumentFAGLJournalLine1(RecRef: RecordRef; var Handled: boolean)
-    var
-        CustomerRec: Record Customer;
-    begin
-        case RecRef.Number() of
-            Database::Customer:
-                begin
-                    RecRef.SetTable(CustomerRec);
-                    CustomerRec."Approval Status" := CustomerRec."Approval Status"::Open;
-                    CustomerRec.Blocked := CustomerRec.Blocked::All;
-                    CustomerRec.Modify();
-                    Handled := true;
-                end;
-        end;
-    end;
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Workflow Response Handling", 'OnOpenDocument', '', false, false)]
+    // local procedure OnopendocumentFAGLJournalLine1(RecRef: RecordRef; var Handled: boolean)
+    // var
+    //     CustomerRec: Record Customer;
+    // begin
+    //     case RecRef.Number() of
+    //         Database::Customer:
+    //             begin
+    //                 RecRef.SetTable(CustomerRec);
+    //                 CustomerRec."Approval Status" := CustomerRec."Approval Status"::Open;
+    //                 CustomerRec.Blocked := CustomerRec.Blocked::All;
+    //                 CustomerRec.Modify();
+    //                 Handled := true;
+    //             end;
+    //     end;
+    // end;
 
     /*      [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnBeforeValidateBuyFromVendorNo', '', false, false)]
      local procedure OnBeforeValidateBuyFromVendorNo(var PurchaseHeader: Record "Purchase Header"; xPurchaseHeader: Record "Purchase Header"; CallingFieldNo: Integer; var SkipBuyFromContact: Boolean)

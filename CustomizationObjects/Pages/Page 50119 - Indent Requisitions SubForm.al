@@ -366,7 +366,7 @@ page 50119 "Indent Requisitions SubForm"
                 Image = Import;
                 Caption = 'Specification';
                 RunObject = page TechnicalSpecifications;
-                RunPageLink = "Document No." = field("Indent No."), "Line No." = field("Indent Line No.");
+                RunPageLink = "Document No." = field("Indent No."), "Indent Line No." = field("Indent Line No.");
                 ToolTip = 'Executes the Specification action.';
                 trigger OnAction()
                 var

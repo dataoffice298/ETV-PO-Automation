@@ -9,6 +9,7 @@ pageextension 50185 CustomerExt extends "Customer Card"
             {
                 ApplicationArea = all;
                 Editable = false;
+                Visible = false;
             }
         }
     }

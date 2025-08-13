@@ -11,6 +11,7 @@ pageextension 50150 "Vendor CardExt" extends "Vendor Card"
             {
                 ApplicationArea = all;
                 Editable = false;
+                Visible = false;
             }
         }
         addafter("Tax Information")

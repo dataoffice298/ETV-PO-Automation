@@ -40,7 +40,7 @@ report 50182 "Regularization Order"
             { }
             column(Name_CompanyInfo; CompanyInfo.Name)
             { }
-            column(GSTNo_CompanyInfo; CompanyInfo."GST Registration No.")
+            column(GSTNo_CompanyInfo; LocationRec."GST Registration No.")
             { }
             column(StateName_CompanyInfo; StateGRec.Description)
             { }
@@ -372,7 +372,10 @@ report 50182 "Regularization Order"
                         if User.FindFirst() then;
                     end;
                 end;
-                if StateGRec.Get(CompanyInfo."State Code") then;
+
+                if LocationRec.Get("Purchase Header"."Location Code") then;
+
+                if StateGRec.Get(LocationRec."State Code") then;
 
                 if VendorGRec.Get("Buy-from Vendor No.") then;
 
@@ -576,6 +579,7 @@ report 50182 "Regularization Order"
         ContactEmail: Text;
         OrderAddress: Record "Order Address";
         GSTRegNo: Code[20];
+        LocationRec: Record Location;
 
 
 
